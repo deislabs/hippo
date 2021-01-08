@@ -15,9 +15,14 @@ class Domain(models.Model):
 class DomainBinding(models.Model):
     app = models.ForeignKey(App, on_delete=models.CASCADE)
     domain = models.ForeignKey(Domain, on_delete=models.CASCADE)
+    cname = models.CharField(max_length=200, blank=True)
 
     class Meta:
-        unique_together = (('app', 'domain'),)
+        constraints = [
+            models.UniqueConstraint(fields=['app', 'cname', 'domain'], name='domain_is_unique')
+        ]
 
     def __str__(self):
-        return '{app}.{domain}'.format(app=self.app.name, domain=str(self.domain))
+        if self.cname == '':
+            return '{app}.{domain}'.format(app=self.app.name, domain=str(self.domain))
+        return '{cname}.{domain}'.format(app=self.app.name, domain=str(self.domain))
