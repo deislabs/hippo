@@ -1,0 +1,16 @@
+from django.db import models
+
+from apps.models import App
+
+class EnvironmentVariable(models.Model):
+    app = models.ForeignKey(App, on_delete=models.CASCADE)
+    key = models.CharField(max_length=100)
+    value = models.CharField(max_length=1000)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['app', 'key'], name='is_unique')
+        ]
+
+    def __str__(self):
+        return '{self.key}={self.value}'.format()
