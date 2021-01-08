@@ -13,4 +13,4 @@ class EnvironmentVariable(models.Model):
         ]
 
     def __str__(self):
-        return '{self.key}={self.value}'.format()
+        return '{key}={value}'.format(key=self.key, value=self.value)
