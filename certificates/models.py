@@ -1,25 +1,28 @@
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.db import models
+from OpenSSL import crypto
 
-from pegasus.models import AuditedModel
+from domains.models import Domain
+from pegasus.models import UuidTimestampedModel
 
-class Certificate(TimestampedModel):
+def validate_certificate(value):
+    try:
+        return crypto.load_certificate(crypto.FILETYPE_PEM, value)
+    except crypto.Error as e:
+        raise ValidationError('Could not load certificate: {}'.format(e))
+
+
+def validate_private_key(value):
+    try:
+        return crypto.load_privatekey(crypto.FILETYPE_PEM, value)
+    except crypto.Error as e:
+        raise ValidationError('Could not load private key: {}'.format(e))
+
+class Certificate(UuidTimestampedModel):
     """
     Public and private key pair used to secure application traffic at the router.
     """
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
-    name = models.CharField(max_length=253, unique=True, validators=[validate_label])
-    # there is no upper limit on the size of an x.509 certificate
-    certificate = models.TextField(validators=[validate_certificate])
-    key = models.TextField(validators=[validate_private_key])
-    # X.509 certificates allow any string of information as the common name.
-    common_name = models.TextField(editable=False, unique=False, null=True)
-    # A list of DNS records if certificate has SubjectAltName
-    san = ArrayField(models.CharField(max_length=253), null=True)
-    # SHA256 fingerprint
-    fingerprint = models.CharField(max_length=96, editable=False)
-    # Expires and Start time of cert
-    expires = models.DateTimeField(editable=False)
-    starts = models.DateTimeField(editable=False)
-    issuer = models.TextField(editable=False)
-    subject = models.TextField(editable=False)
+    owner = models.ForeignKey(Domain, on_delete=models.CASCADE)
+    certificate = models.FileField(validators=[validate_certificate])
+    key = models.FileField(validators=[validate_private_key])
