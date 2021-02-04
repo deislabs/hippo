@@ -1,6 +1,6 @@
 from django.db import models
 
-from pegasus.models import TimestampedModel
+from pegasus.models import UuidTimestampedModel
 from apps.models import App
 
 class Release(UuidTimestampedModel):
