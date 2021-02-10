@@ -1,0 +1,37 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <h2>{{ app.name }}</h2>
+
+    <h3>Environment Variables</h3>
+    <ul>
+    {% for c in app.environmentvariable_set.all %}
+        <li>{{ c.key }} = {{ c.value }}</li>
+    {% endfor %}
+    </ul>
+    <a href="{% url 'config:add_envvar' %}"><input type="submit" value="Add more Environment Variables"></a>
+
+    <h3>Functions</h3>
+    <ul>
+    {% for f in app.function_set.all %}
+        <li>{{ f.name }}: {{ f.args }}</li>
+    {% endfor %}
+    </ul>
+    <a href="{% url 'config:add_function' %}"><input type="submit" value="Add more Functions"></a>
+
+    <h3>Domains</h3>
+    <ul>
+    {% for d in app.domain_set.all %}
+        <li>{{ d.domain }}</li>
+    {% endfor %}
+    </ul>
+    <a href="{% url 'domains:add' %}"><input type="submit" value="Create a new Domain"></a>
+
+    <h3>Releases</h3>
+    <ul>
+    {% for r in app.release_set.all %}
+        <li>{{ r.version }}: {{ r.description }}</li>
+    {% endfor %}
+    </ul>
+    <a href="{% url 'releases:add' %}"><input type="submit" value="Create a new Release"></a>
+{% endblock %}

@@ -5,12 +5,16 @@ from django.http import HttpResponse, HttpResponseNotFound
 from django.shortcuts import redirect, render
 from django.urls import reverse
 
+from apps.models import App
 from .models import CustomUser
 from .forms import CustomUserCreationForm
 
 @login_required
 def profile(request):
-    return HttpResponse('welcome to your profile page!')
+    context = {
+        'apps': App.objects.filter(owner=request.user.pk)
+    }
+    return render(request, 'accounts/profile.html', context)
 
 def register(request):
     if settings.REGISTRATION_MODE == 'disabled':
