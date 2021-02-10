@@ -10,7 +10,8 @@ from .models import App
 class ListView(PermissionListMixin, generic.ListView):
     model = App
     permission_required = 'view_app'
-    
+    context_object_name = 'apps'
+
 
 class DetailView(PermissionRequiredMixin, generic.DetailView):
     model = App

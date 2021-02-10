@@ -1,22 +1,12 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model, login
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseForbidden
 from django.urls import reverse_lazy
-from django.views import generic
 from django.views.generic import edit
 
 from guardian.shortcuts import assign_perm
 
 from .forms import CustomUserCreationForm
-
-class DetailView(LoginRequiredMixin, generic.DetailView):
-    context_object_name = 'user'
-    model = get_user_model()
-    template_name = 'accounts/profile.html'
-
-    def get_object(self):
-        return self.request.user
 
 class RegistrationView(edit.CreateView):
     model = get_user_model()

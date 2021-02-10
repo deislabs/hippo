@@ -18,4 +18,4 @@ class EnvironmentVariable(UuidTimestampedModel):
         return '{key}={value}'.format(key=self.key, value=self.value)
 
     def get_absolute_url(self):
-        return reverse('envvars:detail', kwargs={'pk': self.pk})
+        return reverse('apps:detail', kwargs={'pk': self.owner.pk})

@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 import os
 from pathlib import Path
+from django.urls import reverse_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -138,3 +139,5 @@ STATIC_URL = '/static/'
 REGISTRATION_MODE = os.environ.get('PEGASUS_REGISTRATION_MODE', 'enabled')
 
 DEFAULT_DOMAIN = os.environ.get('PEGASUS_DEFAULT_DOMAIN', 'pegasus.local')
+
+LOGIN_REDIRECT_URL = reverse_lazy('apps:list')

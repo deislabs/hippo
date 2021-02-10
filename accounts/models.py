@@ -8,4 +8,4 @@ class CustomUser(AbstractUser, UuidTimestampedModel):
     pass
 
     def get_absolute_url(self):
-        return reverse('profile')
+        return reverse('apps:list')

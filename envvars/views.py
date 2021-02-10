@@ -5,14 +5,17 @@ from django.views.generic import edit
 from guardian.mixins import PermissionListMixin, PermissionRequiredMixin
 from guardian.shortcuts import assign_perm
 
+from apps.models import App
 from .models import EnvironmentVariable
 
 class ListView(PermissionListMixin, generic.ListView):
     model = EnvironmentVariable
     permission_required = 'view_environmentvariable'
+    context_object_name = 'envvars'
 
     def get_queryset(self):
-        return EnvironmentVariable.objects.filter(owner=self.kwargs['pk'])
+        queryset = super().get_queryset()
+        return queryset.objects.filter(owner=self.request.GET.get('app'))
 
 class CreateView(PermissionRequiredMixin, edit.CreateView):
     model = EnvironmentVariable
@@ -21,7 +24,7 @@ class CreateView(PermissionRequiredMixin, edit.CreateView):
     fields = ['key', 'value']
 
     def form_valid(self, form):
-        form.instance.owner = self.kwargs['pk']
+        form.instance.owner = App.objects.get(pk=self.request.GET.get('app'))
         resp = super().form_valid(form)
         assign_perm('view_environmentvariable', self.request.user, self.object)
         assign_perm('change_environmentvariable', self.request.user, self.object)
