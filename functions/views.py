@@ -12,7 +12,7 @@ class IndexView(generic.ListView, LoginRequiredMixin):
     context_object_name = 'functions'
 
     def get_queryset(self):
-        """Return all envioronment variables."""
+        """Return all environment variables."""
         return get_objects_for_user(self.request.user, 'view_function', Function)
 
 class DetailView(generic.DetailView, PermissionRequiredMixin):
@@ -22,11 +22,7 @@ class DetailView(generic.DetailView, PermissionRequiredMixin):
 class CreateView(edit.CreateView, PermissionRequiredMixin):
     permission_required = 'add_function'
     model = Function
-    fields = ['name', 'args']
-
-    def form_valid(self, form):
-        form.instance.owner = self.request.user
-        return super().form_valid(form)
+    fields = ['owner', 'name', 'args']
 
 class UpdateView(edit.UpdateView, PermissionRequiredMixin):
     permission_required = 'change_function'

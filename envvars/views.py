@@ -12,7 +12,7 @@ class IndexView(generic.ListView, LoginRequiredMixin):
     context_object_name = 'envvars'
 
     def get_queryset(self):
-        """Return all envioronment variables."""
+        """Return all environment variables."""
         return get_objects_for_user(self.request.user, 'view_environmentvariable', EnvironmentVariable)
 
 class DetailView(generic.DetailView, PermissionRequiredMixin):
@@ -22,7 +22,7 @@ class DetailView(generic.DetailView, PermissionRequiredMixin):
 class CreateView(edit.CreateView, PermissionRequiredMixin):
     permission_required = 'add_environmentvariable'
     model = EnvironmentVariable
-    fields = ['key', 'value']
+    fields = ['owner', 'key', 'value']
 
     def form_valid(self, form):
         form.instance.owner = self.request.user

@@ -4,6 +4,9 @@ from . import views
 
 app_name = 'releases'
 urlpatterns = [
-    path('<str:release_pk>/invoke/', views.invoke, name='invoke'),
-    path('add/', views.add, name='add')
+    path('', views.IndexView.as_view(), name='index'),
+    path('new/', views.CreateView.as_view(), name='new'),
+    path('<uuid:pk>/', views.DetailView.as_view(), name='detail'),
+    path('<uuid:pk>/edit/', views.UpdateView.as_view(), name='update'),
+    path('<uuid:pk>/delete/', views.DeleteView.as_view(), name='delete'),
 ]

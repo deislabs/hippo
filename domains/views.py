@@ -1,32 +1,39 @@
-from django.core import serializers
-from django.contrib.auth.decorators import login_required
-from django.forms.models import model_to_dict
-from django.http import HttpResponse, JsonResponse
-from django.shortcuts import get_object_or_404, get_list_or_404, render, redirect
-from django.urls import reverse
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
+from django.views import generic
+from django.views.generic import edit
 
-from pegasus.serialization import to_dict
+from guardian.mixins import PermissionRequiredMixin
+from guardian.shortcuts import get_objects_for_user
 
-from .forms import DomainForm
 from .models import Domain
 
-@login_required
-def index(request):
-    domains = [to_dict(d) for d in get_list_or_404(Domain, owner=request.user.pk)]
-    return JsonResponse(domains, safe=False)
+class IndexView(generic.ListView, LoginRequiredMixin):
+    context_object_name = 'domains'
 
-@login_required
-def add(request):
-    if request.method == 'GET':
-        return render(
-            request, 'domains/create.html',
-            {"form": DomainForm}
-        )
-    elif request.method == 'POST':
-        form = DomainForm(request.POST)
-        if form.is_valid():
-            domain = form.save(commit=False)
-            domain.owner = request.user
-            domain.save()
-            form.save_m2m()
-            return redirect(reverse('accounts:profile'))
+    def get_queryset(self):
+        """Return all environment variables."""
+        return get_objects_for_user(self.request.user, 'view_domain', Domain)
+
+class DetailView(generic.DetailView, PermissionRequiredMixin):
+    permission_required = 'view_domain'
+    model = Domain
+
+class CreateView(edit.CreateView, PermissionRequiredMixin):
+    permission_required = 'add_domain'
+    model = Domain
+    fields = ['domain', 'app']
+
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
+
+class UpdateView(edit.UpdateView, PermissionRequiredMixin):
+    permission_required = 'change_domain'
+    model = Domain
+    fields = ['domain', 'app']
+
+class DeleteView(edit.DeleteView, PermissionRequiredMixin):
+    permission_required = 'delete_domain'
+    model = Domain
+    success_url = reverse_lazy('domains:index')

@@ -1,40 +1,35 @@
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, Http404, JsonResponse
-from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.urls import reverse_lazy
+from django.views import generic
+from django.views.generic import edit
 
-import subprocess
+from guardian.mixins import PermissionRequiredMixin
+from guardian.shortcuts import get_objects_for_user
 
-from .forms import ReleaseForm
 from .models import Release
-from functions.models import Function
-from pegasus.serialization import to_dict
 
-@login_required
-def invoke(request, release_pk):
-    release = get_object_or_404(Release, pk=release_pk)
-    if release.owner.owner.pk != request.user.pk:
-        return Http404()
-    function_name = request.GET.get('fn', '_start')
-    cmd = ['wasmtime', release.build.path]
-    try:
-        function = Function.objects.get(app=release.owner, name=function_name)
-        cmd += ['--invoke', function.name, function.args.split()]
-    except Function.DoesNotExist:
-        pass
-    completed_process = subprocess.run(cmd, capture_output=True)
-    return HttpResponse(completed_process.stdout)
+class IndexView(generic.ListView, LoginRequiredMixin):
+    context_object_name = 'releases'
 
-@login_required
-def add(request):
-    if request.method == 'GET':
-        return render(
-            request, 'releases/create.html',
-            {"form": ReleaseForm}
-        )
-    elif request.method == 'POST':
-        form = ReleaseForm(request.POST, request.FILES)
-        if form.is_valid():
-            form.save()
-            return redirect(reverse('accounts:profile'))
+    def get_queryset(self):
+        """Return all applications that the logged-in user has view permission."""
+        return get_objects_for_user(self.request.user, 'view_release', Release)
+
+class DetailView(generic.DetailView, PermissionRequiredMixin):
+    permission_required = 'view_release'
+    model = Release
+
+class CreateView(edit.CreateView, PermissionRequiredMixin):
+    permission_required = 'add_release'
+    model = Release
+    fields = ['owner', 'build', 'description']
+
+class UpdateView(edit.UpdateView, PermissionRequiredMixin):
+    permission_required = 'change_release'
+    model = Release
+    fields = ['build', 'description']
+
+class DeleteView(edit.DeleteView, PermissionRequiredMixin):
+    permission_required = 'delete_release'
+    model = Release
+    success_url = reverse_lazy('releases:index')
