@@ -1,39 +1,39 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views import generic
 from django.views.generic import edit
 
-from guardian.mixins import PermissionRequiredMixin
-from guardian.shortcuts import get_objects_for_user
+from guardian.mixins import PermissionListMixin, PermissionRequiredMixin
+from guardian.shortcuts import assign_perm
 
 from .models import EnvironmentVariable
 
-class IndexView(generic.ListView, LoginRequiredMixin):
-    context_object_name = 'envvars'
+class ListView(PermissionListMixin, generic.ListView):
+    model = EnvironmentVariable
+    permission_required = 'view_environmentvariable'
 
     def get_queryset(self):
-        """Return all environment variables."""
-        return get_objects_for_user(self.request.user, 'view_environmentvariable', EnvironmentVariable)
+        return EnvironmentVariable.objects.filter(owner=self.kwargs['pk'])
 
-class DetailView(generic.DetailView, PermissionRequiredMixin):
-    permission_required = 'view_environmentvariable'
+class CreateView(PermissionRequiredMixin, edit.CreateView):
     model = EnvironmentVariable
-
-class CreateView(edit.CreateView, PermissionRequiredMixin):
-    permission_required = 'add_environmentvariable'
-    model = EnvironmentVariable
-    fields = ['owner', 'key', 'value']
+    permission_object = None
+    permission_required = 'envvars.add_environmentvariable'
+    fields = ['key', 'value']
 
     def form_valid(self, form):
-        form.instance.owner = self.request.user
-        return super().form_valid(form)
+        form.instance.owner = self.kwargs['pk']
+        resp = super().form_valid(form)
+        assign_perm('view_environmentvariable', self.request.user, self.object)
+        assign_perm('change_environmentvariable', self.request.user, self.object)
+        assign_perm('delete_environmentvariable', self.request.user, self.object)
+        return resp
 
-class UpdateView(edit.UpdateView, PermissionRequiredMixin):
+class UpdateView(PermissionRequiredMixin, edit.UpdateView):
     permission_required = 'change_environmentvariable'
     model = EnvironmentVariable
     fields = ['key', 'value']
 
-class DeleteView(edit.DeleteView, PermissionRequiredMixin):
+class DeleteView(PermissionRequiredMixin, edit.DeleteView):
     permission_required = 'delete_environmentvariable'
     model = EnvironmentVariable
-    success_url = reverse_lazy('envvars:index')
+    success_url = reverse_lazy('envvars:list')

@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 from pegasus.models import UuidTimestampedModel
 from apps.models import App
@@ -15,3 +16,6 @@ class Function(UuidTimestampedModel):
 
     def __str__(self):
         return '"{name}": "{args}"'.format(name=self.name, args=self.args)
+
+    def get_absolute_url(self):
+        return reverse('functions:detail', kwargs={'pk': self.pk})

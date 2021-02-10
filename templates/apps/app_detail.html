@@ -9,7 +9,7 @@
         <li>{{ c.key }} = {{ c.value }}</li>
     {% endfor %}
     </ul>
-    <a href="{% url 'envvars:add' %}"><input type="submit" value="Add more Environment Variables"></a>
+    <a href="{% url 'envvars:new' %}"><input type="submit" value="Add more Environment Variables"></a>
 
     <h3>Functions</h3>
     <ul>
@@ -17,7 +17,7 @@
         <li>{{ f.name }}: {{ f.args }}</li>
     {% endfor %}
     </ul>
-    <a href="{% url 'functions:add' %}"><input type="submit" value="Add more Functions"></a>
+    <a href="{% url 'functions:new' %}"><input type="submit" value="Add more Functions"></a>
 
     <h3>Domains</h3>
     <ul>
@@ -25,7 +25,7 @@
         <li>{{ d.domain }}</li>
     {% endfor %}
     </ul>
-    <a href="{% url 'domains:add' %}"><input type="submit" value="Create a new Domain"></a>
+    <a href="{% url 'domains:new' %}"><input type="submit" value="Create a new Domain"></a>
 
     <h3>Releases</h3>
     <ul>
@@ -33,5 +33,5 @@
         <li>{{ r.version }}: {{ r.description }}</li>
     {% endfor %}
     </ul>
-    <a href="{% url 'releases:add' %}"><input type="submit" value="Create a new Release"></a>
+    <a href="{% url 'releases:new' %}"><input type="submit" value="Create a new Release"></a>
 {% endblock %}

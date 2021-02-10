@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'domains',
     'envvars',
     'functions',
+    'pegasus',
     'releases',
 ]
 

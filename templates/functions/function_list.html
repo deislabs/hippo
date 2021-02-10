@@ -1,0 +1,11 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <h2>Your functions</h2>
+    <ul>
+    {% for function in functions %}
+        <li><a href="{% url 'functions:detail' function.uuid %}">{{ function.name }}</a></li>
+    {% endfor %}
+    </ul>
+    <a href="{% url 'functions:new' %}"><input type="submit" value="Create a new function"></a>
+{% endblock %}

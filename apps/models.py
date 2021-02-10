@@ -5,7 +5,6 @@ from django.urls import reverse
 from pegasus.models import UuidTimestampedModel
 
 class App(UuidTimestampedModel):
-    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     name = models.CharField(max_length=200, unique=True)
 
     def __str__(self):

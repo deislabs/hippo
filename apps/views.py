@@ -1,39 +1,40 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views import generic
 from django.views.generic import edit
 
-from guardian.mixins import PermissionRequiredMixin
-from guardian.shortcuts import get_objects_for_user
+from guardian.mixins import PermissionListMixin, PermissionRequiredMixin
+from guardian.shortcuts import assign_perm
 
 from .models import App
 
-class IndexView(generic.ListView, LoginRequiredMixin):
-    context_object_name = 'apps'
-
-    def get_queryset(self):
-        """Return all applications that the logged-in user has view permission."""
-        return get_objects_for_user(self.request.user, 'view_app', App)
-
-class DetailView(generic.DetailView, PermissionRequiredMixin):
+class ListView(PermissionListMixin, generic.ListView):
+    model = App
     permission_required = 'view_app'
-    model = App
+    
 
-class CreateView(edit.CreateView, PermissionRequiredMixin):
-    permission_required = 'add_app'
+class DetailView(PermissionRequiredMixin, generic.DetailView):
     model = App
+    permission_required = 'view_app'
+
+class CreateView(PermissionRequiredMixin, edit.CreateView):
+    model = App
+    permission_object = None
+    permission_required = 'apps.add_app'
     fields = ['name']
 
     def form_valid(self, form):
-        form.instance.owner = self.request.user
-        return super().form_valid(form)
+        resp = super().form_valid(form)
+        assign_perm('view_app', self.request.user, self.object)
+        assign_perm('change_app', self.request.user, self.object)
+        assign_perm('delete_app', self.request.user, self.object)
+        return resp
 
-class UpdateView(edit.UpdateView, PermissionRequiredMixin):
+class UpdateView(PermissionRequiredMixin, edit.UpdateView):
     permission_required = 'change_app'
     model = App
     fields = ['name']
 
-class DeleteView(edit.DeleteView, PermissionRequiredMixin):
+class DeleteView(PermissionRequiredMixin, edit.DeleteView):
     permission_required = 'delete_app'
     model = App
-    success_url = reverse_lazy('apps:index')
+    success_url = reverse_lazy('apps:list')

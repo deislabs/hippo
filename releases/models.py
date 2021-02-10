@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 from pegasus.models import UuidTimestampedModel
 from apps.models import App
@@ -15,3 +16,6 @@ class Release(UuidTimestampedModel):
         except Release.DoesNotExist:
             self.version = 1
         super().save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('releases:detail', kwargs={'pk': self.pk})

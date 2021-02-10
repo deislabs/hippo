@@ -1,36 +1,41 @@
 from django.conf import settings
-from django.contrib.auth import login
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse, HttpResponseNotFound
-from django.shortcuts import redirect, render
-from django.urls import reverse
+from django.contrib.auth import get_user_model, login
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseForbidden
+from django.urls import reverse_lazy
+from django.views import generic
+from django.views.generic import edit
 
-from apps.models import App
-from .models import CustomUser
+from guardian.shortcuts import assign_perm
+
 from .forms import CustomUserCreationForm
 
-@login_required
-def profile(request):
-    context = {
-        'apps': App.objects.filter(owner=request.user.pk)
-    }
-    return render(request, 'accounts/profile.html', context)
+class DetailView(LoginRequiredMixin, generic.DetailView):
+    context_object_name = 'user'
+    model = get_user_model()
+    template_name = 'accounts/profile.html'
 
-def register(request):
-    if settings.REGISTRATION_MODE == 'disabled':
-        return HttpResponseNotFound('Registration has been disabled. Please contact the administrator.')
-    if request.method == 'GET':
-        return render(
-            request, 'registration/register.html',
-            {"form": CustomUserCreationForm}
-        )
-    elif request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            # First user created is an administrator
-            if not CustomUser.objects.filter(is_superuser=True).exists():
-                user.is_superuser = user.is_staff = True
-                user.save()
-            login(request, user)
-            return redirect(reverse('profile'))
+    def get_object(self):
+        return self.request.user
+
+class RegistrationView(edit.CreateView):
+    model = get_user_model()
+    form_class = CustomUserCreationForm
+    template_name = 'registration/register.html'
+
+    def form_valid(self, form):
+        """Register the first user as a superuser."""
+        if settings.REGISTRATION_MODE == 'disabled':
+            return HttpResponseForbidden('Registration has been disabled. Please contact the administrator.')
+        resp = super().form_valid(form)
+        # the first user is the "AnonymousUser".
+        if get_user_model().objects.count() == 2:
+            self.object.is_superuser = self.object.is_staff = True
+        self.object.save()
+        assign_perm('apps.add_app', self.object)
+        assign_perm('certificates.add_certificate', self.object)
+        assign_perm('domains.add_domain', self.object)
+        assign_perm('envvars.add_environmentvariable', self.object)
+        assign_perm('functions.add_function', self.object)
+        assign_perm('releases.add_release', self.object)
+        return resp

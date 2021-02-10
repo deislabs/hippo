@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 
 from pegasus.models import UuidTimestampedModel
 from apps.models import App
@@ -15,3 +16,6 @@ class EnvironmentVariable(UuidTimestampedModel):
 
     def __str__(self):
         return '{key}={value}'.format(key=self.key, value=self.value)
+
+    def get_absolute_url(self):
+        return reverse('envvars:detail', kwargs={'pk': self.pk})

@@ -8,28 +8,28 @@ from guardian.shortcuts import get_objects_for_user
 
 from .models import Function
 
-class IndexView(generic.ListView, LoginRequiredMixin):
+class IndexView(LoginRequiredMixin, generic.ListView):
     context_object_name = 'functions'
 
     def get_queryset(self):
         """Return all environment variables."""
         return get_objects_for_user(self.request.user, 'view_function', Function)
 
-class DetailView(generic.DetailView, PermissionRequiredMixin):
+class DetailView(PermissionRequiredMixin, generic.DetailView):
     permission_required = 'view_function'
     model = Function
 
-class CreateView(edit.CreateView, PermissionRequiredMixin):
+class CreateView(PermissionRequiredMixin, edit.CreateView):
     permission_required = 'add_function'
     model = Function
     fields = ['owner', 'name', 'args']
 
-class UpdateView(edit.UpdateView, PermissionRequiredMixin):
+class UpdateView(PermissionRequiredMixin, edit.UpdateView):
     permission_required = 'change_function'
     model = Function
     fields = ['name', 'args']
 
-class DeleteView(edit.DeleteView, PermissionRequiredMixin):
+class DeleteView(PermissionRequiredMixin, edit.DeleteView):
     permission_required = 'delete_function'
     model = Function
     success_url = reverse_lazy('functions:index')

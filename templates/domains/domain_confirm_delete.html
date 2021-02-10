@@ -1,12 +1,9 @@
 {% extends 'base_generic.html' %}
 
 {% block content %}
-<h2>Add a new Function</h2>
-
 <form method="post">
     {% csrf_token %}
-    {{form}}
-    <input type="submit" value="Add">
+    <p>Are you sure you want to delete this domain?</p>
+    <input type="submit" value="Submit">
 </form>
-
 {% endblock %}

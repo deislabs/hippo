@@ -8,28 +8,28 @@ from guardian.shortcuts import get_objects_for_user
 
 from .models import Release
 
-class IndexView(generic.ListView, LoginRequiredMixin):
+class IndexView(LoginRequiredMixin, generic.ListView):
     context_object_name = 'releases'
 
     def get_queryset(self):
         """Return all applications that the logged-in user has view permission."""
         return get_objects_for_user(self.request.user, 'view_release', Release)
 
-class DetailView(generic.DetailView, PermissionRequiredMixin):
+class DetailView(PermissionRequiredMixin, generic.DetailView):
     permission_required = 'view_release'
     model = Release
 
-class CreateView(edit.CreateView, PermissionRequiredMixin):
+class CreateView(PermissionRequiredMixin, edit.CreateView):
     permission_required = 'add_release'
     model = Release
     fields = ['owner', 'build', 'description']
 
-class UpdateView(edit.UpdateView, PermissionRequiredMixin):
+class UpdateView(PermissionRequiredMixin, edit.UpdateView):
     permission_required = 'change_release'
     model = Release
     fields = ['build', 'description']
 
-class DeleteView(edit.DeleteView, PermissionRequiredMixin):
+class DeleteView(PermissionRequiredMixin, edit.DeleteView):
     permission_required = 'delete_release'
     model = Release
     success_url = reverse_lazy('releases:index')

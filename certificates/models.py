@@ -1,7 +1,8 @@
-from django.conf import settings
+from OpenSSL import crypto
+
 from django.core.exceptions import ValidationError
 from django.db import models
-from OpenSSL import crypto
+from django.urls import reverse
 
 from domains.models import Domain
 from pegasus.models import UuidTimestampedModel
@@ -26,3 +27,6 @@ class Certificate(UuidTimestampedModel):
     owner = models.ForeignKey(Domain, on_delete=models.CASCADE)
     certificate = models.FileField(validators=[validate_certificate])
     key = models.FileField(validators=[validate_private_key])
+
+    def get_absolute_url(self):
+        return reverse('certificates:detail', kwargs={'pk': self.pk})

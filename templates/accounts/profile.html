@@ -4,9 +4,9 @@
     <h2>Welcome to your Profile Page!</h2>
     <h3>Your Applications</h3>
     <ul>
-    {% for app in apps %}
+    {% for app in user.app_set.all %}
         <li><a href="{% url 'apps:detail' app.uuid %}">{{ app.name }}</a></li>
     {% endfor %}
     </ul>
-    <a href="{% url 'apps:create' %}"><input type="submit" value="Create a new App"></a>
+    <a href="{% url 'apps:new' %}"><input type="submit" value="Create a new App"></a>
 {% endblock %}

@@ -1,0 +1,11 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <h2>Your environment variables</h2>
+    <ul>
+    {% for envvar in envvars %}
+        <li><a href="{% url 'envvars:detail' envvar.uuid %}">{{ envvar.name }}</a></li>
+    {% endfor %}
+    </ul>
+    <a href="{% url 'envvars:new' %}"><input type="submit" value="Create a new environment variable"></a>
+{% endblock %}

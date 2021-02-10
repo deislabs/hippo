@@ -1,12 +1,9 @@
 {% extends 'base_generic.html' %}
 
 {% block content %}
-<h2>Add a new Environment Variable</h2>
-
-<form method="post">
+<form enctype="multipart/form-data" method="post">
     {% csrf_token %}
     {{form}}
-    <input type="submit" value="Add">
+    <input type="submit" value="Submit">
 </form>
-
 {% endblock %}

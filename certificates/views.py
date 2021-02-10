@@ -8,28 +8,28 @@ from guardian.shortcuts import get_objects_for_user
 
 from .models import Certificate
 
-class IndexView(generic.ListView, LoginRequiredMixin):
+class IndexView(LoginRequiredMixin, generic.ListView):
     context_object_name = 'certificates'
 
     def get_queryset(self):
         """Return all environment variables."""
         return get_objects_for_user(self.request.user, 'view_certificate', Certificate)
 
-class DetailView(generic.DetailView, PermissionRequiredMixin):
+class DetailView(PermissionRequiredMixin, generic.DetailView):
     permission_required = 'view_certificate'
     model = Certificate
 
-class CreateView(edit.CreateView, PermissionRequiredMixin):
+class CreateView(PermissionRequiredMixin, edit.CreateView):
     permission_required = 'add_certificate'
     model = Certificate
     fields = ['owner', 'certificate', 'key']
 
-class UpdateView(edit.UpdateView, PermissionRequiredMixin):
+class UpdateView(PermissionRequiredMixin, edit.UpdateView):
     permission_required = 'change_certificate'
     model = Certificate
     fields = ['owner', 'certificate', 'key']
 
-class DeleteView(edit.DeleteView, PermissionRequiredMixin):
+class DeleteView(PermissionRequiredMixin, edit.DeleteView):
     permission_required = 'delete_certificate'
     model = Certificate
     success_url = reverse_lazy('certificates:index')

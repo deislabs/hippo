@@ -8,18 +8,18 @@ from guardian.shortcuts import get_objects_for_user
 
 from .models import Domain
 
-class IndexView(generic.ListView, LoginRequiredMixin):
+class IndexView(LoginRequiredMixin, generic.ListView):
     context_object_name = 'domains'
 
     def get_queryset(self):
         """Return all environment variables."""
         return get_objects_for_user(self.request.user, 'view_domain', Domain)
 
-class DetailView(generic.DetailView, PermissionRequiredMixin):
+class DetailView(PermissionRequiredMixin, generic.DetailView):
     permission_required = 'view_domain'
     model = Domain
 
-class CreateView(edit.CreateView, PermissionRequiredMixin):
+class CreateView(PermissionRequiredMixin, edit.CreateView):
     permission_required = 'add_domain'
     model = Domain
     fields = ['domain', 'app']
@@ -28,12 +28,12 @@ class CreateView(edit.CreateView, PermissionRequiredMixin):
         form.instance.owner = self.request.user
         return super().form_valid(form)
 
-class UpdateView(edit.UpdateView, PermissionRequiredMixin):
+class UpdateView(PermissionRequiredMixin, edit.UpdateView):
     permission_required = 'change_domain'
     model = Domain
     fields = ['domain', 'app']
 
-class DeleteView(edit.DeleteView, PermissionRequiredMixin):
+class DeleteView(PermissionRequiredMixin, edit.DeleteView):
     permission_required = 'delete_domain'
     model = Domain
     success_url = reverse_lazy('domains:index')

@@ -1,11 +1,11 @@
 {% extends "base_generic.html" %}
 
 {% block content %}
-    <h2>Your Applications</h2>
+    <h2>Your applications</h2>
     <ul>
     {% for app in apps %}
         <li><a href="{% url 'apps:detail' app.uuid %}">{{ app.name }}</a></li>
     {% endfor %}
     </ul>
-    <a href="{% url 'apps:new' %}"><input type="submit" value="Create a new App"></a>
+    <a href="{% url 'apps:new' %}"><input type="submit" value="Create a new application"></a>
 {% endblock %}
