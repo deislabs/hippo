@@ -8,7 +8,7 @@ import subprocess
 
 from .forms import ReleaseForm
 from .models import Release
-from config.models import Function
+from functions.models import Function
 from pegasus.serialization import to_dict
 
 @login_required

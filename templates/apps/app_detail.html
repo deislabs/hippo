@@ -9,7 +9,7 @@
         <li>{{ c.key }} = {{ c.value }}</li>
     {% endfor %}
     </ul>
-    <a href="{% url 'config:add_envvar' %}"><input type="submit" value="Add more Environment Variables"></a>
+    <a href="{% url 'envvars:add' %}"><input type="submit" value="Add more Environment Variables"></a>
 
     <h3>Functions</h3>
     <ul>
@@ -17,7 +17,7 @@
         <li>{{ f.name }}: {{ f.args }}</li>
     {% endfor %}
     </ul>
-    <a href="{% url 'config:add_function' %}"><input type="submit" value="Add more Functions"></a>
+    <a href="{% url 'functions:add' %}"><input type="submit" value="Add more Functions"></a>
 
     <h3>Domains</h3>
     <ul>
