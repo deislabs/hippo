@@ -8,7 +8,7 @@ from guardian.shortcuts import get_objects_for_user
 
 from .models import Release
 
-class IndexView(LoginRequiredMixin, generic.ListView):
+class ListView(LoginRequiredMixin, generic.ListView):
     context_object_name = 'releases'
 
     def get_queryset(self):
@@ -32,4 +32,4 @@ class UpdateView(PermissionRequiredMixin, edit.UpdateView):
 class DeleteView(PermissionRequiredMixin, edit.DeleteView):
     permission_required = 'delete_release'
     model = Release
-    success_url = reverse_lazy('releases:index')
+    success_url = reverse_lazy('releases:list')

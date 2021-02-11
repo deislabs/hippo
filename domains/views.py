@@ -8,7 +8,7 @@ from guardian.shortcuts import get_objects_for_user
 
 from .models import Domain
 
-class IndexView(LoginRequiredMixin, generic.ListView):
+class ListView(LoginRequiredMixin, generic.ListView):
     context_object_name = 'domains'
 
     def get_queryset(self):
@@ -36,4 +36,4 @@ class UpdateView(PermissionRequiredMixin, edit.UpdateView):
 class DeleteView(PermissionRequiredMixin, edit.DeleteView):
     permission_required = 'delete_domain'
     model = Domain
-    success_url = reverse_lazy('domains:index')
+    success_url = reverse_lazy('domains:list')
