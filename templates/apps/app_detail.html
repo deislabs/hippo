@@ -9,7 +9,7 @@
         <li>{{ c.key }} = {{ c.value }}</li>
     {% endfor %}
     </ul>
-    <a href="{% url 'envvars:new' %}?app={{ app.pk }}"><input type="submit" value="Add more Environment Variables"></a>
+    <a href="{% url 'envvars:new' %}"><input type="submit" value="Add more Environment Variables"></a>
 
     <h3>Functions</h3>
     <ul>
