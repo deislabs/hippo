@@ -31,7 +31,7 @@
     <h3>Releases</h3>
     <ul>
     {% for r in app.release_set.all %}
-        <li>{{ r.version }}: {{ r.description }} <a href="{% url 'releases:update' r.pk %}">(update description)</a></li>
+        <li><a href="{% url 'releases:detail' r.pk %}">{{ r.version }}</a> <a href="{% url 'releases:update' r.pk %}">(update description)</a></li>
     {% endfor %}
     </ul>
     <a href="{% url 'releases:new' %}"><input type="submit" value="Create a Release"></a>
