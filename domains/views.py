@@ -3,37 +3,50 @@ from django.urls import reverse_lazy
 from django.views import generic
 from django.views.generic import edit
 
-from guardian.mixins import PermissionRequiredMixin
-from guardian.shortcuts import get_objects_for_user
+from guardian.mixins import PermissionListMixin, PermissionRequiredMixin
+from guardian.shortcuts import assign_perm, get_objects_for_user
 
+from apps.models import App
 from .models import Domain
 
 class ListView(LoginRequiredMixin, generic.ListView):
+    model = Domain
     context_object_name = 'domains'
-
-    def get_queryset(self):
-        """Return all environment variables."""
-        return get_objects_for_user(self.request.user, 'view_domain', Domain)
+    permission_required = 'view_domain'
 
 class DetailView(PermissionRequiredMixin, generic.DetailView):
-    permission_required = 'view_domain'
     model = Domain
+    permission_required = 'view_domain'
 
 class CreateView(PermissionRequiredMixin, edit.CreateView):
-    permission_required = 'add_domain'
     model = Domain
-    fields = ['domain', 'app']
+    permission_required = 'domains.add_domain'
+    permission_object = None
+    fields = ['owner', 'domain']
+
+    def get_context_data(self, **kwargs):
+        context = super(CreateView, self).get_context_data(**kwargs)
+        context['form'].fields['owner'].queryset = get_objects_for_user(self.request.user, 'view_app', App)
+        return context
 
     def form_valid(self, form):
-        form.instance.owner = self.request.user
-        return super().form_valid(form)
+        resp = super().form_valid(form)
+        assign_perm('view_domain', self.request.user, self.object)
+        assign_perm('change_domain', self.request.user, self.object)
+        assign_perm('delete_domain', self.request.user, self.object)
+        return resp
 
 class UpdateView(PermissionRequiredMixin, edit.UpdateView):
-    permission_required = 'change_domain'
     model = Domain
-    fields = ['domain', 'app']
+    permission_required = 'change_domain'
+    fields = ['owner', 'domain']
+
+    def get_context_data(self, **kwargs):
+        context = super(UpdateView, self).get_context_data(**kwargs)
+        context['form'].fields['owner'].queryset = get_objects_for_user(self.request.user, 'view_app', App)
+        return context
 
 class DeleteView(PermissionRequiredMixin, edit.DeleteView):
-    permission_required = 'delete_domain'
     model = Domain
+    permission_required = 'delete_domain'
     success_url = reverse_lazy('domains:list')

@@ -19,8 +19,8 @@ class DetailView(PermissionRequiredMixin, generic.DetailView):
 
 class CreateView(PermissionRequiredMixin, edit.CreateView):
     model = App
-    permission_object = None
     permission_required = 'apps.add_app'
+    permission_object = None
     fields = ['name']
 
     def form_valid(self, form):

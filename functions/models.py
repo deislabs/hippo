@@ -18,4 +18,4 @@ class Function(UuidTimestampedModel):
         return '"{name}": "{args}"'.format(name=self.name, args=self.args)
 
     def get_absolute_url(self):
-        return reverse('functions:detail', kwargs={'pk': self.pk})
+        return reverse('functions:list', kwargs={'app': self.owner.pk})
