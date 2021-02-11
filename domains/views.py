@@ -1,9 +1,8 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from django.views import generic
 from django.views.generic import edit
 
-from guardian.mixins import PermissionListMixin, PermissionRequiredMixin
+from guardian.mixins import LoginRequiredMixin, PermissionListMixin, PermissionRequiredMixin
 from guardian.shortcuts import assign_perm, get_objects_for_user
 
 from apps.models import App

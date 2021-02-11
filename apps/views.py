@@ -2,12 +2,12 @@ from django.urls import reverse_lazy
 from django.views import generic
 from django.views.generic import edit
 
-from guardian.mixins import PermissionListMixin, PermissionRequiredMixin
+from guardian.mixins import LoginRequiredMixin, PermissionListMixin, PermissionRequiredMixin
 from guardian.shortcuts import assign_perm
 
 from .models import App
 
-class ListView(PermissionListMixin, generic.ListView):
+class ListView(PermissionListMixin, LoginRequiredMixin, generic.ListView):
     model = App
     permission_required = 'view_app'
     context_object_name = 'apps'
