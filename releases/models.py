@@ -4,9 +4,20 @@ from django.urls import reverse
 from pegasus.models import UuidTimestampedModel
 from apps.models import App
 
+def urljoin(*args):
+    """
+    Joins given arguments into an url. Trailing but not leading slashes are
+    stripped for each argument.
+    """
+    return "/".join(map(lambda x: str(x).rstrip('/'), args))
+
+
+def get_upload_path(instance, filename):
+    return urljoin('uploads', instance.owner.name, instance.version, 'app.wasm')
+
 class Release(UuidTimestampedModel):
     owner = models.ForeignKey(App, on_delete=models.CASCADE)
-    build = models.FileField()
+    build = models.FileField(upload_to=get_upload_path)
     description = models.TextField(blank=True)
     version = models.PositiveIntegerField()
 
