@@ -15,10 +15,6 @@ class IndexView(LoginRequiredMixin, generic.ListView):
         """Return all environment variables."""
         return get_objects_for_user(self.request.user, 'view_function', Function)
 
-class DetailView(PermissionRequiredMixin, generic.DetailView):
-    permission_required = 'view_function'
-    model = Function
-
 class CreateView(PermissionRequiredMixin, edit.CreateView):
     permission_required = 'add_function'
     model = Function
