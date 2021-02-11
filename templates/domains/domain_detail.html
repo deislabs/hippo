@@ -4,6 +4,7 @@
     <h2>{{ domain.domain }}</h2>
 
     <p>Owner: {{ domain.owner.name }}</p>
+    <a href="{% url 'domains:update' domain.pk %}">(edit)</a>
 
     <h3>Certificates</h3>
     <ul>

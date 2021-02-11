@@ -3,4 +3,5 @@
 {% block content %}
     <h2>v{{ release.version }}</h2>
     <p>{{ release.description }}</p>
+    <a href="{% url 'releases:update' release.pk %}">(update description)</a>
 {% endblock %}
