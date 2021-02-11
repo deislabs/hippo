@@ -2,36 +2,37 @@
 
 {% block content %}
     <h2>{{ app.name }}</h2>
+    <a href="{% url 'apps:update' app.pk %}">(rename)</a>
 
     <h3>Environment Variables</h3>
     <ul>
-    {% for c in app.environmentvariable_set.all %}
-        <li>{{ c.key }} = {{ c.value }}</li>
+    {% for e in app.environmentvariable_set.all %}
+        <li>{{ e.key }}={{ e.value }} <a href="{% url 'envvars:update' e.pk %}">(edit)</a></li>
     {% endfor %}
     </ul>
-    <a href="{% url 'envvars:new' %}"><input type="submit" value="Add more Environment Variables"></a>
+    <a href="{% url 'envvars:new' %}"><input type="submit" value="Add an Environment Variable"></a>
 
     <h3>Functions</h3>
     <ul>
     {% for f in app.function_set.all %}
-        <li>{{ f.name }}: {{ f.args }}</li>
+        <li>{{ f.name }}: {{ f.args }} <a href="{% url 'functions:update' f.pk %}">(edit)</a></li>
     {% endfor %}
     </ul>
-    <a href="{% url 'functions:new' %}"><input type="submit" value="Add more Functions"></a>
+    <a href="{% url 'functions:new' %}"><input type="submit" value="Add a Function"></a>
 
     <h3>Domains</h3>
     <ul>
     {% for d in app.domain_set.all %}
-        <li>{{ d.domain }}</li>
+        <li><a href="{% url 'domains:detail' d.pk %}">{{ d.domain }}</a> <a href="{% url 'domains:update' d.pk %}">(edit)</a></li>
     {% endfor %}
     </ul>
-    <a href="{% url 'domains:new' %}"><input type="submit" value="Create a new Domain"></a>
+    <a href="{% url 'domains:new' %}"><input type="submit" value="Add a Domain"></a>
 
     <h3>Releases</h3>
     <ul>
     {% for r in app.release_set.all %}
-        <li>{{ r.version }}: {{ r.description }}</li>
+        <li>{{ r.version }}: {{ r.description }} <a href="{% url 'releases:update' r.pk %}">(update description)</a></li>
     {% endfor %}
     </ul>
-    <a href="{% url 'releases:new' %}"><input type="submit" value="Create a new Release"></a>
+    <a href="{% url 'releases:new' %}"><input type="submit" value="Create a Release"></a>
 {% endblock %}

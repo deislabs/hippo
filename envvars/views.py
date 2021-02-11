@@ -17,7 +17,7 @@ class ListView(PermissionListMixin, LoginRequiredMixin, generic.ListView):
         queryset = super().get_queryset()
         app = self.request.GET.get('app')
         if app is not None:
-            queryset = queryset.objects.filter(owner=self.request.GET.get('app'))
+            queryset = queryset.filter(owner=self.request.GET.get('app'))
         return queryset
 
 class CreateView(PermissionRequiredMixin, edit.CreateView):

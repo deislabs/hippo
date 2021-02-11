@@ -2,4 +2,14 @@
 
 {% block content %}
     <h2>{{ domain.domain }}</h2>
+
+    <p>Owner: {{ domain.owner.name }}</p>
+
+    <h3>Certificates</h3>
+    <ul>
+    {% for c in domain.certificate_set.all %}
+        <li><a href="{% url 'certificates:detail' c.pk %}">{{ c.certificate }}</a></li>
+    {% endfor %}
+    </ul>
+    <a href="{% url 'certificates:new' %}"><input type="submit" value="Add a Certificate"></a>
 {% endblock %}

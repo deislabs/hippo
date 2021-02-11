@@ -17,7 +17,7 @@ class ListView(PermissionListMixin, LoginRequiredMixin, generic.ListView):
         queryset = super().get_queryset()
         domain = self.request.GET.get('domain')
         if domain is not None:
-            queryset = queryset.objects.filter(owner=domain)
+            queryset = queryset.filter(owner=domain)
         return queryset
 
 class DetailView(PermissionRequiredMixin, generic.DetailView):
