@@ -15,23 +15,20 @@ from pathlib import Path
 from django.urls import reverse_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '@_y_tcud=17_3uh5*vbij%^57#@(bq&8y$gz_o5uspu1(a5=2='
+# security keys and auth tokens
+SECRET_KEY = os.environ.get('PEGASUS_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+# SECURITY: change this to allowed fqdn's to prevent host poisioning attacks
+# https://docs.djangoproject.com/en/3.1/ref/settings/#allowed-hosts
 
+ALLOWED_HOSTS = os.environ.get('PEGASUS_ALLOWED_HOSTS', '.localhost,127.0.0.1,[::1]').split(',')
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -91,8 +88,12 @@ WSGI_APPLICATION = 'pegasus.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('PEGASUS_DATABASE_NAME', 'pegasus'),
+        'USER': os.environ.get('PEGASUS_DATABASE_USER', 'postgres'),
+        'PASSWORD': os.environ.get('PEGASUS_DATABASE_PASSWORD', ''),
+        'HOST': os.environ.get('PEGASUS_DATABASE_SERVICE_HOST', ''),
+        'PORT': os.environ.get('PEGASUS_DATABASE_SERVICE_PORT', 5432),
     }
 }
 
