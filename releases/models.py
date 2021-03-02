@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 from django.conf import settings
 from django.db import models
@@ -36,12 +37,25 @@ class Release(UuidTimestampedModel):
             f.write(self.wagi_config())
         with open(self.systemd_service_path(), 'w') as f:
             f.write(self.systemd_service())
+        subprocess.call(['systemctl', 'start', 'pegasus-{}'.format(self.owner.name)])
+        subprocess.call(['systemctl', 'enable', 'pegasus-{}'.format(self.owner.name)])
+
+    def delete(self, *args, **kwargs):
+        # check if we're the last release to be removed; if so we need to remove the systemd unit
+        if self.owner.release_set.count() == 1:
+            subprocess.call(['systemctl', 'stop', 'pegasus-{}'.format(self.owner.name)])
+            subprocess.call(['systemctl', 'disable', 'pegasus-{}'.format(self.owner.name)])
+            os.remove(self.systemd_service_path())
+            os.remove('/usr/lib/systemd/system/pegasus-{}.service'.format(self.owner.name))
+            subprocess.call(['systemctl', 'daemon-reload'])
+            subprocess.call(['systemctl', 'reset-failed'])
+        super().delete(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse('releases:detail', kwargs={'pk': self.pk})
 
     def wagi_config_path(self):
-        return os.path.join(os.path.dirname(self.build.path), 'modules.toml')
+        return os.path.join(settings.MEDIA_ROOT, self.owner.name, 'modules.toml')
 
     def wagi_config(self):
         module_path = self.build.path
@@ -60,12 +74,12 @@ class Release(UuidTimestampedModel):
         return wagi_config
 
     def systemd_service_path(self):
-        return os.path.join(settings.MEDIA_ROOT, '{}.service'.format(self.owner.name))
+        return '/etc/systemd/system/pegasus-{}.service'.format(self.owner.name)
 
     def systemd_service(self):
         svc = '[Unit]\n'
         svc += 'Type=simple\n'
         svc += 'ExecStart=/usr/local/bin/wagi --config {} --listen 0.0.0.0:0\n'.format(self.wagi_config_path())
-        svc += 'PIDFile={}/wagi.pid\n\n'.format(os.path.dirname(self.build.path))
+        svc += 'PIDFile={}/{}.pid\n\n'.format(settings.MEDIA_ROOT, self.owner.name)
         svc += '[Install]\nWantedBy=multi-user.target\n'
         return svc
