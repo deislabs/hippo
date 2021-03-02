@@ -78,6 +78,8 @@ class Release(UuidTimestampedModel):
 
     def systemd_service(self):
         svc = '[Unit]\n'
+        svc += 'Description=Pegasus runtime for app {}\n\n'.format(self.owner.name)
+        svc += '[Service]\n'
         svc += 'Type=simple\n'
         svc += 'ExecStart=/usr/local/bin/wagi --config {} --listen 0.0.0.0:0\n'.format(self.wagi_config_path())
         svc += 'PIDFile={}/{}.pid\n\n'.format(settings.MEDIA_ROOT, self.owner.name)
