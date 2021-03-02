@@ -34,7 +34,7 @@ class Release(UuidTimestampedModel):
         super().save(*args, **kwargs)
         with open(self.wagi_config_path(), 'w') as f:
             f.write(self.wagi_config())
-        with open(self.systemd_service_path()) as f:
+        with open(self.systemd_service_path(), 'w') as f:
             f.write(self.systemd_service())
 
     def get_absolute_url(self):
