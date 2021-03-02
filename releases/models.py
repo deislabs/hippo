@@ -1,8 +1,11 @@
+import os
+
 from django.db import models
 from django.urls import reverse
 
 from pegasus.models import UuidTimestampedModel
 from apps.models import App
+from envvars.models import EnvironmentVariable
 
 def urljoin(*args):
     """
@@ -27,6 +30,19 @@ class Release(UuidTimestampedModel):
         except Release.DoesNotExist:
             self.version = 1
         super().save(*args, **kwargs)
+        with open(os.path.join(os.path.dirname(self.build.path), 'config.toml'), 'w') as f:
+            f.write(self.get_wagi_config())
 
     def get_absolute_url(self):
         return reverse('releases:detail', kwargs={'pk': self.pk})
+
+    def get_wagi_config(self):
+        module_path = self.build.path
+        route = '/'
+        envvars = EnvironmentVariable.objects.filter(owner=self.owner)
+        wagi_config = '[[module]]\n'
+        wagi_config += 'module = {}\n'.format(self.build.path)
+        wagi_config += 'route = "{}"\n'.format(route)
+        for envvar in envvars:
+            wagi_config += 'environment.{} = {}\n'.format(envvar.key, envvar.value)
+        return wagi_config
