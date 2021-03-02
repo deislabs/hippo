@@ -5,6 +5,7 @@ from django.urls import reverse
 
 from pegasus.models import UuidTimestampedModel
 from apps.models import App
+from domains.models import Domain
 from envvars.models import EnvironmentVariable
 
 def urljoin(*args):
