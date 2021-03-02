@@ -64,7 +64,7 @@ class Release(UuidTimestampedModel):
     def systemd_service(self):
         svc = '[Unit]\n'
         svc += 'Type=simple\n'
-        svc += 'ExecStart=/usr/local/bin/wagi --config {} --listen 0.0.0.0:0\n'.format(self.wagi_config_path()))
+        svc += 'ExecStart=/usr/local/bin/wagi --config {} --listen 0.0.0.0:0\n'.format(self.wagi_config_path())
         svc += 'PIDFile={}/wagi.pid\n\n'.format(os.path.dirname(self.build.path))
         svc += '[Install]\nWantedBy=multi-user.target\n'
         return svc
