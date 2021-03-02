@@ -18,7 +18,7 @@ def urljoin(*args):
 
 
 def upload_path(instance, filename):
-    return urljoin('uploads', instance.owner.name, instance.version, 'app.wasm')
+    return urljoin(instance.owner.name, instance.version, 'app.wasm')
 
 class Release(UuidTimestampedModel):
     owner = models.ForeignKey(App, on_delete=models.CASCADE)

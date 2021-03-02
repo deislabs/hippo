@@ -142,3 +142,5 @@ REGISTRATION_MODE = os.environ.get('PEGASUS_REGISTRATION_MODE', 'enabled')
 DEFAULT_DOMAIN = os.environ.get('PEGASUS_DEFAULT_DOMAIN', 'pegasus.local')
 
 LOGIN_REDIRECT_URL = reverse_lazy('apps:list')
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'uploads')
