@@ -1,4 +1,3 @@
-import pidfile
 import os
 import socket
 import subprocess
@@ -95,8 +94,7 @@ class Release(UuidTimestampedModel):
         svc += 'Description=Pegasus runtime for app {}\n\n'.format(self.owner.name)
         svc += '[Service]\n'
         svc += 'Type=simple\n'
-        svc += "ExecStart=/bin/bash -c 'echo $$ > /run/pegasus-{}.pid; exec /usr/local/bin/wagi --config {} --listen 0.0.0.0:0'\n".format(self.owner.name, self.wagi_config_path())
-        svc += 'PIDFile=/run/pegasus-{}.pid\n\n'.format(self.owner.name)
+        svc += "ExecStart=/usr/local/bin/wagi --config {} --listen 0.0.0.0:0\n\n".format(self.owner.name, self.wagi_config_path())
         svc += '[Install]\nWantedBy=multi-user.target\n'
         return svc
 
@@ -106,12 +104,13 @@ class Release(UuidTimestampedModel):
     def traefik_config(self):
         traefik_config = {}
         pid = 0
-        with open('/run/pegasus-{}.pid'.format(self.owner.name), "r") as pidfile:
-            try:
-                pid = int(pidfile.read())
-            except (OSError, ValueError):
-                # TODO: we should bubble this up to the user somehow
-                return traefik_config
+        try:
+            # output will be something like 'MainPID=27197'
+            output = subprocess.check_output(['systemctl', 'show', '-p', 'MainPID', 'pegasus-{}'.format(self.owner.name)])
+            pid = int(output.split('=')[1])
+        except:
+            # TODO: we should bubble this up to the user somehow
+            return traefik_config
         s = socket.socket(fileno=pid)
         _, port = s.getsockname()
         domains = Domain.objects.filter(owner=self.owner)
