@@ -94,7 +94,7 @@ class Release(UuidTimestampedModel):
         svc += 'Description=Pegasus runtime for app {}\n\n'.format(self.owner.name)
         svc += '[Service]\n'
         svc += 'Type=simple\n'
-        svc += "ExecStart=/usr/local/bin/wagi --config {} --listen 0.0.0.0:0\n\n".format(self.owner.name, self.wagi_config_path())
+        svc += "ExecStart=/usr/local/bin/wagi --config {} --listen 0.0.0.0:0\n\n".format(self.wagi_config_path())
         svc += '[Install]\nWantedBy=multi-user.target\n'
         return svc
 
@@ -105,8 +105,8 @@ class Release(UuidTimestampedModel):
         traefik_config = {}
         pid = 0
         try:
-            # output will be something like 'MainPID=27197'
-            output = subprocess.check_output(['systemctl', 'show', '-p', 'MainPID', 'pegasus-{}'.format(self.owner.name)])
+            # output will be something like 'ExecMainPID=27197'
+            output = subprocess.check_output(['systemctl', 'show', '-p', 'ExecMainPID', 'pegasus-{}'.format(self.owner.name)])
             pid = int(output.split('=')[1])
         except Exception as e:
             print(e)
