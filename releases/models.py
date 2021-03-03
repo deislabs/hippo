@@ -109,7 +109,7 @@ class Release(UuidTimestampedModel):
             output = subprocess.check_output(['systemctl', 'show', '-p', 'MainPID', 'pegasus-{}'.format(self.owner.name)])
             pid = int(output.split('=')[1])
         except Exception as e:
-            print(e.message)
+            print(e)
             return traefik_config
         s = socket.socket(fileno=pid)
         _, port = s.getsockname()
