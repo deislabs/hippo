@@ -1,0 +1,60 @@
+; Run these steps as root.
+;
+;     $ sudo su
+;
+; First, create a new user/group called 'traefik':
+;
+;     $ useradd traefik
+;     $ passwd traefik
+;
+; Put traefik in /usr/local/bin and give it appropriate ownership and permissions:
+;
+;     $ mv /path/to/traefik /usr/local/bin
+;     $ chown root:root /usr/local/bin/traefik
+;     $ chmod 755 /usr/local/bin/traefik
+;     $ sudo setcap 'cap_net_bind_service=+ep' /usr/local/bin/traefik
+;
+; Place your traefik configuration file ("traefik.toml") in the proper directory and give it appropriate ownership and permissions:
+;
+;     $ mkdir -p /etc/traefik/acme
+;     $ mv /path/to/traefik.toml /etc/traefik/
+;     $ chown -R root:root /etc/traefik/
+;     $ chown -R traefik:traefik /etc/traefik/acme
+;
+; Then install this systemd unit:
+;
+;     $ mv traefik.service /etc/systemd/system
+;     $ chown root:root /etc/systemd/system/traefik.service
+;     $ chmod 644 /etc/systemd/system/traefik.service
+;     $ systemctl daemon-reload
+;     $ systemctl start traefik
+;     $ systemctl enable traefik
+
+[Unit]
+Description=traefik
+After=network-online.target
+Wants=network-online.target systemd-networkd-wait-online.service
+
+[Service]
+Restart=on-abnormal
+User=traefik
+Group=traefik
+ExecStart=/usr/local/bin/traefik --configfile=/etc/traefik/traefik.toml
+; Use a minimal /dev (May bring additional security if switched to 'true', but it may not work on Raspberry Pi's or other devices, so it has been disabled.)
+PrivateDevices=false
+; Hide /home, /root, and /run/user.
+ProtectHome=true
+; Make /usr, /boot, /etc and possibly some more folders read-only.
+ProtectSystem=full
+; ...Except /etc/traefik/acme, because we want to store letsencrypt certificates there.
+; This merely retains r/w access rights, it does not add any new. Must still be writable on the host!
+ReadWriteDirectories=/etc/traefik/acme
+; The following additional security directives only work with systemd v229 or later.
+; They further restrict privileges that can be gained by traefik. Uncomment if you like.
+; Note that you may have to add capabilities required by any plugins in use.
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+AmbientCapabilities=CAP_NET_BIND_SERVICE
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target
