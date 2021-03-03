@@ -95,7 +95,7 @@ class Release(UuidTimestampedModel):
         svc += 'Description=Pegasus runtime for app {}\n\n'.format(self.owner.name)
         svc += '[Service]\n'
         svc += 'Type=simple\n'
-        svc += "ExecStart=/bin/bash -c 'echo $$ > /run/pegasus-{}.pid; exec /usr/local/bin/wagi --config {} --listen 0.0.0.0:0\n'".format(self.owner.name, self.wagi_config_path())
+        svc += "ExecStart=/bin/bash -c 'echo $$ > /run/pegasus-{}.pid; exec /usr/local/bin/wagi --config {} --listen 0.0.0.0:0'\n".format(self.owner.name, self.wagi_config_path())
         svc += 'PIDFile=/run/pegasus-{}.pid\n\n'.format(self.owner.name)
         svc += '[Install]\nWantedBy=multi-user.target\n'
         return svc
