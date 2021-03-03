@@ -137,4 +137,5 @@ class Release(UuidTimestampedModel):
                     }
                 }
             })
+        print(traefik_config)
         return traefik_config
