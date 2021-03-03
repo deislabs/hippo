@@ -108,8 +108,8 @@ class Release(UuidTimestampedModel):
             # output will be something like 'MainPID=27197'
             output = subprocess.check_output(['systemctl', 'show', '-p', 'MainPID', 'pegasus-{}'.format(self.owner.name)])
             pid = int(output.split('=')[1])
-        except:
-            # TODO: we should bubble this up to the user somehow
+        except Exception as e:
+            print(e.message)
             return traefik_config
         s = socket.socket(fileno=pid)
         _, port = s.getsockname()
