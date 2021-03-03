@@ -1,5 +1,8 @@
+import pidfile
 import os
+import socket
 import subprocess
+import toml
 
 from django.conf import settings
 from django.db import models
@@ -34,11 +37,19 @@ class Release(UuidTimestampedModel):
             self.version = 1
         super().save(*args, **kwargs)
         with open(self.wagi_config_path(), 'w') as f:
-            f.write(self.wagi_config())
+            toml.dump(self.wagi_config(), f)
         with open(self.systemd_service_path(), 'w') as f:
             f.write(self.systemd_service())
-        subprocess.call(['systemctl', 'start', 'pegasus-{}'.format(self.owner.name)])
-        subprocess.call(['systemctl', 'enable', 'pegasus-{}'.format(self.owner.name)])
+        # if we're the first release to be deployed, start the systemd unit
+        if self.owner.release_set.count() == 1:
+            subprocess.call(['systemctl', 'start', 'pegasus-{}'.format(self.owner.name)])
+            subprocess.call(['systemctl', 'enable', 'pegasus-{}'.format(self.owner.name)])
+        else:
+            # TODO: we need to send SIGHUP to WAGI so it picks up on the new module.
+            pass
+        # we need to wait until the app has started. We need the PID file to determine which port we need to wire up.
+        with open(self.traefik_config_path(), 'w') as f:
+            toml.dump(self.traefik_config(), f)
 
     def delete(self, *args, **kwargs):
         # check if we're the last release to be removed; if so we need to remove the systemd unit
@@ -59,18 +70,20 @@ class Release(UuidTimestampedModel):
 
     def wagi_config(self):
         module_path = self.build.path
-        route = '/'
         envvars = EnvironmentVariable.objects.filter(owner=self.owner)
         domains = Domain.objects.filter(owner=self.owner)
-        wagi_config = ''
+        wagi_config = {
+            'module': [],
+        }
         for domain in domains:
-            wagi_config += '[[module]]\n'
-            wagi_config += 'module = "{}"\n'.format(self.build.path)
-            wagi_config += 'route = "{}"\n'.format(route)
+            module_config = {
+                'module': self.build.path,
+                'route': '/',
+                'host': domain.domain,
+            }
             for envvar in envvars:
-                wagi_config += 'environment.{} = "{}"\n'.format(envvar.key, envvar.value)
-            wagi_config += 'host = "{}"\n'.format(domain.domain)
-            wagi_config += '\n'
+                module_config['environment'][envvar.key] = envvar.value
+            wagi_config['module'] += module_config
         return wagi_config
 
     def systemd_service_path(self):
@@ -82,6 +95,45 @@ class Release(UuidTimestampedModel):
         svc += '[Service]\n'
         svc += 'Type=simple\n'
         svc += 'ExecStart=/usr/local/bin/wagi --config {} --listen 0.0.0.0:0\n'.format(self.wagi_config_path())
-        svc += 'PIDFile={}/{}.pid\n\n'.format(settings.MEDIA_ROOT, self.owner.name)
+        svc += 'PIDFile=/tmp/{}.pid\n\n'.format(self.owner.name)
         svc += '[Install]\nWantedBy=multi-user.target\n'
         return svc
+
+    def traefik_config_path(self):
+        return '/etc/traefik/conf.d/{}'.format(self.owner.name)
+
+    def traefik_config(self):
+        traefik_config = {}
+        pid = 0
+        with open('/tmp/{}.pid'.format(self.owner.name), "r") as pidfile:
+            try:
+                pid = int(pidfile.read())
+            except (OSError, ValueError):
+                # TODO: we should bubble this up to the user somehow
+                return traefik_config
+        s = socket.socket(fileno=pid)
+        _, port = s.getsockname()
+        domains = Domain.objects.filter(owner=self.owner)
+        for domain in domains:
+            traefik_config.update({
+                'http': {
+                    'routers': {
+                        'to-{}'.format(self.owner.name): {
+                            'rule': 'Host(`{}`) && PathPrefix(`/`)'.format(domain.domain),
+                            'service': self.owner.name,
+                        }
+                    },
+                    'services': {
+                        self.owner.name: {
+                            'LoadBalancer': {
+                                'servers': [
+                                    {
+                                        'url': 'http://localhost:{}'.format(port)
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            })
+        return traefik_config

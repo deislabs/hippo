@@ -1,0 +1,9 @@
+[entryPoints]
+  [entryPoints.web]
+    # Listen on port 80 for incoming requests
+    address = "0.0.0.0:80"
+
+[providers]
+  [providers.file]
+    directory = "/etc/traefik/conf.d"
+    watch = true

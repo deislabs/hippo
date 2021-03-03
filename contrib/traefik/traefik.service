@@ -16,10 +16,11 @@
 ;
 ; Place your traefik configuration file ("traefik.toml") in the proper directory and give it appropriate ownership and permissions:
 ;
-;     $ mkdir -p /etc/traefik/acme
-;     $ mv /path/to/traefik.toml /etc/traefik/
+;     $ mkdir /etc/traefik
+;     $ mkdir /etc/traefik/conf.d
+;     $ mkdir /etc/traefik/acme
+;     $ mv traefik.toml /etc/traefik/
 ;     $ chown -R root:root /etc/traefik/
-;     $ chown -R traefik:traefik /etc/traefik/acme
 ;
 ; Then install this systemd unit:
 ;
