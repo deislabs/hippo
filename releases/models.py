@@ -96,7 +96,7 @@ class Release(UuidTimestampedModel):
         svc += '[Service]\n'
         svc += 'Type=simple\n'
         svc += 'ExecStart=/usr/local/bin/wagi --config {} --listen 0.0.0.0:0\n'.format(self.wagi_config_path())
-        svc += "ExecStartPost=/bin/sh -c 'umask 022; pgrep {} > /var/run/{}.pid".format(self.owner.name, self.owner.name)
+        svc += "ExecStartPost=/bin/sh -c 'umask 022; pgrep {} > /var/run/{}.pid'\n".format(self.owner.name, self.owner.name)
         svc += 'PIDFile=/var/run/{}.pid\n\n'.format(self.owner.name)
         svc += '[Install]\nWantedBy=multi-user.target\n'
         return svc
