@@ -29,4 +29,4 @@ class Certificate(UuidTimestampedModel):
     key = models.FileField(validators=[validate_private_key])
 
     def get_absolute_url(self):
-        return reverse('certificates:detail', kwargs={'pk': self.pk})
+        return reverse('apps:detail', kwargs={'pk': self.owner.pk})

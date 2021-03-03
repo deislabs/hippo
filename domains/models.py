@@ -15,4 +15,4 @@ class Domain(UuidTimestampedModel):
         return self.domain
 
     def get_absolute_url(self):
-        return reverse('domains:detail', kwargs={'pk': self.pk})
+        return reverse('apps:detail', kwargs={'pk': self.owner.pk})

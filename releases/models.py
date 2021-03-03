@@ -52,7 +52,7 @@ class Release(UuidTimestampedModel):
         super().delete(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse('releases:detail', kwargs={'pk': self.pk})
+        return reverse('apps:detail', kwargs={'pk': self.owner.pk})
 
     def wagi_config_path(self):
         return os.path.join(settings.MEDIA_ROOT, self.owner.name, 'modules.toml')
