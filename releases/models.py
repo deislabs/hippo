@@ -1,4 +1,5 @@
 import os
+import psutil
 import socket
 import subprocess
 import toml
@@ -111,8 +112,13 @@ class Release(UuidTimestampedModel):
         except Exception as e:
             print(e)
             return traefik_config
-        s = socket.socket(fileno=pid)
-        _, port = s.getsockname()
+        port = 0
+        for connection in psutil.net_connections(kind='tcp'):
+            if connection.pid == pid:
+                port = connection.laddr.port
+        if port == 0:
+            print('could not find port')
+            return traefik_config
         domains = Domain.objects.filter(owner=self.owner)
         for domain in domains:
             traefik_config.update({
