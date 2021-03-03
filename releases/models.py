@@ -107,7 +107,7 @@ class Release(UuidTimestampedModel):
         try:
             # output will be something like 'ExecMainPID=27197'
             output = subprocess.check_output(['systemctl', 'show', '-p', 'ExecMainPID', 'pegasus-{}'.format(self.owner.name)])
-            pid = int(output.split('=')[1])
+            pid = int(output.decode('utf-8').split('=')[1])
         except Exception as e:
             print(e)
             return traefik_config
