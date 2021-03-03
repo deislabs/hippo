@@ -8,7 +8,7 @@ To make your app available at a different domain, you add a custom domain to it.
 
 You can add custom domains to any app.
 
-AS short summary of steps to follow are:
+A short summary of steps to follow are:
 
 1. Confirm you own the domain name. You can buy a custom domain at any domain
    registrar.
