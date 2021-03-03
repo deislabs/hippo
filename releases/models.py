@@ -84,7 +84,6 @@ class Release(UuidTimestampedModel):
             for envvar in envvars:
                 module_config['environment'][envvar.key] = envvar.value
             wagi_config['module'].append(module_config)
-        print(wagi_config)
         return wagi_config
 
     def systemd_service_path(self):
@@ -100,7 +99,7 @@ class Release(UuidTimestampedModel):
         return svc
 
     def traefik_config_path(self):
-        return '/etc/traefik/conf.d/{}'.format(self.owner.name)
+        return '/etc/traefik/conf.d/{}.toml'.format(self.owner.name)
 
     def traefik_config(self):
         traefik_config = {}
@@ -142,5 +141,4 @@ class Release(UuidTimestampedModel):
                     }
                 }
             })
-        print(traefik_config)
         return traefik_config
