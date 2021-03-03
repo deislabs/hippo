@@ -83,7 +83,7 @@ class Release(UuidTimestampedModel):
             }
             for envvar in envvars:
                 module_config['environment'][envvar.key] = envvar.value
-            wagi_config['module'] += module_config
+            wagi_config['module'].append(module_config)
         print(wagi_config)
         return wagi_config
 
