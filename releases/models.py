@@ -8,7 +8,7 @@ from django.conf import settings
 from django.db import models
 from django.urls import reverse
 
-from pegasus.models import UuidTimestampedModel
+from hippo.models import UuidTimestampedModel
 from apps.models import App
 from domains.models import Domain
 from envvars.models import EnvironmentVariable
@@ -42,8 +42,8 @@ class Release(UuidTimestampedModel):
             f.write(self.systemd_service())
         # if we're the first release to be deployed, start the systemd unit
         if self.owner.release_set.count() == 1:
-            subprocess.call(['systemctl', 'start', 'pegasus-{}'.format(self.owner.name)])
-            subprocess.call(['systemctl', 'enable', 'pegasus-{}'.format(self.owner.name)])
+            subprocess.call(['systemctl', 'start', 'hippo-{}'.format(self.owner.name)])
+            subprocess.call(['systemctl', 'enable', 'hippo-{}'.format(self.owner.name)])
         else:
             # TODO: we need to send SIGHUP to WAGI so it picks up on the new module.
             pass
@@ -54,10 +54,10 @@ class Release(UuidTimestampedModel):
     def delete(self, *args, **kwargs):
         # check if we're the last release to be removed; if so we need to remove the systemd unit
         if self.owner.release_set.count() == 1:
-            subprocess.call(['systemctl', 'stop', 'pegasus-{}'.format(self.owner.name)])
-            subprocess.call(['systemctl', 'disable', 'pegasus-{}'.format(self.owner.name)])
+            subprocess.call(['systemctl', 'stop', 'hippo-{}'.format(self.owner.name)])
+            subprocess.call(['systemctl', 'disable', 'hippo-{}'.format(self.owner.name)])
             os.remove(self.systemd_service_path())
-            os.remove('/usr/lib/systemd/system/pegasus-{}.service'.format(self.owner.name))
+            os.remove('/usr/lib/systemd/system/hippo-{}.service'.format(self.owner.name))
             subprocess.call(['systemctl', 'daemon-reload'])
             subprocess.call(['systemctl', 'reset-failed'])
         super().delete(*args, **kwargs)
@@ -87,11 +87,11 @@ class Release(UuidTimestampedModel):
         return wagi_config
 
     def systemd_service_path(self):
-        return '/etc/systemd/system/pegasus-{}.service'.format(self.owner.name)
+        return '/etc/systemd/system/hippo-{}.service'.format(self.owner.name)
 
     def systemd_service(self):
         svc = '[Unit]\n'
-        svc += 'Description=Pegasus runtime for app {}\n\n'.format(self.owner.name)
+        svc += 'Description=Hippo runtime for app {}\n\n'.format(self.owner.name)
         svc += '[Service]\n'
         svc += 'Type=simple\n'
         svc += "ExecStart=/usr/local/bin/wagi --config {} --listen 0.0.0.0:0\n\n".format(self.wagi_config_path())
@@ -106,7 +106,7 @@ class Release(UuidTimestampedModel):
         pid = 0
         try:
             # output will be something like 'ExecMainPID=27197'
-            output = subprocess.check_output(['systemctl', 'show', '-p', 'ExecMainPID', 'pegasus-{}'.format(self.owner.name)])
+            output = subprocess.check_output(['systemctl', 'show', '-p', 'ExecMainPID', 'hippo-{}'.format(self.owner.name)])
             pid = int(output.decode('utf-8').split('=')[1])
         except Exception as e:
             print(e)

@@ -2,7 +2,7 @@ from django.conf import settings
 from django.db import models
 from django.urls import reverse
 
-from pegasus.models import UuidTimestampedModel
+from hippo.models import UuidTimestampedModel
 
 class App(UuidTimestampedModel):
     name = models.CharField(max_length=200, unique=True)

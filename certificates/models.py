@@ -5,7 +5,7 @@ from django.db import models
 from django.urls import reverse
 
 from domains.models import Domain
-from pegasus.models import UuidTimestampedModel
+from hippo.models import UuidTimestampedModel
 
 def validate_certificate(value):
     try:
