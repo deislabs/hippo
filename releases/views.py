@@ -28,7 +28,7 @@ class CreateView(PermissionRequiredMixin, edit.CreateView):
     model = Release
     permission_required = 'releases.add_release'
     permission_object = None
-    fields = ['owner', 'build', 'description']
+    fields = ['owner', 'build']
 
     def get_context_data(self, **kwargs):
         context = super(CreateView, self).get_context_data(**kwargs)
@@ -38,14 +38,8 @@ class CreateView(PermissionRequiredMixin, edit.CreateView):
     def form_valid(self, form):
         resp = super().form_valid(form)
         assign_perm('view_release', self.request.user, self.object)
-        assign_perm('change_release', self.request.user, self.object)
         assign_perm('delete_release', self.request.user, self.object)
         return resp
-
-class UpdateView(PermissionRequiredMixin, edit.UpdateView):
-    permission_required = 'change_release'
-    model = Release
-    fields = ['description']
 
 class DeleteView(PermissionRequiredMixin, edit.DeleteView):
     permission_required = 'delete_release'

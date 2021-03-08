@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 SECRET_KEY = os.environ.get('PEGASUS_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 # SECURITY: change this to allowed fqdn's to prevent host poisioning attacks
 # https://docs.djangoproject.com/en/3.1/ref/settings/#allowed-hosts
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'guardian',
     'accounts',
     'apps',
+    'builds',
     'certificates',
     'domains',
     'envvars',

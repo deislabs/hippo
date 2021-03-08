@@ -10,6 +10,7 @@ from django.urls import reverse
 
 from hippo.models import UuidTimestampedModel
 from apps.models import App
+from builds.models import Build
 from domains.models import Domain
 from envvars.models import EnvironmentVariable
 
@@ -26,8 +27,7 @@ def upload_path(instance, filename):
 
 class Release(UuidTimestampedModel):
     owner = models.ForeignKey(App, on_delete=models.CASCADE)
-    build = models.FileField(upload_to=upload_path)
-    description = models.TextField(blank=True)
+    build = models.ForeignKey(Build, on_delete=models.CASCADE)
     version = models.PositiveIntegerField()
 
     def save(self, *args, **kwargs):
@@ -69,7 +69,7 @@ class Release(UuidTimestampedModel):
         return os.path.join(settings.MEDIA_ROOT, self.owner.name, 'modules.toml')
 
     def wagi_config(self):
-        module_path = self.build.path
+        module_path = self.build.artifact.path
         envvars = EnvironmentVariable.objects.filter(owner=self.owner)
         domains = Domain.objects.filter(owner=self.owner)
         wagi_config = {
@@ -77,7 +77,7 @@ class Release(UuidTimestampedModel):
         }
         for domain in domains:
             module_config = {
-                'module': self.build.path,
+                'module': self.build.artifact.path,
                 'route': '/',
                 'host': domain.domain,
             }

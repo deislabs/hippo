@@ -1,0 +1,11 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    <h3>Description:</h3>
+    <p>{{ build.domain }}</p>
+
+    <p>Owner: {{ build.owner.name }}</p>
+    <a href="{% url 'builds:update' build.pk %}">(edit)</a>
+
+    <a href="{% url 'builds:new' %}"><input type="submit" value="Add a Build"></a>
+{% endblock %}

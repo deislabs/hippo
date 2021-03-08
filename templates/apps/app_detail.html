@@ -4,6 +4,14 @@
     <h2>{{ app.name }}</h2>
     <a href="{% url 'apps:update' app.pk %}">(rename)</a>
 
+    <h3>Builds</h3>
+    <ul>
+    {% for b in app.build_set.all %}
+        <li>{{ b.pk }} <a href="{% url 'builds:update' b.pk %}">(edit)</a></li>
+    {% endfor %}
+    </ul>
+    <a href="{% url 'builds:new' %}"><input type="submit" value="Add a Build"></a>
+
     <h3>Environment Variables</h3>
     <ul>
     {% for e in app.environmentvariable_set.all %}
@@ -23,7 +31,7 @@
     <h3>Releases</h3>
     <ul>
     {% for r in app.release_set.all %}
-        <li><a href="{% url 'releases:detail' r.pk %}">{{ r.version }}</a> <a href="{% url 'releases:update' r.pk %}">(update description)</a></li>
+        <li><a href="{% url 'releases:detail' r.pk %}">{{ r.version }}</a>
     {% endfor %}
     </ul>
     <a href="{% url 'releases:new' %}"><input type="submit" value="Create a Release"></a>
