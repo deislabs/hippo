@@ -10,19 +10,15 @@ its developers, nor is it "supported" software.
 > [Krustlet](https://github.com/deislabs/krustlet)) designed to test the limits
 > of WebAssembly as a cloud-based runtime.
 
-Hippo deploys and serves applications compiled to WASI. Developers write an
-application and compile it to WASI. Applications are uploaded via Hippo's
-management portal. In seconds, applications are served on the web.
-
 Hippo provides an easy-to-use management portal for your application, allowing
 users to deploy and roll back their application releases, edit configuration,
 manage domain routing and TLS certificates, and view agrregated logs. Hippo
 provides a simple permissions model to manage your users and groups.
 
-Hippo provides a seamless edge routing model so you and your developers can
-spend more time writing your application, and less time editing load balancer
-configuration. Just add a domain to an application, attach a certificate, and
-let Hippo do the work.
+Hippo comes integrated with a powerful Layer 7 Load Balancer so you and your
+developers can spend more time writing applications, and less time managing your
+load balancer. After initial setup, create an application, attach a domain and a
+TLS certificate, and let Hippo handle the backend routing.
 
 All of Hippo's functionality is exposed through a web application and (coming
 soon) a command line interface.
