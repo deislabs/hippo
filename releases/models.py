@@ -34,8 +34,8 @@ class Release(UuidTimestampedModel):
             subprocess.call(['systemctl', 'start', 'hippo-{}'.format(self.owner.name)])
             subprocess.call(['systemctl', 'enable', 'hippo-{}'.format(self.owner.name)])
         else:
-            # TODO: we need to send SIGHUP to WAGI so it picks up on the new module.
-            pass
+            subprocess.call(['systemctl', 'daemon-reload'])
+            subprocess.call(['systemctl', 'reload', 'hippo-{}'.format(self.owner.name)])
         # we need to wait until the app has started. We need the PID file to determine which port we need to wire up.
         with open(self.traefik_config_path(), 'w') as f:
             toml.dump(self.traefik_config(), f)
