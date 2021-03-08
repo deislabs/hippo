@@ -23,6 +23,7 @@ class RegistrationView(edit.CreateView):
             self.object.is_superuser = self.object.is_staff = True
         self.object.save()
         assign_perm('apps.add_app', self.object)
+        assign_perm('builds.add_build', self.object)
         assign_perm('certificates.add_certificate', self.object)
         assign_perm('domains.add_domain', self.object)
         assign_perm('envvars.add_environmentvariable', self.object)
