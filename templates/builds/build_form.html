@@ -1,7 +1,7 @@
 {% extends 'base_generic.html' %}
 
 {% block content %}
-<form method="post">
+<form enctype="multipart/form-data" method="post">
     {% csrf_token %}
     {{form}}
     <input type="submit" value="Submit">
