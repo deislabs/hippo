@@ -14,17 +14,6 @@ from builds.models import Build
 from domains.models import Domain
 from envvars.models import EnvironmentVariable
 
-def urljoin(*args):
-    """
-    Joins given arguments into an url. Trailing but not leading slashes are
-    stripped for each argument.
-    """
-    return "/".join(map(lambda x: str(x).rstrip('/'), args))
-
-
-def upload_path(instance, filename):
-    return urljoin(instance.owner.name, instance.version, 'app.wasm')
-
 class Release(UuidTimestampedModel):
     owner = models.ForeignKey(App, on_delete=models.CASCADE)
     build = models.ForeignKey(Build, on_delete=models.CASCADE)

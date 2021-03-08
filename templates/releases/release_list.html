@@ -4,8 +4,7 @@
     <h2>Your releases</h2>
     <ul>
     {% for release in releases %}
-        <li><a href="{% url 'releases:detail' release.uuid %}">{{ release.name }}</a></li>
+        <li><a href="{% url 'releases:detail' release.uuid %}">{{ release.name }}</a></li> <a href="{% url 'releases:update' release.pk %}">(update description)</a>
     {% endfor %}
     </ul>
-    <a href="{% url 'releases:new' %}"><input type="submit" value="Create a new release"></a>
 {% endblock %}
