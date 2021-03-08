@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'certificates',
     'domains',
     'envvars',
-    'functions',
     'hippo',
     'releases',
 ]

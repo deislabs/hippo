@@ -26,6 +26,5 @@ class RegistrationView(edit.CreateView):
         assign_perm('certificates.add_certificate', self.object)
         assign_perm('domains.add_domain', self.object)
         assign_perm('envvars.add_environmentvariable', self.object)
-        assign_perm('functions.add_function', self.object)
         assign_perm('releases.add_release', self.object)
         return resp

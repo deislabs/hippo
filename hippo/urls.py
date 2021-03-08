@@ -23,6 +23,5 @@ urlpatterns = [
     path('certificates/', include('certificates.urls')),
     path('domains/', include('domains.urls')),
     path('envvars/', include('envvars.urls')),
-    path('functions/', include('functions.urls')),
     path('releases/', include('releases.urls')),
 ]

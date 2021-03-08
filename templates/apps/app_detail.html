@@ -12,14 +12,6 @@
     </ul>
     <a href="{% url 'envvars:new' %}"><input type="submit" value="Add an Environment Variable"></a>
 
-    <h3>Functions</h3>
-    <ul>
-    {% for f in app.function_set.all %}
-        <li>{{ f.name }}: {{ f.args }} <a href="{% url 'functions:update' f.pk %}">(edit)</a></li>
-    {% endfor %}
-    </ul>
-    <a href="{% url 'functions:new' %}"><input type="submit" value="Add a Function"></a>
-
     <h3>Domains</h3>
     <ul>
     {% for d in app.domain_set.all %}
