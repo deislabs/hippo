@@ -19,3 +19,6 @@ class Build(UuidTimestampedModel):
     owner = models.ForeignKey(App, on_delete=models.CASCADE)
     artifact = models.FileField(upload_to=upload_path)
     description = models.TextField(blank=True)
+
+    def get_absolute_url(self):
+        return reverse('apps:detail', kwargs={'pk': self.owner.pk})
