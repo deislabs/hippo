@@ -1,7 +1,8 @@
 from django.db import models
-from hippo.models import UuidTimestampedModel
+from django.urls import reverse
 
 from apps.models import App
+from hippo.models import UuidTimestampedModel
 
 def urljoin(*args):
     """
