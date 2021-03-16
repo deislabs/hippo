@@ -3,7 +3,6 @@ from django.urls import reverse
 
 from hippo.models import UuidTimestampedModel
 from apps.models import App
-from releases.models import Release
 
 class EnvironmentVariable(UuidTimestampedModel):
     owner = models.ForeignKey(App, on_delete=models.CASCADE)
@@ -20,24 +19,3 @@ class EnvironmentVariable(UuidTimestampedModel):
 
     def get_absolute_url(self):
         return "{}?app={}".format(reverse('envvars:list'), self.owner.pk)
-
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        if self.owner.build_set.count() != 0:
-            Release.objects.create(
-                owner=self.owner,
-                # since there's at least one build, we can assume here that
-                # there has also been a release. it is important that we use the
-                # latest release to find the correct build; it is possible that
-                # the latest build is not currently in use (e.g. a rollback)
-                build=self.owner.release_set.latest('created').build
-            )
-
-    def delete(self, *args, **kwargs):
-        super().delete(*args, **kwargs)
-        if self.owner.build_set.count() != 0:
-            Release.objects.create(
-                owner=self.owner,
-                # since there's at least one build, we can assume here that there has also been a release.
-                build=self.owner.release_set.latest('created').build
-            )

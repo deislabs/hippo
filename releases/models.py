@@ -6,6 +6,8 @@ import toml
 
 from django.conf import settings
 from django.db import models
+from django.db.models.signals import post_save, post_delete
+from django.dispatch import receiver
 from django.urls import reverse
 
 from hippo.models import UuidTimestampedModel
@@ -131,3 +133,28 @@ class Release(UuidTimestampedModel):
                 }
             })
         return traefik_config
+
+@receiver(post_save, sender=Build)
+def create_release_on_build_save(sender,**kwargs):
+    Release.objects.create(owner=sender.owner, build=sender)
+
+@receiver(post_save, sender=EnvironmentVariable)
+def create_release_on_envvar_save(sender,**kwargs):
+    if sender.owner.build_set.count() != 0:
+        Release.objects.create(
+            owner=sender.owner,
+            # since there's at least one build, we can assume here that
+            # there has also been a release. it is important that we use the
+            # latest release to find the correct build; it is possible that
+            # the latest build is not currently in use (e.g. a rollback)
+            build=sender.owner.release_set.latest('created').build
+        )
+
+@receiver(post_delete, sender=EnvironmentVariable)
+def create_release_on_envvar_delete(sender,**kwargs):
+    if sender.owner.build_set.count() != 0:
+        Release.objects.create(
+            owner=sender.owner,
+            # since there's at least one build, we can assume here that there has also been a release.
+            build=sender.owner.release_set.latest('created').build
+        )
