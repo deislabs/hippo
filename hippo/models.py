@@ -22,5 +22,4 @@ class UuidTimestampedModel(TimestampedModel):
                             unique=True)
 
     class Meta:
-        """Mark :class:`UuidTimestampedModel` as abstract."""
         abstract = True

@@ -12,7 +12,7 @@ def urljoin(*args):
 
 
 def upload_path(instance, filename):
-    return urljoin('builds', instance.pk, 'app.wasm')
+    return urljoin('builds', str(instance.pk), 'app.wasm')
 
 
 class Build(UuidTimestampedModel):

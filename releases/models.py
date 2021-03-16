@@ -57,7 +57,7 @@ class Release(UuidTimestampedModel):
         return reverse('apps:detail', kwargs={'pk': self.owner.pk})
 
     def wagi_config_path(self):
-        return os.path.join(settings.MEDIA_ROOT, 'builds', self.build.pk, 'modules.toml')
+        return os.path.join(settings.MEDIA_ROOT, 'builds', str(self.build.pk), 'modules.toml')
 
     def wagi_config(self):
         module_path = self.build.artifact.path
