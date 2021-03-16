@@ -136,25 +136,25 @@ class Release(UuidTimestampedModel):
 
 @receiver(post_save, sender=Build)
 def create_release_on_build_save(sender,**kwargs):
-    Release.objects.create(owner=sender.owner, build=sender)
+    Release.objects.create(owner=kwargs['instance'].owner, build=kwargs['instance'])
 
 @receiver(post_save, sender=EnvironmentVariable)
 def create_release_on_envvar_save(sender,**kwargs):
-    if sender.owner.build_set.count() != 0:
+    if kwargs['instance'].owner.build_set.count() != 0:
         Release.objects.create(
-            owner=sender.owner,
+            owner=kwargs['instance'].owner,
             # since there's at least one build, we can assume here that
             # there has also been a release. it is important that we use the
             # latest release to find the correct build; it is possible that
             # the latest build is not currently in use (e.g. a rollback)
-            build=sender.owner.release_set.latest('created').build
+            build=kwargs['instance'].owner.release_set.latest('created').build
         )
 
 @receiver(post_delete, sender=EnvironmentVariable)
 def create_release_on_envvar_delete(sender,**kwargs):
-    if sender.owner.build_set.count() != 0:
+    if kwargs['instance'].owner.build_set.count() != 0:
         Release.objects.create(
-            owner=sender.owner,
+            owner=kwargs['instance'].owner,
             # since there's at least one build, we can assume here that there has also been a release.
-            build=sender.owner.release_set.latest('created').build
+            build=kwargs['instance'].owner.release_set.latest('created').build
         )
