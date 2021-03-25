@@ -18,7 +18,7 @@ from django.urls import reverse_lazy
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # security keys and auth tokens
-SECRET_KEY = os.environ.get('PEGASUS_SECRET_KEY')
+SECRET_KEY = os.environ.get('HIPPO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -26,7 +26,7 @@ DEBUG = True
 # SECURITY: change this to allowed fqdn's to prevent host poisioning attacks
 # https://docs.djangoproject.com/en/3.1/ref/settings/#allowed-hosts
 
-ALLOWED_HOSTS = os.environ.get('PEGASUS_ALLOWED_HOSTS', '.testhost,127.0.0.1,[::1]').split(',')
+ALLOWED_HOSTS = os.environ.get('HIPPO_ALLOWED_HOSTS', '.testhost,127.0.0.1,[::1]').split(',')
 
 # Application definition
 INSTALLED_APPS = [
@@ -89,11 +89,11 @@ WSGI_APPLICATION = 'hippo.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('PEGASUS_DATABASE_NAME', 'hippo'),
-        'USER': os.environ.get('PEGASUS_DATABASE_USER', 'postgres'),
-        'PASSWORD': os.environ.get('PEGASUS_DATABASE_PASSWORD', ''),
-        'HOST': os.environ.get('PEGASUS_DATABASE_SERVICE_HOST', ''),
-        'PORT': os.environ.get('PEGASUS_DATABASE_SERVICE_PORT', 5432),
+        'NAME': os.environ.get('HIPPO_DATABASE_NAME', 'hippo'),
+        'USER': os.environ.get('HIPPO_DATABASE_USER', 'postgres'),
+        'PASSWORD': os.environ.get('HIPPO_DATABASE_PASSWORD', ''),
+        'HOST': os.environ.get('HIPPO_DATABASE_SERVICE_HOST', ''),
+        'PORT': os.environ.get('HIPPO_DATABASE_SERVICE_PORT', 5432),
     }
 }
 
@@ -137,9 +137,9 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-REGISTRATION_MODE = os.environ.get('PEGASUS_REGISTRATION_MODE', 'enabled')
+REGISTRATION_MODE = os.environ.get('HIPPO_REGISTRATION_MODE', 'enabled')
 
-DEFAULT_DOMAIN = os.environ.get('PEGASUS_DEFAULT_DOMAIN', 'hippo.test')
+DEFAULT_DOMAIN = os.environ.get('HIPPO_DEFAULT_DOMAIN', 'hippo.test')
 
 LOGIN_REDIRECT_URL = reverse_lazy('apps:list')
 
