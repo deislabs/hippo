@@ -1,0 +1,35 @@
+﻿@model hippo.ViewModels.LoginForm
+
+@{
+    ViewData["Title"] = "Log In";
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Login">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Username" class="control-label"></label>
+                <input asp-for="Username" class="form-control" />
+                <span asp-validation-for="Username" class="text-warning"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" type="password" class="form-control" />
+                <span asp-validation-for="Password" class="text-warning"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="RememberMe" class="control-label">Remember me?</label>
+                <input asp-for="RememberMe" type="checkbox" class="checkbox-inline" />
+                <span asp-validation-for="RememberMe" class="text-warning"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

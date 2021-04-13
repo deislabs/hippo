@@ -1,0 +1,50 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Hippo : @ViewBag.Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="The Hippo Platform.">
+    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/lib/fontawesome/css/all.css" rel="stylesheet" />
+    <link href="~/css/site.css" rel="stylesheet" />
+</head>
+<body>
+    <div class="navbar navbar-inverse">
+        <header class="container">
+            <div class="navbar-header">
+                <div class="navbar-brand"><i class="fa fa-hippo"></i>Hippo</div>
+                @* Let us add a little menu button using the following special chars *@
+                <button class="navbar-toggler" data-toggle="collapse" data-target="#menu">&#9776;</button>
+            </div>
+            @* hide menu on small screens until the toggle button can actually show it *@
+            <div id="menu" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a asp-controller="Apps" asp-action="Index">Home</a></li>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li><a asp-controller="Accounts" asp-action="Logout">Logout</a></li>
+                    }
+                    else
+                    {
+                        <li><a asp-controller="Accounts" asp-action="Login">Login</a></li>
+                    }
+                </ul>
+            </div>
+        </header>
+    </div>
+    <section class="container">
+        <h2 class="text-center">@ViewBag.Title</h2>
+        @RenderBody()
+    </section>
+    <footer class="container">
+        <div class="text-center">Copyright 2021 Microsoft. All Rights Reserved.</div>
+    </footer>
+    <script src="~/lib/fontawesome/js/all.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+    @* If one of the pages creates a section called scripts, load it here
+    *@
+    @RenderSection("scripts", false)
+</body>
+</html>

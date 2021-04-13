@@ -1,9 +1,0 @@
-{% extends 'base_generic.html' %}
-
-{% block content %}
-<form method="post">
-    {% csrf_token %}
-    <p>Are you sure you want to delete this release?</p>
-    <input type="submit" value="Submit">
-</form>
-{% endblock %}
