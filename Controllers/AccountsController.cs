@@ -14,13 +14,11 @@ namespace Hippo.Controllers
     {
         private readonly SignInManager<Account> signInManager;
         private readonly UserManager<Account> userManager;
-        private readonly IConfiguration config;
 
         public AccountsController(SignInManager<Account> signInManager, UserManager<Account> userManager, IConfiguration config)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
-            this.config = config;
         }
 
         public IActionResult Register()
