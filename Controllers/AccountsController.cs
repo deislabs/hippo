@@ -50,7 +50,6 @@ namespace Hippo.Controllers
                 var result = await signInManager.UserManager.CreateAsync(account, form.Password);
                 if (result.Succeeded)
                 {
-                    // TODO: make the first user a superuser account
                     return RedirectToAction("Login", "Accounts");
                 }
                 else
