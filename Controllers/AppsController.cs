@@ -12,9 +12,9 @@ namespace Hippo.Controllers
 {
     public class AppsController : Controller
     {
-        private readonly IDataRepository repository;
+        private readonly IAppRepository repository;
 
-        public AppsController(IDataRepository repository)
+        public AppsController(IAppRepository repository)
         {
             this.repository = repository;
         }
@@ -22,13 +22,13 @@ namespace Hippo.Controllers
         // GET: apps
         public IActionResult Index()
         {
-            return View(repository.GetAllApps());
+            return View(repository.SelectAll());
         }
 
         // GET: apps/details/2562dbe3-0317-4895-9536-c0fad46de437
         public IActionResult Details(Guid id)
         {
-            var application = repository.GetAppById(id);
+            var application = repository.SelectById(id);
             if (application == null)
             {
                 return NotFound();
@@ -52,8 +52,8 @@ namespace Hippo.Controllers
         {
             if (ModelState.IsValid)
             {
-                repository.AddApp(application.Name);
-                repository.SaveAll();
+                repository.Insert(application.Name);
+                repository.Save();
                 return RedirectToAction(nameof(Index));
             }
             return View(application);
@@ -62,7 +62,7 @@ namespace Hippo.Controllers
         // GET: apps/edit/2562dbe3-0317-4895-9536-c0fad46de437
         public IActionResult Edit(Guid id)
         {
-            var application = repository.GetAppById(id);
+            var application = repository.SelectById(id);
             if (application == null)
             {
                 return NotFound();
@@ -92,10 +92,10 @@ namespace Hippo.Controllers
             {
                 try
                 {
-                    var application = repository.GetAppById(id);
+                    var application = repository.SelectById(id);
                     application.Name = form.Name;
                     repository.Update(application);
-                    repository.SaveAll();
+                    repository.Save();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -116,7 +116,7 @@ namespace Hippo.Controllers
         // GET: apps/delete/2562dbe3-0317-4895-9536-c0fad46de437
         public IActionResult Delete(Guid id)
         {
-            return View(repository.GetAppById(id));
+            return View(repository.SelectById(id));
         }
 
         // POST: apps/delete/2562dbe3-0317-4895-9536-c0fad46de437
@@ -124,14 +124,14 @@ namespace Hippo.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(Guid id)
         {
-            repository.RemoveAppById(id);
-            repository.SaveAll();
+            repository.Delete(id);
+            repository.Save();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ApplicationExists(Guid id)
         {
-            return repository.GetAppById(id) != null;
+            return repository.SelectById(id) != null;
         }
     }
 }

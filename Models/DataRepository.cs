@@ -5,27 +5,27 @@ using System.Threading.Tasks;
 
 namespace Hippo.Models
 {
-    public interface IDataRepository
+    public interface IAppRepository
     {
-        IEnumerable<App> GetAllApps();
-        App GetAppById(Guid id);
-        IEnumerable<App> GetAppsByUser(string username);
-        void AddApp(string name);
-        App RemoveAppById(Guid id);
-        void Update<TEntity>(TEntity a);
-        bool SaveAll();
+        IEnumerable<App> SelectAll();
+        App SelectById(Guid id);
+        IEnumerable<App> SelectByOwner(string username);
+        void Insert(string name);
+        void Update(App a);
+        App Delete(Guid id);
+        void Save();
     }
 
-    public class DataRepository : IDataRepository
+    public class AppRepository : IAppRepository
     {
         private readonly DataContext context;
 
-        public DataRepository(DataContext context)
+        public AppRepository(DataContext context)
         {
             this.context = context;
         }
 
-        public void AddApp(string name)
+        public void Insert(string name)
         {
             var app = new App
             {
@@ -34,7 +34,7 @@ namespace Hippo.Models
             context.Add(app);
         }
 
-        public IEnumerable<App> GetAllApps()
+        public IEnumerable<App> SelectAll()
         {
             var query = from a in context.Applications
                         orderby a.Name
@@ -42,7 +42,7 @@ namespace Hippo.Models
             return query.ToList();
         }
 
-        public App GetAppById(Guid id)
+        public App SelectById(Guid id)
         {
             var query = from a in context.Applications
                         where a.Id == id
@@ -50,7 +50,7 @@ namespace Hippo.Models
             return query.Single();
         }
 
-        public IEnumerable<App> GetAppsByUser(string username)
+        public IEnumerable<App> SelectByOwner(string username)
         {
             var query = from a in context.Applications
                         where a.Owner.UserName == username
@@ -59,19 +59,19 @@ namespace Hippo.Models
             return query.ToList();
         }
 
-        public App RemoveAppById(Guid id)
+        public App Delete(Guid id)
         {
-            var app = GetAppById(id);
+            var app = SelectById(id);
             context.Remove(app);
             return app;
         }
 
-        public bool SaveAll()
+        public void Save()
         {
-            return context.SaveChanges() > 0;
+            context.SaveChanges();
         }
 
-        public void Update<TEntity>(TEntity a)
+        public void Update(App a)
         {
             context.Update(a);
         }
