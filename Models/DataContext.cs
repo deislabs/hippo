@@ -13,6 +13,7 @@ namespace Hippo.Models
         {
         }
 
+        public DbSet<Account> Accounts { get; set; }
         public DbSet<App> Applications { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

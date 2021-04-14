@@ -25,7 +25,7 @@ namespace Hippo.Controllers
             return View(await _context.Applications.ToListAsync());
         }
 
-        // GET: apps/details/5
+        // GET: apps/details/2562dbe3-0317-4895-9536-c0fad46de437
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -48,7 +48,7 @@ namespace Hippo.Controllers
             return View();
         }
 
-        // POST: Applications/New
+        // POST: apps/New
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -64,7 +64,7 @@ namespace Hippo.Controllers
             return View(application);
         }
 
-        // GET: apps/edit/aaaa-bbbb-cccc-dddd
+        // GET: apps/edit/2562dbe3-0317-4895-9536-c0fad46de437
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -84,7 +84,7 @@ namespace Hippo.Controllers
             return View(vm);
         }
 
-        // POST: applications/edit/aaaa-bbbb-cccc-dddd
+        // POST: applications/edit/2562dbe3-0317-4895-9536-c0fad46de437
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -121,7 +121,7 @@ namespace Hippo.Controllers
             return View(form);
         }
 
-        // GET: apps/delete/aaaa-bbbb-cccc-dddd
+        // GET: apps/delete/2562dbe3-0317-4895-9536-c0fad46de437
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -139,7 +139,7 @@ namespace Hippo.Controllers
             return View(application);
         }
 
-        // POST: apps/delete/aaaa-bbbb-cccc-dddd
+        // POST: apps/delete/2562dbe3-0317-4895-9536-c0fad46de437
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)

@@ -14,11 +14,13 @@ namespace Hippo.Controllers
     {
         private readonly SignInManager<Account> signInManager;
         private readonly UserManager<Account> userManager;
+        private readonly DataContext context;
 
-        public AccountsController(SignInManager<Account> signInManager, UserManager<Account> userManager, IConfiguration config)
+        public AccountsController(SignInManager<Account> signInManager, UserManager<Account> userManager, DataContext context)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
+            this.context = context;
         }
 
         public IActionResult Register()
@@ -35,7 +37,17 @@ namespace Hippo.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await signInManager.UserManager.CreateAsync(new Account(form.Username, form.Email), form.Password);
+                var account = new Account
+                {
+                    UserName = form.UserName,
+                    Email = form.Email,
+                };
+                if (context.Accounts.Count() == 0) {
+                    // first account is a super user
+                    account.IsSuperUser = true;
+                }
+
+                var result = await signInManager.UserManager.CreateAsync(account, form.Password);
                 if (result.Succeeded)
                 {
                     // TODO: make the first user a superuser account

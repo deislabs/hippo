@@ -15,17 +15,6 @@ namespace Hippo.Models
     /// </summary>
     public class Account: IdentityUser
     {
-        public Account(string username, string email)
-        {
-            Username = username;
-            Email = email;
-        }
-        /// <summary>
-        /// The user's display name.
-        /// </summary>
-        [Required]
-        public string Username { get; set; }
-
         /// <summary>
         /// Determines whether the user has administrative privileges.
         /// Used to determine whether the user can access protected

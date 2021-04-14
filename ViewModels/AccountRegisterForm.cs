@@ -10,7 +10,8 @@ namespace Hippo.ViewModels
     public class AccountRegisterForm
     {
         [Required]
-        public string Username { get; set; }
+        [Display(Name = "Username")]
+        public string UserName { get; set; }
 
         [DataType(DataType.EmailAddress)]
         [Display(Name = "Email address")]
