@@ -19,13 +19,13 @@ namespace hippo.Controllers
             _context = context;
         }
 
-        // GET: Applications
+        // GET: apps
         public async Task<IActionResult> Index()
         {
             return View(await _context.Applications.ToListAsync());
         }
 
-        // GET: Applications/Details/5
+        // GET: apps/details/5
         public async Task<IActionResult> Details(Guid? id)
         {
             if (id == null)
@@ -43,7 +43,7 @@ namespace hippo.Controllers
             return View(application);
         }
 
-        // GET: Applications/New
+        // GET: apps/new
         public IActionResult New()
         {
             return View();
@@ -65,7 +65,7 @@ namespace hippo.Controllers
             return View(application);
         }
 
-        // GET: Applications/Edit/5
+        // GET: apps/edit/aaaa-bbbb-cccc-dddd
         public async Task<IActionResult> Edit(Guid? id)
         {
             if (id == null)
@@ -85,7 +85,7 @@ namespace hippo.Controllers
             return View(vm);
         }
 
-        // POST: Applications/Edit/5
+        // POST: applications/edit/aaaa-bbbb-cccc-dddd
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
@@ -122,7 +122,7 @@ namespace hippo.Controllers
             return View(form);
         }
 
-        // GET: Applications/Delete/5
+        // GET: apps/delete/aaaa-bbbb-cccc-dddd
         public async Task<IActionResult> Delete(Guid? id)
         {
             if (id == null)
@@ -140,7 +140,7 @@ namespace hippo.Controllers
             return View(application);
         }
 
-        // POST: Applications/Delete/5
+        // POST: apps/delete/aaaa-bbbb-cccc-dddd
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)

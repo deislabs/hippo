@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Identity;
 
 namespace hippo.Models
 {
-    /// <summary> 
-    /// The generic IdentityUser has a lot of built in properties 
-    /// that can be used for identities. 
+    /// <summary>
+    /// The generic IdentityUser has a lot of built in properties
+    /// that can be used for identities.
     /// By using IdentityUser to inherit we are saying that we want to add on to it.
     /// </summary>
     public class Account: IdentityUser

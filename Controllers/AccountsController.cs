@@ -73,7 +73,6 @@ namespace hippo.Controllers
         {
             if (ModelState.IsValid)
             {
-                // do stuff
                 var result = await signInManager.PasswordSignInAsync(form.Username, form.Password, form.RememberMe, false);
                 if (result.Succeeded)
                 {
