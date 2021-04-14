@@ -33,8 +33,7 @@ namespace hippo.Controllers
                 return NotFound();
             }
 
-            var application = await _context.Applications
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var application = await _context.Applications.FindAsync(id);
             if (application == null)
             {
                 return NotFound();
