@@ -40,7 +40,7 @@ namespace hippo
             // cookie auth for web forms, and token auth for the API.
             services.AddAuthentication().AddCookie().AddJwtBearer(
               cfg =>
-              cfg.TokenValidationParameters = new TokenValidationParameters()
+              cfg.TokenValidationParameters = new TokenValidationParameters
               {
                   ValidateIssuer = true,
                   ValidateAudience = true,
