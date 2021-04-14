@@ -12,28 +12,23 @@ namespace Hippo.Controllers
 {
     public class AppsController : Controller
     {
-        private readonly DataContext _context;
+        private readonly IDataRepository repository;
 
-        public AppsController(DataContext context)
+        public AppsController(IDataRepository repository)
         {
-            _context = context;
+            this.repository = repository;
         }
 
         // GET: apps
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Applications.ToListAsync());
+            return View(repository.GetAllApps());
         }
 
         // GET: apps/details/2562dbe3-0317-4895-9536-c0fad46de437
-        public async Task<IActionResult> Details(Guid? id)
+        public IActionResult Details(Guid id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var application = await _context.Applications.FindAsync(id);
+            var application = repository.GetAppById(id);
             if (application == null)
             {
                 return NotFound();
@@ -53,34 +48,31 @@ namespace Hippo.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> New([Bind("Id,Name")] App application)
+        public IActionResult New([Bind("Id,Name")] App application)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(application);
-                await _context.SaveChangesAsync();
+                repository.AddApp(application.Name);
+                repository.SaveAll();
                 return RedirectToAction(nameof(Index));
             }
             return View(application);
         }
 
         // GET: apps/edit/2562dbe3-0317-4895-9536-c0fad46de437
-        public async Task<IActionResult> Edit(Guid? id)
+        public IActionResult Edit(Guid id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var application = await _context.Applications.FindAsync(id);
+            var application = repository.GetAppById(id);
             if (application == null)
             {
                 return NotFound();
             }
 
-            AppEditForm vm = new AppEditForm();
-            vm.Id = application.Id;
-            vm.Name = application.Name;
+            AppEditForm vm = new AppEditForm
+            {
+                Id = application.Id,
+                Name = application.Name,
+            };
             return View(vm);
         }
 
@@ -89,7 +81,7 @@ namespace Hippo.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name")] AppEditForm form)
+        public IActionResult Edit(Guid id, [Bind("Id,Name")] AppEditForm form)
         {
             if (id != form.Id)
             {
@@ -100,10 +92,10 @@ namespace Hippo.Controllers
             {
                 try
                 {
-                    var application = await _context.Applications.FindAsync(id);
+                    var application = repository.GetAppById(id);
                     application.Name = form.Name;
-                    _context.Update(application);
-                    await _context.SaveChangesAsync();
+                    repository.Update(application);
+                    repository.SaveAll();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -122,37 +114,24 @@ namespace Hippo.Controllers
         }
 
         // GET: apps/delete/2562dbe3-0317-4895-9536-c0fad46de437
-        public async Task<IActionResult> Delete(Guid? id)
+        public IActionResult Delete(Guid id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var application = await _context.Applications
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (application == null)
-            {
-                return NotFound();
-            }
-
-            return View(application);
+            return View(repository.GetAppById(id));
         }
 
         // POST: apps/delete/2562dbe3-0317-4895-9536-c0fad46de437
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(Guid id)
+        public IActionResult DeleteConfirmed(Guid id)
         {
-            var application = await _context.Applications.FindAsync(id);
-            _context.Applications.Remove(application);
-            await _context.SaveChangesAsync();
+            repository.RemoveAppById(id);
+            repository.SaveAll();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ApplicationExists(Guid id)
         {
-            return _context.Applications.Any(e => e.Id == id);
+            return repository.GetAppById(id) != null;
         }
     }
 }

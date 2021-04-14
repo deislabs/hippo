@@ -20,9 +20,10 @@
             @* hide menu on small screens until the toggle button can actually show it *@
             <div id="menu" class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a asp-controller="Apps" asp-action="Index">Home</a></li>
+                    <li><a asp-controller="Home" asp-action="Index">Home</a></li>
                     @if (User.Identity.IsAuthenticated)
                     {
+                        <li><a asp-controller="Apps" asp-action="Index">My Apps</a></li>
                         <li><a asp-controller="Accounts" asp-action="Logout">Logout</a></li>
                     }
                     else
