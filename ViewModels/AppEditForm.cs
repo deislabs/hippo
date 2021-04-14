@@ -6,15 +6,12 @@ using System.Threading.Tasks;
 
 namespace hippo.ViewModels
 {
-    public class LoginForm
+    public class AppEditForm
     {
         [Required]
-        public string Username { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
-        [DataType(DataType.Password)]
-        public string Password { get; set; }
-
-        public bool RememberMe { get; set; }
+        public string Name { get; set; }
     }
 }

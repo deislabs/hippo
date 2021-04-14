@@ -23,7 +23,9 @@ namespace hippo.Models
         /// <summary>
         /// The user's display name.
         /// </summary>
+        [Required]
         public string Username { get; set; }
+
         /// <summary>
         /// Determines whether the user has administrative privileges.
         /// Used to determine whether the user can access protected

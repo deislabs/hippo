@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using hippo.Models;
+using hippo.ViewModels;
 
 namespace hippo.Controllers
 {
@@ -77,7 +78,11 @@ namespace hippo.Controllers
             {
                 return NotFound();
             }
-            return View(application);
+
+            AppEditForm vm = new AppEditForm();
+            vm.Id = application.Id;
+            vm.Name = application.Name;
+            return View(vm);
         }
 
         // POST: Applications/Edit/5
@@ -85,9 +90,9 @@ namespace hippo.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name")] App application)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name")] AppEditForm form)
         {
-            if (id != application.Id)
+            if (id != form.Id)
             {
                 return NotFound();
             }
@@ -96,12 +101,14 @@ namespace hippo.Controllers
             {
                 try
                 {
+                    var application = await _context.Applications.FindAsync(id);
+                    application.Name = form.Name;
                     _context.Update(application);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ApplicationExists(application.Id))
+                    if (!ApplicationExists(form.Id))
                     {
                         return NotFound();
                     }
@@ -112,7 +119,7 @@ namespace hippo.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(application);
+            return View(form);
         }
 
         // GET: Applications/Delete/5

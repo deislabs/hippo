@@ -12,11 +12,17 @@ namespace hippo.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
+
+        [Required]
         public string Name { get; set; }
+
         public Account Owner { get; set; }
+
         public Account[] Collaborators { get; set; }
+
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime Created { get; set; }
+
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime Modified { get; set; }
     }
