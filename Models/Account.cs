@@ -6,7 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 
-namespace hippo.Models
+namespace Hippo.Models
 {
     /// <summary>
     /// The generic IdentityUser has a lot of built in properties

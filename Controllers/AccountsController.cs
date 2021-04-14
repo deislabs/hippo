@@ -1,5 +1,5 @@
-﻿using hippo.Models;
-using hippo.ViewModels;
+﻿using Hippo.Models;
+using Hippo.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace hippo.Controllers
+namespace Hippo.Controllers
 {
     public class AccountsController : Controller
     {

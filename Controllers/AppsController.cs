@@ -5,10 +5,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using hippo.Models;
-using hippo.ViewModels;
+using Hippo.Models;
+using Hippo.ViewModels;
 
-namespace hippo.Controllers
+namespace Hippo.Controllers
 {
     public class AppsController : Controller
     {

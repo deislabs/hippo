@@ -1,4 +1,4 @@
-using hippo.Models;
+using Hippo.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -17,7 +17,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace hippo
+namespace Hippo
 {
     public class Startup
     {

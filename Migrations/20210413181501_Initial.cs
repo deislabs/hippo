@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace hippo.Migrations
+namespace Hippo.Migrations
 {
     public partial class Initial : Migration
     {

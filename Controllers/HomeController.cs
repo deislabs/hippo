@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace hippo.Controllers
+namespace Hippo.Controllers
 {
     public class HomeController : Controller
     {

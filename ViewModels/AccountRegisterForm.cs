@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace hippo.ViewModels
+namespace Hippo.ViewModels
 {
     public class AccountRegisterForm
     {

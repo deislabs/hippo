@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace hippo.Migrations
+namespace Hippo.Migrations
 {
     public partial class RenameUsername : Migration
     {

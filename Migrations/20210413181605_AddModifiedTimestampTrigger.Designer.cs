@@ -5,9 +5,9 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
-using hippo.Models;
+using Hippo.Models;
 
-namespace hippo.Migrations
+namespace Hippo.Migrations
 {
     [DbContext(typeof(DataContext))]
     [Migration("20210413181605_AddModifiedTimestampTrigger")]
