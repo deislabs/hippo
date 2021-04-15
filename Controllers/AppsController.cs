@@ -7,34 +7,39 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Hippo.Models;
 using Hippo.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace Hippo.Controllers
 {
+    [Authorize]
     public class AppsController : Controller
     {
         private readonly IAppRepository repository;
+        private readonly UserManager<Account> userManager;
 
-        public AppsController(IAppRepository repository)
+        public AppsController(IAppRepository repository, UserManager<Account> userManager)
         {
             this.repository = repository;
+            this.userManager = userManager;
         }
 
         // GET: apps
         public IActionResult Index()
         {
-            return View(repository.SelectAll());
+            return View(repository.SelectAllByUser(User.Identity.Name));
         }
 
         // GET: apps/details/2562dbe3-0317-4895-9536-c0fad46de437
         public IActionResult Details(Guid id)
         {
-            var application = repository.SelectById(id);
-            if (application == null)
+            var a = repository.SelectByUserAndId(User.Identity.Name, id);
+            if (a == null)
             {
                 return NotFound();
             }
 
-            return View(application);
+            return View(a);
         }
 
         // GET: apps/new
@@ -48,30 +53,34 @@ namespace Hippo.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult New([Bind("Id,Name")] App application)
+        public async Task<IActionResult> New([Bind("Id,Name")] App a)
         {
             if (ModelState.IsValid)
             {
-                repository.Insert(application.Name);
+                repository.Insert(new App
+                {
+                    Name = a.Name,
+                    Owner = await userManager.FindByNameAsync(User.Identity.Name),
+                });
                 repository.Save();
                 return RedirectToAction(nameof(Index));
             }
-            return View(application);
+            return View(a);
         }
 
         // GET: apps/edit/2562dbe3-0317-4895-9536-c0fad46de437
         public IActionResult Edit(Guid id)
         {
-            var application = repository.SelectById(id);
-            if (application == null)
+            var a = repository.SelectByUserAndId(User.Identity.Name, id);
+            if (a == null)
             {
                 return NotFound();
             }
 
             AppEditForm vm = new AppEditForm
             {
-                Id = application.Id,
-                Name = application.Name,
+                Id = a.Id,
+                Name = a.Name,
             };
             return View(vm);
         }
@@ -92,9 +101,10 @@ namespace Hippo.Controllers
             {
                 try
                 {
-                    var application = repository.SelectById(id);
-                    application.Name = form.Name;
-                    repository.Update(application);
+                    var a = repository.SelectByUserAndId(User.Identity.Name, id);
+
+                    a.Name = form.Name;
+                    repository.Update(a);
                     repository.Save();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -116,7 +126,8 @@ namespace Hippo.Controllers
         // GET: apps/delete/2562dbe3-0317-4895-9536-c0fad46de437
         public IActionResult Delete(Guid id)
         {
-            return View(repository.SelectById(id));
+            var a = repository.SelectByUserAndId(User.Identity.Name, id);
+            return View(a);
         }
 
         // POST: apps/delete/2562dbe3-0317-4895-9536-c0fad46de437
@@ -124,14 +135,15 @@ namespace Hippo.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(Guid id)
         {
-            repository.Delete(id);
+            var a = repository.SelectByUserAndId(User.Identity.Name, id);
+            repository.Delete(a);
             repository.Save();
             return RedirectToAction(nameof(Index));
         }
 
         private bool ApplicationExists(Guid id)
         {
-            return repository.SelectById(id) != null;
+            return repository.SelectByUserAndId(User.Identity.Name, id) != null;
         }
     }
 }

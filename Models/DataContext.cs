@@ -19,6 +19,9 @@ namespace Hippo.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<App>()
+                .HasIndex(a => a.Name)
+                .IsUnique();
+            modelBuilder.Entity<App>()
                 .Property(b => b.Created)
                 .HasDefaultValueSql("now()");
             modelBuilder.Entity<App>()

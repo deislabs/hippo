@@ -15,6 +15,7 @@ namespace Hippo.Models
         [Required]
         public string Name { get; set; }
 
+        [Required]
         public Account Owner { get; set; }
 
         public Account[] Collaborators { get; set; }
