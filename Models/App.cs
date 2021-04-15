@@ -10,7 +10,6 @@ namespace Hippo.Models
     public class App
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
 
         [Required]
