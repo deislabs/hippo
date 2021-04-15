@@ -24,7 +24,6 @@ namespace Hippo.Models
         {
             this.context = context;
         }
-
         public void Insert(string name)
         {
             var app = new App
@@ -33,47 +32,16 @@ namespace Hippo.Models
             };
             context.Add(app);
         }
-
-        public IEnumerable<App> SelectAll()
-        {
-            var query = from a in context.Applications
-                        orderby a.Name
-                        select a;
-            return query.ToList();
-        }
-
-        public App SelectById(Guid id)
-        {
-            var query = from a in context.Applications
-                        where a.Id == id
-                        select a;
-            return query.Single();
-        }
-
-        public IEnumerable<App> SelectByOwner(string username)
-        {
-            var query = from a in context.Applications
-                        where a.Owner.UserName == username
-                        orderby a.Name
-                        select a;
-            return query.ToList();
-        }
-
+        public IEnumerable<App> SelectAll() => context.Applications.OrderBy(a=>a.Name);
+        public App SelectById(Guid id) => context.Applications.Where(a=>a.Id == id).Single();
+        public IEnumerable<App> SelectByOwner(string username) => context.Applications.Where(a=>a.Owner.UserName==username).OrderBy(a=>a.Name);
         public App Delete(Guid id)
         {
             var app = SelectById(id);
             context.Remove(app);
             return app;
         }
-
-        public void Save()
-        {
-            context.SaveChanges();
-        }
-
-        public void Update(App a)
-        {
-            context.Update(a);
-        }
+        public void Save() => context.SaveChanges();
+        public void Update(App a) => context.Update(a);
     }
 }

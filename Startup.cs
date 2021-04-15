@@ -57,7 +57,7 @@ namespace Hippo
                 options.UseNpgsql(Configuration.GetConnectionString("hippo"))
             );
 
-            services.AddScoped<IDataRepository, DataRepository>();
+            services.AddScoped<IAppRepository, AppRepository>();
 
             services.AddSwaggerGen(c =>
             {
