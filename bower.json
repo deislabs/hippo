@@ -1,0 +1,25 @@
+{
+  "name": "hippo",
+  "private": true,
+  "authors": [
+    "Matthew Fisher <matt.fisher@microsoft.com>"
+  ],
+  "description": "hippo API",
+  "main": "",
+  "license": "MIT",
+  "homepage": "https://github.com/deislabs/hippo",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.6.0",
+    "bootstrap": "^4.6.0",
+    "fontawesome": "^5.15.3",
+    "jquery-validation": "^1.19.3",
+    "jquery-validation-unobtrusive": "^3.2.11"
+  }
+}
