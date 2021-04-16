@@ -78,8 +78,8 @@ namespace hippo.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     OwnerId = table.Column<string>(type: "text", nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    Modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()"),
+                    Modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()")
                 },
                 constraints: table =>
                 {
@@ -192,8 +192,8 @@ namespace hippo.Migrations
                     StartDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
                     Issuer = table.Column<string>(type: "text", nullable: true),
                     Subject = table.Column<string>(type: "text", nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    Modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()"),
+                    Modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()")
                 },
                 constraints: table =>
                 {
@@ -213,8 +213,8 @@ namespace hippo.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     OwnerId = table.Column<string>(type: "text", nullable: true),
                     Name = table.Column<string>(type: "text", nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    Modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()"),
+                    Modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()")
                 },
                 constraints: table =>
                 {
@@ -234,8 +234,8 @@ namespace hippo.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     OwnerId = table.Column<string>(type: "text", nullable: true),
                     PublicKey = table.Column<string>(type: "text", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    Modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()"),
+                    Modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()")
                 },
                 constraints: table =>
                 {
@@ -255,8 +255,8 @@ namespace hippo.Migrations
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     AppId = table.Column<Guid>(type: "uuid", nullable: true),
                     UploadUrl = table.Column<string>(type: "text", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    Modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()"),
+                    Modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()")
                 },
                 constraints: table =>
                 {
@@ -275,8 +275,8 @@ namespace hippo.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     AppId = table.Column<Guid>(type: "uuid", nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    Modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()"),
+                    Modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()")
                 },
                 constraints: table =>
                 {
@@ -297,8 +297,8 @@ namespace hippo.Migrations
                     Key = table.Column<string>(type: "text", nullable: false),
                     Value = table.Column<string>(type: "text", nullable: false),
                     ConfigId = table.Column<Guid>(type: "uuid", nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    Modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()"),
+                    Modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()")
                 },
                 constraints: table =>
                 {
@@ -319,8 +319,8 @@ namespace hippo.Migrations
                     Revision = table.Column<string>(type: "text", nullable: false),
                     BuildId = table.Column<Guid>(type: "uuid", nullable: true),
                     ConfigId = table.Column<Guid>(type: "uuid", nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    Modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: false)
+                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()"),
+                    Modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()")
                 },
                 constraints: table =>
                 {

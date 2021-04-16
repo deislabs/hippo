@@ -53,19 +53,19 @@ namespace Hippo.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> New([Bind("Id,Name")] App a)
+        public async Task<IActionResult> New(AppNewForm form)
         {
             if (ModelState.IsValid)
             {
                 repository.Insert(new App
                 {
-                    Name = a.Name,
+                    Name = form.Name,
                     Owner = await userManager.FindByNameAsync(User.Identity.Name),
                 });
                 repository.Save();
                 return RedirectToAction(nameof(Index));
             }
-            return View(a);
+            return View(form);
         }
 
         // GET: apps/edit/2562dbe3-0317-4895-9536-c0fad46de437

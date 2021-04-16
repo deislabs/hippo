@@ -5,7 +5,6 @@ namespace Hippo.Models
 {
     public class Build: BaseEntity
     {
-
         public App App { get; set; }
 
         [Required]

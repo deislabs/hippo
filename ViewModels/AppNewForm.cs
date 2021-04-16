@@ -1,14 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
 
-namespace Hippo.Models
+namespace Hippo.ViewModels
 {
-    public class Domain: BaseEntity
+    public class AppNewForm
     {
         [Required]
-        public Account Owner { get; set; }
-
         public string Name { get; set; }
     }
 }

@@ -11,7 +11,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace hippo.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20210416173604_Initial")]
+    [Migration("20210416175212_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -102,11 +102,13 @@ namespace hippo.Migrations
 
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValueSql("now()");
 
                     b.Property<DateTime>("Modified")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValueSql("now()");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -136,11 +138,13 @@ namespace hippo.Migrations
 
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValueSql("now()");
 
                     b.Property<DateTime>("Modified")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValueSql("now()");
 
                     b.Property<string>("UploadUrl")
                         .IsRequired()
@@ -167,7 +171,8 @@ namespace hippo.Migrations
 
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValueSql("now()");
 
                     b.Property<DateTime>("ExpiryDate")
                         .HasColumnType("timestamp without time zone");
@@ -180,7 +185,8 @@ namespace hippo.Migrations
 
                     b.Property<DateTime>("Modified")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValueSql("now()");
 
                     b.Property<string>("OwnerId")
                         .HasColumnType("text");
@@ -215,11 +221,13 @@ namespace hippo.Migrations
 
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValueSql("now()");
 
                     b.Property<DateTime>("Modified")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValueSql("now()");
 
                     b.HasKey("Id");
 
@@ -236,11 +244,13 @@ namespace hippo.Migrations
 
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValueSql("now()");
 
                     b.Property<DateTime>("Modified")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValueSql("now()");
 
                     b.Property<string>("Name")
                         .HasColumnType("text");
@@ -269,7 +279,8 @@ namespace hippo.Migrations
 
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValueSql("now()");
 
                     b.Property<string>("Key")
                         .IsRequired()
@@ -277,7 +288,8 @@ namespace hippo.Migrations
 
                     b.Property<DateTime>("Modified")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValueSql("now()");
 
                     b.Property<string>("Value")
                         .IsRequired()
@@ -298,11 +310,13 @@ namespace hippo.Migrations
 
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValueSql("now()");
 
                     b.Property<DateTime>("Modified")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValueSql("now()");
 
                     b.Property<string>("OwnerId")
                         .HasColumnType("text");
@@ -332,11 +346,13 @@ namespace hippo.Migrations
 
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValueSql("now()");
 
                     b.Property<DateTime>("Modified")
                         .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("timestamp without time zone");
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValueSql("now()");
 
                     b.Property<string>("Revision")
                         .IsRequired()

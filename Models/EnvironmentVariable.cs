@@ -6,7 +6,6 @@ namespace Hippo.Models
 {
     public class EnvironmentVariable: BaseEntity
     {
-
         [Required]
         public string Key { get; set; }
 

@@ -11,6 +11,11 @@ namespace Hippo.Models
 {
     public abstract class BaseEntity
     {
+        public BaseEntity()
+        {
+            Created = DateTime.Now;
+            Modified = DateTime.Now;
+        }
 
         [Key]
         public Guid Id { get; set; }

@@ -7,7 +7,6 @@ namespace Hippo.Models
 {
     public class Release: BaseEntity
     {
-
         [Required]
         public string Revision { get; set; }
 

@@ -5,7 +5,6 @@ namespace Hippo.Models
 {
     public class Key: BaseEntity
     {
-
         [Required]
         public Account Owner { get; set; }
 

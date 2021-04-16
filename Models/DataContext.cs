@@ -27,6 +27,25 @@ namespace Hippo.Models
         {
             base.OnModelCreating(modelBuilder);
 
+            // TODO: there must be a cleaner way using the abstract BaseEntity class here...
+            // meh. do what works for now.
+            modelBuilder.Entity<App>().Property(x => x.Created).HasDefaultValueSql("now()");
+            modelBuilder.Entity<App>().Property(x => x.Modified).HasDefaultValueSql("now()");
+            modelBuilder.Entity<Build>().Property(x => x.Created).HasDefaultValueSql("now()");
+            modelBuilder.Entity<Build>().Property(x => x.Modified).HasDefaultValueSql("now()");
+            modelBuilder.Entity<Certificate>().Property(x => x.Created).HasDefaultValueSql("now()");
+            modelBuilder.Entity<Certificate>().Property(x => x.Modified).HasDefaultValueSql("now()");
+            modelBuilder.Entity<Config>().Property(x => x.Created).HasDefaultValueSql("now()");
+            modelBuilder.Entity<Config>().Property(x => x.Modified).HasDefaultValueSql("now()");
+            modelBuilder.Entity<Domain>().Property(x => x.Created).HasDefaultValueSql("now()");
+            modelBuilder.Entity<Domain>().Property(x => x.Modified).HasDefaultValueSql("now()");
+            modelBuilder.Entity<EnvironmentVariable>().Property(x => x.Created).HasDefaultValueSql("now()");
+            modelBuilder.Entity<EnvironmentVariable>().Property(x => x.Modified).HasDefaultValueSql("now()");
+            modelBuilder.Entity<Key>().Property(x => x.Created).HasDefaultValueSql("now()");
+            modelBuilder.Entity<Key>().Property(x => x.Modified).HasDefaultValueSql("now()");
+            modelBuilder.Entity<Release>().Property(x => x.Created).HasDefaultValueSql("now()");
+            modelBuilder.Entity<Release>().Property(x => x.Modified).HasDefaultValueSql("now()");
+
             modelBuilder.Entity<App>()
                 .HasIndex(a => a.Name)
                 .IsUnique();
