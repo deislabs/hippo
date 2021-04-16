@@ -9,14 +9,10 @@ namespace Hippo.Models
     public interface IConfigRepository
     {
         IEnumerable<Config> SelectAll();
-
         IEnumerable<Config> SelectAllByUser(string username);
         Config SelectById(Guid id);
-
         Config SelectByUserAndId(string username, Guid id);
-        void Insert(Config c);
         void Update(Config c);
-        void Delete(Config c);
         void Save();
     }
 
@@ -28,10 +24,6 @@ namespace Hippo.Models
         {
             this.context = context;
         }
-
-        public void Delete(Config c) => context.Remove(c);
-
-        public void Insert(Config c) => context.Add(c);
 
         public void Save() => context.SaveChanges();
 
