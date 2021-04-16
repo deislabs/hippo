@@ -4,13 +4,12 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Hippo.Models
 {
-    public class App
+    public class App: BaseEntity
     {
-        [Key]
-        public Guid Id { get; set; }
 
         [Required]
         public string Name { get; set; }
@@ -19,11 +18,5 @@ namespace Hippo.Models
         public Account Owner { get; set; }
 
         public Account[] Collaborators { get; set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime Created { get; set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public DateTime Modified { get; set; }
     }
 }

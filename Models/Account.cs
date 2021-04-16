@@ -15,6 +15,7 @@ namespace Hippo.Models
     /// </summary>
     public class Account: IdentityUser
     {
+
         /// <summary>
         /// Determines whether the user has administrative privileges.
         /// Used to determine whether the user can access protected

@@ -5,12 +5,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Hippo.Models
 {
-    public class Config: BaseEntity
+    public class Release: BaseEntity
     {
 
         [Required]
-        public App App { get; set; }
+        public string Revision { get; set; }
 
-        public List<EnvironmentVariable> EnvironmentVariables { get; set; }
+        [Required]
+        public Build Build { get; set; }
+
+        [Required]
+        public Config Config { get; set; }
     }
 }

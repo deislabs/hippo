@@ -15,21 +15,25 @@ namespace Hippo.Models
 
         public DbSet<Account> Accounts { get; set; }
         public DbSet<App> Applications { get; set; }
+        public DbSet<Build> Builds { get; set; }
+        public DbSet<Certificate> Certificates { get; set; }
         public DbSet<Config> Configuration { get; set; }
+        public DbSet<Domain> Domains { get; set; }
+        public DbSet<EnvironmentVariable> EnvironmentVariables { get; set; }
+        public DbSet<Key> Keys { get; set; }
+        public DbSet<Release> Releases { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<App>()
                 .HasIndex(a => a.Name)
                 .IsUnique();
-            modelBuilder.Entity<App>()
-                .Property(b => b.Created)
-                .HasDefaultValueSql("now()");
-            modelBuilder.Entity<App>()
-                .Property(b => b.Modified)
-                .HasDefaultValueSql("now()");
 
-            base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Domain>()
+                .HasIndex(d => d.Name)
+                .IsUnique();
         }
     }
 }

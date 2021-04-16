@@ -4,10 +4,8 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Hippo.Models
 {
-    public class EnvironmentVariable
+    public class EnvironmentVariable: BaseEntity
     {
-        [Key]
-        public Guid Id { get; set; }
 
         [Required]
         public string Key { get; set; }
