@@ -23,14 +23,11 @@ namespace Hippo.Controllers
             this.repository = repository;
             this.userManager = userManager;
         }
-
-        // GET: apps
         public IActionResult Index()
         {
             return View(repository.SelectAllByUser(User.Identity.Name));
         }
 
-        // GET: apps/details/2562dbe3-0317-4895-9536-c0fad46de437
         public IActionResult Details(Guid id)
         {
             var a = repository.SelectByUserAndId(User.Identity.Name, id);
@@ -48,9 +45,6 @@ namespace Hippo.Controllers
             return View();
         }
 
-        // POST: apps/new
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> New(AppNewForm form)
@@ -68,7 +62,6 @@ namespace Hippo.Controllers
             return View(form);
         }
 
-        // GET: apps/edit/2562dbe3-0317-4895-9536-c0fad46de437
         public IActionResult Edit(Guid id)
         {
             var a = repository.SelectByUserAndId(User.Identity.Name, id);
@@ -85,9 +78,6 @@ namespace Hippo.Controllers
             return View(vm);
         }
 
-        // POST: apps/edit/2562dbe3-0317-4895-9536-c0fad46de437
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Edit(Guid id, [Bind("Id,Name")] AppEditForm form)
@@ -123,14 +113,12 @@ namespace Hippo.Controllers
             return View(form);
         }
 
-        // GET: apps/delete/2562dbe3-0317-4895-9536-c0fad46de437
         public IActionResult Delete(Guid id)
         {
             var a = repository.SelectByUserAndId(User.Identity.Name, id);
             return View(a);
         }
 
-        // POST: apps/delete/2562dbe3-0317-4895-9536-c0fad46de437
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(Guid id)
