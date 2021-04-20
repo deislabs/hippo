@@ -1,25 +1,22 @@
 ﻿@model IEnumerable<Hippo.Models.App>
 
-@{
-    ViewData["Title"] = "My Applications";
-}
-
-<p>
-    <a asp-action="New" class="btn btn-primary">Create a new Application</a>
-</p>
-@foreach (var item in Model) {
-<div class="container-fluid">
-  <div class="row-fluid">
-    <div class="span2">
-      <!--Sidebar content-->
-      <h3>@Html.DisplayFor(modelItem => item.Name)</h3>
-      <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-      <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-      <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-    </div>
-    <div class="span8">
-      <!--Body content-->
-    </div>
+<div class="container">
+  <div class="row" style="padding-bottom: 20px;">
+    <a asp-action="New" class="btn btn-primary btn-sm">Create a new Application</a>
+  </div>
+  <div class="row">
+    @foreach (var item in Model) {
+      <div class="card">
+        <span class="card-header badge badge-success">Healthy</span>
+        <div class="card-body">
+          <h5 class="card-title">@Html.DisplayFor(modelItem => item.Name)</h5>
+        </div>
+        <div class="card-body btn-group" role="group" aria-label="actions">
+          <a asp-action="Edit" asp-route-id="@item.Id" class="card-link btn btn-sml btn-secondary">Edit</a>
+          <a asp-action="Details" asp-route-id="@item.Id" class="card-link btn btn-sml btn-secondary">Details</a>
+          <a asp-action="Delete" asp-route-id="@item.Id" class="card-link btn btn-sml btn-danger">Delete</a>
+        </div>
+      </div>
+    }
   </div>
 </div>
-}
