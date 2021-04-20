@@ -7,8 +7,9 @@ namespace Hippo.Models
     public class Domain: BaseEntity
     {
         [Required]
-        public Account Owner { get; set; }
-
         public string Name { get; set; }
+
+        [Required]
+        public Certificate[] Certificates { get; set; }
     }
 }

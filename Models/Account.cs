@@ -22,5 +22,10 @@ namespace Hippo.Models
         /// endpoints like the administration portal.
         /// </summary>
         public bool IsSuperUser { get; set; }
+
+        /// <summary>
+        /// Personal signing key used for signing off releases and determining trust.
+        /// </summary>
+        public Key SigningKey { get; set; }
     }
 }

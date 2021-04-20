@@ -8,8 +8,6 @@ namespace Hippo.Models
     public class Config: BaseEntity
     {
         [Required]
-        public App App { get; set; }
-
         public List<EnvironmentVariable> EnvironmentVariables { get; set; }
     }
 }

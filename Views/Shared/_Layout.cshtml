@@ -23,7 +23,7 @@
                     <li><a asp-controller="Home" asp-action="Index">Home</a></li>
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <li><a asp-controller="Apps" asp-action="Index">My Apps</a></li>
+                        <li><a asp-controller="Apps" asp-action="Index">My Applications</a></li>
                         <li><a asp-controller="Accounts" asp-action="Logout">Logout</a></li>
                     }
                     else

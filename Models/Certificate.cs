@@ -6,9 +6,6 @@ namespace Hippo.Models
 {
     public class Certificate: BaseEntity
     {
-        [Required]
-        public Account Owner { get; set; }
-
         public string Cert { get; set; }
 
         public string PrivateKey { get; set; }

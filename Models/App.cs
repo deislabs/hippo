@@ -17,6 +17,13 @@ namespace Hippo.Models
         [Required]
         public Account Owner { get; set; }
 
-        public Account[] Collaborators { get; set; }
+        [Required]
+        public List<Account> Collaborators { get; set; }
+
+        [Required]
+        public List<Domain> Domains { get; set; }
+
+        [Required]
+        public List<Release> Releases { get; set; }
     }
 }

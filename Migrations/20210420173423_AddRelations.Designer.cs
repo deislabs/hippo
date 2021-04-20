@@ -4,15 +4,17 @@ using System.Collections.Generic;
 using Hippo.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace hippo.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20210420173423_AddRelations")]
+    partial class AddRelations
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -249,7 +251,6 @@ namespace hippo.Migrations
                         .HasDefaultValueSql("now()");
 
                     b.Property<string>("Name")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -311,10 +312,6 @@ namespace hippo.Migrations
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("now()");
-
-                    b.Property<string>("PrivateKey")
-                        .IsRequired()
-                        .HasColumnType("text");
 
                     b.Property<string>("PublicKey")
                         .IsRequired()
