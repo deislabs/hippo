@@ -57,6 +57,8 @@ namespace Hippo
                 options.UseNpgsql(Configuration.GetConnectionString("hippo"))
             );
 
+            services.AddTransient<DataSeeder>();
+
             services.AddScoped<IAppRepository, AppRepository>();
 
             services.AddSwaggerGen(c =>
@@ -92,6 +94,15 @@ namespace Hippo
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            if (env.IsDevelopment())
+            {
+                using (var scope = app.ApplicationServices.CreateScope())
+                {
+                    var seeder = scope.ServiceProvider.GetService<DataSeeder>();
+                    seeder.Seed().Wait();
+                }
+            }
         }
     }
 }

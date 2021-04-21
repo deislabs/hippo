@@ -13,12 +13,12 @@ using Microsoft.AspNetCore.Identity;
 namespace Hippo.Controllers
 {
     [Authorize]
-    public class AppsController : Controller
+    public class AppController : Controller
     {
         private readonly IAppRepository repository;
         private readonly UserManager<Account> userManager;
 
-        public AppsController(IAppRepository repository, UserManager<Account> userManager)
+        public AppController(IAppRepository repository, UserManager<Account> userManager)
         {
             this.repository = repository;
             this.userManager = userManager;
@@ -39,7 +39,6 @@ namespace Hippo.Controllers
             return View(a);
         }
 
-        // GET: apps/new
         public IActionResult New()
         {
             return View();

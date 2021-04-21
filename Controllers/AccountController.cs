@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace Hippo.Controllers
 {
-    public class AccountsController : Controller
+    public class AccountController : Controller
     {
         private readonly SignInManager<Account> signInManager;
         private readonly UserManager<Account> userManager;
         private readonly DataContext context;
 
-        public AccountsController(SignInManager<Account> signInManager, UserManager<Account> userManager, DataContext context)
+        public AccountController(SignInManager<Account> signInManager, UserManager<Account> userManager, DataContext context)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
@@ -27,7 +27,7 @@ namespace Hippo.Controllers
         {
             if (this.User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Apps");
+                return RedirectToAction("Index", "App");
             }
             return View();
         }
@@ -50,7 +50,7 @@ namespace Hippo.Controllers
                 var result = await signInManager.UserManager.CreateAsync(account, form.Password);
                 if (result.Succeeded)
                 {
-                    return RedirectToAction("Login", "Accounts");
+                    return RedirectToAction("Login", "Account");
                 }
                 else
                 {
@@ -72,7 +72,7 @@ namespace Hippo.Controllers
         {
             if (this.User.Identity.IsAuthenticated)
             {
-                return RedirectToAction("Index", "Apps");
+                return RedirectToAction("Index", "App");
             }
             return View();
         }
@@ -91,7 +91,7 @@ namespace Hippo.Controllers
                     }
                     else
                     {
-                        return RedirectToAction("Index", "Apps");
+                        return RedirectToAction("Index", "App");
                     }
                 }
                 else
