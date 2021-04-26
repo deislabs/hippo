@@ -9,6 +9,7 @@ using Hippo.Models;
 using Hippo.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Hosting;
 
 namespace Hippo.Controllers
 {
@@ -17,11 +18,13 @@ namespace Hippo.Controllers
     {
         private readonly IAppRepository repository;
         private readonly UserManager<Account> userManager;
+        private readonly IWebHostEnvironment environment;
 
-        public AppController(IAppRepository repository, UserManager<Account> userManager)
+        public AppController(IAppRepository repository, UserManager<Account> userManager, IWebHostEnvironment environment)
         {
             this.repository = repository;
             this.userManager = userManager;
+            this.environment = environment;
         }
         public IActionResult Index()
         {
@@ -126,6 +129,24 @@ namespace Hippo.Controllers
             repository.Delete(a);
             repository.Save();
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Release(Guid id, AppReleaseForm form)
+        {
+            if (id != form.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                var a = repository.SelectByUserAndId(User.Identity.Name, id);
+                a.DeployTo(form.Revision, environment.ContentRootPath);
+                return RedirectToAction(nameof(Index));
+            }
+            return View(form);
         }
 
         private bool ApplicationExists(Guid id)
