@@ -7,7 +7,7 @@ namespace Hippo.Tests
 {
     internal class FakeAppRepository: IAppRepository
     {
-        private List<App> Applications;
+        private readonly List<App> Applications;
 
         public FakeAppRepository()
         {
@@ -60,7 +60,7 @@ namespace Hippo.Tests
 
         public void Update(App a)
         {
-            throw new NotImplementedException();
+            Applications.Add(a);
         }
     }
 }

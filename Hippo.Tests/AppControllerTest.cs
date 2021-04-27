@@ -14,11 +14,11 @@ namespace Hippo.Tests
 {
     public class AppControllerTest
     {
-        private AppController controller;
+        private readonly AppController controller;
 
-        private Account admin;
+        private readonly Account admin;
 
-        private Account user;
+        private readonly Account user;
 
         public AppControllerTest()
         {

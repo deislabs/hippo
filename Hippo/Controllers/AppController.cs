@@ -69,7 +69,7 @@ namespace Hippo.Controllers
                 return NotFound();
             }
 
-            AppEditForm vm = new AppEditForm
+            var vm = new AppEditForm
             {
                 Id = a.Id,
                 Name = a.Name,

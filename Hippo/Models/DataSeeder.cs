@@ -10,13 +10,11 @@ namespace Hippo.Models
     public class DataSeeder
     {
         private readonly DataContext context;
-        private readonly IWebHostEnvironment environment;
         private readonly UserManager<Account> userManager;
 
-        public DataSeeder(DataContext context, IWebHostEnvironment environment, UserManager<Account> userManager)
+        public DataSeeder(DataContext context, UserManager<Account> userManager)
         {
             this.context = context;
-            this.environment = environment;
             this.userManager = userManager;
         }
 

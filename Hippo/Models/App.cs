@@ -59,12 +59,12 @@ namespace Hippo.Models
             var hosts = new List<string>();
             foreach (var domain in Domains)
             {
-                hosts.Add(String.Format("Host(`{}`)", domain.Name));
+                hosts.Add(String.Format("Host(`{0}`)", domain.Name));
             }
             rule.AppendJoin(" || ", hosts);
             rule.AppendFormat(" && PathPrefix(`/`)");
             routers.Add(
-                String.Format("to-{}", Name),
+                String.Format("to-{0}", Name),
                 new Dictionary<string, string>
                 {
                     {
@@ -90,7 +90,7 @@ namespace Hippo.Models
                                     new Dictionary<string, string>
                                     {
                                         {
-                                            "url", String.Format("http://localhost:{}", port)
+                                            "url", String.Format("http://localhost:{0}", port)
                                         }
                                     }
                                 }
@@ -128,19 +128,14 @@ namespace Hippo.Models
             return Path.Combine(rootPath, "systemd", "hippo-" + Name + ".service");
         }
 
-        private string ConfigFor(Release release)
+        private static string ConfigFor(Release release)
         {
-            var envvars = release.Config.EnvironmentVariables;
             var wagiConfig = new StringBuilder();
-            foreach (Domain domain in Domains)
+            wagiConfig.AppendLine("[[module]]");
+            wagiConfig.AppendFormat("module = \"{0}\"\n", release.Build.UploadUrl.ToString());
+            foreach (EnvironmentVariable envvar in release.Config.EnvironmentVariables)
             {
-                wagiConfig.AppendLine("[[module]]");
-                wagiConfig.AppendFormat("module = \"{0}\"\n", release.Build.UploadUrl.ToString());
-                foreach (EnvironmentVariable envvar in release.Config.EnvironmentVariables)
-                {
-                    wagiConfig.AppendFormat("environment.{0} = \"{1}\"\n", envvar.Key, envvar.Value);
-                }
-                wagiConfig.AppendLine();
+                wagiConfig.AppendFormat("environment.{0} = \"{1}\"\n", envvar.Key, envvar.Value);
             }
             return wagiConfig.ToString();
         }

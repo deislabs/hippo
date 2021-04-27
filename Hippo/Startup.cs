@@ -90,11 +90,9 @@ namespace Hippo
 
             if (env.IsDevelopment())
             {
-                using (var scope = app.ApplicationServices.CreateScope())
-                {
-                    var seeder = scope.ServiceProvider.GetService<DataSeeder>();
-                    seeder.Seed().Wait();
-                }
+                using var scope = app.ApplicationServices.CreateScope();
+                var seeder = scope.ServiceProvider.GetService<DataSeeder>();
+                seeder.Seed().Wait();
             }
         }
     }
