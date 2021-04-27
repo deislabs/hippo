@@ -5,7 +5,7 @@ namespace Hippo.ViewModels
     public class LoginForm
     {
         [Required]
-        public string Username { get; set; }
+        public string UserName { get; set; }
 
         [Required]
         [DataType(DataType.Password)]

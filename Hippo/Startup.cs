@@ -47,7 +47,7 @@ namespace Hippo
 
             services.AddDbContext<DataContext>(
                 options =>
-                options.UseNpgsql(Configuration.GetConnectionString("hippo"))
+                options.UseNpgsql(Configuration.GetConnectionString("Hippo"))
             );
 
             services.AddTransient<DataSeeder>();
