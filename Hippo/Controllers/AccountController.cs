@@ -2,9 +2,6 @@
 using Hippo.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,13 +10,11 @@ namespace Hippo.Controllers
     public class AccountController : Controller
     {
         private readonly SignInManager<Account> signInManager;
-        private readonly UserManager<Account> userManager;
         private readonly DataContext context;
 
-        public AccountController(SignInManager<Account> signInManager, UserManager<Account> userManager, DataContext context)
+        public AccountController(SignInManager<Account> signInManager, DataContext context)
         {
             this.signInManager = signInManager;
-            this.userManager = userManager;
             this.context = context;
         }
 
@@ -42,7 +37,7 @@ namespace Hippo.Controllers
                     UserName = form.UserName,
                     Email = form.Email,
                 };
-                if (context.Accounts.Count() == 0) {
+                if (!context.Accounts.Any()) {
                     // first account is a super user
                     account.IsSuperUser = true;
                 }

@@ -1,12 +1,7 @@
-using System;
 using Xunit;
 using Hippo.Controllers;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Hippo.Models;
 using Moq;
 using System.Threading;
