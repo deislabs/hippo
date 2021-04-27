@@ -19,6 +19,7 @@ namespace Hippo.Controllers
             this.repository = repository;
         }
 
+        [HttpPost]
         public IActionResult New(BuildUploadForm form)
         {
             if (ModelState.IsValid)
