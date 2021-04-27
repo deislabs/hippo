@@ -5,7 +5,7 @@ VisualStudioVersion = 16.0.31129.286
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hippo", "Hippo\Hippo.csproj", "{8927CEEA-0EF3-41F0-A5B9-B368777F8F09}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hippo.Test", "Hippo.Test\Hippo.Test.csproj", "{CDC0A540-3CB4-4130-B3A0-C808E61F92FE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hippo.Test", "Hippo.Tests\Hippo.Tests.csproj", "{CDC0A540-3CB4-4130-B3A0-C808E61F92FE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
