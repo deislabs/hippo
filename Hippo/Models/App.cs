@@ -27,7 +27,7 @@ namespace Hippo.Models
         [Required]
         public List<Release> Releases { get; set; }
 
-        public void DeployTo(string revision, string rootPath)
+        public void DeployTo(int revision, string rootPath)
         {
             var release = Releases.Where(r => r.Revision == revision).Single();
             if (release == null)

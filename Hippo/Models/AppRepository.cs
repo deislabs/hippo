@@ -26,10 +26,7 @@ namespace Hippo.Models
         {
             this.context = context;
         }
-        public void Insert(App a)
-        {
-            context.Add(a);
-        }
+        public void Insert(App a) => context.Add(a);
         public IEnumerable<App> SelectAll() => context.Applications.OrderBy(a=>a.Name);
         public App SelectById(Guid id) => context.Applications.Where(a=>a.Id==id).Single();
         public void Delete(App a) => context.Remove(a);

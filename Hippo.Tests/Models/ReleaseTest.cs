@@ -11,10 +11,10 @@ namespace Hippo.Tests.Models
         public ReleaseTest()
         {
             V1 = new Release{
-                Revision = "1.0.0",
+                Revision = 1,
                 Build = new Build
                 {
-                    UploadUrl = "bindle:bacongobbler.com/example/1.0.0"
+                    UploadUrl = "bindle:bacongobbler.com/example/1"
                 },
                 Config = new Config{
                     EnvironmentVariables = new List<EnvironmentVariable>()

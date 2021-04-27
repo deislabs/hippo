@@ -51,10 +51,10 @@ namespace Hippo.Models
                         {
                             new Release
                             {
-                                Revision = "1.0.0",
+                                Revision = 1,
                                 Build = new Build
                                 {
-                                    UploadUrl = "bindle:hippos.rocks/helloworld/1.0.0"
+                                    UploadUrl = "bindle:hippos.rocks/helloworld/1"
                                 },
                                 Config = new Config
                                 {
