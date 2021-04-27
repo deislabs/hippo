@@ -1,16 +1,17 @@
-using Xunit;
 using Hippo.Controllers;
+using Hippo.Models;
+using Hippo.Tests.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
-using Hippo.Models;
-using Moq;
-using System.Threading;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using Moq;
+using System.Threading;
 using System.Security.Claims;
 using System.Security.Principal;
+using Xunit;
 
-namespace Hippo.Tests
+namespace Hippo.Tests.Controllers
 {
     public class AppControllerTest
     {
@@ -46,7 +47,7 @@ namespace Hippo.Tests
         }
 
         [Fact]
-        public void GetApps()
+        public void TestGetApps()
         {
             var fakeIdentity = new GenericIdentity(admin.UserName);
             var context = new ControllerContext

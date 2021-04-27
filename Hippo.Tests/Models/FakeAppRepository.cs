@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Hippo.Models;
 
-namespace Hippo.Tests
+namespace Hippo.Tests.Models
 {
     internal class FakeAppRepository: IAppRepository
     {

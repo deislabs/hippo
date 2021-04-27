@@ -27,7 +27,7 @@ namespace Hippo.Models
         [Required]
         public List<Release> Releases { get; set; }
 
-        internal void DeployTo(string revision, string rootPath)
+        public void DeployTo(string revision, string rootPath)
         {
             var release = Releases.Where(r => r.Revision == revision).Single();
             if (release == null)
@@ -35,7 +35,7 @@ namespace Hippo.Models
                 throw new InvalidOperationException("release not found");
             }
 
-            File.WriteAllText(release.Build.WagiConfigPath(rootPath), Toml.Parse(ConfigFor(release)).ToString());
+            File.WriteAllText(release.Build.WagiConfigPath(rootPath), Toml.Parse(release.WagiConfig()).ToString());
             File.WriteAllText(SystemdServicePath(rootPath), SystemdServiceFor(release, rootPath));
             // TODO: start the systemd service before writing out the traefik config
             // https://github.com/deislabs/hippo/blob/e0a5ed97cd1b00ec93fb3515ed51c3c5b9ee02d0/releases/models.py#L34-L41
@@ -44,7 +44,7 @@ namespace Hippo.Models
         }
 
         // https://github.com/deislabs/hippo/blob/e0a5ed97cd1b00ec93fb3515ed51c3c5b9ee02d0/releases/models.py#L95-L135
-        private string TraefikConfig()
+        public string TraefikConfig()
         {
             if (!Domains.Any())
             {
@@ -102,12 +102,12 @@ namespace Hippo.Models
             return JsonSerializer.Serialize(traefikConfig, new JsonSerializerOptions{ PropertyNamingPolicy = JsonNamingPolicy.CamelCase});
         }
 
-        private string TraefikConfigPath(string rootPath)
+        public string TraefikConfigPath(string rootPath)
         {
             return Path.Combine(rootPath, "traefik", "conf.d", Name + ".toml");
         }
 
-        private string SystemdServiceFor(Release release, string rootPath)
+        public string SystemdServiceFor(Release release, string rootPath)
         {
             var systemdService = new StringBuilder();
             systemdService.AppendLine("[Unit]");
@@ -123,21 +123,9 @@ namespace Hippo.Models
             return systemdService.ToString();
         }
 
-        private string SystemdServicePath(string rootPath)
+        public string SystemdServicePath(string rootPath)
         {
             return Path.Combine(rootPath, "systemd", "hippo-" + Name + ".service");
-        }
-
-        private static string ConfigFor(Release release)
-        {
-            var wagiConfig = new StringBuilder();
-            wagiConfig.AppendLine("[[module]]");
-            wagiConfig.AppendFormat("module = \"{0}\"\n", release.Build.UploadUrl.ToString());
-            foreach (EnvironmentVariable envvar in release.Config.EnvironmentVariables)
-            {
-                wagiConfig.AppendFormat("environment.{0} = \"{1}\"\n", envvar.Key, envvar.Value);
-            }
-            return wagiConfig.ToString();
         }
     }
 }
