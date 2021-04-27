@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="../Hippo/hippo.csproj" />
+    <ProjectReference Include="../Hippo/Hippo.csproj" />
   </ItemGroup>
 
 </Project>
