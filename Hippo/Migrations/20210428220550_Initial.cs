@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace hippo.Migrations
+namespace Hippo.Migrations
 {
     public partial class Initial : Migration
     {
@@ -21,6 +20,48 @@ namespace hippo.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetRoles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Configuration",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()"),
+                    Modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Configuration", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Domains",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()"),
+                    Modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Domains", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Keys",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    PublicKey = table.Column<string>(type: "text", nullable: false),
+                    PrivateKey = table.Column<string>(type: "text", nullable: false),
+                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()"),
+                    Modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Keys", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -45,12 +86,35 @@ namespace hippo.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "EnvironmentVariables",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    ConfigurationId = table.Column<Guid>(type: "uuid", nullable: true),
+                    Key = table.Column<string>(type: "text", nullable: false),
+                    Value = table.Column<string>(type: "text", nullable: false),
+                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()"),
+                    Modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EnvironmentVariables", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_EnvironmentVariables_Configuration_ConfigurationId",
+                        column: x => x.ConfigurationId,
+                        principalTable: "Configuration",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetUsers",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
                     IsSuperUser = table.Column<bool>(type: "boolean", nullable: false),
-                    AppId = table.Column<Guid>(type: "uuid", nullable: true),
+                    SigningKeyId = table.Column<Guid>(type: "uuid", nullable: true),
+                    ApplicationId = table.Column<Guid>(type: "uuid", nullable: true),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -69,6 +133,12 @@ namespace hippo.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUsers_Keys_SigningKeyId",
+                        column: x => x.SigningKeyId,
+                        principalTable: "Keys",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -178,147 +248,13 @@ namespace hippo.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Certificates",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    OwnerId = table.Column<string>(type: "text", nullable: true),
-                    Cert = table.Column<string>(type: "text", nullable: true),
-                    PrivateKey = table.Column<string>(type: "text", nullable: true),
-                    CommonName = table.Column<string>(type: "text", nullable: true),
-                    SubjectAlternateNames = table.Column<List<string>>(type: "text[]", nullable: true),
-                    Fingerprint = table.Column<string>(type: "text", nullable: true),
-                    ExpiryDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    StartDate = table.Column<DateTime>(type: "timestamp without time zone", nullable: false),
-                    Issuer = table.Column<string>(type: "text", nullable: true),
-                    Subject = table.Column<string>(type: "text", nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()"),
-                    Modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Certificates", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Certificates_AspNetUsers_OwnerId",
-                        column: x => x.OwnerId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Domains",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    OwnerId = table.Column<string>(type: "text", nullable: true),
-                    Name = table.Column<string>(type: "text", nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()"),
-                    Modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Domains", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Domains_AspNetUsers_OwnerId",
-                        column: x => x.OwnerId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Keys",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    OwnerId = table.Column<string>(type: "text", nullable: true),
-                    PublicKey = table.Column<string>(type: "text", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()"),
-                    Modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Keys", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Keys_AspNetUsers_OwnerId",
-                        column: x => x.OwnerId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Builds",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    AppId = table.Column<Guid>(type: "uuid", nullable: true),
-                    UploadUrl = table.Column<string>(type: "text", nullable: false),
-                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()"),
-                    Modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Builds", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Builds_Applications_AppId",
-                        column: x => x.AppId,
-                        principalTable: "Applications",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Configuration",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    AppId = table.Column<Guid>(type: "uuid", nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()"),
-                    Modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Configuration", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Configuration_Applications_AppId",
-                        column: x => x.AppId,
-                        principalTable: "Applications",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "EnvironmentVariables",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Key = table.Column<string>(type: "text", nullable: false),
-                    Value = table.Column<string>(type: "text", nullable: false),
-                    ConfigId = table.Column<Guid>(type: "uuid", nullable: true),
-                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()"),
-                    Modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()")
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_EnvironmentVariables", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_EnvironmentVariables_Configuration_ConfigId",
-                        column: x => x.ConfigId,
-                        principalTable: "Configuration",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Releases",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    ApplicationId = table.Column<Guid>(type: "uuid", nullable: true),
                     Revision = table.Column<string>(type: "text", nullable: false),
-                    BuildId = table.Column<Guid>(type: "uuid", nullable: true),
-                    ConfigId = table.Column<Guid>(type: "uuid", nullable: true),
+                    UploadUrl = table.Column<string>(type: "text", nullable: false),
                     Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()"),
                     Modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()")
                 },
@@ -326,15 +262,51 @@ namespace hippo.Migrations
                 {
                     table.PrimaryKey("PK_Releases", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Releases_Builds_BuildId",
-                        column: x => x.BuildId,
-                        principalTable: "Builds",
+                        name: "FK_Releases_Applications_ApplicationId",
+                        column: x => x.ApplicationId,
+                        principalTable: "Applications",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Channels",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: true),
+                    ApplicationId = table.Column<Guid>(type: "uuid", nullable: true),
+                    DomainId = table.Column<Guid>(type: "uuid", nullable: true),
+                    ConfigurationId = table.Column<Guid>(type: "uuid", nullable: true),
+                    ReleaseId = table.Column<Guid>(type: "uuid", nullable: true),
+                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()"),
+                    Modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Channels", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Channels_Applications_ApplicationId",
+                        column: x => x.ApplicationId,
+                        principalTable: "Applications",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Releases_Configuration_ConfigId",
-                        column: x => x.ConfigId,
+                        name: "FK_Channels_Configuration_ConfigurationId",
+                        column: x => x.ConfigurationId,
                         principalTable: "Configuration",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Channels_Domains_DomainId",
+                        column: x => x.DomainId,
+                        principalTable: "Domains",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Channels_Releases_ReleaseId",
+                        column: x => x.ReleaseId,
+                        principalTable: "Releases",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -382,9 +354,14 @@ namespace hippo.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_AppId",
+                name: "IX_AspNetUsers_ApplicationId",
                 table: "AspNetUsers",
-                column: "AppId");
+                column: "ApplicationId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AspNetUsers_SigningKeyId",
+                table: "AspNetUsers",
+                column: "SigningKeyId");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
@@ -393,19 +370,24 @@ namespace hippo.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Builds_AppId",
-                table: "Builds",
-                column: "AppId");
+                name: "IX_Channels_ApplicationId",
+                table: "Channels",
+                column: "ApplicationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Certificates_OwnerId",
-                table: "Certificates",
-                column: "OwnerId");
+                name: "IX_Channels_ConfigurationId",
+                table: "Channels",
+                column: "ConfigurationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Configuration_AppId",
-                table: "Configuration",
-                column: "AppId");
+                name: "IX_Channels_DomainId",
+                table: "Channels",
+                column: "DomainId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Channels_ReleaseId",
+                table: "Channels",
+                column: "ReleaseId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Domains_Name",
@@ -414,34 +396,19 @@ namespace hippo.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Domains_OwnerId",
-                table: "Domains",
-                column: "OwnerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_EnvironmentVariables_ConfigId",
+                name: "IX_EnvironmentVariables_ConfigurationId",
                 table: "EnvironmentVariables",
-                column: "ConfigId");
+                column: "ConfigurationId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Keys_OwnerId",
-                table: "Keys",
-                column: "OwnerId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Releases_BuildId",
+                name: "IX_Releases_ApplicationId",
                 table: "Releases",
-                column: "BuildId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Releases_ConfigId",
-                table: "Releases",
-                column: "ConfigId");
+                column: "ApplicationId");
 
             migrationBuilder.AddForeignKey(
-                name: "FK_AspNetUsers_Applications_AppId",
+                name: "FK_AspNetUsers_Applications_ApplicationId",
                 table: "AspNetUsers",
-                column: "AppId",
+                column: "ApplicationId",
                 principalTable: "Applications",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Restrict);
@@ -469,25 +436,19 @@ namespace hippo.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "Certificates");
-
-            migrationBuilder.DropTable(
-                name: "Domains");
+                name: "Channels");
 
             migrationBuilder.DropTable(
                 name: "EnvironmentVariables");
 
             migrationBuilder.DropTable(
-                name: "Keys");
-
-            migrationBuilder.DropTable(
-                name: "Releases");
-
-            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Builds");
+                name: "Domains");
+
+            migrationBuilder.DropTable(
+                name: "Releases");
 
             migrationBuilder.DropTable(
                 name: "Configuration");
@@ -497,6 +458,9 @@ namespace hippo.Migrations
 
             migrationBuilder.DropTable(
                 name: "Applications");
+
+            migrationBuilder.DropTable(
+                name: "Keys");
         }
     }
 }

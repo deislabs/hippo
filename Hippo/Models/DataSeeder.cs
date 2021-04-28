@@ -41,9 +41,9 @@ namespace Hippo.Models
 
             if (!context.Applications.Any())
             {
-                var applications = new List<App>()
+                var applications = new List<Application>()
                 {
-                    new App
+                    new Application
                     {
                         Name = "helloworld",
                         Owner = user,
@@ -51,22 +51,16 @@ namespace Hippo.Models
                         {
                             new Release
                             {
-                                Revision = 1,
-                                Build = new Build
-                                {
-                                    UploadUrl = "bindle:hippos.rocks/helloworld/1"
-                                },
-                                Config = new Config
-                                {
-                                    EnvironmentVariables = new List<EnvironmentVariable>()
-                                    {
-                                        new EnvironmentVariable
-                                        {
-                                            Key = "HELLO",
-                                            Value = "world",
-                                        }
-                                    }
-                                }
+                                Revision = "1.0.0",
+                                UploadUrl = "bindle:hippos.rocks/helloworld/1.0.0"
+                            }
+                        },
+                        Channels = new List<Channel>
+                        {
+                            new Channel
+                            {
+                                Name = "development",
+
                             }
                         }
                     }

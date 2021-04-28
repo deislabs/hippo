@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace hippo.Migrations
+namespace Hippo.Migrations
 {
     public partial class AddModifiedTimestampTrigger : Migration
     {
@@ -20,13 +20,8 @@ CREATE TRIGGER trigger_app_modified
   FOR EACH ROW
   EXECUTE PROCEDURE update_modified_column();
 
-CREATE TRIGGER trigger_build_modified
-  BEFORE UPDATE ON ""Builds""
-  FOR EACH ROW
-  EXECUTE PROCEDURE update_modified_column();
-
-CREATE TRIGGER trigger_certificate_modified
-  BEFORE UPDATE ON ""Certificates""
+CREATE TRIGGER trigger_channel_modified
+  BEFORE UPDATE ON ""Channels""
   FOR EACH ROW
   EXECUTE PROCEDURE update_modified_column();
 
@@ -61,8 +56,7 @@ CREATE TRIGGER trigger_release_modified
         {
             migrationBuilder.Sql(
 @"DROP TRIGGER trigger_app_modified;
-DROP TRIGGER trigger_build_modified;
-DROP TRIGGER trigger_certificate_modified;
+DROP TRIGGER trigger_channel_modified;
 DROP TRIGGER trigger_config_modified;
 DROP TRIGGER trigger_domain_modified;
 DROP TRIGGER trigger_environmentvariable_modified;

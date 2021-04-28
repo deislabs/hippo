@@ -5,25 +5,15 @@ namespace Hippo.Models
 {
     public class Release: BaseEntity
     {
+        public Application Application { get; set; }
+        // TODO: is this something we can infer from the UploadUrl?
+        // e.g. bindle:hippos.rocks/myapp/1.0.0
+        //
+        // If so we should convert this to a function and parse the UploadUrl to fetch this information.
         [Required]
-        public int Revision { get; set; }
+        public string Revision { get; set; }
 
         [Required]
-        public Build Build { get; set; }
-
-        [Required]
-        public Config Config { get; set; }
-
-        public string WagiConfig()
-        {
-            var wagiConfig = new StringBuilder();
-            wagiConfig.AppendLine("[[module]]");
-            wagiConfig.AppendFormat("module = \"{0}\"\n", Build.UploadUrl.ToString());
-            foreach (EnvironmentVariable envvar in Config.EnvironmentVariables)
-            {
-                wagiConfig.AppendFormat("environment.{0} = \"{1}\"\n", envvar.Key, envvar.Value);
-            }
-            return wagiConfig.ToString();
-        }
+        public string UploadUrl { get; set; }
     }
 }

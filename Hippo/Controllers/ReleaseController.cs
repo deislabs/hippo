@@ -11,32 +11,27 @@ namespace Hippo.Controllers
 {
     [Route("api/[Controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class BuildController : Controller
+    public class ReleaseController : Controller
     {
         private readonly IAppRepository repository;
-        public BuildController(IAppRepository repository)
+        public ReleaseController(IAppRepository repository)
         {
             this.repository = repository;
         }
 
         [HttpPost]
-        public IActionResult New(BuildUploadForm form)
+        public IActionResult New(ReleaseUploadForm form)
         {
             if (ModelState.IsValid)
             {
                 var app = repository.SelectByUserAndId(User.Identity.Name, form.AppId);
                 if (app != null)
                 {
-                    var last_release = app.Releases.OrderBy(r => r.Revision).LastOrDefault();
                     app.Releases.Add(
                         new Release
                         {
-                            Build = new Build
-                            {
-                                UploadUrl = form.UploadUrl
-                            },
-                            Config = last_release.Config,
-                            Revision = last_release.Revision + 1,
+                            Revision = form.Revision,
+                            UploadUrl = form.UploadUrl
                         }
                     );
                     repository.Update(app);

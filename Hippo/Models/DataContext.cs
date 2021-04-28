@@ -10,10 +10,9 @@ namespace Hippo.Models
         }
 
         public DbSet<Account> Accounts { get; set; }
-        public DbSet<App> Applications { get; set; }
-        public DbSet<Build> Builds { get; set; }
-        public DbSet<Certificate> Certificates { get; set; }
-        public DbSet<Config> Configuration { get; set; }
+        public DbSet<Application> Applications { get; set; }
+        public DbSet<Channel> Channels { get; set; }
+        public DbSet<Configuration> Configuration { get; set; }
         public DbSet<Domain> Domains { get; set; }
         public DbSet<EnvironmentVariable> EnvironmentVariables { get; set; }
         public DbSet<Key> Keys { get; set; }
@@ -25,14 +24,12 @@ namespace Hippo.Models
 
             // TODO: there must be a cleaner way using the abstract BaseEntity class here...
             // meh. do what works for now.
-            modelBuilder.Entity<App>().Property(x => x.Created).HasDefaultValueSql("now()");
-            modelBuilder.Entity<App>().Property(x => x.Modified).HasDefaultValueSql("now()");
-            modelBuilder.Entity<Build>().Property(x => x.Created).HasDefaultValueSql("now()");
-            modelBuilder.Entity<Build>().Property(x => x.Modified).HasDefaultValueSql("now()");
-            modelBuilder.Entity<Certificate>().Property(x => x.Created).HasDefaultValueSql("now()");
-            modelBuilder.Entity<Certificate>().Property(x => x.Modified).HasDefaultValueSql("now()");
-            modelBuilder.Entity<Config>().Property(x => x.Created).HasDefaultValueSql("now()");
-            modelBuilder.Entity<Config>().Property(x => x.Modified).HasDefaultValueSql("now()");
+            modelBuilder.Entity<Application>().Property(x => x.Created).HasDefaultValueSql("now()");
+            modelBuilder.Entity<Application>().Property(x => x.Modified).HasDefaultValueSql("now()");
+            modelBuilder.Entity<Channel>().Property(x => x.Created).HasDefaultValueSql("now()");
+            modelBuilder.Entity<Channel>().Property(x => x.Modified).HasDefaultValueSql("now()");
+            modelBuilder.Entity<Configuration>().Property(x => x.Created).HasDefaultValueSql("now()");
+            modelBuilder.Entity<Configuration>().Property(x => x.Modified).HasDefaultValueSql("now()");
             modelBuilder.Entity<Domain>().Property(x => x.Created).HasDefaultValueSql("now()");
             modelBuilder.Entity<Domain>().Property(x => x.Modified).HasDefaultValueSql("now()");
             modelBuilder.Entity<EnvironmentVariable>().Property(x => x.Created).HasDefaultValueSql("now()");
@@ -42,9 +39,21 @@ namespace Hippo.Models
             modelBuilder.Entity<Release>().Property(x => x.Created).HasDefaultValueSql("now()");
             modelBuilder.Entity<Release>().Property(x => x.Modified).HasDefaultValueSql("now()");
 
-            modelBuilder.Entity<App>()
+            modelBuilder.Entity<Application>()
                 .HasIndex(a => a.Name)
                 .IsUnique();
+
+            modelBuilder.Entity<Application>()
+                .HasMany(a => a.Channels)
+                .WithOne(c => c.Application);
+
+            modelBuilder.Entity<Application>()
+                .HasMany(a => a.Releases)
+                .WithOne(r => r.Application);
+
+            modelBuilder.Entity<Configuration>()
+                .HasMany(c => c.EnvironmentVariables)
+                .WithOne(e => e.Configuration);
 
             modelBuilder.Entity<Domain>()
                 .HasIndex(d => d.Name)

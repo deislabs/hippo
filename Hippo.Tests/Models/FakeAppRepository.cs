@@ -7,13 +7,13 @@ namespace Hippo.Tests.Models
 {
     internal class FakeAppRepository: IAppRepository
     {
-        private readonly List<App> Applications;
+        private readonly List<Application> Applications;
 
         public FakeAppRepository()
         {
-            Applications = new List<App>
+            Applications = new List<Application>
             {
-                new App{
+                new Application{
                     Name = "one",
                     Owner = new Account
                     {
@@ -23,12 +23,12 @@ namespace Hippo.Tests.Models
             };
         }
 
-        public void Delete(App a)
+        public void Delete(Application a)
         {
             throw new NotImplementedException();
         }
 
-        public void Insert(App a)
+        public void Insert(Application a)
         {
             throw new NotImplementedException();
         }
@@ -38,27 +38,27 @@ namespace Hippo.Tests.Models
             throw new NotImplementedException();
         }
 
-        public IEnumerable<App> SelectAll()
+        public IEnumerable<Application> SelectAll()
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<App> SelectAllByUser(string username)
+        public IEnumerable<Application> SelectAllByUser(string username)
         {
             return Applications.Where(a => a.Owner.UserName == username);
         }
 
-        public App SelectById(Guid id)
+        public Application SelectById(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public App SelectByUserAndId(string username, Guid id)
+        public Application SelectByUserAndId(string username, Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public void Update(App a)
+        public void Update(Application a)
         {
             Applications.Add(a);
         }

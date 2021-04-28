@@ -3,9 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Hippo.Models
 {
-    public class Config: BaseEntity
+    public class Configuration: BaseEntity
     {
         [Required]
-        public List<EnvironmentVariable> EnvironmentVariables { get; set; }
+        public ICollection<EnvironmentVariable> EnvironmentVariables { get; set; }
     }
 }

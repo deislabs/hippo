@@ -6,15 +6,13 @@ namespace Hippo.Models
 {
     public interface IAppRepository
     {
-        IEnumerable<App> SelectAll();
-
-        IEnumerable<App> SelectAllByUser(string username);
-        App SelectById(Guid id);
-
-        App SelectByUserAndId(string username, Guid id);
-        void Insert(App a);
-        void Update(App a);
-        void Delete(App a);
+        IEnumerable<Application> SelectAll();
+        IEnumerable<Application> SelectAllByUser(string username);
+        Application SelectById(Guid id);
+        Application SelectByUserAndId(string username, Guid id);
+        void Insert(Application a);
+        void Update(Application a);
+        void Delete(Application a);
         void Save();
     }
 
@@ -26,15 +24,15 @@ namespace Hippo.Models
         {
             this.context = context;
         }
-        public void Insert(App a) => context.Add(a);
-        public IEnumerable<App> SelectAll() => context.Applications.OrderBy(a=>a.Name);
-        public App SelectById(Guid id) => context.Applications.Where(a=>a.Id==id).Single();
-        public void Delete(App a) => context.Remove(a);
+        public void Insert(Application a) => context.Add(a);
+        public IEnumerable<Application> SelectAll() => context.Applications.OrderBy(a=>a.Name);
+        public Application SelectById(Guid id) => context.Applications.Where(a=>a.Id==id).Single();
+        public void Delete(Application a) => context.Remove(a);
         public void Save() => context.SaveChanges();
-        public void Update(App a) => context.Update(a);
+        public void Update(Application a) => context.Update(a);
 
-        public IEnumerable<App> SelectAllByUser(string username) => context.Applications.Where(a=>a.Owner.UserName==username).OrderBy(a=>a.Name);
+        public IEnumerable<Application> SelectAllByUser(string username) => context.Applications.Where(a=>a.Owner.UserName==username).OrderBy(a=>a.Name);
 
-        public App SelectByUserAndId(string username, Guid id) => context.Applications.Where(a=>a.Id==id && a.Owner.UserName==username).Single();
+        public Application SelectByUserAndId(string username, Guid id) => context.Applications.Where(a=>a.Id==id && a.Owner.UserName==username).Single();
     }
 }

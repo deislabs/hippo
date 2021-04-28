@@ -50,7 +50,7 @@ namespace Hippo.Controllers
         {
             if (ModelState.IsValid)
             {
-                repository.Insert(new App
+                repository.Insert(new Application
                 {
                     Name = form.Name,
                     Owner = await userManager.FindByNameAsync(User.Identity.Name),
@@ -140,7 +140,7 @@ namespace Hippo.Controllers
             if (ModelState.IsValid)
             {
                 var a = repository.SelectByUserAndId(User.Identity.Name, id);
-                a.DeployTo(form.Revision, environment.ContentRootPath);
+                a.Publish(form.Revision, form.ChannelName);
                 return RedirectToAction(nameof(Index));
             }
             return View(form);

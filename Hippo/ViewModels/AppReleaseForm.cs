@@ -8,6 +8,8 @@ namespace Hippo.ViewModels
         [Required]
         public Guid Id { get; set; }
 
-        public int Revision { get; set; }
+        public string Revision { get; set; }
+
+        public string ChannelName { get; set; }
     }
 }
