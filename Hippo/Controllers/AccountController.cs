@@ -124,7 +124,7 @@ namespace Hippo.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateToken([FromBody] LoginForm form)
+        public async Task<IActionResult> CreateToken([FromBody] ApiLoginForm form)
         {
             if (ModelState.IsValid)
             {
@@ -170,7 +170,7 @@ namespace Hippo.Controllers
                         var token = new JwtSecurityToken(configuration["Jwt:Issuer"], // the creator of the token
                         configuration["Jwt:Audience"], // who can use the token
                         claims,
-                        expires: DateTime.UtcNow.AddMinutes(20),
+                        expires: DateTime.UtcNow.AddMinutes(30),
                         signingCredentials: credentials);
 
                         var results = new
