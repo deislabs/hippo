@@ -27,14 +27,11 @@ namespace Hippo.Controllers
                 var app = repository.SelectByUserAndId(User.Identity.Name, form.AppId);
                 if (app != null)
                 {
-                    app.Releases.Add(
-                        new Release
-                        {
-                            Revision = form.Revision,
-                            UploadUrl = form.UploadUrl
-                        }
-                    );
-                    repository.Update(app);
+                    repository.AddRelease(app, new Release
+                    {
+                        Revision = form.Revision,
+                        UploadUrl = form.UploadUrl
+                    });
                     repository.Save();
                     return RedirectToAction("Index", "App");
                 }

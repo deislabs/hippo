@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using NuGet.Versioning;
 
 namespace Hippo.Models
 {
@@ -10,6 +11,8 @@ namespace Hippo.Models
         IEnumerable<Application> SelectAllByUser(string username);
         Application SelectById(Guid id);
         Application SelectByUserAndId(string username, Guid id);
+
+        void AddRelease(Application a, Release r);
         void Insert(Application a);
         void Update(Application a);
         void Delete(Application a);
@@ -34,5 +37,27 @@ namespace Hippo.Models
         public IEnumerable<Application> SelectAllByUser(string username) => context.Applications.Where(a=>a.Owner.UserName==username).OrderBy(a=>a.Name);
 
         public Application SelectByUserAndId(string username, Guid id) => context.Applications.Where(a=>a.Id==id && a.Owner.UserName==username).Single();
+
+        public void AddRelease(Application a, Release release)
+        {
+            a.Releases.Add(release);
+            foreach (Channel c in a.Channels)
+            {
+                if (c.AutoDeploy)
+                {
+                    var filter = VersionRange.Parse(c.VersionRange);
+                    // find the latest version that satisfies the filter.
+                    foreach (Release r in a.Releases.OrderBy(r => r.Revision))
+                    {
+                        if (filter.Satisfies(NuGetVersion.Parse(r.Revision)))
+                        {
+                            c.UnPublish();
+                            c.Release = r;
+                            c.Publish();
+                        }
+                    }
+                }
+            }
+        }
     }
 }

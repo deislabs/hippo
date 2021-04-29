@@ -10,11 +10,29 @@ namespace Hippo.Models
     public class Channel: BaseEntity
     {
         public string Name { get; set; }
+
+        public bool AutoDeploy { get; set; }
+
+        public string VersionRange { get; set; }
         public Application Application { get; set; }
         public Domain Domain { get; set; }
         public Configuration Configuration { get; set; }
         public Release Release { get; set; }
 
+        /// <summary>
+        /// Gracefully shut down the current release. This prevents the channel
+        /// from receiving requests.
+        /// </summary>
+        public void UnPublish()
+        {
+            // TODO: stop the systemd service
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Publish the current release with no changes to the "auto deploy"
+        /// feature.
+        /// </summary>
         public void Publish()
         {
             File.WriteAllText(WagiConfigPath(), Toml.Parse(WagiConfig()).ToString());
@@ -23,6 +41,17 @@ namespace Hippo.Models
             // https://github.com/deislabs/hippo/blob/e0a5ed97cd1b00ec93fb3515ed51c3c5b9ee02d0/releases/models.py#L34-L41
             // https://seshuk.com/2020-06-02-linux-exec-dotnetcore/
             File.WriteAllText(TraefikConfigPath(), Toml.Parse(TraefikConfig()).ToString());
+        }
+
+        /// <summary>
+        /// Publish the current release. If autoDeploy is set to false, the
+        /// channel will no longer automatically deploy the next available
+        /// release.
+        /// </summary>
+        public void Publish(bool autoDeploy)
+        {
+            AutoDeploy = autoDeploy;
+            Publish();
         }
 
         public string TraefikConfig()
