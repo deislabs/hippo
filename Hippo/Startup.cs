@@ -45,10 +45,20 @@ namespace Hippo
               }
             );
 
-            services.AddDbContext<DataContext>(
-                options =>
-                options.UseNpgsql(Configuration.GetConnectionString("Hippo"))
-            );
+            if (HostingEnvironment.IsDevelopment())
+            {
+                services.AddDbContext<DataContext>(
+                    options =>
+                    options.UseInMemoryDatabase("Hippo")
+                );
+            }
+            else
+            {
+                services.AddDbContext<DataContext>(
+                    options =>
+                    options.UseNpgsql(Configuration.GetConnectionString("Hippo"))
+                );
+            }
 
             services.AddTransient<DataSeeder>();
 
