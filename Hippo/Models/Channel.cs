@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Text.Json;
@@ -31,8 +32,16 @@ namespace Hippo.Models
         /// </summary>
         public void UnPublish()
         {
-            // TODO: stop the systemd service
-            throw new NotImplementedException();
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = "systemctl",
+                    Arguments = "stop " + SystemdServicePath(),
+                }
+            };
+            process.Start();
+            process.WaitForExit();
         }
 
         /// <summary>
@@ -43,9 +52,16 @@ namespace Hippo.Models
         {
             File.WriteAllText(WagiConfigPath(), Toml.Parse(WagiConfig()).ToString());
             File.WriteAllText(SystemdServicePath(), SystemdService());
-            // TODO: start the systemd service before writing out the traefik config
-            // https://github.com/deislabs/hippo/blob/e0a5ed97cd1b00ec93fb3515ed51c3c5b9ee02d0/releases/models.py#L34-L41
-            // https://seshuk.com/2020-06-02-linux-exec-dotnetcore/
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = "systemctl",
+                    Arguments = "start " + SystemdServicePath(),
+                }
+            };
+            process.Start();
+            process.WaitForExit();
             File.WriteAllText(TraefikConfigPath(), Toml.Parse(TraefikConfig()).ToString());
         }
 
