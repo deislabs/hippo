@@ -23,6 +23,11 @@ namespace Hippo.Tests.Models
             };
         }
 
+        public void AddRelease(Application a, Release r)
+        {
+            throw new NotImplementedException();
+        }
+
         public void Delete(Application a)
         {
             throw new NotImplementedException();
