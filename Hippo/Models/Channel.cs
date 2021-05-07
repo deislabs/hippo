@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
 using System.Text;
 using System.Text.Json;
@@ -9,6 +10,8 @@ namespace Hippo.Models
 {
     public class Channel: BaseEntity
     {
+        private const int EphemeralPortRange = 32768;
+
         public string Name { get; set; }
 
         public bool AutoDeploy { get; set; }
@@ -16,6 +19,9 @@ namespace Hippo.Models
         public string VersionRange { get; set; }
         public Application Application { get; set; }
         public Domain Domain { get; set; }
+
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public uint Port { get; set; }
         public Configuration Configuration { get; set; }
         public Release Release { get; set; }
 
@@ -63,10 +69,8 @@ namespace Hippo.Models
             var routers = new Dictionary<string, object>();
             var services = new Dictionary<string, object>();
             var traefikConfig = new { Http = new { Routers = routers, Services = services}};
-            // TODO: determine port number from systemd
-            // https://github.com/deislabs/hippo/blob/e0a5ed97cd1b00ec93fb3515ed51c3c5b9ee02d0/releases/models.py#L97-L111
-            // var pid = 0;
-            var port = 8080;
+            // start from the ephemeral port range
+            var port = Port + EphemeralPortRange;
             routers.Add(
                 String.Format("to-{0}-{1}", Application.Name, Name),
                 new Dictionary<string, string>
@@ -120,7 +124,7 @@ namespace Hippo.Models
             systemdService.AppendLine("[Service]");
             systemdService.AppendLine("Type=simple");
             // TODO: make wagi system path configurable
-            systemdService.AppendFormat("ExecStart=/usr/local/bin/wagi --config {0} --listen 0.0.0.0:0\n", WagiConfigPath());
+            systemdService.AppendFormat("ExecStart=/usr/local/bin/wagi --config {0} --listen 0.0.0.0:{1}\n", WagiConfigPath(), Port + EphemeralPortRange);
             systemdService.AppendLine();
             systemdService.AppendLine("[Install]");
             systemdService.AppendLine("WantedBy=multi-user.target");
