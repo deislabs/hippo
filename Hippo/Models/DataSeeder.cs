@@ -47,7 +47,7 @@ namespace Hippo.Models
                     {
                         Name = "helloworld",
                         Owner = user,
-                        Releases = new List<Release>()
+                        Releases = new List<Release>
                         {
                             new Release
                             {
@@ -60,7 +60,6 @@ namespace Hippo.Models
                             new Channel
                             {
                                 Name = "development",
-
                             }
                         }
                     }

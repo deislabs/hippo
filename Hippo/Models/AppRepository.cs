@@ -36,7 +36,7 @@ namespace Hippo.Models
 
         public IEnumerable<Application> SelectAllByUser(string username) => context.Applications.Where(a=>a.Owner.UserName==username).OrderBy(a=>a.Name);
 
-        public Application SelectByUserAndId(string username, Guid id) => context.Applications.Where(a=>a.Id==id && (a.Owner.UserName==username || a.Collaborators.Exists(match=>match.UserName==username))).Single();
+        public Application SelectByUserAndId(string username, Guid id) => context.Applications.Where(a=>a.Id==id && (a.Owner.UserName==username)).Single();
 
         public void AddRelease(Application a, Release release)
         {
@@ -51,9 +51,9 @@ namespace Hippo.Models
                     {
                         if (filter.Satisfies(NuGetVersion.Parse(r.Revision)))
                         {
-                            c.UnPublish();
+                            c.Stop();
                             c.Release = r;
-                            c.Publish();
+                            c.Start();
                         }
                     }
                 }

@@ -26,12 +26,13 @@ namespace Hippo.Models
 
         public List<Channel> Channels { get; set; }
 
-        public void Publish(string revision, string channelName)
+        public void Start(string revision, string channelName)
         {
             var channel = Channels.Where(c => c.Name == channelName).Single();
             var release = Releases.Where(r => r.Revision == revision).Single();
+            channel.Stop();
             channel.Release = release;
-            channel.Publish();
+            channel.Start();
         }
     }
 }

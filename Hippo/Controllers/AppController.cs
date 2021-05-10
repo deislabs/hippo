@@ -128,6 +128,16 @@ namespace Hippo.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        public IActionResult Release(Guid id)
+        {
+            var a = repository.SelectByUserAndId(User.Identity.Name, id);
+            var vm = new AppReleaseForm
+            {
+                Id = a.Id
+            };
+            return View(vm);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Release(Guid id, AppReleaseForm form)
@@ -140,7 +150,7 @@ namespace Hippo.Controllers
             if (ModelState.IsValid)
             {
                 var a = repository.SelectByUserAndId(User.Identity.Name, id);
-                a.Publish(form.Revision, form.ChannelName);
+                a.Start(form.Revision, form.ChannelName);
                 return RedirectToAction(nameof(Index));
             }
             return View(form);

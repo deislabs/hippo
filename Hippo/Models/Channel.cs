@@ -30,7 +30,7 @@ namespace Hippo.Models
         /// Gracefully shut down the current release. This prevents the channel
         /// from receiving requests.
         /// </summary>
-        public void UnPublish()
+        public void Stop()
         {
             var process = new Process
             {
@@ -45,10 +45,10 @@ namespace Hippo.Models
         }
 
         /// <summary>
-        /// Publish the current release with no changes to the "auto deploy"
+        /// Start the current release with no changes to the "auto deploy"
         /// feature.
         /// </summary>
-        public void Publish()
+        public void Start()
         {
             File.WriteAllText(WagiConfigPath(), Toml.Parse(WagiConfig()).ToString());
             File.WriteAllText(SystemdServicePath(), SystemdService());
@@ -66,14 +66,14 @@ namespace Hippo.Models
         }
 
         /// <summary>
-        /// Publish the current release. If autoDeploy is set to false, the
+        /// Start the current release. If autoDeploy is set to false, the
         /// channel will no longer automatically deploy the next available
         /// release.
         /// </summary>
-        public void Publish(bool autoDeploy)
+        public void Start(bool autoDeploy)
         {
             AutoDeploy = autoDeploy;
-            Publish();
+            Start();
         }
 
         public string TraefikConfig()
