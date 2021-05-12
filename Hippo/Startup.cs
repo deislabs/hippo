@@ -60,7 +60,7 @@ namespace Hippo
                 );
             }
 
-            // services.AddTransient<DataSeeder>();
+            services.AddTransient<DataSeeder>();
 
             services.AddScoped<IAppRepository, AppRepository>();
 
@@ -72,9 +72,9 @@ namespace Hippo
             services.AddMvc();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
-            if (env.IsDevelopment())
+            if (HostingEnvironment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
@@ -98,12 +98,12 @@ namespace Hippo
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            // if (env.IsDevelopment())
-            // {
-            //     using var scope = app.ApplicationServices.CreateScope();
-            //     var seeder = scope.ServiceProvider.GetService<DataSeeder>();
-            //     seeder.Seed().Wait();
-            // }
+            if (HostingEnvironment.IsDevelopment())
+            {
+                using var scope = app.ApplicationServices.CreateScope();
+                var seeder = scope.ServiceProvider.GetService<DataSeeder>();
+                seeder.Seed().Wait();
+            }
         }
     }
 }

@@ -12,6 +12,7 @@ namespace Hippo.ViewModels
         public string Revision { get; set; }
 
         [Required]
+        [Display(Name = "Upload URL")]
         public string UploadUrl { get; set; }
     }
 }

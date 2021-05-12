@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/Hippo/bin/Debug/net5.0/hippo.dll",
+            "program": "${workspaceFolder}/Hippo/bin/Debug/net5.0/Hippo.dll",
             "args": [],
             "cwd": "${workspaceFolder}/Hippo",
             "stopAtEntry": false,
@@ -23,7 +23,7 @@
                 "ASPNETCORE_ENVIRONMENT": "Development"
             },
             "sourceFileMap": {
-                "/Views": "${workspaceFolder}/Hippo/Views"
+                "/Views": "${workspaceFolder}/Views"
             }
         },
         {

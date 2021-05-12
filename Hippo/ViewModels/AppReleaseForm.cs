@@ -10,6 +10,7 @@ namespace Hippo.ViewModels
 
         public string Revision { get; set; }
 
+        [Display(Name = "Channel Name")]
         public string ChannelName { get; set; }
     }
 }
