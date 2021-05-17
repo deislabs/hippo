@@ -13,10 +13,11 @@ namespace Hippo.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ReleaseController : Controller
     {
-        private readonly IAppRepository repository;
-        public ReleaseController(IAppRepository repository)
+        private readonly DataContext context;
+
+        public ReleaseController(DataContext context)
         {
-            this.repository = repository;
+            this.context = context;
         }
 
         [HttpPost]
@@ -24,15 +25,15 @@ namespace Hippo.Controllers
         {
             if (ModelState.IsValid)
             {
-                var app = repository.SelectByUserAndId(User.Identity.Name, form.AppId);
+                var app = context.Applications.Where(application=>application.Id==form.AppId && application.Owner.UserName==User.Identity.Name).SingleOrDefault();
                 if (app != null)
                 {
-                    repository.AddRelease(app, new Release
+                    app.Releases.Add(new Release
                     {
                         Revision = form.Revision,
                         UploadUrl = form.UploadUrl
                     });
-                    repository.Save();
+                    context.SaveChanges();
                     return RedirectToAction("Index", "App");
                 }
                 else

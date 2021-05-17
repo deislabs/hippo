@@ -62,8 +62,6 @@ namespace Hippo
 
             services.AddTransient<DataSeeder>();
 
-            services.AddScoped<IAppRepository, AppRepository>();
-
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "hippo", Version = "v1" });

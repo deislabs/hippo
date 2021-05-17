@@ -7,30 +7,37 @@ using Hippo.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Hosting;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using Tomlyn;
+using System.Text;
+using System.Collections.Generic;
+using System.Text.Json;
 
 namespace Hippo.Controllers
 {
     [Authorize]
     public class AppController : Controller
     {
-        private readonly IAppRepository repository;
+        private readonly DataContext context;
         private readonly UserManager<Account> userManager;
         private readonly IWebHostEnvironment environment;
 
-        public AppController(IAppRepository repository, UserManager<Account> userManager, IWebHostEnvironment environment)
+        public AppController(DataContext context, UserManager<Account> userManager, IWebHostEnvironment environment)
         {
-            this.repository = repository;
+            this.context = context;
             this.userManager = userManager;
             this.environment = environment;
         }
         public IActionResult Index()
         {
-            return View(repository.SelectAllByUser(User.Identity.Name));
+            return View(context.Applications.Where(application=>application.Owner.UserName==User.Identity.Name));
         }
 
         public IActionResult Details(Guid id)
         {
-            var a = repository.SelectByUserAndId(User.Identity.Name, id);
+            var a = context.Applications.Where(application=>application.Id==id && application.Owner.UserName==User.Identity.Name).SingleOrDefault();
             if (a == null)
             {
                 return NotFound();
@@ -50,12 +57,12 @@ namespace Hippo.Controllers
         {
             if (ModelState.IsValid)
             {
-                repository.Insert(new Application
+                context.Applications.Add(new Application
                 {
                     Name = form.Name,
                     Owner = await userManager.FindByNameAsync(User.Identity.Name),
                 });
-                repository.Save();
+                context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             return View(form);
@@ -63,7 +70,7 @@ namespace Hippo.Controllers
 
         public IActionResult Edit(Guid id)
         {
-            var a = repository.SelectByUserAndId(User.Identity.Name, id);
+            var a = context.Applications.Where(application=>application.Id==id && application.Owner.UserName==User.Identity.Name).SingleOrDefault();
             if (a == null)
             {
                 return NotFound();
@@ -90,11 +97,15 @@ namespace Hippo.Controllers
             {
                 try
                 {
-                    var a = repository.SelectByUserAndId(User.Identity.Name, id);
+                    var a = context.Applications.Where(application=>application.Id==id && application.Owner.UserName==User.Identity.Name).SingleOrDefault();
+                    if (a == null)
+                    {
+                        return NotFound();
+                    }
 
                     a.Name = form.Name;
-                    repository.Update(a);
-                    repository.Save();
+                    context.Applications.Update(a);
+                    context.SaveChanges();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -114,7 +125,11 @@ namespace Hippo.Controllers
 
         public IActionResult Delete(Guid id)
         {
-            var a = repository.SelectByUserAndId(User.Identity.Name, id);
+            var a = context.Applications.Where(application=>application.Id==id && application.Owner.UserName==User.Identity.Name).SingleOrDefault();
+            if (a == null)
+            {
+                return NotFound();
+            }
             return View(a);
         }
 
@@ -122,15 +137,15 @@ namespace Hippo.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(Guid id)
         {
-            var a = repository.SelectByUserAndId(User.Identity.Name, id);
-            repository.Delete(a);
-            repository.Save();
+            var a = context.Applications.Where(application=>application.Id==id && application.Owner.UserName==User.Identity.Name).SingleOrDefault();
+            context.Applications.Remove(a);
+            context.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Release(Guid id)
         {
-            var a = repository.SelectByUserAndId(User.Identity.Name, id);
+            var a = context.Applications.Where(application=>application.Id==id && application.Owner.UserName==User.Identity.Name).SingleOrDefault();
             var vm = new AppReleaseForm
             {
                 Id = a.Id
@@ -149,16 +164,37 @@ namespace Hippo.Controllers
 
             if (ModelState.IsValid)
             {
-                var a = repository.SelectByUserAndId(User.Identity.Name, id);
-                a.Start(form.Revision, form.ChannelName);
-                return RedirectToAction(nameof(Index));
+                var application = context.Applications
+                    .Where(application=>application.Id==id && application.Owner.UserName==User.Identity.Name)
+                    .SingleOrDefault();
+                var channel = context.Channels
+                    .Where(c => c.Application == application && c.Name == form.ChannelName)
+                    .Include(c => c.Application)
+                    .Include(c => c.Configuration)
+                        .ThenInclude(c => c.EnvironmentVariables)
+                    .Include(c => c.Domain)
+                    .Include(c => c.Release)
+                    .SingleOrDefault();
+                var release = context.Releases
+                    .Where(r => r.Application == application && r.Revision == form.Revision)
+                    .SingleOrDefault();
+
+                if (application != null && channel != null && release != null)
+                {
+                    channel.Stop();
+                    channel.Release = release;
+                    context.SaveChanges();
+                    channel.Start();
+                    return RedirectToAction(nameof(Index));
+                }
+                return NotFound();
             }
             return View(form);
         }
 
         private bool ApplicationExists(Guid id)
         {
-            return repository.SelectByUserAndId(User.Identity.Name, id) != null;
+            return context.Applications.Find(id) != null;
         }
     }
 }

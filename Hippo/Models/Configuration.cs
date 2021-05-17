@@ -6,6 +6,6 @@ namespace Hippo.Models
     public class Configuration: BaseEntity
     {
         [Required]
-        public ICollection<EnvironmentVariable> EnvironmentVariables { get; set; }
+        public virtual ICollection<EnvironmentVariable> EnvironmentVariables { get; set; }
     }
 }

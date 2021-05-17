@@ -50,8 +50,12 @@ namespace Hippo.Models
         /// </summary>
         public void Start()
         {
-            File.WriteAllText(WagiConfigPath(), Toml.Parse(WagiConfig()).ToString());
-            File.WriteAllText(SystemdServicePath(), SystemdService());
+            FileInfo wagiConfigFile = new(WagiConfigPath());
+            wagiConfigFile.Directory.Create();
+            File.WriteAllText(wagiConfigFile.FullName, Toml.Parse(WagiConfig()).ToString());
+            FileInfo systemdServiceFile = new(SystemdServicePath());
+            systemdServiceFile.Directory.Create();
+            File.WriteAllText(systemdServiceFile.FullName, SystemdService());
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo
@@ -62,7 +66,9 @@ namespace Hippo.Models
             };
             process.Start();
             process.WaitForExit();
-            File.WriteAllText(TraefikConfigPath(), Toml.Parse(TraefikConfig()).ToString());
+            FileInfo traefikConfigFile = new(TraefikConfigPath());
+            traefikConfigFile.Directory.Create();
+            File.WriteAllText(traefikConfigFile.FullName, Toml.Parse(TraefikConfig()).ToString());
         }
 
         /// <summary>

@@ -5,6 +5,7 @@ namespace Hippo.ViewModels
     public class LoginForm
     {
         [Required]
+        [Display(Name = "Username")]
         public string UserName { get; set; }
 
         [Required]

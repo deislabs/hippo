@@ -10,6 +10,7 @@ using System.Threading;
 using System.Security.Claims;
 using System.Security.Principal;
 using Xunit;
+using Microsoft.EntityFrameworkCore;
 
 namespace Hippo.Tests.Controllers
 {
@@ -41,9 +42,12 @@ namespace Hippo.Tests.Controllers
             .ReturnsAsync(user);
             var environment = new Mock<IWebHostEnvironment>();
             environment.Setup(x => x.ContentRootPath).Returns("/etc");
-            var repository = new FakeAppRepository();
+            var options = new DbContextOptionsBuilder<DataContext>()
+                .UseInMemoryDatabase(databaseName: "Hippo")
+                .Options;
+            var context = new DataContext(options);
             var userManager = new UserManager<Account>(store.Object, null, null, null, null, null, null, null, null);
-            controller = new AppController(repository, userManager, environment.Object);
+            controller = new AppController(context, userManager, environment.Object);
         }
 
         [Fact]

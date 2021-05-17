@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Hippo.Models;
 using Xunit;
 
@@ -43,7 +44,7 @@ namespace Hippo.Tests.Models
 @"[[module]]
 module = ""bindle:hippos.rocks/one/1.0.0""
 ",
-            application.Channels[0].WagiConfig());
+            application.Channels.First().WagiConfig());
         }
     }
 }

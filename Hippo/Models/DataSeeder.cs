@@ -41,7 +41,7 @@ namespace Hippo.Models
 
             if (!context.Applications.Any())
             {
-                var applications = new List<Application>()
+                var applications = new List<Application>
                 {
                     new Application
                     {
@@ -60,14 +60,30 @@ namespace Hippo.Models
                             new Channel
                             {
                                 Name = "development",
+                                Configuration = new Configuration
+                                {
+                                    EnvironmentVariables = new List<EnvironmentVariable>
+                                    {
+                                        new EnvironmentVariable
+                                        {
+                                            Key = "HELLO",
+                                            Value = "world"
+                                        }
+                                    }
+                                },
+                                Domain = new Domain
+                                {
+                                    Name = "app.hippos.rocks"
+                                }
                             }
                         }
                     }
                 };
 
-                context.AddRange(applications);
-                context.SaveChanges();
+                context.Applications.AddRange(applications);
             }
+
+            context.SaveChanges();
         }
     }
 }

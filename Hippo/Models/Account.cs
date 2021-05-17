@@ -20,6 +20,6 @@ namespace Hippo.Models
         /// <summary>
         /// Personal signing key used for signing off releases and determining trust.
         /// </summary>
-        public Key SigningKey { get; set; }
+        public virtual Key SigningKey { get; set; }
     }
 }

@@ -5,7 +5,8 @@ namespace Hippo.Models
 {
     public class Release: BaseEntity
     {
-        public Application Application { get; set; }
+        public virtual Application Application { get; set; }
+
         // TODO: is this something we can infer from the UploadUrl?
         // e.g. bindle:hippos.rocks/myapp/1.0.0
         //
