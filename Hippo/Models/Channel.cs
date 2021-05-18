@@ -90,7 +90,7 @@ namespace Hippo.Models
             }
             var routers = new Dictionary<string, object>();
             var services = new Dictionary<string, object>();
-            var traefikConfig = new { Http = new { Routers = routers, Services = services}};
+            var traefikConfig = new { http = new { routers, services}};
             // start from the ephemeral port range
             var port = Port + EphemeralPortRange;
             routers.Add(
@@ -110,7 +110,7 @@ namespace Hippo.Models
                 new Dictionary<string, object>
                 {
                     {
-                        "LoadBalancer",
+                        "loadBalancer",
                         new Dictionary<string, object>
                         {
                             {
@@ -129,7 +129,7 @@ namespace Hippo.Models
                     }
                 }
             );
-            return JsonSerializer.Serialize(traefikConfig, new JsonSerializerOptions{ PropertyNamingPolicy = JsonNamingPolicy.CamelCase});
+            return Nett.Toml.WriteString(traefikConfig);
         }
 
         public string TraefikConfigPath()
