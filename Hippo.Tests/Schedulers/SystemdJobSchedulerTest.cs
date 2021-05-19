@@ -1,15 +1,16 @@
 using System.Collections.Generic;
 using System.Linq;
 using Hippo.Models;
+using Hippo.Schedulers;
 using Xunit;
 
-namespace Hippo.Tests.Models
+namespace Hippo.Tests.Schedulers
 {
-    public class ChannelTest
+    public class SystemdJobSchedulerTest
     {
         private readonly Application application;
 
-        public ChannelTest()
+        public SystemdJobSchedulerTest()
         {
             application = new Application
             {
@@ -45,7 +46,7 @@ namespace Hippo.Tests.Models
 @"[[module]]
 module = ""bindle:hippos.rocks/one/1.0.0""
 ",
-            application.Channels.First().WagiConfig());
+            SystemdJobScheduler.WagiConfig(application.Channels.First()));
         }
 
         [Fact]
@@ -69,7 +70,7 @@ service = ""one-development""
 [[http.services.one-development.loadBalancer.servers]]
 url = ""http://localhost:32768""
 ".Trim(),
-                application.Channels.First().TraefikConfig().Trim());
+                SystemdJobScheduler.TraefikConfig(application.Channels.First()).Trim());
         }
     }
 }

@@ -1,6 +1,5 @@
 using Hippo.Controllers;
 using Hippo.Models;
-using Hippo.Tests.Models;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +10,7 @@ using System.Security.Claims;
 using System.Security.Principal;
 using Xunit;
 using Microsoft.EntityFrameworkCore;
+using Hippo.Tests.Schedulers;
 
 namespace Hippo.Tests.Controllers
 {
@@ -47,7 +47,8 @@ namespace Hippo.Tests.Controllers
                 .Options;
             var context = new DataContext(options);
             var userManager = new UserManager<Account>(store.Object, null, null, null, null, null, null, null, null);
-            controller = new AppController(context, userManager, environment.Object);
+            var jobScheduler = new FakeJobScheduler();
+            controller = new AppController(context, userManager, environment.Object, jobScheduler);
         }
 
         [Fact]

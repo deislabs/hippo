@@ -46,7 +46,7 @@ namespace Hippo.Schedulers
             process.WaitForExit();
         }
 
-        private static string TraefikConfig(Channel c)
+        public static string TraefikConfig(Channel c)
         {
             if (c.Domain == null)
             {
@@ -83,12 +83,12 @@ namespace Hippo.Schedulers
             return Toml.WriteString(traefikConfig);
         }
 
-        private static string TraefikConfigPath(Channel c)
+        public static string TraefikConfigPath(Channel c)
         {
             return Path.Combine("/etc", "traefik", "conf.d", c.Name + ".toml");
         }
 
-        private static string SystemdService(Channel c)
+        public static string SystemdService(Channel c)
         {
             var systemdService = new StringBuilder();
             systemdService.AppendLine("[Unit]");
@@ -104,12 +104,12 @@ namespace Hippo.Schedulers
             return systemdService.ToString();
         }
 
-        private static string SystemdServicePath(Channel c)
+        public static string SystemdServicePath(Channel c)
         {
             return Path.Combine("/etc", "systemd", "system", "hippo-" + c.Application.Name + "-" + c.Name + ".service");
         }
 
-        private static string WagiConfig(Channel c)
+        public static string WagiConfig(Channel c)
         {
             var wagiConfig = new StringBuilder();
             wagiConfig.AppendLine("[[module]]");
@@ -121,7 +121,7 @@ namespace Hippo.Schedulers
             return wagiConfig.ToString();
         }
 
-        private static string WagiConfigPath(Channel c)
+        public static string WagiConfigPath(Channel c)
         {
             return Path.Combine("/etc", "wagi", c.Id.ToString(), "modules.toml");
         }
