@@ -1,3 +1,4 @@
+using Nett;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -5,7 +6,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Text.Json;
-using Tomlyn;
 
 namespace Hippo.Models
 {
@@ -52,7 +52,7 @@ namespace Hippo.Models
         {
             FileInfo wagiConfigFile = new(WagiConfigPath());
             wagiConfigFile.Directory.Create();
-            File.WriteAllText(wagiConfigFile.FullName, Toml.Parse(WagiConfig()).ToString());
+            File.WriteAllText(wagiConfigFile.FullName, WagiConfig());
             FileInfo systemdServiceFile = new(SystemdServicePath());
             systemdServiceFile.Directory.Create();
             File.WriteAllText(systemdServiceFile.FullName, SystemdService());
@@ -68,7 +68,7 @@ namespace Hippo.Models
             process.WaitForExit();
             FileInfo traefikConfigFile = new(TraefikConfigPath());
             traefikConfigFile.Directory.Create();
-            File.WriteAllText(traefikConfigFile.FullName, Toml.Parse(TraefikConfig()).ToString());
+            File.WriteAllText(traefikConfigFile.FullName, TraefikConfig());
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace Hippo.Models
             };
 
             var traefikConfig = new { http = new { routers, services}};
-            return Nett.Toml.WriteString(traefikConfig);
+            return Toml.WriteString(traefikConfig);
         }
 
         public string TraefikConfigPath()
