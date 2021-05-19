@@ -1,4 +1,5 @@
 using Hippo.Models;
+using Hippo.Schedulers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -61,6 +62,8 @@ namespace Hippo
             }
 
             services.AddTransient<DataSeeder>();
+
+            services.AddSingleton<IJobScheduler, SystemdJobScheduler>();
 
             services.AddSwaggerGen(c =>
             {

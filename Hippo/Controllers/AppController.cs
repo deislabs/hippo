@@ -14,6 +14,7 @@ using Tomlyn;
 using System.Text;
 using System.Collections.Generic;
 using System.Text.Json;
+using Hippo.Schedulers;
 
 namespace Hippo.Controllers
 {
@@ -23,12 +24,14 @@ namespace Hippo.Controllers
         private readonly DataContext context;
         private readonly UserManager<Account> userManager;
         private readonly IWebHostEnvironment environment;
+        private readonly IJobScheduler scheduler;
 
-        public AppController(DataContext context, UserManager<Account> userManager, IWebHostEnvironment environment)
+        public AppController(DataContext context, UserManager<Account> userManager, IWebHostEnvironment environment, IJobScheduler scheduler)
         {
             this.context = context;
             this.userManager = userManager;
             this.environment = environment;
+            this.scheduler = scheduler;
         }
         public IActionResult Index()
         {
@@ -181,10 +184,10 @@ namespace Hippo.Controllers
 
                 if (application != null && channel != null && release != null)
                 {
-                    channel.Stop();
+                    scheduler.Stop(channel);
                     channel.Release = release;
                     context.SaveChanges();
-                    channel.Start();
+                    scheduler.Start(channel);
                     return RedirectToAction(nameof(Index));
                 }
                 return NotFound();
