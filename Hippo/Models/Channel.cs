@@ -142,7 +142,7 @@ namespace Hippo.Models
 
         public string SystemdServicePath()
         {
-            return Path.Combine("/etc", "systemd", "system", "hippo-" + Name + ".service");
+            return Path.Combine("/etc", "systemd", "system", "hippo-" + Application.Name + "-" + Name + ".service");
         }
 
         public string WagiConfig()
