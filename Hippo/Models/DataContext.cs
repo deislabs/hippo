@@ -14,7 +14,6 @@ namespace Hippo.Models
         public DbSet<Channel> Channels { get; set; }
         public DbSet<Configuration> Configuration { get; set; }
         public DbSet<Domain> Domains { get; set; }
-
         public DbSet<EnvironmentVariable> EnvironmentVariables { get; set; }
         public DbSet<Key> Keys { get; set; }
         public DbSet<Release> Releases { get; set; }
