@@ -11,6 +11,7 @@ using System.Security.Principal;
 using Xunit;
 using Microsoft.EntityFrameworkCore;
 using Hippo.Tests.Schedulers;
+using AutoMapper;
 
 namespace Hippo.Tests.Controllers
 {
@@ -47,8 +48,9 @@ namespace Hippo.Tests.Controllers
                 .Options;
             var context = new DataContext(options);
             var userManager = new UserManager<Account>(store.Object, null, null, null, null, null, null, null, null);
+            var mapper = new Mock<IMapper>();
             var jobScheduler = new FakeJobScheduler();
-            controller = new AppController(context, userManager, environment.Object, jobScheduler);
+            controller = new AppController(context, userManager, environment.Object, mapper.Object, jobScheduler);
         }
 
         [Fact]
