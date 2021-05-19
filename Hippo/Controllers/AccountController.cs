@@ -45,14 +45,24 @@ namespace Hippo.Controllers
                     UserName = form.UserName,
                     Email = form.Email,
                 };
-                if (!context.Accounts.Any()) {
-                    // first account is a super user
-                    account.IsSuperUser = true;
-                }
+                var isFirstAccount = !context.Accounts.Any();
 
                 var result = await signInManager.UserManager.CreateAsync(account, form.Password);
                 if (result.Succeeded)
                 {
+                    if (isFirstAccount)
+                    {
+                        // assign first user as Administrator
+                        var roleResult = await signInManager.UserManager.AddToRoleAsync(account, "Administrator");
+                        if (!roleResult.Succeeded)
+                        {
+                            ModelState.AddModelError("", "failed to assign role 'Administrator'");
+                            foreach (IdentityError error in result.Errors)
+                            {
+                                ModelState.AddModelError("", error.Description);
+                            }
+                        }
+                    }
                     return RedirectToAction("Login", "Account");
                 }
                 else

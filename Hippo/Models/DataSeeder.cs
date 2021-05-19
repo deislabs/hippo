@@ -29,14 +29,18 @@ namespace Hippo.Models
                 {
                     UserName = "admin",
                     Email = "admin@hippos.rocks",
-                    IsSuperUser = true,
                 };
             }
 
             var result = await userManager.CreateAsync(user, "Passw0rd!");
-            if (result != IdentityResult.Success)
+            if (!result.Succeeded)
             {
                 throw new InvalidOperationException("Failed to create default user");
+            }
+            var roleResult = await userManager.AddToRoleAsync(user, "Administrator");
+            if (!roleResult.Succeeded)
+            {
+                throw new InvalidOperationException("Failed to assign default user as Administrator");
             }
 
             if (!context.Applications.Any())

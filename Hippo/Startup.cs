@@ -9,7 +9,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Hippo
 {
@@ -46,6 +48,12 @@ namespace Hippo
               }
             );
 
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("RequireAdministratorRole",
+                    policy => policy.RequireRole("Administrator"));
+            });
+
             if (HostingEnvironment.IsDevelopment())
             {
                 services.AddDbContext<DataContext>(
@@ -73,7 +81,7 @@ namespace Hippo
             services.AddMvc();
         }
 
-        public void Configure(IApplicationBuilder app)
+        public void Configure(IApplicationBuilder app, IServiceProvider serviceProvider)
         {
             if (HostingEnvironment.IsDevelopment())
             {
@@ -99,6 +107,8 @@ namespace Hippo
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
 
+            CreateRoles(serviceProvider);
+
             if (HostingEnvironment.IsDevelopment())
             {
                 using var scope = app.ApplicationServices.CreateScope();
@@ -106,5 +116,21 @@ namespace Hippo
                 seeder.Seed().Wait();
             }
         }
+
+        private static void CreateRoles(IServiceProvider serviceProvider)
+        {
+            var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            Task<IdentityResult> roleResult;
+
+            Task<bool> hasAdminRole = roleManager.RoleExistsAsync("Administrator");
+            hasAdminRole.Wait();
+
+            if (!hasAdminRole.Result)
+            {
+                roleResult = roleManager.CreateAsync(new IdentityRole("Administrator"));
+                roleResult.Wait();
+            }
+        }
+
     }
 }
