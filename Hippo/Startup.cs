@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Reflection;
 using System.Text;
 
 namespace Hippo
@@ -62,6 +63,8 @@ namespace Hippo
             }
 
             services.AddTransient<DataSeeder>();
+
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
             services.AddSingleton<IJobScheduler, SystemdJobScheduler>();
 

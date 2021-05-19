@@ -14,9 +14,11 @@ namespace Hippo.Models
         public DbSet<Channel> Channels { get; set; }
         public DbSet<Configuration> Configuration { get; set; }
         public DbSet<Domain> Domains { get; set; }
+
         public DbSet<EnvironmentVariable> EnvironmentVariables { get; set; }
         public DbSet<Key> Keys { get; set; }
         public DbSet<Release> Releases { get; set; }
+        public DbSet<Snapshot> Snapshots { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -38,6 +40,8 @@ namespace Hippo.Models
             modelBuilder.Entity<Key>().Property(x => x.Modified).HasDefaultValueSql("now()");
             modelBuilder.Entity<Release>().Property(x => x.Created).HasDefaultValueSql("now()");
             modelBuilder.Entity<Release>().Property(x => x.Modified).HasDefaultValueSql("now()");
+            modelBuilder.Entity<Snapshot>().Property(x => x.Created).HasDefaultValueSql("now()");
+            modelBuilder.Entity<Snapshot>().Property(x => x.Modified).HasDefaultValueSql("now()");
 
             modelBuilder.Entity<Application>()
                 .HasIndex(a => a.Name)

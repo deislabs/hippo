@@ -15,6 +15,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Text.Json;
 using Hippo.Schedulers;
+using AutoMapper;
 
 namespace Hippo.Controllers
 {
@@ -24,13 +25,15 @@ namespace Hippo.Controllers
         private readonly DataContext context;
         private readonly UserManager<Account> userManager;
         private readonly IWebHostEnvironment environment;
+        private readonly IMapper mapper;
         private readonly IJobScheduler scheduler;
 
-        public AppController(DataContext context, UserManager<Account> userManager, IWebHostEnvironment environment, IJobScheduler scheduler)
+        public AppController(DataContext context, UserManager<Account> userManager, IWebHostEnvironment environment, IMapper mapper, IJobScheduler scheduler)
         {
             this.context = context;
             this.userManager = userManager;
             this.environment = environment;
+            this.mapper = mapper;
             this.scheduler = scheduler;
         }
         public IActionResult Index()
@@ -144,6 +147,46 @@ namespace Hippo.Controllers
             context.Applications.Remove(a);
             context.SaveChanges();
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult CreateSnapshot(Guid id)
+        {
+            var a = context.Applications.Where(application=>application.Id==id && application.Owner.UserName==User.Identity.Name).SingleOrDefault();
+            var vm = new AppSnapshotForm
+            {
+                Id = a.Id
+            };
+            return View(vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult CreateSnapshot(Guid id, AppSnapshotForm form)
+        {
+            if (id != form.Id)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                var application = context.Applications
+                    .Where(application=>application.Id==id && application.Owner.UserName==User.Identity.Name)
+                    .SingleOrDefault();
+                var channel = context.Channels
+                    .Where(c => c.Application == application && c.Name == form.ChannelName)
+                    .Include(c => c.Application)
+                    .Include(c => c.Configuration)
+                        .ThenInclude(c => c.EnvironmentVariables)
+                    .Include(c => c.Domain)
+                    .Include(c => c.Release)
+                    .SingleOrDefault();
+                Snapshot snapshot = mapper.Map<Snapshot>(channel);
+                context.Snapshots.Add(snapshot);
+                context.SaveChanges();
+                return RedirectToAction(nameof(Index));
+            }
+            return View(form);
         }
 
         public IActionResult Release(Guid id)
