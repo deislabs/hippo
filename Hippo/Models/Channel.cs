@@ -88,48 +88,35 @@ namespace Hippo.Models
             {
                 return "";
             }
-            var routers = new Dictionary<string, object>();
-            var services = new Dictionary<string, object>();
-            var traefikConfig = new { Http = new { Routers = routers, Services = services}};
+
             // start from the ephemeral port range
             var port = Port + EphemeralPortRange;
-            routers.Add(
-                String.Format("to-{0}-{1}", Application.Name, Name),
-                new Dictionary<string, string>
+            var serviceId = $"{Application.Name}-{Name}";
+
+            var routers = new Dictionary<string, object> {
                 {
-                    {
-                        "rule", String.Format("Host(`{0}`) && PathPrefix(`/`)", Domain.Name)
-                    },
-                    {
-                        "service", String.Format("{0}-{1}", Application.Name, Name)
+                    $"to-{serviceId}",
+                    new {
+                        rule = $"Host(`{Domain.Name}`) && PathPrefix(`/`)",
+                        service = serviceId
                     }
                 }
-            );
-            services.Add(
-                String.Format("{0}-{1}", Application.Name, Name),
-                new Dictionary<string, object>
+            };
+            var services = new Dictionary<string, object> {
                 {
-                    {
-                        "LoadBalancer",
-                        new Dictionary<string, object>
-                        {
-                            {
-                                "servers",
-                                new List<Dictionary<string, string>>
-                                {
-                                    new Dictionary<string, string>
-                                    {
-                                        {
-                                            "url", String.Format("http://localhost:{0}", port)
-                                        }
-                                    }
-                                }
+                    serviceId,
+                    new {
+                        loadBalancer = new {
+                            servers = new [] {
+                                new { url = $"http://localhost:{port}" }
                             }
                         }
                     }
                 }
-            );
-            return JsonSerializer.Serialize(traefikConfig, new JsonSerializerOptions{ PropertyNamingPolicy = JsonNamingPolicy.CamelCase});
+            };
+
+            var traefikConfig = new { http = new { routers, services}};
+            return Nett.Toml.WriteString(traefikConfig);
         }
 
         public string TraefikConfigPath()
