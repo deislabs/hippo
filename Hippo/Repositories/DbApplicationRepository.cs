@@ -44,7 +44,9 @@ namespace Hippo.Repositories
             var a = GetApplicationById(id);
             _context.Applications.Remove(a);
             await _context.SaveChangesAsync();
-
         }
+
+        public async Task SaveChanges() =>
+            await _context.SaveChangesAsync();
     }
 }

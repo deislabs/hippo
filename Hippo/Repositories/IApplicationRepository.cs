@@ -13,5 +13,6 @@ namespace Hippo.Repositories
         Task AddNew(Application application);
         Task Update(Application application);
         Task DeleteApplicationById(Guid id);
+        Task SaveChanges();
     }
 }

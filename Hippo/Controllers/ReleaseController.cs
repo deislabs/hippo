@@ -1,6 +1,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Hippo.Models;
+using Hippo.Repositories;
 using Hippo.ViewModels;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -13,19 +14,19 @@ namespace Hippo.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ReleaseController : Controller
     {
-        private readonly DataContext context;
+        private readonly IApplicationRepository applications;
 
-        public ReleaseController(DataContext context)
+        public ReleaseController(IApplicationRepository applications)
         {
-            this.context = context;
+            this.applications = applications;
         }
 
         [HttpPost]
-        public IActionResult New(ReleaseUploadForm form)
+        public async Task<IActionResult> New(ReleaseUploadForm form)
         {
             if (ModelState.IsValid)
             {
-                var app = context.Applications.Where(application=>application.Id==form.AppId && application.Owner.UserName==User.Identity.Name).SingleOrDefault();
+                var app = applications.GetApplicationById(form.AppId);
                 if (app != null)
                 {
                     app.Releases.Add(new Release
@@ -33,7 +34,7 @@ namespace Hippo.Controllers
                         Revision = form.Revision,
                         UploadUrl = form.UploadUrl
                     });
-                    context.SaveChanges();
+                    await applications.SaveChanges();
                     return RedirectToAction("Index", "App");
                 }
                 else
