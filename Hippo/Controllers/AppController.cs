@@ -15,32 +15,38 @@ using System.Text;
 using System.Collections.Generic;
 using System.Text.Json;
 using Hippo.Schedulers;
+using Hippo.Repositories;
 
 namespace Hippo.Controllers
 {
     [Authorize]
     public class AppController : Controller
     {
-        private readonly DataContext context;
+        private readonly IApplicationRepository applications;
+        private readonly IChannelRepository channels;
+        private readonly IReleaseRepository releases;
         private readonly UserManager<Account> userManager;
         private readonly IWebHostEnvironment environment;
         private readonly IJobScheduler scheduler;
 
-        public AppController(DataContext context, UserManager<Account> userManager, IWebHostEnvironment environment, IJobScheduler scheduler)
+        public AppController(IApplicationRepository applications, IChannelRepository channels, IReleaseRepository releases, UserManager<Account> userManager, IWebHostEnvironment environment, IJobScheduler scheduler)
         {
-            this.context = context;
+            this.applications = applications;
+            this.channels = channels;
+            this.releases = releases;
             this.userManager = userManager;
             this.environment = environment;
             this.scheduler = scheduler;
         }
+
         public IActionResult Index()
         {
-            return View(context.Applications.Where(application=>application.Owner.UserName==User.Identity.Name));
+            return View(applications.ListApplications());
         }
 
         public IActionResult Details(Guid id)
         {
-            var a = context.Applications.Where(application=>application.Id==id && application.Owner.UserName==User.Identity.Name).SingleOrDefault();
+            var a = applications.GetApplicationById(id);
             if (a == null)
             {
                 return NotFound();
@@ -60,12 +66,11 @@ namespace Hippo.Controllers
         {
             if (ModelState.IsValid)
             {
-                context.Applications.Add(new Application
+                await applications.AddNew(new Application
                 {
                     Name = form.Name,
                     Owner = await userManager.FindByNameAsync(User.Identity.Name),
                 });
-                context.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             return View(form);
@@ -73,7 +78,7 @@ namespace Hippo.Controllers
 
         public IActionResult Edit(Guid id)
         {
-            var a = context.Applications.Where(application=>application.Id==id && application.Owner.UserName==User.Identity.Name).SingleOrDefault();
+            var a = applications.GetApplicationById(id);
             if (a == null)
             {
                 return NotFound();
@@ -89,7 +94,7 @@ namespace Hippo.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Guid id, [Bind("Id,Name")] AppEditForm form)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name")] AppEditForm form)
         {
             if (id != form.Id)
             {
@@ -100,19 +105,18 @@ namespace Hippo.Controllers
             {
                 try
                 {
-                    var a = context.Applications.Where(application=>application.Id==id && application.Owner.UserName==User.Identity.Name).SingleOrDefault();
+                    var a = applications.GetApplicationById(id);
                     if (a == null)
                     {
                         return NotFound();
                     }
 
                     a.Name = form.Name;
-                    context.Applications.Update(a);
-                    context.SaveChanges();
+                    await applications.Update(a);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ApplicationExists(form.Id))
+                    if (!applications.ApplicationExistsById(form.Id))
                     {
                         return NotFound();
                     }
@@ -128,7 +132,7 @@ namespace Hippo.Controllers
 
         public IActionResult Delete(Guid id)
         {
-            var a = context.Applications.Where(application=>application.Id==id && application.Owner.UserName==User.Identity.Name).SingleOrDefault();
+            var a = applications.GetApplicationById(id);
             if (a == null)
             {
                 return NotFound();
@@ -138,17 +142,15 @@ namespace Hippo.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(Guid id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var a = context.Applications.Where(application=>application.Id==id && application.Owner.UserName==User.Identity.Name).SingleOrDefault();
-            context.Applications.Remove(a);
-            context.SaveChanges();
+            await applications.DeleteApplicationById(id);
             return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Release(Guid id)
         {
-            var a = context.Applications.Where(application=>application.Id==id && application.Owner.UserName==User.Identity.Name).SingleOrDefault();
+            var a = applications.GetApplicationById(id);
             var vm = new AppReleaseForm
             {
                 Id = a.Id
@@ -158,7 +160,7 @@ namespace Hippo.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Release(Guid id, AppReleaseForm form)
+        public async Task<IActionResult> Release(Guid id, AppReleaseForm form)
         {
             if (id != form.Id)
             {
@@ -167,37 +169,21 @@ namespace Hippo.Controllers
 
             if (ModelState.IsValid)
             {
-                var application = context.Applications
-                    .Where(application=>application.Id==id && application.Owner.UserName==User.Identity.Name)
-                    .SingleOrDefault();
-                var channel = context.Channels
-                    .Where(c => c.Application == application && c.Name == form.ChannelName)
-                    .Include(c => c.Application)
-                    .Include(c => c.Configuration)
-                        .ThenInclude(c => c.EnvironmentVariables)
-                    .Include(c => c.Domain)
-                    .Include(c => c.Release)
-                    .SingleOrDefault();
-                var release = context.Releases
-                    .Where(r => r.Application == application && r.Revision == form.Revision)
-                    .SingleOrDefault();
+                var application = applications.GetApplicationById(id);
+                var channel = channels.GetChannelByName(application, form.ChannelName);
+                var release = releases.GetReleaseByRevision(application, form.Revision);
 
                 if (application != null && channel != null && release != null)
                 {
                     scheduler.Stop(channel);
                     channel.Release = release;
-                    context.SaveChanges();
+                    await channels.SaveChanges();
                     scheduler.Start(channel);
                     return RedirectToAction(nameof(Index));
                 }
                 return NotFound();
             }
             return View(form);
-        }
-
-        private bool ApplicationExists(Guid id)
-        {
-            return context.Applications.Find(id) != null;
         }
     }
 }

@@ -11,6 +11,7 @@ using System.Security.Principal;
 using Xunit;
 using Microsoft.EntityFrameworkCore;
 using Hippo.Tests.Schedulers;
+using Hippo.Repositories;
 
 namespace Hippo.Tests.Controllers
 {
@@ -48,7 +49,7 @@ namespace Hippo.Tests.Controllers
             var context = new DataContext(options);
             var userManager = new UserManager<Account>(store.Object, null, null, null, null, null, null, null, null);
             var jobScheduler = new FakeJobScheduler();
-            controller = new AppController(context, userManager, environment.Object, jobScheduler);
+            controller = new AppController(new DbApplicationRepository(context, new FakeCurrentUser(admin.UserName)), new DbChannelRepository(context), new DbReleaseRepository(context), userManager, environment.Object, jobScheduler);
         }
 
         [Fact]
@@ -67,5 +68,17 @@ namespace Hippo.Tests.Controllers
             var viewResult = controller.Index();
             Assert.NotNull(viewResult);
         }
+    }
+
+    class FakeCurrentUser: ICurrentUser
+    {
+        private readonly string _name;
+
+        public FakeCurrentUser(string name)
+        {
+            _name = name;    
+        }
+
+        public string Name() => _name;
     }
 }

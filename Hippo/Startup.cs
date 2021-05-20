@@ -1,8 +1,10 @@
 using Hippo.Models;
+using Hippo.Repositories;
 using Hippo.Schedulers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -46,6 +48,8 @@ namespace Hippo
               }
             );
 
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            
             if (HostingEnvironment.IsDevelopment())
             {
                 services.AddDbContext<DataContext>(
@@ -60,6 +64,11 @@ namespace Hippo
                     options.UseNpgsql(Configuration.GetConnectionString("Hippo"))
                 );
             }
+
+            services.AddScoped<ICurrentUser, ActionContextCurrentUser>();
+            services.AddScoped<IApplicationRepository, DbApplicationRepository>();
+            services.AddScoped<IChannelRepository, DbChannelRepository>();
+            services.AddScoped<IReleaseRepository, DbReleaseRepository>();
 
             services.AddTransient<DataSeeder>();
 
