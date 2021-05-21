@@ -16,17 +16,19 @@ using System.Collections.Generic;
 using System.Text.Json;
 using Hippo.Schedulers;
 using Hippo.Repositories;
+using Microsoft.Extensions.Logging;
 
 namespace Hippo.Controllers
 {
     [Authorize]
-    public class AppController : Controller
+    public class AppController : HippoController
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<Account> _userManager;
         private readonly IJobScheduler _scheduler;
 
-        public AppController(IUnitOfWork unitOfWork, UserManager<Account> userManager, IJobScheduler scheduler)
+        public AppController(IUnitOfWork unitOfWork, UserManager<Account> userManager, IJobScheduler scheduler, ILogger<AppController> logger)
+            : base(logger)
         {
             this._unitOfWork = unitOfWork;
             this._userManager = userManager;
@@ -159,8 +161,11 @@ namespace Hippo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Release(Guid id, AppReleaseForm form)
         {
+            _logger.LogInformation($"Release: form application {form.Id} revision {form.Revision}: starting");
+
             if (id != form.Id)
             {
+                _logger.LogWarning($"Release: application ID {form.Id} did not match expected ID {id}");
                 return NotFound();
             }
 
@@ -176,8 +181,14 @@ namespace Hippo.Controllers
                     channel.Release = release;
                     await _unitOfWork.SaveChanges();
                     _scheduler.Start(channel);
+                    _logger.LogInformation($"Release: form application {form.Id} revision {form.Revision}: succeeded");
                     return RedirectToAction(nameof(Index));
                 }
+
+                LogIfNotFound(application, id);
+                LogIfNotFound(channel, form.ChannelName);
+                LogIfNotFound(release, form.Revision);
+
                 return NotFound();
             }
             return View(form);
