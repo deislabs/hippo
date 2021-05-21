@@ -29,24 +29,18 @@ namespace Hippo.Repositories
 
         public async Task AddNew(Application application)
         {
-                await _context.Applications.AddAsync(application);
-                await _context.SaveChangesAsync();
+            await _context.Applications.AddAsync(application);
         }
 
-        public async Task Update(Application application)
+        public void Update(Application application)
         {
             _context.Applications.Update(application);
-            await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteApplicationById(Guid id)
+        public void DeleteApplicationById(Guid id)
         {
             var a = GetApplicationById(id);
             _context.Applications.Remove(a);
-            await _context.SaveChangesAsync();
         }
-
-        public async Task SaveChanges() =>
-            await _context.SaveChangesAsync();
     }
 }

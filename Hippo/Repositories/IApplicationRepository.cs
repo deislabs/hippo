@@ -11,8 +11,7 @@ namespace Hippo.Repositories
         Application GetApplicationById(Guid id);
         bool ApplicationExistsById(Guid id);
         Task AddNew(Application application);
-        Task Update(Application application);
-        Task DeleteApplicationById(Guid id);
-        Task SaveChanges();
+        void Update(Application application);
+        void DeleteApplicationById(Guid id);
     }
 }

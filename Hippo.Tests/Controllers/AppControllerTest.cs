@@ -49,7 +49,7 @@ namespace Hippo.Tests.Controllers
             var context = new DataContext(options);
             var userManager = new UserManager<Account>(store.Object, null, null, null, null, null, null, null, null);
             var jobScheduler = new FakeJobScheduler();
-            controller = new AppController(new DbApplicationRepository(context, new FakeCurrentUser(admin.UserName)), new DbChannelRepository(context), new DbReleaseRepository(context), userManager, environment.Object, jobScheduler);
+            controller = new AppController(new DbUnitOfWork(context, new FakeCurrentUser(admin.UserName)), userManager, environment.Object, jobScheduler);
         }
 
         [Fact]

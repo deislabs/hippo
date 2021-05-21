@@ -23,8 +23,5 @@ namespace Hippo.Repositories
                     .Include(c => c.Domain)
                     .Include(c => c.Release)
                     .SingleOrDefault();
-
-        public async Task SaveChanges() =>
-            await _context.SaveChangesAsync();
     }
 }

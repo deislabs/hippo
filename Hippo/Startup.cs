@@ -66,10 +66,7 @@ namespace Hippo
             }
 
             services.AddScoped<ICurrentUser, ActionContextCurrentUser>();
-            services.AddScoped<IAccountRepository, DbAccountRepository>();
-            services.AddScoped<IApplicationRepository, DbApplicationRepository>();
-            services.AddScoped<IChannelRepository, DbChannelRepository>();
-            services.AddScoped<IReleaseRepository, DbReleaseRepository>();
+            services.AddScoped<IUnitOfWork, DbUnitOfWork>();
 
             services.AddTransient<DataSeeder>();
 

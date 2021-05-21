@@ -17,13 +17,13 @@ namespace Hippo.Controllers
     public class AccountController : Controller
     {
         private readonly SignInManager<Account> signInManager;
-        private readonly IAccountRepository accounts;
+        private readonly IUnitOfWork unitOfWork;
         private readonly IConfiguration configuration;
 
-        public AccountController(SignInManager<Account> signInManager, IAccountRepository accounts, IConfiguration configuration)
+        public AccountController(SignInManager<Account> signInManager, IUnitOfWork unitOfWork, IConfiguration configuration)
         {
             this.signInManager = signInManager;
-            this.accounts = accounts;
+            this.unitOfWork = unitOfWork;
             this.configuration = configuration;
         }
 
@@ -46,7 +46,7 @@ namespace Hippo.Controllers
                     UserName = form.UserName,
                     Email = form.Email,
                 };
-                if (accounts.IsEmpty()) {
+                if (unitOfWork.Accounts.IsEmpty()) {
                     // first account is a super user
                     account.IsSuperUser = true;
                 }

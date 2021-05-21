@@ -14,11 +14,11 @@ namespace Hippo.Controllers
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class ReleaseController : Controller
     {
-        private readonly IApplicationRepository applications;
+        private readonly IUnitOfWork unitOfWork;
 
-        public ReleaseController(IApplicationRepository applications)
+        public ReleaseController(IUnitOfWork unitOfWork)
         {
-            this.applications = applications;
+            this.unitOfWork = unitOfWork;
         }
 
         [HttpPost]
@@ -26,7 +26,7 @@ namespace Hippo.Controllers
         {
             if (ModelState.IsValid)
             {
-                var app = applications.GetApplicationById(form.AppId);
+                var app = unitOfWork.Applications.GetApplicationById(form.AppId);
                 if (app != null)
                 {
                     app.Releases.Add(new Release
@@ -34,7 +34,7 @@ namespace Hippo.Controllers
                         Revision = form.Revision,
                         UploadUrl = form.UploadUrl
                     });
-                    await applications.SaveChanges();
+                    await unitOfWork.SaveChanges();
                     return RedirectToAction("Index", "App");
                 }
                 else
