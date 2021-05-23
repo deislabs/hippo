@@ -1,9 +1,10 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using Hippo.Logging;
 
 namespace Hippo.ViewModels
 {
-    public class AppReleaseForm
+    public class AppReleaseForm: ITraceable
     {
         [Required]
         public Guid Id { get; set; }
@@ -12,5 +13,10 @@ namespace Hippo.ViewModels
 
         [Display(Name = "Channel Name")]
         public string ChannelName { get; set; }
+
+        public string FormatTrace()
+        {
+            return $"{nameof(AppReleaseForm)}[id={Id}, rev={Revision}, chan={ChannelName}]";
+        }
     }
 }

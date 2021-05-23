@@ -37,12 +37,18 @@ namespace Hippo.Controllers
 
         public IActionResult Index()
         {
+            TraceMethodEntry();
+
             return View(_unitOfWork.Applications.ListApplications());
         }
 
         public IActionResult Details(Guid id)
         {
+            TraceMethodEntry(WithArgs(id));
+
             var a = _unitOfWork.Applications.GetApplicationById(id);
+            LogIfNotFound(a, id);
+
             if (a == null)
             {
                 return NotFound();
@@ -53,6 +59,7 @@ namespace Hippo.Controllers
 
         public IActionResult New()
         {
+            TraceMethodEntry();
             return View();
         }
 
@@ -60,6 +67,8 @@ namespace Hippo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> New(AppNewForm form)
         {
+            TraceMethodEntry(WithArgs(form));
+
             if (ModelState.IsValid)
             {
                 await _unitOfWork.Applications.AddNew(new Application
@@ -75,7 +84,11 @@ namespace Hippo.Controllers
 
         public IActionResult Edit(Guid id)
         {
+            TraceMethodEntry(WithArgs(id));
+
             var a = _unitOfWork.Applications.GetApplicationById(id);
+            LogIfNotFound(a, id);
+
             if (a == null)
             {
                 return NotFound();
@@ -93,8 +106,11 @@ namespace Hippo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name")] AppEditForm form)
         {
+            TraceMethodEntry(WithArgs(id, form));
+
             if (id != form.Id)
             {
+                LogIdMismatch("application", id, form.Id);
                 return NotFound();
             }
 
@@ -103,6 +119,8 @@ namespace Hippo.Controllers
                 try
                 {
                     var a = _unitOfWork.Applications.GetApplicationById(id);
+                    LogIfNotFound(a, id);
+
                     if (a == null)
                     {
                         return NotFound();
@@ -116,10 +134,12 @@ namespace Hippo.Controllers
                 {
                     if (!_unitOfWork.Applications.ApplicationExistsById(form.Id))
                     {
+                        _logger.LogWarning($"Edit: concurrency error updating {form.Id}: no longer exists");
                         return NotFound();
                     }
                     else
                     {
+                        _logger.LogError($"Edit: concurrency error updating {form.Id}");
                         throw;
                     }
                 }
@@ -130,7 +150,11 @@ namespace Hippo.Controllers
 
         public IActionResult Delete(Guid id)
         {
+            TraceMethodEntry(WithArgs(id));
+
             var a = _unitOfWork.Applications.GetApplicationById(id);
+            LogIfNotFound(a, id);
+
             if (a == null)
             {
                 return NotFound();
@@ -142,6 +166,8 @@ namespace Hippo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
+            TraceMethodEntry(WithArgs(id));
+
             _unitOfWork.Applications.DeleteApplicationById(id);
             await _unitOfWork.SaveChanges();
             return RedirectToAction(nameof(Index));
@@ -149,6 +175,8 @@ namespace Hippo.Controllers
 
         public IActionResult Release(Guid id)
         {
+            TraceMethodEntry(WithArgs(id));
+
             var a = _unitOfWork.Applications.GetApplicationById(id);
             var vm = new AppReleaseForm
             {
@@ -161,11 +189,11 @@ namespace Hippo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Release(Guid id, AppReleaseForm form)
         {
-            _logger.LogInformation($"Release: form application {form.Id} revision {form.Revision}: starting");
+            TraceMethodEntry(WithArgs(id, form));
 
             if (id != form.Id)
             {
-                _logger.LogWarning($"Release: application ID {form.Id} did not match expected ID {id}");
+                LogIdMismatch("application", id, form.Id);
                 return NotFound();
             }
 
