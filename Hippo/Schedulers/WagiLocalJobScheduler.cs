@@ -21,8 +21,12 @@ namespace Hippo.Schedulers
             var port = c.PortID + Channel.EphemeralPortRange;
 
             // TODO: ProcessStartInfo.CreateNoWindow (but want to keep as a child process)
-            var process = Process.Start("wagi", $"-c {wagiConfigFile.FullName} -l 127.0.0.1:{port}");
-            _wagiProcessIds[c.Id] = process.Id;
+            // TODO: On Windows do we need an OS job object to auto exit child processes when
+            // parent exits?  (On Unixalikes I *think* we get this free.)
+            using (var process = Process.Start("wagi", $"-c {wagiConfigFile.FullName} -l 127.0.0.1:{port}"))
+            {
+                _wagiProcessIds[c.Id] = process.Id;
+            }
         }
 
         public void Stop(Channel c)
@@ -30,11 +34,13 @@ namespace Hippo.Schedulers
             if (_wagiProcessIds.TryGetValue(c.Id, out var wagiProcessId))
             {
                 _wagiProcessIds.Remove(c.Id);
-                var wagiProcess = Process.GetProcessById(wagiProcessId);
-                if (wagiProcess != null)
+                using (var wagiProcess = Process.GetProcessById(wagiProcessId))
                 {
-                    wagiProcess.Kill(true); // I don't think there's a less awful way to do this
-                    wagiProcess.WaitForExit();
+                    if (wagiProcess != null)
+                    {
+                        wagiProcess.Kill(true); // I don't think there's a less awful way to do this
+                        wagiProcess.WaitForExit();
+                    }
                 }
             }
         }
