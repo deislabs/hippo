@@ -41,15 +41,13 @@ namespace Hippo.Tests.Controllers
             .ReturnsAsync(admin);
             store.Setup(x => x.FindByIdAsync("2", CancellationToken.None))
             .ReturnsAsync(user);
-            var environment = new Mock<IWebHostEnvironment>();
-            environment.Setup(x => x.ContentRootPath).Returns("/etc");
             var options = new DbContextOptionsBuilder<DataContext>()
                 .UseInMemoryDatabase(databaseName: "Hippo")
                 .Options;
             var context = new DataContext(options);
             var userManager = new UserManager<Account>(store.Object, null, null, null, null, null, null, null, null);
             var jobScheduler = new FakeJobScheduler();
-            controller = new AppController(new DbUnitOfWork(context, new FakeCurrentUser(admin.UserName)), userManager, environment.Object, jobScheduler);
+            controller = new AppController(new DbUnitOfWork(context, new FakeCurrentUser(admin.UserName)), userManager, jobScheduler);
         }
 
         [Fact]
@@ -76,7 +74,7 @@ namespace Hippo.Tests.Controllers
 
         public FakeCurrentUser(string name)
         {
-            _name = name;    
+            _name = name;
         }
 
         public string Name() => _name;

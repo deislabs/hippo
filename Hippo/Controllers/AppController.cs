@@ -24,14 +24,12 @@ namespace Hippo.Controllers
     {
         private readonly IUnitOfWork unitOfWork;
         private readonly UserManager<Account> userManager;
-        private readonly IWebHostEnvironment environment;
         private readonly IJobScheduler scheduler;
 
-        public AppController(IUnitOfWork unitOfWork, UserManager<Account> userManager, IWebHostEnvironment environment, IJobScheduler scheduler)
+        public AppController(IUnitOfWork unitOfWork, UserManager<Account> userManager, IJobScheduler scheduler)
         {
             this.unitOfWork = unitOfWork;
             this.userManager = userManager;
-            this.environment = environment;
             this.scheduler = scheduler;
         }
 
