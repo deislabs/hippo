@@ -6,7 +6,8 @@ The front-end uses the Bootstrap design framework, which (along with some other 
 
 ## Running the Webapp
 
-1. Install the [.NET SDK](http://dot.net/), to enable to `dotnet` CLI.
-2. Run `bower intall` to fetch the front-end packages.
-3. Build the webapp via `dotnet run`.
-4. Navigate to [localhost:5001](https://localhost:5001/) to view the webapp running locally.
+1. Navigate to the webapp directory: `cd hippo/`
+2. Install the [.NET SDK](http://dot.net/), to enable to `dotnet` CLI.
+3. Run `bower intall` to fetch the front-end packages.
+4. Build the webapp via `dotnet run`.
+5. Navigate to [localhost:5001](https://localhost:5001/) to view the webapp running locally.
