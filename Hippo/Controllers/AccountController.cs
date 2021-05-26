@@ -16,15 +16,15 @@ namespace Hippo.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly SignInManager<Account> signInManager;
-        private readonly IUnitOfWork unitOfWork;
-        private readonly IConfiguration configuration;
+        private readonly SignInManager<Account> _signInManager;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IConfiguration _configuration;
 
         public AccountController(SignInManager<Account> signInManager, IUnitOfWork unitOfWork, IConfiguration configuration)
         {
-            this.signInManager = signInManager;
-            this.unitOfWork = unitOfWork;
-            this.configuration = configuration;
+            this._signInManager = signInManager;
+            this._unitOfWork = unitOfWork;
+            this._configuration = configuration;
         }
 
         public IActionResult Register()
@@ -46,12 +46,12 @@ namespace Hippo.Controllers
                     UserName = form.UserName,
                     Email = form.Email,
                 };
-                if (unitOfWork.Accounts.IsEmpty()) {
+                if (_unitOfWork.Accounts.IsEmpty()) {
                     // first account is a super user
                     account.IsSuperUser = true;
                 }
 
-                var result = await signInManager.UserManager.CreateAsync(account, form.Password);
+                var result = await _signInManager.UserManager.CreateAsync(account, form.Password);
                 if (result.Succeeded)
                 {
                     return RedirectToAction("Login", "Account");
@@ -86,7 +86,7 @@ namespace Hippo.Controllers
         {
             if (ModelState.IsValid)
             {
-                var result = await signInManager.PasswordSignInAsync(form.UserName, form.Password, form.RememberMe, false);
+                var result = await _signInManager.PasswordSignInAsync(form.UserName, form.Password, form.RememberMe, false);
                 if (result.Succeeded)
                 {
                     if (Request.Query.Keys.Contains("ReturnUrl"))
@@ -120,7 +120,7 @@ namespace Hippo.Controllers
 
         public async Task<IActionResult> Logout()
         {
-            await signInManager.SignOutAsync();
+            await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
 
@@ -129,10 +129,10 @@ namespace Hippo.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await signInManager.UserManager.FindByNameAsync(form.UserName);
+                var user = await _signInManager.UserManager.FindByNameAsync(form.UserName);
                 if (user != null)
                 {
-                    var result = await signInManager.CheckPasswordSignInAsync(user, form.Password, lockoutOnFailure: false);
+                    var result = await _signInManager.CheckPasswordSignInAsync(user, form.Password, lockoutOnFailure: false);
                     if (result.Succeeded)
                     {
                         // create the token here
@@ -162,14 +162,14 @@ namespace Hippo.Controllers
                         // read from configuration json - keep changing/or fetch from another source.
                         // the trick here is that the key needs to be accessible for the application
                         // also needs to be replaceable by the people setting up your system.
-                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
+                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
 
                         // new credentials required. create it using the key you just created in combination with a
                         // security algorithm.
                         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-                        var token = new JwtSecurityToken(configuration["Jwt:Issuer"], // the creator of the token
-                        configuration["Jwt:Audience"], // who can use the token
+                        var token = new JwtSecurityToken(_configuration["Jwt:Issuer"], // the creator of the token
+                        _configuration["Jwt:Audience"], // who can use the token
                         claims,
                         expires: DateTime.UtcNow.AddMinutes(30),
                         signingCredentials: credentials);
