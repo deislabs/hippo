@@ -38,7 +38,8 @@ namespace Hippo.Controllers
         protected void TraceMethodEntry(MethodArgs args, [CallerMemberName] string methodName = null)
         {
             var argsText = args.IsEmpty ? "" : $" with args ({args.Format()})";
-            _logger.LogTrace($"{methodName}: entered{argsText}");
+            var modelStateText = (ModelState == null || ModelState.IsValid) ? "" : " [model state: invalid]";
+            _logger.LogTrace($"{methodName}: entered{argsText}{modelStateText}");
         }
 
         protected static MethodArgs WithArgs(params object[] args)

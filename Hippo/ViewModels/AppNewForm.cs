@@ -8,9 +8,7 @@ namespace Hippo.ViewModels
         [Required]
         public string Name { get; set; }
 
-        public string FormatTrace()
-        {
-            return $"{nameof(AppNewForm)}[name={Name}]";
-        }
+        public string FormatTrace() =>
+            $"{nameof(AppNewForm)}[name={Name}]";
     }
 }

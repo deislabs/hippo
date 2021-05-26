@@ -4,8 +4,10 @@ using Hippo.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -14,13 +16,15 @@ using System.Threading.Tasks;
 
 namespace Hippo.Controllers
 {
-    public class AccountController : Controller
+    public class AccountController : HippoController
     {
         private readonly SignInManager<Account> _signInManager;
         private readonly IUnitOfWork _unitOfWork;
         private readonly IConfiguration _configuration;
 
-        public AccountController(SignInManager<Account> signInManager, IUnitOfWork unitOfWork, IConfiguration configuration)
+        // TODO: assess logging code for PII/GDPR implications
+        public AccountController(SignInManager<Account> signInManager, IUnitOfWork unitOfWork, IConfiguration configuration, ILogger<AccountController> logger)
+            : base(logger)
         {
             this._signInManager = signInManager;
             this._unitOfWork = unitOfWork;
@@ -29,6 +33,8 @@ namespace Hippo.Controllers
 
         public IActionResult Register()
         {
+            TraceMethodEntry();
+
             if (this.User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("Index", "App");
@@ -39,6 +45,8 @@ namespace Hippo.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(AccountRegisterForm form)
         {
+            TraceMethodEntry(WithArgs(form));
+            
             if (ModelState.IsValid)
             {
                 var account = new Account
@@ -54,10 +62,16 @@ namespace Hippo.Controllers
                 var result = await _signInManager.UserManager.CreateAsync(account, form.Password);
                 if (result.Succeeded)
                 {
+                    _logger.LogTrace($"Register: created user {form.UserName}");
+                    if (account.IsSuperUser)
+                    {
+                        _logger.LogInformation($"Register: {form.UserName} is the superuser");
+                    }
                     return RedirectToAction("Login", "Account");
                 }
                 else
                 {
+                    _logger.LogWarning($"Register: error(s) creatimg user {form.UserName}: {string.Join(", ", result.Errors.Select(e => e.Description))}");
                     ModelState.AddModelError("", "failed to create account");
                     foreach (IdentityError error in result.Errors)
                     {
@@ -74,6 +88,8 @@ namespace Hippo.Controllers
 
         public IActionResult Login()
         {
+            TraceMethodEntry();
+
             if (this.User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("Index", "App");
@@ -84,11 +100,15 @@ namespace Hippo.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginForm form)
         {
+            TraceMethodEntry(WithArgs(form));
+
             if (ModelState.IsValid)
             {
                 var result = await _signInManager.PasswordSignInAsync(form.UserName, form.Password, form.RememberMe, false);
                 if (result.Succeeded)
                 {
+                    _logger.LogTrace($"Login {form.UserName}: succeeded: {SigninFailureLogMessage(result)}");
+
                     if (Request.Query.Keys.Contains("ReturnUrl"))
                     {
                         Redirect(Request.Query["ReturnUrl"].First());
@@ -100,6 +120,8 @@ namespace Hippo.Controllers
                 }
                 else
                 {
+                    _logger.LogWarning($"Login {form.UserName}: failed: {SigninFailureLogMessage(result)}");
+
                     if (result.IsNotAllowed)
                     {
                         ModelState.AddModelError("", "cannot log in at this time; please contact the administrator");
@@ -120,6 +142,8 @@ namespace Hippo.Controllers
 
         public async Task<IActionResult> Logout()
         {
+            TraceMethodEntry();
+
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
@@ -127,6 +151,8 @@ namespace Hippo.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateToken([FromBody] ApiLoginForm form)
         {
+            TraceMethodEntry(WithArgs(form));
+
             if (ModelState.IsValid)
             {
                 var user = await _signInManager.UserManager.FindByNameAsync(form.UserName);
@@ -135,6 +161,8 @@ namespace Hippo.Controllers
                     var result = await _signInManager.CheckPasswordSignInAsync(user, form.Password, lockoutOnFailure: false);
                     if (result.Succeeded)
                     {
+                        _logger.LogTrace($"CreateToken {form.UserName}: sign in succeeded");
+
                         // create the token here
                         // Claims-based identity is a common way for applications to acquire the identity information they need about users inside their organization, in other organizations,
                         // and on the Internet. It also provides a consistent approach for applications running on-premises or in the cloud.
@@ -183,9 +211,31 @@ namespace Hippo.Controllers
                         // empty quotes to say no source for this resource, just give a new object
                         return Created("", results);
                     }
+                    else
+                    {
+                        _logger.LogWarning($"CreateToken {form.UserName}: sign in failed: {SigninFailureLogMessage(result)}");
+                    }
                 }
             }
             return BadRequest();
+        }
+
+        private static string SigninFailureLogMessage(Microsoft.AspNetCore.Identity.SignInResult result)
+        {
+            var reasons = new List<string>();
+            if (result.IsNotAllowed)
+            {
+                reasons.Add("not allowed");
+            }
+            if (result.IsLockedOut)
+            {
+                reasons.Add("locked out");
+            }
+            if (result.RequiresTwoFactor)
+            {
+                reasons.Add("needs 2FA");
+            }
+            return string.Join(",", reasons);
         }
     }
 }

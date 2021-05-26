@@ -14,9 +14,7 @@ namespace Hippo.ViewModels
         [Display(Name = "Channel Name")]
         public string ChannelName { get; set; }
 
-        public string FormatTrace()
-        {
-            return $"{nameof(AppReleaseForm)}[id={Id}, rev={Revision}, chan={ChannelName}]";
-        }
+        public string FormatTrace() =>
+            $"{nameof(AppReleaseForm)}[id={Id}, rev={Revision}, chan={ChannelName}]";
     }
 }
