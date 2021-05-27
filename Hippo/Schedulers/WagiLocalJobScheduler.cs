@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using Hippo.Models;
+using Microsoft.Extensions.Hosting;
 
 namespace Hippo.Schedulers
 {
@@ -11,6 +12,15 @@ namespace Hippo.Schedulers
     {
         // This assumes a singleton scheduler instance!
         private readonly Dictionary<Guid, int> _wagiProcessIds = new();
+
+        public WagiLocalJobScheduler(IHostApplicationLifetime lifetime)
+        {
+            lifetime.ApplicationStopping.Register(() => {
+                foreach (var processId in _wagiProcessIds) {
+                    KillProcessById(processId.Value);
+                }
+            });
+        }
         
         public void Start(Channel c)
         {
@@ -20,10 +30,8 @@ namespace Hippo.Schedulers
 
             var port = c.PortID + Channel.EphemeralPortRange;
 
-            // TODO: ProcessStartInfo.CreateNoWindow (but want to keep as a child process)
-            // TODO: On Windows do we need an OS job object to auto exit child processes when
-            // parent exits?  (On Unixalikes I *think* we get this free.)
-            using (var process = Process.Start("wagi", $"-c {wagiConfigFile.FullName} -l 127.0.0.1:{port}"))
+            var wagiProgram = OperatingSystem.IsWindows() ? "wagi.exe" : "wagi";
+            using (var process = Process.Start(wagiProgram, $"-c {wagiConfigFile.FullName} -l 127.0.0.1:{port}"))
             {
                 _wagiProcessIds[c.Id] = process.Id;
             }
@@ -34,13 +42,18 @@ namespace Hippo.Schedulers
             if (_wagiProcessIds.TryGetValue(c.Id, out var wagiProcessId))
             {
                 _wagiProcessIds.Remove(c.Id);
-                using (var wagiProcess = Process.GetProcessById(wagiProcessId))
+                KillProcessById(wagiProcessId);
+            }
+        }
+
+        private static void KillProcessById(int wagiProcessId)
+        {
+            using (var wagiProcess = Process.GetProcessById(wagiProcessId))
+            {
+                if (wagiProcess != null)
                 {
-                    if (wagiProcess != null)
-                    {
-                        wagiProcess.Kill(true); // I don't think there's a less awful way to do this
-                        wagiProcess.WaitForExit();
-                    }
+                    wagiProcess.Kill(true); // I don't think there's a less awful way to do this
+                    wagiProcess.WaitForExit();
                 }
             }
         }

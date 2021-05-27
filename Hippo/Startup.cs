@@ -78,7 +78,8 @@ namespace Hippo
 
             services.AddTransient<DataSeeder>();
 
-            services.AddSingleton<IJobScheduler, SystemdJobScheduler>();
+            // services.AddSingleton<IJobScheduler, SystemdJobScheduler>();
+            services.AddSingleton<IJobScheduler, WagiLocalJobScheduler>();
 
             services.AddSwaggerGen(c =>
             {
