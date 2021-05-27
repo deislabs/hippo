@@ -30,9 +30,17 @@ namespace Hippo.Schedulers
 
             var port = c.PortID + Channel.EphemeralPortRange;
 
-            var wagiProgram = OperatingSystem.IsWindows() ? "wagi.exe" : "wagi";
-            using (var process = Process.Start(wagiProgram, $"-c {wagiConfigFile.FullName} -l 127.0.0.1:{port}"))
+            var wagiProgram = OperatingSystem.IsWindows() ? "wagi.exe" : "/home/ivan/github/wagi/target/debug/wagi";
+            var psi = new ProcessStartInfo
             {
+                FileName = wagiProgram,
+                Arguments = $"-c {wagiConfigFile.FullName} -l 127.0.0.1:{port}",
+            };
+            psi.Environment["BINDLE_SERVER_URL"] = Environment.GetEnvironmentVariable("BINDLE_SERVER_URL");
+            Console.WriteLine(psi.Environment["BINDLE_SERVER_URL"]);
+            using (var process = Process.Start(psi))
+            {
+                process.Exited += (s, e) => _wagiProcessIds.Remove(c.Id);
                 _wagiProcessIds[c.Id] = process.Id;
             }
         }
@@ -48,13 +56,30 @@ namespace Hippo.Schedulers
 
         private static void KillProcessById(int wagiProcessId)
         {
-            using (var wagiProcess = Process.GetProcessById(wagiProcessId))
+            try
             {
-                if (wagiProcess != null)
+                using (var wagiProcess = Process.GetProcessById(wagiProcessId))
                 {
-                    wagiProcess.Kill(true); // I don't think there's a less awful way to do this
-                    wagiProcess.WaitForExit();
+                    if (wagiProcess != null && !wagiProcess.HasExited)
+                    {
+                        // TODO: check it is an actual wagi process and not something that reused the ID
+                        // TODO: a better way to do this might be to hang onto the Process object not
+                        // just the ID
+                        try
+                        {
+                            wagiProcess.Kill(true); // I don't think there's a less awful way to do this
+                            wagiProcess.WaitForExit();
+                        }
+                        catch
+                        {
+                            // TODO: log it and move on
+                        }
+                    }
                 }
+            }
+            catch
+            {
+                // TODO: process not running: log and move on
             }
         }
 
@@ -64,6 +89,12 @@ namespace Hippo.Schedulers
             var wagiConfig = new StringBuilder();
             wagiConfig.AppendLine("[[module]]");
             wagiConfig.AppendFormat("module = \"{0}\"\n", c.Release.UploadUrl.ToString());
+            var bindleServer = Environment.GetEnvironmentVariable("BINDLE_SERVER_URL");
+            if (bindleServer != null)
+            {
+                wagiConfig.AppendFormat("bindle_server = \"{0}\"\n", bindleServer);
+            }
+            wagiConfig.AppendLine("route = \"/\"");
             foreach (EnvironmentVariable envvar in c.Configuration.EnvironmentVariables)
             {
                 wagiConfig.AppendFormat("environment.{0} = \"{1}\"\n", envvar.Key, envvar.Value);
@@ -73,7 +104,7 @@ namespace Hippo.Schedulers
 
         public static string WagiConfigPath(Channel c)
         {
-            return Path.Combine("/etc", "wagi", c.Id.ToString(), "modules.toml");
+            return Path.Combine("/tmp", "wagi", c.Id.ToString(), "modules.toml");
         }
     }
 }
