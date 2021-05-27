@@ -38,11 +38,6 @@ namespace Hippo.Tests.Controllers
                 UserName = "user",
                 Id = "2"
             };
-            var store = new Mock<IUserStore<Account>>();
-            store.Setup(x => x.FindByIdAsync("1", CancellationToken.None))
-            .ReturnsAsync(_admin);
-            store.Setup(x => x.FindByIdAsync("2", CancellationToken.None))
-            .ReturnsAsync(_user);
             var options = new DbContextOptionsBuilder<DataContext>()
                 .UseInMemoryDatabase(databaseName: "Hippo")
                 .Options;
