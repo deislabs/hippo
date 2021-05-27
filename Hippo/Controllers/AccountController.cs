@@ -178,7 +178,7 @@ namespace Hippo.Controllers
                             new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                             // jti - unique string that is representative of each token so using a guid
                             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                            // unque name - username of the user mapped to the identity inside the user object
+                            // unique name - username of the user mapped to the identity inside the user object
                             // that is available on every controller and view
                             new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName)
                         };
@@ -204,8 +204,8 @@ namespace Hippo.Controllers
 
                         var results = new
                         {
-                        token = new JwtSecurityTokenHandler().WriteToken(token),
-                        expiration = token.ValidTo
+                            token = new JwtSecurityTokenHandler().WriteToken(token),
+                            expiration = token.ValidTo
                         };
 
                         // empty quotes to say no source for this resource, just give a new object
