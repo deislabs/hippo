@@ -37,6 +37,7 @@ namespace Hippo.Schedulers
                 Arguments = $"-c {wagiConfigFile.FullName} -l 127.0.0.1:{port}",
             };
             psi.Environment["BINDLE_SERVER_URL"] = Environment.GetEnvironmentVariable("BINDLE_SERVER_URL");
+            psi.Environment["RUST_LOG"] = "warn,wagi=trace";
             Console.WriteLine(psi.Environment["BINDLE_SERVER_URL"]);
             using (var process = Process.Start(psi))
             {

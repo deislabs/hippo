@@ -56,7 +56,7 @@ namespace Hippo.Models
                             new Release
                             {
                                 Revision = "1.0.0",
-                                UploadUrl = "bindle:hippos.rocks/helloworld/1.0.0"
+                                UploadUrl = "bindle:wasm-supreme-chainsaw/0.1.0"
                             }
                         },
                         Channels = new List<Channel>
