@@ -88,6 +88,7 @@ namespace Hippo.Schedulers
         public static string WagiConfig(Channel c)
         {
             var wagiConfig = new StringBuilder();
+            wagiConfig.AppendLine($"default_host = \"localhost:{c.PortID + Channel.EphemeralPortRange}\"");
             wagiConfig.AppendLine("[[module]]");
             wagiConfig.AppendFormat("module = \"{0}\"\n", c.Release.UploadUrl.ToString());
             var bindleServer = Environment.GetEnvironmentVariable("BINDLE_SERVER_URL");
