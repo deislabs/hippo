@@ -24,11 +24,6 @@ namespace Hippo.Schedulers
         
         public void Start(Channel c)
         {
-            // TODO: we will be able to remove this
-            FileInfo wagiConfigFile = new(WagiConfigPath(c));
-            wagiConfigFile.Directory.Create();
-            File.WriteAllText(wagiConfigFile.FullName, WagiConfig(c));
-
             var port = c.PortID + Channel.EphemeralPortRange;
 
             // TODO: assumes wagi binary is on PATH
@@ -86,31 +81,6 @@ namespace Hippo.Schedulers
             {
                 // TODO: process not running: log and move on
             }
-        }
-
-        // TODO: deduplicate with SystemdJobScheduler
-        public static string WagiConfig(Channel c)
-        {
-            var wagiConfig = new StringBuilder();
-            wagiConfig.AppendLine($"default_host = \"localhost:{c.PortID + Channel.EphemeralPortRange}\"");
-            wagiConfig.AppendLine("[[module]]");
-            wagiConfig.AppendFormat("module = \"{0}\"\n", c.Release.UploadUrl.ToString());
-            var bindleServer = Environment.GetEnvironmentVariable("BINDLE_SERVER_URL");
-            if (bindleServer != null)
-            {
-                wagiConfig.AppendFormat("bindle_server = \"{0}\"\n", bindleServer);
-            }
-            wagiConfig.AppendLine("route = \"/\"");
-            foreach (EnvironmentVariable envvar in c.Configuration.EnvironmentVariables)
-            {
-                wagiConfig.AppendFormat("environment.{0} = \"{1}\"\n", envvar.Key, envvar.Value);
-            }
-            return wagiConfig.ToString();
-        }
-
-        public static string WagiConfigPath(Channel c)
-        {
-            return Path.Combine("/tmp", "wagi", c.Id.ToString(), "modules.toml");
         }
     }
 }
