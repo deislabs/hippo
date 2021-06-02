@@ -24,19 +24,23 @@ namespace Hippo.Schedulers
         
         public void Start(Channel c)
         {
+            // TODO: we will be able to remove this
             FileInfo wagiConfigFile = new(WagiConfigPath(c));
             wagiConfigFile.Directory.Create();
             File.WriteAllText(wagiConfigFile.FullName, WagiConfig(c));
 
             var port = c.PortID + Channel.EphemeralPortRange;
 
-            var wagiProgram = OperatingSystem.IsWindows() ? "wagi.exe" : "/home/ivan/github/wagi/target/debug/wagi";
+            // TODO: assumes wagi binary is on PATH
+            var wagiProgram = OperatingSystem.IsWindows() ? "wagi.exe" : "wagi";
+            // TODO: this will change!
             var psi = new ProcessStartInfo
             {
                 FileName = wagiProgram,
                 Arguments = $"-c {wagiConfigFile.FullName} -l 127.0.0.1:{port}",
             };
             psi.Environment["BINDLE_SERVER_URL"] = Environment.GetEnvironmentVariable("BINDLE_SERVER_URL");
+            // TODO: drive this from outside
             psi.Environment["RUST_LOG"] = "warn,wagi=trace";
             Console.WriteLine(psi.Environment["BINDLE_SERVER_URL"]);
             using (var process = Process.Start(psi))
