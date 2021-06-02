@@ -33,11 +33,11 @@ namespace Hippo.Schedulers
 
             // TODO: assumes wagi binary is on PATH
             var wagiProgram = OperatingSystem.IsWindows() ? "wagi.exe" : "wagi";
-            // TODO: this will change!
+            // NOTE: THIS IS NEW WAGI
             var psi = new ProcessStartInfo
             {
                 FileName = wagiProgram,
-                Arguments = $"-c {wagiConfigFile.FullName} -l 127.0.0.1:{port}",
+                Arguments = $"-b {new Uri(c.Release.UploadUrl).PathAndQuery} --bindle-server {Environment.GetEnvironmentVariable("BINDLE_SERVER_URL")} -l 127.0.0.1:{port}",
             };
             psi.Environment["BINDLE_SERVER_URL"] = Environment.GetEnvironmentVariable("BINDLE_SERVER_URL");
             // TODO: drive this from outside
