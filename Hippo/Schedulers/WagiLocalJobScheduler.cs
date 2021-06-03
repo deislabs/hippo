@@ -26,9 +26,7 @@ namespace Hippo.Schedulers
         {
             var port = c.PortID + Channel.EphemeralPortRange;
 
-            // TODO: assumes wagi binary is on PATH
-            var wagiProgram = OperatingSystem.IsWindows() ? "wagi.exe" : "wagi";
-            // NOTE: THIS IS NEW WAGI
+            var wagiProgram = WagiBinaryPath();
             var psi = new ProcessStartInfo
             {
                 FileName = wagiProgram,
@@ -37,7 +35,7 @@ namespace Hippo.Schedulers
             psi.Environment["BINDLE_SERVER_URL"] = Environment.GetEnvironmentVariable("BINDLE_SERVER_URL");
             // TODO: drive this from outside
             psi.Environment["RUST_LOG"] = "warn,wagi=trace";
-            Console.WriteLine(psi.Environment["BINDLE_SERVER_URL"]);
+
             using (var process = Process.Start(psi))
             {
                 process.Exited += (s, e) => _wagiProcessIds.Remove(c.Id);
@@ -52,6 +50,12 @@ namespace Hippo.Schedulers
                 _wagiProcessIds.Remove(c.Id);
                 KillProcessById(wagiProcessId);
             }
+        }
+
+        private static string WagiBinaryPath()
+        {
+            return Environment.GetEnvironmentVariable("HIPPO_WAGI_PATH") ??
+                (OperatingSystem.IsWindows() ? "wagi.exe" : "wagi");
         }
 
         private static void KillProcessById(int wagiProcessId)
