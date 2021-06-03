@@ -6,10 +6,11 @@ namespace Hippo.ViewModels
     public class ApiLoginForm: ITraceable
     {
         [Required]
-        [Display(Name = "Username")]
+        [Display(Name = "username")]
         public string UserName { get; set; }
 
         [Required]
+        [Display(Name = "password")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 

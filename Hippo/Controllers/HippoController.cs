@@ -29,12 +29,12 @@ namespace Hippo.Controllers
         {
             _logger.LogWarning($"{methodName}: ${objectType} ID {formId} did not match expected ID {expectedId}");
         }
-        
+
         protected void TraceMethodEntry([CallerMemberName] string methodName = null)
         {
             TraceMethodEntry(WithArgs(new object[0]), methodName);
         }
-        
+
         protected void TraceMethodEntry(MethodArgs args, [CallerMemberName] string methodName = null)
         {
             var argsText = args.IsEmpty ? "" : $" with args ({args.Format()})";
