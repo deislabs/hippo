@@ -54,24 +54,31 @@ namespace Hippo.Controllers
                     UserName = form.UserName,
                     Email = form.Email,
                 };
-                if (_unitOfWork.Accounts.IsEmpty()) {
-                    // first account is a super user
-                    account.IsSuperUser = true;
-                }
 
                 var result = await _signInManager.UserManager.CreateAsync(account, form.Password);
                 if (result.Succeeded)
                 {
                     _logger.LogTrace($"Register: created user {form.UserName}");
-                    if (account.IsSuperUser)
+                    if (_unitOfWork.Accounts.IsEmpty())
                     {
-                        _logger.LogInformation($"Register: {form.UserName} is the superuser");
+                        // assign first user as Administrator
+                        var roleResult = await _signInManager.UserManager.AddToRoleAsync(account, "Administrator");
+                        if (!roleResult.Succeeded)
+                        {
+                            ModelState.AddModelError("", "failed to assign role 'Administrator'");
+                            foreach (IdentityError error in result.Errors)
+                            {
+                                ModelState.AddModelError("", error.Description);
+                            }
+                        } else {
+                            _logger.LogInformation($"Register: {form.UserName} has been granted the 'Administrator' role");
+                        }
                     }
                     return RedirectToAction("Login", "Account");
                 }
                 else
                 {
-                    _logger.LogWarning($"Register: error(s) creatimg user {form.UserName}: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+                    _logger.LogWarning($"Register: error(s) creating user {form.UserName}: {string.Join(", ", result.Errors.Select(e => e.Description))}");
                     ModelState.AddModelError("", "failed to create account");
                     foreach (IdentityError error in result.Errors)
                     {

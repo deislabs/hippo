@@ -9,14 +9,6 @@ namespace Hippo.Models
     /// </summary>
     public class Account: IdentityUser
     {
-
-        /// <summary>
-        /// Determines whether the user has administrative privileges.
-        /// Used to determine whether the user can access protected
-        /// endpoints like the administration portal.
-        /// </summary>
-        public bool IsSuperUser { get; set; }
-
         /// <summary>
         /// Personal signing key used for signing off releases and determining trust.
         /// </summary>

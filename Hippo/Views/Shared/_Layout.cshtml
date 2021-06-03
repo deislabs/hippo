@@ -6,8 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="The Hippo Platform.">
     <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
-    <link href="~/lib/fontawesome/css/all.css" rel="stylesheet" />
+    <link href="~/lib/fontawesome/dist/css/all.css" rel="stylesheet" />
     <link href="~/css/site.css" rel="stylesheet" />
+    @* If one of the pages creates a section called styles, load it here
+    *@
+    @RenderSection("styles", false)
 </head>
 <body>
     <header class="container">
@@ -42,7 +45,7 @@
     <footer class="container fixed-bottom">
         <div class="row justify-content-md-center"><small>Copyright 2021 Microsoft. All Rights Reserved.</small></div>
     </footer>
-    <script src="~/lib/fontawesome/js/all.js"></script>
+    <script src="~/lib/fontawesome/dist/js/all.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
     @* If one of the pages creates a section called scripts, load it here

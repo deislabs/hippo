@@ -31,7 +31,6 @@ namespace Hippo.Tests.Controllers
             {
                 UserName = "admin",
                 Id = "1",
-                IsSuperUser = true,
             };
             this._user = new Account
             {

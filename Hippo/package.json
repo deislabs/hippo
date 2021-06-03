@@ -1,0 +1,25 @@
+{
+  "name": "hippo",
+  "private": true,
+  "authors": [
+    "Matthew Fisher <matt.fisher@microsoft.com>"
+  ],
+  "description": "hippo API",
+  "license": "MIT",
+  "dependencies": {
+    "@fortawesome/fontawesome-free": "^5.15.3",
+    "@popperjs/core": "^2.9.2",
+    "bootstrap": "^5.0.1",
+    "jquery": "^3.6.0",
+    "jquery-validation": "^1.19.3",
+    "jquery-validation-unobtrusive": "^3.2.12",
+    "xterm": "^4.12.0"
+  },
+  "devDependencies": {
+    "del": "^6.0.0",
+    "gulp": "^4.0.2"
+  },
+  "scripts": {
+    "build": "npm install && gulp clean && gulp"
+  }
+}
