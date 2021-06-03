@@ -78,8 +78,12 @@ namespace Hippo
 
             services.AddTransient<DataSeeder>();
 
-            // services.AddSingleton<IJobScheduler, SystemdJobScheduler>();
-            services.AddSingleton<IJobScheduler, WagiLocalJobScheduler>();
+            var schedulerVar = Environment.GetEnvironmentVariable("HIPPO_JOB_SCHEDULER");
+            switch (schedulerVar)
+            {
+                case "local_process": services.AddSingleton<IJobScheduler, WagiLocalJobScheduler>(); break;
+                default: services.AddSingleton<IJobScheduler, SystemdJobScheduler>(); break;
+            }
 
             services.AddSwaggerGen(c =>
             {
