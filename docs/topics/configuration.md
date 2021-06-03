@@ -8,10 +8,14 @@ variables.
 
 ### Job scheduler
 
-By default, Hippo schedules WAGI instances using `systemd`, which requires sudo privileges.
-If you have the `wagi` binary locally, you can instead schedule WAGI instances in your user account
-without sudo.  To do this, set the environment variable `HIPPO_JOB_SCHEDULER` to `local_process`.
+By default, Hippo runs applications in your user account using the `wagi` binary. It assumes
+`wagi` is on your system PATH. If `wagi` isn't on your path, you can set the environment
+variable `HIPPO_WAGI_PATH` to the path of the binary you want to use. On Windows this should
+include the `.exe` extension.
 
-By default, the `local_process` scheduler expects to find the `wagi` binary on your path.
-You can set the environment variable `HIPPO_WAGI_PATH` to the path of the binary you want to
-use. On Windows this should include the `.exe` extension.
+Alternatively, Hippo can schedule WAGI instances as system processes using `systemd`.
+To do this, set the environment variable `HIPPO_JOB_SCHEDULER` to `systemd`. The `systemd`
+scheduler expects the WAGI binary to be at `/usr/local/bin/wagi` and this is not configurable
+at the moment.
+
+
