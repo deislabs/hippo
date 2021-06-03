@@ -1,10 +1,13 @@
 ﻿using Hippo.Models;
+using Hippo.Repositories;
 using Hippo.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
@@ -13,21 +16,25 @@ using System.Threading.Tasks;
 
 namespace Hippo.Controllers
 {
-    public class AccountController : Controller
+    public class AccountController : HippoController
     {
-        private readonly SignInManager<Account> signInManager;
-        private readonly DataContext context;
-        private readonly IConfiguration configuration;
+        private readonly SignInManager<Account> _signInManager;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IConfiguration _configuration;
 
-        public AccountController(SignInManager<Account> signInManager, DataContext context, IConfiguration configuration)
+        // TODO: assess logging code for PII/GDPR implications
+        public AccountController(SignInManager<Account> signInManager, IUnitOfWork unitOfWork, IConfiguration configuration, ILogger<AccountController> logger)
+            : base(logger)
         {
-            this.signInManager = signInManager;
-            this.context = context;
-            this.configuration = configuration;
+            this._signInManager = signInManager;
+            this._unitOfWork = unitOfWork;
+            this._configuration = configuration;
         }
 
         public IActionResult Register()
         {
+            TraceMethodEntry();
+
             if (this.User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("Index", "App");
@@ -38,6 +45,8 @@ namespace Hippo.Controllers
         [HttpPost]
         public async Task<IActionResult> Register(AccountRegisterForm form)
         {
+            TraceMethodEntry(WithArgs(form));
+            
             if (ModelState.IsValid)
             {
                 var account = new Account
@@ -45,15 +54,15 @@ namespace Hippo.Controllers
                     UserName = form.UserName,
                     Email = form.Email,
                 };
-                var isFirstAccount = !context.Accounts.Any();
 
-                var result = await signInManager.UserManager.CreateAsync(account, form.Password);
+                var result = await _signInManager.UserManager.CreateAsync(account, form.Password);
                 if (result.Succeeded)
                 {
-                    if (isFirstAccount)
+                    _logger.LogTrace($"Register: created user {form.UserName}");
+                    if (_unitOfWork.Accounts.IsEmpty())
                     {
                         // assign first user as Administrator
-                        var roleResult = await signInManager.UserManager.AddToRoleAsync(account, "Administrator");
+                        var roleResult = await _signInManager.UserManager.AddToRoleAsync(account, "Administrator");
                         if (!roleResult.Succeeded)
                         {
                             ModelState.AddModelError("", "failed to assign role 'Administrator'");
@@ -61,12 +70,15 @@ namespace Hippo.Controllers
                             {
                                 ModelState.AddModelError("", error.Description);
                             }
+                        } else {
+                            _logger.LogInformation($"Register: {form.UserName} has been granted the 'Administrator' role");
                         }
                     }
                     return RedirectToAction("Login", "Account");
                 }
                 else
                 {
+                    _logger.LogWarning($"Register: error(s) creating user {form.UserName}: {string.Join(", ", result.Errors.Select(e => e.Description))}");
                     ModelState.AddModelError("", "failed to create account");
                     foreach (IdentityError error in result.Errors)
                     {
@@ -83,6 +95,8 @@ namespace Hippo.Controllers
 
         public IActionResult Login()
         {
+            TraceMethodEntry();
+
             if (this.User.Identity.IsAuthenticated)
             {
                 return RedirectToAction("Index", "App");
@@ -93,11 +107,15 @@ namespace Hippo.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginForm form)
         {
+            TraceMethodEntry(WithArgs(form));
+
             if (ModelState.IsValid)
             {
-                var result = await signInManager.PasswordSignInAsync(form.UserName, form.Password, form.RememberMe, false);
+                var result = await _signInManager.PasswordSignInAsync(form.UserName, form.Password, form.RememberMe, false);
                 if (result.Succeeded)
                 {
+                    _logger.LogTrace($"Login {form.UserName}: succeeded: {SigninFailureLogMessage(result)}");
+
                     if (Request.Query.Keys.Contains("ReturnUrl"))
                     {
                         Redirect(Request.Query["ReturnUrl"].First());
@@ -109,6 +127,8 @@ namespace Hippo.Controllers
                 }
                 else
                 {
+                    _logger.LogWarning($"Login {form.UserName}: failed: {SigninFailureLogMessage(result)}");
+
                     if (result.IsNotAllowed)
                     {
                         ModelState.AddModelError("", "cannot log in at this time; please contact the administrator");
@@ -129,21 +149,27 @@ namespace Hippo.Controllers
 
         public async Task<IActionResult> Logout()
         {
-            await signInManager.SignOutAsync();
+            TraceMethodEntry();
+
+            await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateToken([FromBody] ApiLoginForm form)
         {
+            TraceMethodEntry(WithArgs(form));
+
             if (ModelState.IsValid)
             {
-                var user = await signInManager.UserManager.FindByNameAsync(form.UserName);
+                var user = await _signInManager.UserManager.FindByNameAsync(form.UserName);
                 if (user != null)
                 {
-                    var result = await signInManager.CheckPasswordSignInAsync(user, form.Password, lockoutOnFailure: false);
+                    var result = await _signInManager.CheckPasswordSignInAsync(user, form.Password, lockoutOnFailure: false);
                     if (result.Succeeded)
                     {
+                        _logger.LogTrace($"CreateToken {form.UserName}: sign in succeeded");
+
                         // create the token here
                         // Claims-based identity is a common way for applications to acquire the identity information they need about users inside their organization, in other organizations,
                         // and on the Internet. It also provides a consistent approach for applications running on-premises or in the cloud.
@@ -159,7 +185,7 @@ namespace Hippo.Controllers
                             new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                             // jti - unique string that is representative of each token so using a guid
                             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                            // unque name - username of the user mapped to the identity inside the user object
+                            // unique name - username of the user mapped to the identity inside the user object
                             // that is available on every controller and view
                             new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName)
                         };
@@ -171,30 +197,52 @@ namespace Hippo.Controllers
                         // read from configuration json - keep changing/or fetch from another source.
                         // the trick here is that the key needs to be accessible for the application
                         // also needs to be replaceable by the people setting up your system.
-                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
+                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
 
                         // new credentials required. create it using the key you just created in combination with a
                         // security algorithm.
                         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-                        var token = new JwtSecurityToken(configuration["Jwt:Issuer"], // the creator of the token
-                        configuration["Jwt:Audience"], // who can use the token
+                        var token = new JwtSecurityToken(_configuration["Jwt:Issuer"], // the creator of the token
+                        _configuration["Jwt:Audience"], // who can use the token
                         claims,
                         expires: DateTime.UtcNow.AddMinutes(30),
                         signingCredentials: credentials);
 
                         var results = new
                         {
-                        token = new JwtSecurityTokenHandler().WriteToken(token),
-                        expiration = token.ValidTo
+                            token = new JwtSecurityTokenHandler().WriteToken(token),
+                            expiration = token.ValidTo
                         };
 
                         // empty quotes to say no source for this resource, just give a new object
                         return Created("", results);
                     }
+                    else
+                    {
+                        _logger.LogWarning($"CreateToken {form.UserName}: sign in failed: {SigninFailureLogMessage(result)}");
+                    }
                 }
             }
             return BadRequest();
+        }
+
+        private static string SigninFailureLogMessage(Microsoft.AspNetCore.Identity.SignInResult result)
+        {
+            var reasons = new List<string>();
+            if (result.IsNotAllowed)
+            {
+                reasons.Add("not allowed");
+            }
+            if (result.IsLockedOut)
+            {
+                reasons.Add("locked out");
+            }
+            if (result.RequiresTwoFactor)
+            {
+                reasons.Add("needs 2FA");
+            }
+            return string.Join(",", reasons);
         }
     }
 }

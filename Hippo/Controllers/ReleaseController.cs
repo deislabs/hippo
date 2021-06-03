@@ -1,31 +1,38 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Hippo.Models;
+using Hippo.Repositories;
 using Hippo.ViewModels;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace Hippo.Controllers
 {
     [Route("api/[Controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class ReleaseController : Controller
+    public class ReleaseController : HippoController
     {
-        private readonly DataContext context;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public ReleaseController(DataContext context)
+        public ReleaseController(IUnitOfWork unitOfWork, ILogger<ReleaseController> logger)
+            : base(logger)
         {
-            this.context = context;
+            this._unitOfWork = unitOfWork;
         }
 
         [HttpPost]
-        public IActionResult New(ReleaseUploadForm form)
+        public async Task<IActionResult> New(ReleaseUploadForm form)
         {
+            TraceMethodEntry(WithArgs(form));
+
             if (ModelState.IsValid)
             {
-                var app = context.Applications.Where(application=>application.Id==form.AppId && application.Owner.UserName==User.Identity.Name).SingleOrDefault();
+                var app = _unitOfWork.Applications.GetApplicationById(form.AppId);
+                LogIfNotFound(app, form.AppId);
+
                 if (app != null)
                 {
                     app.Releases.Add(new Release
@@ -33,7 +40,7 @@ namespace Hippo.Controllers
                         Revision = form.Revision,
                         UploadUrl = form.UploadUrl
                     });
-                    context.SaveChanges();
+                    await _unitOfWork.SaveChanges();
                     return RedirectToAction("Index", "App");
                 }
                 else

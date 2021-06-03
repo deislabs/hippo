@@ -45,8 +45,8 @@ namespace Hippo.Tests.Schedulers
             Assert.Equal(
 @"[[module]]
 module = ""bindle:hippos.rocks/one/1.0.0""
-",
-            SystemdJobScheduler.WagiConfig(application.Channels.First()));
+".Trim(),
+            SystemdJobScheduler.WagiConfig(application.Channels.First()).Trim());
         }
 
         [Fact]

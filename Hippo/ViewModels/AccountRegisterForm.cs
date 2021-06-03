@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Hippo.Logging;
 
 namespace Hippo.ViewModels
 {
-    public class AccountRegisterForm
+    public class AccountRegisterForm: ITraceable
     {
         [Required]
         [Display(Name = "Username")]
@@ -21,5 +22,8 @@ namespace Hippo.ViewModels
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "Password and confirmation password do not match")]
         public string PasswordConfirm { get; set; }
+
+        public string FormatTrace() =>
+            $"{nameof(AccountRegisterForm)}[username={UserName}]";
     }
 }

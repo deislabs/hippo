@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Hippo.Logging;
 
 namespace Hippo.ViewModels
 {
-    public class LoginForm
+    public class LoginForm: ITraceable
     {
         [Required]
         [Display(Name = "Username")]
@@ -14,5 +15,8 @@ namespace Hippo.ViewModels
 
         [Display(Name = "Remember me?")]
         public bool RememberMe { get; set; }
+
+        public string FormatTrace() =>
+            $"{nameof(LoginForm)}[username={UserName}]";
     }
 }

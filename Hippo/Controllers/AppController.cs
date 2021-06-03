@@ -15,32 +15,40 @@ using System.Text;
 using System.Collections.Generic;
 using System.Text.Json;
 using Hippo.Schedulers;
+using Hippo.Repositories;
+using Microsoft.Extensions.Logging;
 
 namespace Hippo.Controllers
 {
     [Authorize]
-    public class AppController : Controller
+    public class AppController : HippoController
     {
-        private readonly DataContext context;
-        private readonly UserManager<Account> userManager;
-        private readonly IWebHostEnvironment environment;
-        private readonly IJobScheduler scheduler;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly UserManager<Account> _userManager;
+        private readonly IJobScheduler _scheduler;
 
-        public AppController(DataContext context, UserManager<Account> userManager, IWebHostEnvironment environment, IJobScheduler scheduler)
+        public AppController(IUnitOfWork unitOfWork, UserManager<Account> userManager, IJobScheduler scheduler, ILogger<AppController> logger)
+            : base(logger)
         {
-            this.context = context;
-            this.userManager = userManager;
-            this.environment = environment;
-            this.scheduler = scheduler;
+            this._unitOfWork = unitOfWork;
+            this._userManager = userManager;
+            this._scheduler = scheduler;
         }
+
         public IActionResult Index()
         {
-            return View(context.Applications.Where(application=>application.Owner.UserName==User.Identity.Name));
+            TraceMethodEntry();
+
+            return View(_unitOfWork.Applications.ListApplications());
         }
 
         public IActionResult Details(Guid id)
         {
-            var a = context.Applications.Where(application=>application.Id==id && application.Owner.UserName==User.Identity.Name).SingleOrDefault();
+            TraceMethodEntry(WithArgs(id));
+
+            var a = _unitOfWork.Applications.GetApplicationById(id);
+            LogIfNotFound(a, id);
+
             if (a == null)
             {
                 return NotFound();
@@ -51,6 +59,7 @@ namespace Hippo.Controllers
 
         public IActionResult New()
         {
+            TraceMethodEntry();
             return View();
         }
 
@@ -58,14 +67,16 @@ namespace Hippo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> New(AppNewForm form)
         {
+            TraceMethodEntry(WithArgs(form));
+
             if (ModelState.IsValid)
             {
-                context.Applications.Add(new Application
+                await _unitOfWork.Applications.AddNew(new Application
                 {
                     Name = form.Name,
-                    Owner = await userManager.FindByNameAsync(User.Identity.Name),
+                    Owner = await _userManager.FindByNameAsync(User.Identity.Name),
                 });
-                context.SaveChanges();
+                await _unitOfWork.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             return View(form);
@@ -73,7 +84,11 @@ namespace Hippo.Controllers
 
         public IActionResult Edit(Guid id)
         {
-            var a = context.Applications.Where(application=>application.Id==id && application.Owner.UserName==User.Identity.Name).SingleOrDefault();
+            TraceMethodEntry(WithArgs(id));
+
+            var a = _unitOfWork.Applications.GetApplicationById(id);
+            LogIfNotFound(a, id);
+
             if (a == null)
             {
                 return NotFound();
@@ -89,10 +104,13 @@ namespace Hippo.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Guid id, [Bind("Id,Name")] AppEditForm form)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name")] AppEditForm form)
         {
+            TraceMethodEntry(WithArgs(id, form));
+
             if (id != form.Id)
             {
+                LogIdMismatch("application", id, form.Id);
                 return NotFound();
             }
 
@@ -100,24 +118,28 @@ namespace Hippo.Controllers
             {
                 try
                 {
-                    var a = context.Applications.Where(application=>application.Id==id && application.Owner.UserName==User.Identity.Name).SingleOrDefault();
+                    var a = _unitOfWork.Applications.GetApplicationById(id);
+                    LogIfNotFound(a, id);
+
                     if (a == null)
                     {
                         return NotFound();
                     }
 
                     a.Name = form.Name;
-                    context.Applications.Update(a);
-                    context.SaveChanges();
+                    _unitOfWork.Applications.Update(a);
+                    await _unitOfWork.SaveChanges();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ApplicationExists(form.Id))
+                    if (!_unitOfWork.Applications.ApplicationExistsById(form.Id))
                     {
+                        _logger.LogWarning($"Edit: concurrency error updating {form.Id}: no longer exists");
                         return NotFound();
                     }
                     else
                     {
+                        _logger.LogError($"Edit: concurrency error updating {form.Id}");
                         throw;
                     }
                 }
@@ -128,7 +150,11 @@ namespace Hippo.Controllers
 
         public IActionResult Delete(Guid id)
         {
-            var a = context.Applications.Where(application=>application.Id==id && application.Owner.UserName==User.Identity.Name).SingleOrDefault();
+            TraceMethodEntry(WithArgs(id));
+
+            var a = _unitOfWork.Applications.GetApplicationById(id);
+            LogIfNotFound(a, id);
+
             if (a == null)
             {
                 return NotFound();
@@ -138,17 +164,20 @@ namespace Hippo.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult DeleteConfirmed(Guid id)
+        public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var a = context.Applications.Where(application=>application.Id==id && application.Owner.UserName==User.Identity.Name).SingleOrDefault();
-            context.Applications.Remove(a);
-            context.SaveChanges();
+            TraceMethodEntry(WithArgs(id));
+
+            _unitOfWork.Applications.DeleteApplicationById(id);
+            await _unitOfWork.SaveChanges();
             return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Release(Guid id)
         {
-            var a = context.Applications.Where(application=>application.Id==id && application.Owner.UserName==User.Identity.Name).SingleOrDefault();
+            TraceMethodEntry(WithArgs(id));
+
+            var a = _unitOfWork.Applications.GetApplicationById(id);
             var vm = new AppReleaseForm
             {
                 Id = a.Id
@@ -158,46 +187,39 @@ namespace Hippo.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Release(Guid id, AppReleaseForm form)
+        public async Task<IActionResult> Release(Guid id, AppReleaseForm form)
         {
+            TraceMethodEntry(WithArgs(id, form));
+
             if (id != form.Id)
             {
+                LogIdMismatch("application", id, form.Id);
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                var application = context.Applications
-                    .Where(application=>application.Id==id && application.Owner.UserName==User.Identity.Name)
-                    .SingleOrDefault();
-                var channel = context.Channels
-                    .Where(c => c.Application == application && c.Name == form.ChannelName)
-                    .Include(c => c.Application)
-                    .Include(c => c.Configuration)
-                        .ThenInclude(c => c.EnvironmentVariables)
-                    .Include(c => c.Domain)
-                    .Include(c => c.Release)
-                    .SingleOrDefault();
-                var release = context.Releases
-                    .Where(r => r.Application == application && r.Revision == form.Revision)
-                    .SingleOrDefault();
+                var application = _unitOfWork.Applications.GetApplicationById(id);
+                var channel = _unitOfWork.Channels.GetChannelByName(application, form.ChannelName);
+                var release = _unitOfWork.Releases.GetReleaseByRevision(application, form.Revision);
 
                 if (application != null && channel != null && release != null)
                 {
-                    scheduler.Stop(channel);
+                    _scheduler.Stop(channel);
                     channel.Release = release;
-                    context.SaveChanges();
-                    scheduler.Start(channel);
+                    await _unitOfWork.SaveChanges();
+                    _scheduler.Start(channel);
+                    _logger.LogInformation($"Release: form application {form.Id} revision {form.Revision}: succeeded");
                     return RedirectToAction(nameof(Index));
                 }
+
+                LogIfNotFound(application, id);
+                LogIfNotFound(channel, form.ChannelName);
+                LogIfNotFound(release, form.Revision);
+
                 return NotFound();
             }
             return View(form);
-        }
-
-        private bool ApplicationExists(Guid id)
-        {
-            return context.Applications.Find(id) != null;
         }
     }
 }
