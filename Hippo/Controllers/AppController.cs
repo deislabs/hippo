@@ -189,6 +189,8 @@ namespace Hippo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Release(Guid id, AppReleaseForm form)
         {
+            // TODO: this method is now a bit ill-named.  It is really specifically
+            // about updating a specified-revision channel to a new revision.
             TraceMethodEntry(WithArgs(id, form));
 
             if (id != form.Id)
@@ -201,12 +203,13 @@ namespace Hippo.Controllers
             {
                 var application = _unitOfWork.Applications.GetApplicationById(id);
                 var channel = _unitOfWork.Channels.GetChannelByName(application, form.ChannelName);
-                var release = _unitOfWork.Revisions.GetRevisionByNumber(application, form.Revision);
+                var revision = _unitOfWork.Revisions.GetRevisionByNumber(application, form.Revision);
 
-                if (application != null && channel != null && release != null)
+                if (application != null && channel != null && revision != null)
                 {
                     _scheduler.Stop(channel);
-                    channel.Release = release;
+                    channel.SpecifiedRevision = revision;
+                    channel.ActiveRevision = revision;
                     await _unitOfWork.SaveChanges();
                     _scheduler.Start(channel);
                     _logger.LogInformation($"Release: application {form.Id} channel {channel.Id} revision {form.Revision}: succeeded");
@@ -216,7 +219,7 @@ namespace Hippo.Controllers
 
                 LogIfNotFound(application, id);
                 LogIfNotFound(channel, form.ChannelName);
-                LogIfNotFound(release, form.Revision);
+                LogIfNotFound(revision, form.Revision);
 
                 return NotFound();
             }
