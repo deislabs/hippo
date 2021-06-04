@@ -58,6 +58,10 @@ namespace Hippo.Models
             modelBuilder.Entity<Domain>()
                 .HasIndex(d => d.Name)
                 .IsUnique();
+
+            modelBuilder.Entity<Channel>()
+                .Property(c => c.RevisionSelectionStrategy)
+                .HasConversion<int>();
         }
     }
 }

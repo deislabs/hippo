@@ -32,6 +32,8 @@ namespace Hippo.Models
 
     public enum ChannelRevisionSelectionStrategy
     {
+        // IMPORTANT: The underlying values here are contractual with the database.
+        // **DO NOT** change the underlying numeric value of any case.
         UseSpecifiedRevision = 0,
         UseRangeRule = 1,
     }
