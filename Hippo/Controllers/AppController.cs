@@ -180,7 +180,9 @@ namespace Hippo.Controllers
             var a = _unitOfWork.Applications.GetApplicationById(id);
             var vm = new AppReleaseForm
             {
-                Id = a.Id
+                Id = a.Id,
+                Channels = a.Channels.AsSelectList(ch => ch.Name),
+                Revisions = a.Revisions.AsSelectList(r => r.RevisionNumber),
             };
             return View(vm);
         }
@@ -202,8 +204,8 @@ namespace Hippo.Controllers
             if (ModelState.IsValid)
             {
                 var application = _unitOfWork.Applications.GetApplicationById(id);
-                var channel = _unitOfWork.Channels.GetChannelByName(application, form.ChannelName);
-                var revision = _unitOfWork.Revisions.GetRevisionByNumber(application, form.Revision);
+                var channel = _unitOfWork.Channels.GetChannelByName(application, form.SelectedChannelName);
+                var revision = _unitOfWork.Revisions.GetRevisionByNumber(application, form.SelectedRevisionNumber);
 
                 if (application != null && channel != null && revision != null)
                 {
@@ -212,14 +214,14 @@ namespace Hippo.Controllers
                     channel.ActiveRevision = revision;
                     await _unitOfWork.SaveChanges();
                     _scheduler.Start(channel);
-                    _logger.LogInformation($"Release: application {form.Id} channel {channel.Id} revision {form.Revision}: succeeded");
+                    _logger.LogInformation($"Release: application {form.Id} channel {channel.Id} revision {form.SelectedRevisionNumber}: succeeded");
                     _logger.LogInformation($"Release: serving on port {channel.PortID + Channel.EphemeralPortRange}");
                     return RedirectToAction(nameof(Index));
                 }
 
                 LogIfNotFound(application, id);
-                LogIfNotFound(channel, form.ChannelName);
-                LogIfNotFound(revision, form.Revision);
+                LogIfNotFound(channel, form.SelectedChannelName);
+                LogIfNotFound(revision, form.SelectedRevisionNumber);
 
                 return NotFound();
             }
