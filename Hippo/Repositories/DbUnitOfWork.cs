@@ -15,7 +15,7 @@ namespace Hippo.Repositories
             Accounts = new DbAccountRepository(_dataContext);
             Applications = new DbApplicationRepository(_dataContext, currentUser);
             Channels = new DbChannelRepository(_dataContext);
-            Releases = new DbReleaseRepository(_dataContext);
+            Revisions = new DbRevisionRepository(_dataContext);
         }
 
         // We could make these lazy, but they are as cheap to construct as a Lazy would
@@ -23,7 +23,7 @@ namespace Hippo.Repositories
         public IAccountRepository Accounts { get; }
         public IApplicationRepository Applications { get; }
         public IChannelRepository Channels { get; }
-        public IReleaseRepository Releases { get; }
+        public IRevisionRepository Revisions { get; }
 
         public async Task SaveChanges() => await _dataContext.SaveChangesAsync();
     }

@@ -3,18 +3,13 @@ using System.Text;
 
 namespace Hippo.Models
 {
-    public class Release: BaseEntity
+    public class Revision: BaseEntity
     {
         public virtual Application Application { get; set; }
 
-        // TODO: is this something we can infer from the UploadUrl?
-        // e.g. bindle:hippos.rocks/myapp/1.0.0
-        //
-        // If so we should convert this to a function and parse the UploadUrl to fetch this information.
+        // This is the revision number that gets composed with the Application.StorageId
+        // to get the bindle ID.  E.g. this might be "1.4.0" or "1.1.5-prerelease2".
         [Required]
-        public string Revision { get; set; }
-
-        [Required]
-        public string UploadUrl { get; set; }
+        public string RevisionNumber { get; set; }
     }
 }

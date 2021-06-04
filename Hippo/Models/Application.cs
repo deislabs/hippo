@@ -16,6 +16,15 @@ namespace Hippo.Models
         [Required]
         public string Name { get; set; }
 
+        // This is the ID in Bindle or whatever storage backend is used.  It gets composed
+        // with a revision ID to get a Bindle ID.
+        //
+        // For example, the Weather application might have the StorageId contoso/weather.
+        // Revision 1.4.0 of the Weather application would then have the bindle id
+        // contoso/weather/1.4.0
+        [Required]
+        public string StorageId { get; set; }
+
         [Required]
         public virtual Account Owner { get; set; }
 
@@ -23,7 +32,7 @@ namespace Hippo.Models
         public virtual ICollection<Account> Collaborators { get; set; }
 
         [Required]
-        public virtual ICollection<Release> Releases { get; set; }
+        public virtual ICollection<Revision> Revisions { get; set; }
 
         [Required]
         public virtual ICollection<Channel> Channels { get; set; }

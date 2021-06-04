@@ -21,7 +21,8 @@ namespace Hippo.Repositories
                     .Include(c => c.Configuration)
                         .ThenInclude(c => c.EnvironmentVariables)
                     .Include(c => c.Domain)
-                    .Include(c => c.Release)
+                    .Include(c => c.ActiveRevision)
+                    .Include(c => c.SpecifiedRevision)
                     .SingleOrDefault();
     }
 }

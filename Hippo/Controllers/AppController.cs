@@ -201,7 +201,7 @@ namespace Hippo.Controllers
             {
                 var application = _unitOfWork.Applications.GetApplicationById(id);
                 var channel = _unitOfWork.Channels.GetChannelByName(application, form.ChannelName);
-                var release = _unitOfWork.Releases.GetReleaseByRevision(application, form.Revision);
+                var release = _unitOfWork.Revisions.GetRevisionByNumber(application, form.Revision);
 
                 if (application != null && channel != null && release != null)
                 {
