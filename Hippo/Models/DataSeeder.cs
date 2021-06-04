@@ -67,6 +67,7 @@ namespace Hippo.Models
                             new Channel
                             {
                                 Name = "development",
+                                PortID = 0,
                                 RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseSpecifiedRevision,
                                 SpecifiedRevision = revisions[1],
                                 ActiveRevision = revisions[1],
@@ -84,6 +85,22 @@ namespace Hippo.Models
                                 Domain = new Domain
                                 {
                                     Name = "app.hippos.rocks"
+                                }
+                            },
+                            new Channel
+                            {
+                                Name = "staging",
+                                PortID = 1,
+                                RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseSpecifiedRevision,
+                                SpecifiedRevision = revisions[0],
+                                ActiveRevision = revisions[0],
+                                Configuration = new Configuration
+                                {
+                                    EnvironmentVariables = new List<EnvironmentVariable>(),
+                                },
+                                Domain = new Domain
+                                {
+                                    Name = "staging.hippos.rocks"
                                 }
                             }
                         }
