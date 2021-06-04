@@ -15,6 +15,7 @@ namespace Hippo.Tests.Schedulers
             application = new Application
             {
                 Name = "one",
+                StorageId = "hippos.rocks/one",
                 Channels = new List<Channel>
                 {
                     new Channel
@@ -32,7 +33,12 @@ namespace Hippo.Tests.Schedulers
                         SpecifiedRevision = new Revision
                         {
                             RevisionNumber = "1.0.0",
+                        },
+                        ActiveRevision = new Revision
+                        {
+                            RevisionNumber = "1.0.0",
                         }
+
                     }
                 }
             };
