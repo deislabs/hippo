@@ -24,7 +24,7 @@ namespace Hippo.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> New(ReleaseUploadForm form)
+        public async Task<IActionResult> New(RevisionRegistrationForm form)
         {
             TraceMethodEntry(WithArgs(form));
 
