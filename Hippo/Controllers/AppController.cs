@@ -209,7 +209,8 @@ namespace Hippo.Controllers
                     channel.Release = release;
                     await _unitOfWork.SaveChanges();
                     _scheduler.Start(channel);
-                    _logger.LogInformation($"Release: form application {form.Id} revision {form.Revision}: succeeded");
+                    _logger.LogInformation($"Release: application {form.Id} channel {channel.Id} revision {form.Revision}: succeeded");
+                    _logger.LogInformation($"Release: serving on port {channel.PortID + Channel.EphemeralPortRange}");
                     return RedirectToAction(nameof(Index));
                 }
 
