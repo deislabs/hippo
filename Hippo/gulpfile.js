@@ -20,6 +20,7 @@ gulp.task('default', async function() {
 
     gulp.src(nodeRoot + "@fortawesome/fontawesome-free/css/*").pipe(gulp.dest(targetPath + "/fontawesome/dist/css"));
     gulp.src(nodeRoot + "@fortawesome/fontawesome-free/js/*").pipe(gulp.dest(targetPath + "/fontawesome/dist/js"));
+    gulp.src(nodeRoot + "@fortawesome/fontawesome-free/webfonts/*").pipe(gulp.dest(targetPath + "/fontawesome/dist/webfonts"));
 
     gulp.src(nodeRoot + "jquery/dist/jquery.js").pipe(gulp.dest(targetPath + "/jquery/dist"));
     gulp.src(nodeRoot + "jquery/dist/jquery.min.js").pipe(gulp.dest(targetPath + "/jquery/dist"));
