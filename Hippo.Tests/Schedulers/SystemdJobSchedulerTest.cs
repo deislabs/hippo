@@ -15,6 +15,7 @@ namespace Hippo.Tests.Schedulers
             application = new Application
             {
                 Name = "one",
+                StorageId = "hippos.rocks/one",
                 Channels = new List<Channel>
                 {
                     new Channel
@@ -28,11 +29,16 @@ namespace Hippo.Tests.Schedulers
                         {
                             EnvironmentVariables = new List<EnvironmentVariable>()
                         },
-                        Release = new Release
+                        RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseSpecifiedRevision,
+                        SpecifiedRevision = new Revision
                         {
-                            Revision = "1.0.0",
-                            UploadUrl = "bindle:hippos.rocks/one/1.0.0"
+                            RevisionNumber = "1.0.0",
+                        },
+                        ActiveRevision = new Revision
+                        {
+                            RevisionNumber = "1.0.0",
                         }
+
                     }
                 }
             };

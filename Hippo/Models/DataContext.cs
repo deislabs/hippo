@@ -16,7 +16,7 @@ namespace Hippo.Models
         public DbSet<Domain> Domains { get; set; }
         public DbSet<EnvironmentVariable> EnvironmentVariables { get; set; }
         public DbSet<Key> Keys { get; set; }
-        public DbSet<Release> Releases { get; set; }
+        public DbSet<Revision> Revisions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -36,8 +36,8 @@ namespace Hippo.Models
             modelBuilder.Entity<EnvironmentVariable>().Property(x => x.Modified).HasDefaultValueSql("now()");
             modelBuilder.Entity<Key>().Property(x => x.Created).HasDefaultValueSql("now()");
             modelBuilder.Entity<Key>().Property(x => x.Modified).HasDefaultValueSql("now()");
-            modelBuilder.Entity<Release>().Property(x => x.Created).HasDefaultValueSql("now()");
-            modelBuilder.Entity<Release>().Property(x => x.Modified).HasDefaultValueSql("now()");
+            modelBuilder.Entity<Revision>().Property(x => x.Created).HasDefaultValueSql("now()");
+            modelBuilder.Entity<Revision>().Property(x => x.Modified).HasDefaultValueSql("now()");
 
             modelBuilder.Entity<Application>()
                 .HasIndex(a => a.Name)
@@ -48,7 +48,7 @@ namespace Hippo.Models
                 .WithOne(c => c.Application);
 
             modelBuilder.Entity<Application>()
-                .HasMany(a => a.Releases)
+                .HasMany(a => a.Revisions)
                 .WithOne(r => r.Application);
 
             modelBuilder.Entity<Configuration>()
@@ -58,6 +58,10 @@ namespace Hippo.Models
             modelBuilder.Entity<Domain>()
                 .HasIndex(d => d.Name)
                 .IsUnique();
+
+            modelBuilder.Entity<Channel>()
+                .Property(c => c.RevisionSelectionStrategy)
+                .HasConversion<int>();
         }
     }
 }

@@ -13,18 +13,18 @@ namespace Hippo.Controllers
 {
     [Route("api/[Controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class ReleaseController : HippoController
+    public class RevisionController : HippoController
     {
         private readonly IUnitOfWork _unitOfWork;
 
-        public ReleaseController(IUnitOfWork unitOfWork, ILogger<ReleaseController> logger)
+        public RevisionController(IUnitOfWork unitOfWork, ILogger<RevisionController> logger)
             : base(logger)
         {
             this._unitOfWork = unitOfWork;
         }
 
         [HttpPost]
-        public async Task<IActionResult> New(ReleaseUploadForm form)
+        public async Task<IActionResult> New(RevisionRegistrationForm form)
         {
             TraceMethodEntry(WithArgs(form));
 
@@ -35,10 +35,9 @@ namespace Hippo.Controllers
 
                 if (app != null)
                 {
-                    app.Releases.Add(new Release
+                    app.Revisions.Add(new Revision
                     {
-                        Revision = form.Revision,
-                        UploadUrl = form.UploadUrl
+                        RevisionNumber = form.RevisionNumber,
                     });
                     await _unitOfWork.SaveChanges();
                     return RedirectToAction("Index", "App");

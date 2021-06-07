@@ -15,15 +15,26 @@ namespace Hippo.Models
 
         public string Name { get; set; }
 
-        public bool AutoDeploy { get; set; }
+        public ChannelRevisionSelectionStrategy RevisionSelectionStrategy { get; set; }
+        
+        public Revision SpecifiedRevision { get; set; }
+        public string RangeRule { get; set; }
 
-        public string VersionRange { get; set; }
+        public Revision ActiveRevision { get; set; }
+
         public Application Application { get; set; }
         public Domain Domain { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public uint PortID { get; set; }
         public Configuration Configuration { get; set; }
-        public Release Release { get; set; }
+    }
+
+    public enum ChannelRevisionSelectionStrategy
+    {
+        // IMPORTANT: The underlying values here are contractual with the database.
+        // **DO NOT** change the underlying numeric value of any case.
+        UseRangeRule = 0,
+        UseSpecifiedRevision = 1,
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Hippo.Models;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.EntityFrameworkCore;
 
 namespace Hippo.Repositories
 {
@@ -22,7 +23,11 @@ namespace Hippo.Repositories
             _context.Applications.Where(application=>application.Owner.UserName == _owner.Name());
 
         public Application GetApplicationById(Guid id) =>
-            _context.Applications.Where(application => application.Id == id && application.Owner.UserName == _owner.Name()).SingleOrDefault();
+            _context.Applications
+                    .Where(application => application.Id == id && application.Owner.UserName == _owner.Name())
+                    .Include(a => a.Channels)
+                    .Include(a => a.Revisions)
+                    .SingleOrDefault();
 
         public bool ApplicationExistsById(Guid id) =>
             _context.Applications.Find(id) != null;

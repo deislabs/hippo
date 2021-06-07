@@ -7,7 +7,7 @@ namespace Hippo.Repositories
         IAccountRepository Accounts { get; }
         IApplicationRepository Applications { get; }
         IChannelRepository Channels { get; }
-        IReleaseRepository Releases { get; }
+        IRevisionRepository Revisions { get; }
 
         Task SaveChanges();
     }

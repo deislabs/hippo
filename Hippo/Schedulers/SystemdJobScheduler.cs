@@ -113,7 +113,7 @@ namespace Hippo.Schedulers
         {
             var wagiConfig = new StringBuilder();
             wagiConfig.AppendLine("[[module]]");
-            wagiConfig.AppendFormat("module = \"{0}\"\n", c.Release.UploadUrl.ToString());
+            wagiConfig.AppendFormat("module = \"bindle:{0}/{1}\"\n", c.Application.StorageId, c.ActiveRevision.RevisionNumber);
             foreach (EnvironmentVariable envvar in c.Configuration.EnvironmentVariables)
             {
                 wagiConfig.AppendFormat("environment.{0} = \"{1}\"\n", envvar.Key, envvar.Value);
