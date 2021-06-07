@@ -34,7 +34,7 @@ namespace Hippo.Models
     {
         // IMPORTANT: The underlying values here are contractual with the database.
         // **DO NOT** change the underlying numeric value of any case.
-        UseSpecifiedRevision = 0,
-        UseRangeRule = 1,
+        UseRangeRule = 0,
+        UseSpecifiedRevision = 1,
     }
 }
