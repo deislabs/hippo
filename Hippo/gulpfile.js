@@ -30,5 +30,5 @@ gulp.task('default', async function() {
     gulp.src(nodeRoot + "jquery-validation-unobtrusive/dist/*.js").pipe(gulp.dest(targetPath + "/jquery-validation-unobtrusive"));
 
     gulp.src(nodeRoot + "xterm/css/xterm.css").pipe(gulp.dest(targetPath + "/xterm/dist/css"));
-    gulp.src(nodeRoot + "xterm/lib/xterm.js").pipe(gulp.dest(targetPath + "/xterm/dist/js"));
+    gulp.src(nodeRoot + "xterm/lib/*").pipe(gulp.dest(targetPath + "/xterm/dist/js"));
 });
