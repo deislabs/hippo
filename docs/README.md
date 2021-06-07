@@ -6,4 +6,4 @@ Everything you need to know about Hippo.
 
 Hippo has a lot of documentation. A high-level overview of how it’s organized will help you know where to look for certain things:
 
-- [Development Guide](development.md)
+- [Development Guide](community/developers.md)
