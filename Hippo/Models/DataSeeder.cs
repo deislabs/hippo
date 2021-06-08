@@ -66,11 +66,10 @@ namespace Hippo.Models
                         {
                             new Channel
                             {
-                                Name = "development",
+                                Name = "Development",
                                 PortID = 0,
                                 RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseSpecifiedRevision,
                                 SpecifiedRevision = revisions[1],
-                                ActiveRevision = revisions[1],
                                 Configuration = new Configuration
                                 {
                                     EnvironmentVariables = new List<EnvironmentVariable>
@@ -89,11 +88,10 @@ namespace Hippo.Models
                             },
                             new Channel
                             {
-                                Name = "staging",
+                                Name = "Staging",
                                 PortID = 1,
                                 RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseSpecifiedRevision,
                                 SpecifiedRevision = revisions[0],
-                                ActiveRevision = revisions[0],
                                 Configuration = new Configuration
                                 {
                                     EnvironmentVariables = new List<EnvironmentVariable>(),
@@ -102,10 +100,30 @@ namespace Hippo.Models
                                 {
                                     Name = "staging.hippos.rocks"
                                 }
+                            },
+                            new Channel
+                            {
+                                Name = "Compatibility 1.1",
+                                PortID = 2,
+                                RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseRangeRule,
+                                RangeRule = "~1.1",
+                                Configuration = new Configuration
+                                {
+                                    EnvironmentVariables = new List<EnvironmentVariable>(),
+                                },
+                                Domain = new Domain
+                                {
+                                    Name = "v1.hippos.rocks"
+                                }
                             }
                         }
                     }
                 };
+
+                foreach (var application in applications)
+                {
+                    application.ReevaluateActiveRevisions();
+                }
 
                 context.Applications.AddRange(applications);
             }

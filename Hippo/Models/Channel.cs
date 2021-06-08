@@ -44,6 +44,7 @@ namespace Hippo.Models
                     throw new InvalidOperationException($"Unknown revision strategy {RevisionSelectionStrategy}");
 
             }
+            // TODO: should this trigger a redeploy?
         }
     }
 

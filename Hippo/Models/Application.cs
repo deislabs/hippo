@@ -36,5 +36,18 @@ namespace Hippo.Models
 
         [Required]
         public virtual ICollection<Channel> Channels { get; set; }
+
+        public void ReevaluateActiveRevisions()
+        {
+            if (Channels == null)
+            {
+                return;
+            }
+            foreach (var channel in Channels)
+            {
+                channel.ReevaluateActiveRevision();
+                // TODO: should this trigger a redeploy?
+            }
+        }
     }
 }
