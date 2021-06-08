@@ -29,7 +29,7 @@ If you're new to the project, get started with [the
 introduction](docs/intro/README.md). For more in-depth information about
 Hippo, plunge right into the [topic guides](docs/topics/README.md).
 
-Looking for the developer guide? [Start here](docs/community/developers.md).
+Looking for the developer guide? [Start here](docs/developers/developer-guide.md).
 
 ## Community, discussion, contribution, and support
 
