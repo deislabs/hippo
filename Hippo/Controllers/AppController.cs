@@ -211,7 +211,7 @@ namespace Hippo.Controllers
                 {
                     _scheduler.Stop(channel);
                     channel.SpecifiedRevision = revision;
-                    channel.ActiveRevision = revision;
+                    channel.ReevaluateActiveRevision();
                     await _unitOfWork.SaveChanges();
                     _scheduler.Start(channel);
                     _logger.LogInformation($"Release: application {form.Id} channel {channel.Id} revision {form.SelectedRevisionNumber}: succeeded");
