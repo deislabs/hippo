@@ -37,17 +37,25 @@ namespace Hippo.Models
         [Required]
         public virtual ICollection<Channel> Channels { get; set; }
 
-        public void ReevaluateActiveRevisions()
+        public IReadOnlyList<Channel> ReevaluateActiveRevisions()
+        {
+            return ReevaluateActiveRevisionsLazy().ToList().AsReadOnly();
+        }
+
+        public IEnumerable<Channel> ReevaluateActiveRevisionsLazy()
         {
             if (Channels == null)
             {
-                return;
+                yield break;
             }
             foreach (var channel in Channels)
             {
-                channel.ReevaluateActiveRevision();
-                // TODO: should this trigger a redeploy?
+                if (channel.ReevaluateActiveRevision())
+                {
+                    yield return channel;
+                }
             }
+            // TODO: should this trigger a redeploy?
         }
     }
 }

@@ -254,5 +254,57 @@ namespace Hippo.Controllers
 
             return View(form);
         }
+
+        public IActionResult RegisterRevision(Guid id)
+        {
+            TraceMethodEntry(WithArgs(id));
+
+            var a = _unitOfWork.Applications.GetApplicationById(id);
+            var vm = new AppRegisterRevisionForm
+            {
+                Id = a.Id,
+            };
+            return View(vm);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RegisterRevision(Guid id, AppRegisterRevisionForm form)
+        {
+            TraceMethodEntry(WithArgs(id, form));
+
+            if (id != form.Id)
+            {
+                LogIdMismatch("application", id, form.Id);
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                var application = _unitOfWork.Applications.GetApplicationById(id);
+
+                application.Revisions.Add(new Revision { RevisionNumber = form.RevisionNumber });
+                var changedChannels = application.ReevaluateActiveRevisions();
+                await _unitOfWork.SaveChanges();
+
+                // TODO: We can get away with this for the WAGI-local scheduler, but does systemd
+                // still need the old version?  The old release code was careful to stop the channel
+                // before applying the change.
+                //
+                // TODO: Longer term, channels should drain requests and switch over without stopping.
+                // That may be down to Nomad spinning up the new one before spinning down the old
+                // one - TBA.
+                foreach (var channel in changedChannels)
+                {
+                    _scheduler.Stop(channel);
+                    _scheduler.Start(channel);
+                }
+
+                _logger.LogInformation($"RegisterRevision: application {form.Id} registered {form.RevisionNumber}");
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View(form);
+        }
     }
 }
