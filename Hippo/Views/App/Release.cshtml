@@ -1,6 +1,6 @@
 @model Hippo.ViewModels.AppReleaseForm
 
-<h2>Update channel to a new revision</h2>
+<h2>Reconfigure a channel</h2>
 
 <form asp-action="Release">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -13,11 +13,23 @@
         <span asp-validation-for="SelectedChannelName" class="text-danger"></span>
     </div>
     <div class="form-group">
+        <label asp-for="SelectedRevisionSelectionStrategy" class="control-label"></label>
+        <select asp-for="SelectedRevisionSelectionStrategy" asp-items="Model.RevisionSelectionStrategies" class="form-control">
+            <option value="">Select revision selection strategy</option>
+        </select>
+        <span asp-validation-for="SelectedRevisionSelectionStrategy" class="text-danger"></span>
+    </div>
+    <div class="form-group">
         <label asp-for="SelectedRevisionNumber" class="control-label"></label>
         <select asp-for="SelectedRevisionNumber" asp-items="Model.Revisions" class="form-control">
             <option value="">Select revision to update to</option>
         </select>
         <span asp-validation-for="SelectedRevisionNumber" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="SelectedRevisionRule" class="control-label"></label>
+        <input asp-for="SelectedRevisionRule" asp-items="Model.Revisions" class="form-control" />
+        <span asp-validation-for="SelectedRevisionRule" class="text-danger"></span>
     </div>
     <div class="form-group btn-group">
         <input type="submit" value="Save" class="btn btn-primary" />
