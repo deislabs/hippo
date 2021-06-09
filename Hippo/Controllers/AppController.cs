@@ -182,6 +182,7 @@ namespace Hippo.Controllers
             {
                 Id = a.Id,
                 Channels = a.Channels.AsSelectList(ch => ch.Name),
+                RevisionSelectionStrategies = Converters.EnumValuesAsSelectList<ChannelRevisionSelectionStrategy>(),
                 Revisions = a.Revisions.AsSelectList(r => r.RevisionNumber),
             };
             return View(vm);
@@ -191,8 +192,8 @@ namespace Hippo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Release(Guid id, AppReleaseForm form)
         {
-            // TODO: this method is now a bit ill-named.  It is really specifically
-            // about updating a specified-revision channel to a new revision.
+            // TODO: this method is now a bit ill-named.  It is really
+            // about changing the configuration of a channel.
             TraceMethodEntry(WithArgs(id, form));
 
             if (id != form.Id)
@@ -205,26 +206,52 @@ namespace Hippo.Controllers
             {
                 var application = _unitOfWork.Applications.GetApplicationById(id);
                 var channel = _unitOfWork.Channels.GetChannelByName(application, form.SelectedChannelName);
-                var revision = _unitOfWork.Revisions.GetRevisionByNumber(application, form.SelectedRevisionNumber);
 
-                if (application != null && channel != null && revision != null)
+                if (application == null || channel == null)
                 {
-                    _scheduler.Stop(channel);
-                    channel.SpecifiedRevision = revision;
-                    channel.ActiveRevision = revision;
-                    await _unitOfWork.SaveChanges();
-                    _scheduler.Start(channel);
-                    _logger.LogInformation($"Release: application {form.Id} channel {channel.Id} revision {form.SelectedRevisionNumber}: succeeded");
-                    _logger.LogInformation($"Release: serving on port {channel.PortID + Channel.EphemeralPortRange}");
-                    return RedirectToAction(nameof(Index));
+                    LogIfNotFound(application, id);
+                    LogIfNotFound(channel, form.SelectedChannelName);
+                    return NotFound();
                 }
 
-                LogIfNotFound(application, id);
-                LogIfNotFound(channel, form.SelectedChannelName);
-                LogIfNotFound(revision, form.SelectedRevisionNumber);
+                if (form.SelectedRevisionSelectionStrategy == Enum.GetName(ChannelRevisionSelectionStrategy.UseSpecifiedRevision))
+                {
+                    var revision = _unitOfWork.Revisions.GetRevisionByNumber(application, form.SelectedRevisionNumber);
+                    if (revision == null)
+                    {
+                        LogIfNotFound(revision, form.SelectedRevisionNumber);
+                        return NotFound();
+                    }
+                    channel.RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseSpecifiedRevision;
+                    channel.SpecifiedRevision = revision;
+                }
+                else if (form.SelectedRevisionSelectionStrategy == Enum.GetName(ChannelRevisionSelectionStrategy.UseRangeRule))
+                {
+                    var rule = form.SelectedRevisionRule;
+                    if (string.IsNullOrWhiteSpace(rule))
+                    {
+                        _logger.LogError("Release: empty rule");
+                        return BadRequest("rule was empty");  // TODO: this is a terrible way of handling it; await Ronan
+                    }
+                    channel.RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseRangeRule;
+                    channel.RangeRule = rule;
+                }
+                else
+                {
+                    _logger.LogError("Release: no strategy");
+                    return BadRequest("no strategy");  // TODO: this is a terrible way of handling it; await Ronan
+                }
 
-                return NotFound();
+                _scheduler.Stop(channel);
+                channel.ReevaluateActiveRevision();
+                await _unitOfWork.SaveChanges();
+                _scheduler.Start(channel);
+
+                _logger.LogInformation($"Release: application {form.Id} channel {channel.Id} now at revision {channel.ActiveRevision.RevisionNumber}");
+                _logger.LogInformation($"Release: serving on port {channel.PortID + Channel.EphemeralPortRange}");
+                return RedirectToAction(nameof(Index));
             }
+
             return View(form);
         }
     }

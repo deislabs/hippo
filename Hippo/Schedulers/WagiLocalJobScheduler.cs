@@ -16,10 +16,22 @@ namespace Hippo.Schedulers
         public WagiLocalJobScheduler(IHostApplicationLifetime lifetime)
         {
             lifetime.ApplicationStopping.Register(() => {
-                foreach (var processId in _wagiProcessIds) {
+                foreach (var processId in _wagiProcessIds)
+                {
                     KillProcessById(processId.Value);
                 }
             });
+        }
+
+        public void OnSchedulerStart(IEnumerable<Application> applications)
+        {
+            foreach (var application in applications)
+            {
+                foreach (var channel in application.Channels)
+                {
+                    Start(channel);
+                }
+            }
         }
         
         public void Start(Channel c)

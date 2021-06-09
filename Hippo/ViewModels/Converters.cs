@@ -11,5 +11,11 @@ namespace Hippo.ViewModels
         {
             return source.Select(o => new SelectListItem(selector(o), selector(o))).ToList();
         }
+
+        internal static IList<SelectListItem> EnumValuesAsSelectList<T>()
+            where T: struct, Enum
+        {
+            return Enum.GetValues<T>().Select(o => new SelectListItem(Enum.GetName<T>(o), Enum.GetName<T>(o))).ToList();
+        }
     }
 }

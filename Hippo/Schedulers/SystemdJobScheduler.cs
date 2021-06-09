@@ -9,6 +9,11 @@ namespace Hippo.Schedulers
 {
     public class SystemdJobScheduler : IJobScheduler
     {
+        public void OnSchedulerStart(IEnumerable<Application> applications)
+        {
+            // Nothing to do - apps run independently of scheduler object lifecycle
+        }
+
         public void Start(Channel c)
         {
             FileInfo wagiConfigFile = new(WagiConfigPath(c));

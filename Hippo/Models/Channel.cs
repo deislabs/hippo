@@ -1,3 +1,4 @@
+using Hippo.Rules;
 using Nett;
 using System;
 using System.Collections.Generic;
@@ -28,6 +29,23 @@ namespace Hippo.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public uint PortID { get; set; }
         public Configuration Configuration { get; set; }
+
+        public void ReevaluateActiveRevision()
+        {
+            switch (RevisionSelectionStrategy)
+            {
+                case ChannelRevisionSelectionStrategy.UseSpecifiedRevision:
+                    ActiveRevision = SpecifiedRevision;
+                    break;
+                case ChannelRevisionSelectionStrategy.UseRangeRule:
+                    ActiveRevision = RevisionRangeRule.Parse(RangeRule).Match(Application.Revisions);
+                    break;
+                default:
+                    throw new InvalidOperationException($"Unknown revision strategy {RevisionSelectionStrategy}");
+
+            }
+            // TODO: should this trigger a redeploy?
+        }
     }
 
     public enum ChannelRevisionSelectionStrategy

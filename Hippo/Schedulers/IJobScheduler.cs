@@ -1,9 +1,12 @@
+using System.Collections.Generic;
 using Hippo.Models;
 
 namespace Hippo.Schedulers
 {
     public interface IJobScheduler
     {
+        void OnSchedulerStart(IEnumerable<Application> applications);
+
         /// <summary>
         /// Start the current release.
         /// </summary>

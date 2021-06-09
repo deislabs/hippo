@@ -62,50 +62,74 @@ namespace Hippo.Models
                         Owner = user,
                         StorageId = "hippos.rocks/helloworld",
                         Revisions = revisions,
-                        Channels = new List<Channel>
+                    }
+                };
+
+                var application = applications[0];
+
+                application.Channels = new List<Channel>
+                {
+                    new Channel
+                    {
+                        Name = "Development",
+                        Application = application,
+                        PortID = 0,
+                        RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseSpecifiedRevision,
+                        SpecifiedRevision = revisions[1],
+                        Configuration = new Configuration
                         {
-                            new Channel
+                            EnvironmentVariables = new List<EnvironmentVariable>
                             {
-                                Name = "development",
-                                PortID = 0,
-                                RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseSpecifiedRevision,
-                                SpecifiedRevision = revisions[1],
-                                ActiveRevision = revisions[1],
-                                Configuration = new Configuration
+                                new EnvironmentVariable
                                 {
-                                    EnvironmentVariables = new List<EnvironmentVariable>
-                                    {
-                                        new EnvironmentVariable
-                                        {
-                                            Key = "HELLO",
-                                            Value = "world"
-                                        }
-                                    }
-                                },
-                                Domain = new Domain
-                                {
-                                    Name = "app.hippos.rocks"
-                                }
-                            },
-                            new Channel
-                            {
-                                Name = "staging",
-                                PortID = 1,
-                                RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseSpecifiedRevision,
-                                SpecifiedRevision = revisions[0],
-                                ActiveRevision = revisions[0],
-                                Configuration = new Configuration
-                                {
-                                    EnvironmentVariables = new List<EnvironmentVariable>(),
-                                },
-                                Domain = new Domain
-                                {
-                                    Name = "staging.hippos.rocks"
+                                    Key = "HELLO",
+                                    Value = "world"
                                 }
                             }
+                        },
+                        Domain = new Domain
+                        {
+                            Name = "app.hippos.rocks"
+                        }
+                    },
+                    new Channel
+                    {
+                        Name = "Staging",
+                        Application = application,
+                        PortID = 1,
+                        RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseSpecifiedRevision,
+                        SpecifiedRevision = revisions[0],
+                        Configuration = new Configuration
+                        {
+                            EnvironmentVariables = new List<EnvironmentVariable>(),
+                        },
+                        Domain = new Domain
+                        {
+                            Name = "staging.hippos.rocks"
+                        }
+                    },
+                    new Channel
+                    {
+                        Name = "Compatibility 1.1",
+                        Application = application,
+                        PortID = 2,
+                        RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseRangeRule,
+                        RangeRule = "~1.1",
+                        Configuration = new Configuration
+                        {
+                            EnvironmentVariables = new List<EnvironmentVariable>(),
+                        },
+                        Domain = new Domain
+                        {
+                            Name = "v1.hippos.rocks"
                         }
                     }
                 };
+
+                foreach (var app in applications)
+                {
+                    app.ReevaluateActiveRevisions();
+                }
 
                 context.Applications.AddRange(applications);
             }

@@ -8,6 +8,7 @@ namespace Hippo.Repositories
     public interface IApplicationRepository
     {
         IEnumerable<Application> ListApplications();
+        IEnumerable<Application> ListApplicationsForAllUsers();
         Application GetApplicationById(Guid id);
         bool ApplicationExistsById(Guid id);
         Task AddNew(Application application);

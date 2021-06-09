@@ -20,7 +20,15 @@ namespace Hippo.Repositories
         }
 
         public IEnumerable<Application> ListApplications() =>
-            _context.Applications.Where(application=>application.Owner.UserName == _owner.Name());
+            _context.Applications
+                    .Where(application=>application.Owner.UserName == _owner.Name())
+                    .Include(a => a.Channels)
+                    .Include(a => a.Revisions);
+
+        public IEnumerable<Application> ListApplicationsForAllUsers() =>
+            _context.Applications
+                    .Include(a => a.Channels)
+                    .Include(a => a.Revisions);
 
         public Application GetApplicationById(Guid id) =>
             _context.Applications
