@@ -30,6 +30,12 @@ namespace Hippo.Repositories
                     .Include(a => a.Channels)
                     .Include(a => a.Revisions);
 
+        public IEnumerable<Application> ListApplicationsByStorageId(string storageId) =>
+            _context.Applications
+                    .Where(application => application.StorageId == storageId && application.Owner.UserName == _owner.Name())
+                    .Include(a => a.Channels)
+                    .Include(a => a.Revisions);
+
         public Application GetApplicationById(Guid id) =>
             _context.Applications
                     .Where(application => application.Id == id && application.Owner.UserName == _owner.Name())

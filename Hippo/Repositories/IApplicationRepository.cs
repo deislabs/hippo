@@ -9,6 +9,7 @@ namespace Hippo.Repositories
     {
         IEnumerable<Application> ListApplications();
         IEnumerable<Application> ListApplicationsForAllUsers();
+        IEnumerable<Application> ListApplicationsByStorageId(string storageId);
         Application GetApplicationById(Guid id);
         bool ApplicationExistsById(Guid id);
         Task AddNew(Application application);
