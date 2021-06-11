@@ -30,8 +30,10 @@ namespace Hippo.Models
         public uint PortID { get; set; }
         public Configuration Configuration { get; set; }
 
-        public void ReevaluateActiveRevision()
+        public bool ReevaluateActiveRevision()
         {
+            var previous = ActiveRevision;
+
             switch (RevisionSelectionStrategy)
             {
                 case ChannelRevisionSelectionStrategy.UseSpecifiedRevision:
@@ -45,6 +47,8 @@ namespace Hippo.Models
 
             }
             // TODO: should this trigger a redeploy?
+
+            return ActiveRevision != previous;
         }
     }
 
