@@ -26,5 +26,10 @@ namespace Hippo.Repositories
         public IRevisionRepository Revisions { get; }
 
         public async Task SaveChanges() => await _dataContext.SaveChangesAsync();
+
+        public void Dispose()
+        {
+            _dataContext.Dispose();
+        }
     }
 }
