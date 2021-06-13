@@ -21,7 +21,7 @@ namespace Hippo
                 })
                 .ConfigureServices(services =>
                 {
-                    services.AddHostedService<ChannelUpdateTask>();
+                    services.AddHostedService<ChannelUpdateBackgroundService>();
                 });
     }
 }

@@ -10,13 +10,13 @@ using Microsoft.Extensions.Logging;
 
 namespace Hippo.Tasks
 {
-    public class ChannelUpdateTask : BackgroundService
+    public class ChannelUpdateBackgroundService : BackgroundService
     {
         private readonly IServiceProvider _services;
         private readonly ITaskQueue<ChannelReference> _queue;
         private readonly ILogger _logger;
 
-        public ChannelUpdateTask(IServiceProvider services, ITaskQueue<ChannelReference> queue, ILogger<ChannelUpdateTask> logger)
+        public ChannelUpdateBackgroundService(IServiceProvider services, ITaskQueue<ChannelReference> queue, ILogger<ChannelUpdateBackgroundService> logger)
         {
             _services = services;
             _queue = queue;

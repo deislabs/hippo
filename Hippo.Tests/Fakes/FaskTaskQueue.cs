@@ -7,7 +7,7 @@ namespace Hippo.Tests.Fakes
 {
     public class FakeTaskQueue<T> : ITaskQueue<T>
     {
-        private Queue<T> _impl;
+        private Queue<T> _impl = new Queue<T>();
         
         public Task<T> Dequeue(CancellationToken cancellationToken)
         {
