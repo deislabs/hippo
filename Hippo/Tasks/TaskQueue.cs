@@ -6,13 +6,17 @@ namespace Hippo.Tasks
 {
     public interface ITaskQueue<T>
     {
-        ValueTask Enqueue(T value, CancellationToken cancellationToken);
-        ValueTask<T> Dequeue(CancellationToken cancellationToken);
+        Task Enqueue(T value, CancellationToken cancellationToken);
+        Task<T> Dequeue(CancellationToken cancellationToken);
     }
 
     public class TaskQueue<T>: ITaskQueue<T>
     {
+        const int DEFAULT_BUFFER_CAPACITY = 1024;
+
         private readonly Channel<T> _queue;
+
+        public TaskQueue() : this(DEFAULT_BUFFER_CAPACITY) {}
 
         public TaskQueue(int capacity)
         {
@@ -20,12 +24,12 @@ namespace Hippo.Tasks
             _queue = Channel.CreateBounded<T>(options);
         }
 
-        public async ValueTask Enqueue(T value, CancellationToken cancellationToken)
+        public async Task Enqueue(T value, CancellationToken cancellationToken)
         {
             await _queue.Writer.WriteAsync(value, cancellationToken);
         }
 
-        public async ValueTask<T> Dequeue(CancellationToken cancellationToken)
+        public async Task<T> Dequeue(CancellationToken cancellationToken)
         {
             return await _queue.Reader.ReadAsync(cancellationToken);
         }

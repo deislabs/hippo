@@ -13,6 +13,8 @@ using Microsoft.EntityFrameworkCore;
 using Hippo.Tests.Schedulers;
 using Hippo.Repositories;
 using Hippo.Tests.Stubs;
+using Hippo.Tests.Fakes;
+using Hippo.Tasks;
 
 namespace Hippo.Tests.Controllers
 {
@@ -46,8 +48,8 @@ namespace Hippo.Tests.Controllers
                 .Options;
             var context = new DataContext(options);
             var userManager = new UserManager<Account>(store.Object, null, null, null, null, null, null, null, null);
-            var jobScheduler = new FakeJobScheduler();
-            controller = new AppController(new DbUnitOfWork(context, new FakeCurrentUser(admin.UserName)), userManager, jobScheduler, new NullLogger<AppController>());
+            var taskQueue = new FakeTaskQueue<ChannelReference>();
+            controller = new AppController(new DbUnitOfWork(context, new FakeCurrentUser(admin.UserName)), userManager, taskQueue, new NullLogger<AppController>());
         }
 
         [Fact]

@@ -1,6 +1,7 @@
 using Hippo.Models;
 using Hippo.Repositories;
 using Hippo.Schedulers;
+using Hippo.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -84,6 +85,8 @@ namespace Hippo
                 case "systemd": services.AddSingleton<IJobScheduler, SystemdJobScheduler>(); break;
                 default: services.AddSingleton<IJobScheduler, WagiLocalJobScheduler>(); break;
             }
+
+            services.AddSingleton<ITaskQueue<ChannelReference>, TaskQueue<ChannelReference>>();
 
             services.AddSwaggerGen(c =>
             {
