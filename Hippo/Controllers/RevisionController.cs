@@ -1,10 +1,13 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Hippo.Messages;
 using Hippo.Models;
 using Hippo.Repositories;
 using Hippo.Schedulers;
+using Hippo.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -18,13 +21,13 @@ namespace Hippo.Controllers
     public class RevisionController : HippoController
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IJobScheduler _scheduler;
+        private readonly ITaskQueue<ChannelReference> _channelsToReschedule;
 
-        public RevisionController(IUnitOfWork unitOfWork, IJobScheduler scheduler, ILogger<RevisionController> logger)
+        public RevisionController(IUnitOfWork unitOfWork, ITaskQueue<ChannelReference> channelsToReschedule, ILogger<RevisionController> logger)
             : base(logger)
         {
             this._unitOfWork = unitOfWork;
-            this._scheduler = scheduler;
+            this._channelsToReschedule = channelsToReschedule;
         }
 
         [HttpPost]
@@ -35,6 +38,7 @@ namespace Hippo.Controllers
             if (ModelState.IsValid)
             {
                 var apps = FindApps();
+                var changedChannels = new List<Channel>();
 
                 foreach (var app in apps)
                 {
@@ -43,17 +47,26 @@ namespace Hippo.Controllers
                     {
                         RevisionNumber = request.RevisionNumber,
                     });
-                    // TODO: same comment as on app controller, and this really feels out of place
-                    // should we raise events on active revision changes and let schedulers subscribe?
-                    // (or even do reevaluation and/or channel update as a background process)
-                    foreach (var channel in app.ReevaluateActiveRevisions())
-                    {
-                        _scheduler.Stop(channel);
-                        _scheduler.Start(channel);
-                    }
+                    
+                    var changedAppChannels = app.ReevaluateActiveRevisions();
+                    changedChannels.AddRange(changedAppChannels);
                 }
 
                 await _unitOfWork.SaveChanges();
+
+                var queueRescheduleTasks = changedChannels.Select(c =>
+                    _channelsToReschedule.Enqueue(new ChannelReference(c.Application.Id, c.Id), CancellationToken.None)
+                );
+
+                try
+                {
+                    await Task.WhenAll(queueRescheduleTasks);
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError($"New: failed to queue channel rescheduling for one or more of {String.Join(",", changedChannels.Select(c => c.Name))}: {e}");
+                    throw;
+                }
 
                 return apps.Any() ?
                     Created("", null) :

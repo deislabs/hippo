@@ -17,6 +17,8 @@ using System.Text.Json;
 using Hippo.Schedulers;
 using Hippo.Repositories;
 using Microsoft.Extensions.Logging;
+using Hippo.Tasks;
+using System.Threading;
 
 namespace Hippo.Controllers
 {
@@ -25,14 +27,14 @@ namespace Hippo.Controllers
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<Account> _userManager;
-        private readonly IJobScheduler _scheduler;
+        private readonly ITaskQueue<ChannelReference> _channelsToReschedule;
 
-        public AppController(IUnitOfWork unitOfWork, UserManager<Account> userManager, IJobScheduler scheduler, ILogger<AppController> logger)
+        public AppController(IUnitOfWork unitOfWork, UserManager<Account> userManager, ITaskQueue<ChannelReference> channelsToReschedule, ILogger<AppController> logger)
             : base(logger)
         {
             this._unitOfWork = unitOfWork;
             this._userManager = userManager;
-            this._scheduler = scheduler;
+            this._channelsToReschedule = channelsToReschedule;
         }
 
         public IActionResult Index()
@@ -242,10 +244,9 @@ namespace Hippo.Controllers
                     return BadRequest("no strategy");  // TODO: this is a terrible way of handling it; await Ronan
                 }
 
-                _scheduler.Stop(channel);
                 channel.ReevaluateActiveRevision();
                 await _unitOfWork.SaveChanges();
-                _scheduler.Start(channel);
+                await _channelsToReschedule.Enqueue(new ChannelReference(application.Id, channel.Id), CancellationToken.None);
 
                 _logger.LogInformation($"Release: application {form.Id} channel {channel.Id} now at revision {channel.ActiveRevision.RevisionNumber}");
                 _logger.LogInformation($"Release: serving on port {channel.PortID + Channel.EphemeralPortRange}");
@@ -287,17 +288,19 @@ namespace Hippo.Controllers
                 var changedChannels = application.ReevaluateActiveRevisions();
                 await _unitOfWork.SaveChanges();
 
-                // TODO: We can get away with this for the WAGI-local scheduler, but does systemd
-                // still need the old version?  The old release code was careful to stop the channel
-                // before applying the change.
-                //
-                // TODO: Longer term, channels should drain requests and switch over without stopping.
-                // That may be down to Nomad spinning up the new one before spinning down the old
-                // one - TBA.
-                foreach (var channel in changedChannels)
+                // TODO: deduplicate with RevisionController
+                var queueRescheduleTasks = changedChannels.Select(channel =>
+                    _channelsToReschedule.Enqueue(new ChannelReference(application.Id, channel.Id), CancellationToken.None)
+                );
+
+                try
                 {
-                    _scheduler.Stop(channel);
-                    _scheduler.Start(channel);
+                    await Task.WhenAll(queueRescheduleTasks);
+                }
+                catch (Exception e)
+                {
+                    _logger.LogError($"RegisterRevision: failed to queue channel rescheduling for one or more of {String.Join(",", changedChannels.Select(c => c.Name))}: {e}");
+                    throw;
                 }
 
                 _logger.LogInformation($"RegisterRevision: application {form.Id} registered {form.RevisionNumber}");

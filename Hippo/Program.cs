@@ -1,4 +1,6 @@
+using Hippo.Tasks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
 namespace Hippo
@@ -16,6 +18,10 @@ namespace Hippo
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
+                })
+                .ConfigureServices(services =>
+                {
+                    services.AddHostedService<ChannelUpdateBackgroundService>();
                 });
     }
 }
