@@ -25,6 +25,14 @@ namespace Hippo.Schedulers
         {
             _logger = logger;
 
+            var bindleUrl = Environment.GetEnvironmentVariable(ENV_BINDLE);
+
+            if (string.IsNullOrWhiteSpace(bindleUrl))
+            {
+                _logger.LogError($"Bindle server URL not specified: set {ENV_BINDLE}");
+                _logger.LogCritical($"No channels will be able to run - this scheduler requires {ENV_BINDLE}");
+            }
+
             lifetime.ApplicationStopping.Register(() => {
                 foreach (var processId in _wagiProcessIds)
                 {
