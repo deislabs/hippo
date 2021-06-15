@@ -49,8 +49,8 @@ $ dotnet run
 Then, open https://localhost:5001 to view the browser. The
 default administrator username/password is 'admin' and 'Passw0rd!'.
 
-If you want to test the pre-seeded applications, open https://localhost:32768,
-https://localhost:32769, and https://localhost:32770. There you should find
+If you want to test the pre-seeded applications, open http://localhost:32768,
+http://localhost:32769, and http://localhost:32770. There you should find
 three applications all running and served by the local WAGI scheduler.
 
 ```console
