@@ -64,7 +64,7 @@ namespace Hippo.Tests.Models
 
         public ApplicationTest()
         {
-        //     One = new Application
+        //     One = new ApplicationController
         //     {
         //         Name = "one",
         //         Owner = new Account

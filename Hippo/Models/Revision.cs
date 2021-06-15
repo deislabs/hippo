@@ -7,7 +7,7 @@ namespace Hippo.Models
     {
         public virtual Application Application { get; set; }
 
-        // This is the revision number that gets composed with the Application.StorageId
+        // This is the revision number that gets composed with the ApplicationController.StorageId
         // to get the bindle ID.  E.g. this might be "1.4.0" or "1.1.5-prerelease2".
         [Required]
         public string RevisionNumber { get; set; }
