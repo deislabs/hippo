@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Hippo.Messages;
+using Hippo.ViewModels;
 using Hippo.Models;
 using Hippo.Repositories;
 using Hippo.Schedulers;
@@ -31,7 +31,7 @@ namespace Hippo.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> New([FromBody] RegisterRevisionRequest request)
+        public async Task<IActionResult> New([FromBody] RevisionRegistrationForm request)
         {
             TraceMethodEntry(WithArgs(request));
 
