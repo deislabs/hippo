@@ -36,5 +36,10 @@ namespace Hippo.Repositories
                     .Include(c => c.ActiveRevision)
                     .Include(c => c.SpecifiedRevision)
                     .SingleOrDefault();
+
+        public async Task AddNew(Channel channel)
+        {
+            await _context.Channels.AddAsync(channel);
+        }
     }
 }
