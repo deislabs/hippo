@@ -20,6 +20,6 @@ namespace Hippo.Messages
         /// </summary>
         /// <returns>Trace string</returns>
         public string FormatTrace() 
-          => $"{GetType().Name}[ApplicationName={ApplicationName}, ApplicationGUID={ApplicationGUID}], StorageId={StorageId}]";
+            => $"{GetType().Name}[ApplicationName={ApplicationName}, ApplicationGUID={ApplicationGUID}], StorageId={StorageId}]";
     }
 }
