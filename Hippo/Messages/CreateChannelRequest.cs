@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Hippo.Logging;
-using SemVer;
+using Hippo.Models;
 
 namespace Hippo.Messages
 {
@@ -16,7 +16,7 @@ namespace Hippo.Messages
         /// </summary>
         /// <returns>Trace striing</returns>
         public virtual string FormatTrace()
-        => $"{GetType().Name}[Appid={AppId}, Name={Name}, FixedToRevision={FixedToRevision}, RevisionNumber={RevisionNumber}]";
+        => $"{GetType().Name}[Appid={AppId}, Name={Name}, RevisionSelectionStrategy={RevisionSelectionStrategy}, RevisionNumber={RevisionNumber}]";
 
         /// <summary>
         /// IValidatableObject.Validate implementation.
@@ -26,40 +26,40 @@ namespace Hippo.Messages
 
             // TODO : Should we validate that the revision exists or if its a range there is at least one revision in the range available?
 
-            if (FixedToRevision)
+            if (RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseSpecifiedRevision)
             { 
                 if (String.IsNullOrEmpty(RevisionNumber))
                 {
                     yield return new ValidationResult(
                         $"Revision Number must be specified when fixing a channel to a revision number",
                         new[] { nameof(RevisionNumber) ,
-                                nameof(FixedToRevision)});
+                                nameof(RevisionSelectionStrategy)});
                 }
 
                 if  (!SemVer.Version.TryParse(RevisionNumber, out _))
                 {
                     yield return new ValidationResult(
-                        $"Revision Number is not a valid SemVer version",
+                        $"Revision Number does not comply with Semantic Versioning version number rules",
                         new[] { nameof(RevisionNumber) });
                 }
             
             }
 
-            if (!FixedToRevision)
+            if (RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseRangeRule)
             {
                 if (String.IsNullOrEmpty(RevisionRange))
                 {
                     yield return new ValidationResult(
                         $"Revision Range must be specified when not fixing a channel to a revision number",
                         new[] { nameof(RevisionRange),
-                                nameof(FixedToRevision)});
+                                nameof(RevisionSelectionStrategy)});
                 }
 
 
                 if (!SemVer.Range.TryParse(RevisionRange, out _))
                 {
                     yield return new ValidationResult(
-                        $"Revision Range is not a valid SemVer range",
+                        $"Revision Range does not comply with Semantic Versioning version number range rules",
                         new[] { nameof(RevisionRange) });
                 }
 

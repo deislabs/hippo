@@ -52,11 +52,20 @@ namespace Hippo.Models
         }
     }
 
+    /// <summary>
+    /// The strategy to use to select a revision for the Channel
+    /// </summary>
     public enum ChannelRevisionSelectionStrategy
     {
         // IMPORTANT: The underlying values here are contractual with the database.
         // **DO NOT** change the underlying numeric value of any case.
+        /// <summary>
+        /// Use a range rule to select the most appropriate revision for the channel
+        /// </summary>
         UseRangeRule = 0,
+        /// <summary>
+        /// Use a specific revision version for the channel
+        /// </summary>
         UseSpecifiedRevision = 1,
     }
 }

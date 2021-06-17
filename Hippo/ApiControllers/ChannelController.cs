@@ -1,16 +1,18 @@
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Hippo.Controllers;
 using Hippo.Messages;
 using Hippo.Models;
 using Hippo.Repositories;
+using Hippo.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace Hippo.APIControllers
+namespace Hippo.ApiControllers
 {
     /// <summary>
     /// ChannelController providers an API to create Hippo Channels 
@@ -21,19 +23,21 @@ namespace Hippo.APIControllers
     public class ChannelController : HippoController
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ITaskQueue<ChannelReference> _taskQueue;
         /// <summary>
         /// Initializes a new instance of the <see cref="ChannelController"/> class.
         /// </summary>
         /// <param name="unitOfWork">Iunitofwork instance</param>
         /// <param name="logger">ILogger Instance</param>
-        public ChannelController(IUnitOfWork unitOfWork, ILogger<ChannelController> logger)
+        public ChannelController(IUnitOfWork unitOfWork, ITaskQueue<ChannelReference> taskQueue, ILogger<ChannelController> logger)
                 : base(logger)
         {
-            this._unitOfWork = unitOfWork;
+            _unitOfWork = unitOfWork;
+            _taskQueue = taskQueue;
         }
 
         /// <summary>
-        /// Creates a new Hippo Channel
+        /// Creates a new Hippo ChannelMessage
         /// </summary>
         /// <remarks>
         /// Sample requests:
@@ -41,22 +45,22 @@ namespace Hippo.APIControllers
         ///     POST /api/channel
         ///     {
         ///        "appId": "4208d635-7618-4150-b8a8-bc3205e70e32",
-        ///        "name": "My new Channel",
-        ///        "fixedToRevision": true,
+        ///        "name": "My new ChannelMessage",
+        ///        "revisionSelectionStrategy": "UseRangeRule",
         ///        "revisionNumber": "1.2.3"
         ///     }
         ///     
         ///     POST /api/channel
         ///     {
         ///        "appId": "4208d635-7618-4150-b8a8-bc3205e70e32",
-        ///        "name": "My new Channel",
+        ///        "revisionSelectionStrategy": "UseSpecifiedRevision",
         ///        "fixedToRevision": false,
         ///        "revisionRange": "~1.2.3"
         ///     }
         ///
         /// </remarks>
         /// <param name="request">The channel details.</param>
-        /// <returns>Details of the newly created Channel.</returns>
+        /// <returns>Details of the newly created ChannelMessage.</returns>
         /// <response code="201">Returns the newly created ApplicationMessage details</response>
         /// <response code="400">The request is invalid</response> 
         /// <response code="404">App was not found with the appId </response> 
@@ -91,16 +95,16 @@ namespace Hippo.APIControllers
                     Id = channelId,
                     Application = app,
                     Name = request.Name,
-                    RevisionSelectionStrategy = request.FixedToRevision ? ChannelRevisionSelectionStrategy.UseSpecifiedRevision : ChannelRevisionSelectionStrategy.UseRangeRule,
-                    RangeRule = request.FixedToRevision ? "" : request.RevisionRange,
-                    SpecifiedRevision = request.FixedToRevision ? new Revision { RevisionNumber = request.RevisionNumber } : null
+                    RevisionSelectionStrategy = request.RevisionSelectionStrategy,
+                    RangeRule = request.RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseRangeRule ? request.RevisionRange :  "",
+                    SpecifiedRevision = request.RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseSpecifiedRevision ? new Revision { RevisionNumber = request.RevisionNumber } : null
                 };
-                
+                channel.ReevaluateActiveRevision();
+
                 await _unitOfWork.Channels.AddNew(channel);
                 await _unitOfWork.SaveChanges();
 
-
-                //TODO: should the new channel be started?
+                await _taskQueue.Enqueue(new ChannelReference(channel.Application.Id, channel.Id), CancellationToken.None);
 
                 var response = new CreateChannelResponse()
                 {
@@ -116,7 +120,7 @@ namespace Hippo.APIControllers
         }
 
         /// <summary>
-        /// Gets a Hippo Channel biy Channel Id
+        /// Gets a Hippo ChannelMessage by ChannelMessage Id
         /// </summary>
         /// <remarks>
         /// Sample requests:
@@ -126,7 +130,7 @@ namespace Hippo.APIControllers
         ///
         /// </remarks>
         /// <param name="id">The channel id.</param>
-        /// <returns>Details of the Channel.</returns>
+        /// <returns>Details of the ChannelMessage.</returns>
         /// <response code="200">Returns the newly created ApplicationMessage details</response>
         /// <response code="400">The request is invalid</response> 
         /// <response code="404">App was not found with the appId </response> 
@@ -156,7 +160,7 @@ namespace Hippo.APIControllers
                 var response = new Messages.GetChannelResponse
                 {
                     AppId = channel.Application.Id,
-                    FixedToRevision = channel.RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseSpecifiedRevision,
+                    RevisionSelectionStrategy = channel.RevisionSelectionStrategy,
                     Name = channel.Name,
                     RevisionNumber = channel.SpecifiedRevision.RevisionNumber,
                     RevisionRange = channel.RangeRule
@@ -171,3 +175,4 @@ namespace Hippo.APIControllers
         }
     }
 }
+

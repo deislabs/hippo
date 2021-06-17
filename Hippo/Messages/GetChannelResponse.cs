@@ -1,8 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using Hippo.Logging;
-using SemVer;
 
 namespace Hippo.Messages
 {
@@ -16,7 +12,6 @@ namespace Hippo.Messages
         /// </summary>
         /// <returns>Trace striing</returns>
         public virtual string FormatTrace()
-        => $"{GetType().Name}[Appid={AppId}, Name={Name}, FixedToRevision={FixedToRevision}, RevisionNumber={RevisionNumber}]";
+        => $"{GetType().Name}[Appid={AppId}, Name={Name}, RevisionSelectionStrategy={RevisionSelectionStrategy}, RevisionNumber={RevisionNumber}]";
     }
 }
-
