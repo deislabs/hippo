@@ -108,7 +108,12 @@ namespace Hippo.ApiControllers
 
                 var response = new CreateChannelResponse()
                 {
-                   Id = channelId
+                   Id = channelId,
+                   AppId = app.Id,
+                   Name = request.Name,
+                   RevisionNumber = request.RevisionNumber,
+                   RevisionRange = request.RevisionRange,
+                   RevisionSelectionStrategy = request.RevisionSelectionStrategy
                 };
                 return Created("", response);
             }

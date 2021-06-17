@@ -7,7 +7,7 @@ namespace Hippo.Messages
     /// <summary>
     /// Response payload for a new ChannelMessage API Request.
     /// </summary>
-    public class CreateChannelResponse : ITraceable
+    public class CreateChannelResponse : ChannelMessage, ITraceable
     {
         /// <summary>
         /// The GUID of the ChannelMessage which was created.
@@ -21,6 +21,6 @@ namespace Hippo.Messages
         /// </summary>
         /// <returns>Trace striing</returns>
         public virtual string FormatTrace()
-        => $"{GetType().Name}[ChannelId={Id}]";
+        => $"{GetType().Name}[ChannelId={Id},Appid={AppId}, Name={Name}, RevisionSelectionStrategy={RevisionSelectionStrategy}, RevisionNumber={RevisionNumber}, RevisionRange={RevisionRange}]";
     }
 }

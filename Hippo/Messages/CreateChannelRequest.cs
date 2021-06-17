@@ -16,7 +16,7 @@ namespace Hippo.Messages
         /// </summary>
         /// <returns>Trace striing</returns>
         public virtual string FormatTrace()
-        => $"{GetType().Name}[Appid={AppId}, Name={Name}, RevisionSelectionStrategy={RevisionSelectionStrategy}, RevisionNumber={RevisionNumber}]";
+        => $"{GetType().Name}[Appid={AppId}, Name={Name}, RevisionSelectionStrategy={RevisionSelectionStrategy}, RevisionNumber={RevisionNumber}, RevisionRange={RevisionRange}]";
 
         /// <summary>
         /// IValidatableObject.Validate implementation.
