@@ -92,7 +92,7 @@ namespace Hippo.Tests.ApiControllers
       var response = await client.PostAsJsonAsync<CreateApplicationRequest>("/api/application", fixture.CreateApplicationRequest);
       Assert.True(response.IsSuccessStatusCode);
       var createApplicationResponse = await response.Content.ReadFromJsonAsync<CreateApplicationResponse>();
-      Assert.NotEqual(createApplicationResponse.ApplicationGUID, Guid.Empty);
+      Assert.NotEqual(createApplicationResponse.Id, Guid.Empty);
       Assert.Equal(createApplicationResponse.ApplicationName, fixture.CreateApplicationRequest.ApplicationName);
       Assert.Equal(createApplicationResponse.StorageId, fixture.CreateApplicationRequest.StorageId);
 
@@ -116,7 +116,7 @@ namespace Hippo.Tests.ApiControllers
       var createdResult = response.Result as CreatedResult;
       Assert.IsType<CreateApplicationResponse>(createdResult.Value);
       var result = createdResult.Value as CreateApplicationResponse;
-      Assert.NotEqual(result.ApplicationGUID, Guid.Empty);
+      Assert.NotEqual(result.Id, Guid.Empty);
       Assert.Equal(result.ApplicationName, fixture.CreateApplicationRequest.ApplicationName);
       Assert.Equal(result.StorageId, fixture.CreateApplicationRequest.StorageId);
     }

@@ -84,7 +84,7 @@ namespace Hippo.ApiControllers
                 await _unitOfWork.SaveChanges();
                 var response= new CreateApplicationResponse
                 {
-                    ApplicationGUID = app.Id,
+                    Id = app.Id,
                     ApplicationName = app.Name,
                     StorageId = app.StorageId
                 };

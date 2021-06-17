@@ -10,16 +10,16 @@ namespace Hippo.Messages
     public class CreateApplicationResponse: ApplicationMessage, ITraceable
     {
         /// <summary>
-        /// The name GUID of the new Application
+        /// The GUID of the new Application
         /// </summary>
         /// <example>4208d635-7618-4150-b8a8-bc3205e70e32</example>
         [Required]
-        public Guid ApplicationGUID { get; set; }
+        public Guid Id { get; set; }
         /// <summary>
         /// ITraceable.FormatTrace implementation.
         /// </summary>
         /// <returns>Trace string</returns>
         public string FormatTrace() 
-            => $"{GetType().Name}[ApplicationName={ApplicationName}, ApplicationGUID={ApplicationGUID}], StorageId={StorageId}]";
+            => $"{GetType().Name}[ApplicationName={ApplicationName}, ApplicationGUID={Id}], StorageId={StorageId}]";
     }
 }
