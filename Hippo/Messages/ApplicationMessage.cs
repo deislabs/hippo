@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Hippo.Messages
 {
-    public class ApplicationMessage
+    public abstract class ApplicationMessage
     {
         /// <summary>
         /// The name of the ApplicationController
