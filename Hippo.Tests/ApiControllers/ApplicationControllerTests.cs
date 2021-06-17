@@ -6,7 +6,7 @@ using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
-using Hippo.APIControllers;
+using Hippo.ApiControllers;
 using Hippo.Messages;
 using Hippo.Models;
 using Hippo.Repositories;

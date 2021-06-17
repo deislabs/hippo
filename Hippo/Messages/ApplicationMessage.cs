@@ -5,7 +5,7 @@ namespace Hippo.Messages
     public abstract class ApplicationMessage
     {
         /// <summary>
-        /// The name of the ApplicationController
+        /// The name of the Application 
         /// </summary>
         /// <example>My Excellent Application</example>
         [Required]

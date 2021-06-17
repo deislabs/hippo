@@ -19,7 +19,7 @@ namespace Hippo.Messages
         /// ITraceable.FormatTrace implementation.
         /// </summary>
         /// <returns>Trace string</returns>
-        public string FormatTrace()
-        => $"{GetType().Name}[ApplicationName={ApplicationName}, ApplicationGUID={ApplicationGUID}], StorageId={StorageId}]";
+        public string FormatTrace() 
+          => $"{GetType().Name}[ApplicationName={ApplicationName}, ApplicationGUID={ApplicationGUID}], StorageId={StorageId}]";
     }
 }

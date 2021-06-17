@@ -25,6 +25,11 @@ namespace Hippo.Controllers
             }
         }
 
+        protected void TraceMessage(string message, [CallerMemberName] string methodName = null)
+        {
+           _logger.LogTrace($"{methodName}: {message}");
+        }
+
         protected void LogIdMismatch(string objectType, Guid expectedId, Guid formId, [CallerMemberName] string methodName = null)
         {
             _logger.LogWarning($"{methodName}: ${objectType} ID {formId} did not match expected ID {expectedId}");

@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 
-namespace Hippo.APIControllers
+namespace Hippo.ApiControllers
 {
     /// <summary>
     /// ApplicationController providers an API to create Hippo Applications 
@@ -43,7 +43,7 @@ namespace Hippo.APIControllers
         /// <remarks>
         /// Sample request:
         ///
-        ///     POST /api/application/New
+        ///     POST /api/application
         ///     {
         ///        "applicationName": "My excellent new application",
         ///        "storageId": "contoso/weather"
@@ -66,10 +66,12 @@ namespace Hippo.APIControllers
             try
             {
                 TraceMethodEntry(WithArgs(request));
+
                 if (!ModelState.IsValid)
                 {
                     return BadRequest(ModelState);
                 }
+
                 var app = new Models.Application
                 {
                     Id = System.Guid.NewGuid(),
@@ -77,6 +79,7 @@ namespace Hippo.APIControllers
                     StorageId = request.StorageId,
                     Owner = await _userManager.FindByNameAsync(User.Identity.Name),
                 };
+
                 await _unitOfWork.Applications.AddNew(app);
                 await _unitOfWork.SaveChanges();
                 var response= new CreateApplicationResponse
@@ -85,11 +88,14 @@ namespace Hippo.APIControllers
                     ApplicationName = app.Name,
                     StorageId = app.StorageId
                 };
+                
+                TraceMessage($"Successfully Created Application Id: {app.Id}");
                 return Created("", response);
+                
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Exception Creating Application");
+                _logger.LogError(ex, $"Exception Creating Application Name:{request.ApplicationName} StorageId: {request.StorageId}");
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
