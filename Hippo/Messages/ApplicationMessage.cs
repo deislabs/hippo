@@ -12,7 +12,7 @@ namespace Hippo.Messages
         public string ApplicationName { get; set; }
 
         /// <summary>
-        /// This is the ID in Bindle or whatever storage backend is used.It gets composed
+        /// This is the ID in Bindle or whatever storage backend is used. It gets composed
         /// with a revision ID to get a Bindle ID.
         ///
         /// For example, the Weather application might have the StorageId contoso/weather.
