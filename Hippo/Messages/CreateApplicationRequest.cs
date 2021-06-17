@@ -12,6 +12,6 @@ namespace Hippo.Messages
         /// </summary>
         /// <returns>Trace string</returns>
         public virtual string FormatTrace()
-        => $"{GetType().Name}[ApplicationName={ApplicationName}, StorageId={StorageId}]";
+            => $"{GetType().Name}[ApplicationName={ApplicationName}, StorageId={StorageId}]";
     }
 }
