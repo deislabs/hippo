@@ -15,6 +15,10 @@ namespace Hippo.Schedulers
 
         public PortMapper(int start, int end)
         {
+            if (start <= 0)
+            {
+                throw new ArgumentException("starting range must be a positive integer");
+            }
             if (end <= start)
             {
                 throw new ArgumentException("ending range must be larger than starting range");
