@@ -69,16 +69,4 @@ namespace Hippo.Tests.Controllers
             Assert.NotNull(viewResult);
         }
     }
-
-    class FakeCurrentUser: ICurrentUser
-    {
-        private readonly string _name;
-
-        public FakeCurrentUser(string name)
-        {
-            _name = name;
-        }
-
-        public string Name() => _name;
-    }
 }
