@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
 using Hippo.Models;
 using Microsoft.Extensions.Hosting;
@@ -12,10 +14,16 @@ namespace Hippo.Schedulers
 {
     public class WagiLocalJobScheduler : IJobScheduler
     {
-        // This assumes a singleton scheduler instance!
-        private readonly Dictionary<Guid, int> _wagiProcessIds = new();
-        private readonly ILogger _logger;
 
+        private class WagiProcessInfo {
+            public int ProcessId { get; set; }
+            public int Port { get; set; }
+        }
+
+        // This assumes a singleton scheduler instance!
+        private readonly Dictionary<Guid, WagiProcessInfo> _wagiProcessInfos = new();
+        private readonly ILogger _logger;
+        private PortMapper _portMapper = new(PortMapper.EphemeralPortStartRange, PortMapper.MaxPortNumber);
         private const string ENV_BINDLE = "BINDLE_SERVER_URL";
 
         private const string ENV_WAGI = "HIPPO_WAGI_PATH";
@@ -35,11 +43,14 @@ namespace Hippo.Schedulers
 
             lifetime.ApplicationStopping.Register(() =>
             {
-                foreach (var processId in _wagiProcessIds)
+                foreach (var processInfos in _wagiProcessInfos)
                 {
-                    KillProcessById(processId.Value);
+                    KillProcessById(processInfos.Value.ProcessId);
                 }
             });
+
+            // TODO: make this configurable
+            _portMapper = new PortMapper(PortMapper.EphemeralPortStartRange, PortMapper.MaxPortNumber);
         }
 
         public void OnSchedulerStart(IEnumerable<Application> applications)
@@ -55,7 +66,7 @@ namespace Hippo.Schedulers
 
         public void Start(Channel c)
         {
-            var port = c.PortID + Channel.EphemeralPortRange;
+            var port = _portMapper.ReservePort();
 
             var wagiProgram = WagiBinaryPath();
             var bindleUrl = Environment.GetEnvironmentVariable(ENV_BINDLE);
@@ -79,12 +90,18 @@ namespace Hippo.Schedulers
             {
                 using (var process = Process.Start(psi))
                 {
-                    process.Exited += (s, e) => _wagiProcessIds.Remove(c.Id);
-                    _wagiProcessIds[c.Id] = process.Id;
+                    process.Exited += (s, e) => _wagiProcessInfos.Remove(c.Id);
+                    _wagiProcessInfos[c.Id] = new()
+                    {
+                        ProcessId = process.Id,
+                        Port = port,
+                    };
                 }
             }
             catch (Win32Exception e)  // yes, even on Linux
             {
+                // free up port for re-use
+                _portMapper.FreePort(port);
                 if (e.Message.Contains("No such file or directory"))
                 {
                     _logger.LogError($"Program '{wagiProgram}' not found: check system path or set {ENV_WAGI}");
@@ -96,10 +113,11 @@ namespace Hippo.Schedulers
 
         public void Stop(Channel c)
         {
-            if (_wagiProcessIds.TryGetValue(c.Id, out var wagiProcessId))
+            if (_wagiProcessInfos.TryGetValue(c.Id, out var wagiProcessInfo))
             {
-                _wagiProcessIds.Remove(c.Id);
-                KillProcessById(wagiProcessId);
+                _wagiProcessInfos.Remove(c.Id);
+                KillProcessById(wagiProcessInfo.ProcessId);
+                _portMapper.FreePort(wagiProcessInfo.Port);
             }
         }
 
@@ -136,6 +154,20 @@ namespace Hippo.Schedulers
             {
                 // TODO: process not running: log and move on
             }
+        }
+
+        public ChannelStatus Status(Channel c)
+        {
+            ChannelStatus status = new()
+            {
+                IsRunning = false
+            };
+            if (_wagiProcessInfos.TryGetValue(c.Id, out var processInfo))
+            {
+                status.IsRunning = true;
+                status.Port = processInfo.Port;
+            }
+            return status;
         }
     }
 }

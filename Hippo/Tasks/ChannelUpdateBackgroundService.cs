@@ -46,6 +46,7 @@ namespace Hippo.Tasks
                                 scheduler.Stop(channel);
                                 scheduler.Start(channel);
                                 _logger.LogTrace($"ExecuteAsync: redeployed {channel.Application.Name} channel {channel.Name} at rev {channel.ActiveRevision}");
+                                _logger.LogTrace($"ExecuteAsync: app {channel.Application.Name} channel {channel.Name} is serving on port {scheduler.Status(channel).Port}");
                             }
                             catch (Exception e)
                             {

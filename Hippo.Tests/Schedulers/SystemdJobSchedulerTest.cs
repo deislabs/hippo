@@ -74,9 +74,9 @@ service = ""one-development""
 [http.services.one-development.loadBalancer]
 
 [[http.services.one-development.loadBalancer.servers]]
-url = ""http://localhost:32768""
+url = ""http://localhost:8080""
 ".Trim(),
-                SystemdJobScheduler.TraefikConfig(application.Channels.First()).Trim());
+                SystemdJobScheduler.TraefikConfig(application.Channels.First(), 8080).Trim());
         }
     }
 }

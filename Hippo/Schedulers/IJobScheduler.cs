@@ -13,6 +13,11 @@ namespace Hippo.Schedulers
         void Start(Channel c);
 
         /// <summary>
+        /// provides information about the channel's current status.
+        /// </summary>
+        ChannelStatus Status(Channel c);
+
+        /// <summary>
         /// Gracefully shut down the current release. This prevents the channel
         /// from receiving requests.
         /// </summary>

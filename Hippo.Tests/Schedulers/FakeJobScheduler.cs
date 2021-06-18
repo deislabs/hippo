@@ -16,6 +16,12 @@ namespace Hippo.Tests.Schedulers
             // no-op
         }
 
+        public ChannelStatus Status(Channel c)
+        {
+            // no-op
+            return new();
+        }
+
         public void Stop(Channel c)
         {
             // no-op

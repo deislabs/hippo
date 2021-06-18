@@ -78,7 +78,6 @@ namespace Hippo.Models
                     {
                         Name = "Development",
                         Application = application,
-                        PortID = 0,
                         RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseSpecifiedRevision,
                         SpecifiedRevision = revisions[1],
                         Configuration = new Configuration
@@ -101,7 +100,6 @@ namespace Hippo.Models
                     {
                         Name = "Staging",
                         Application = application,
-                        PortID = 1,
                         RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseSpecifiedRevision,
                         SpecifiedRevision = revisions[0],
                         Configuration = new Configuration
@@ -117,7 +115,6 @@ namespace Hippo.Models
                     {
                         Name = "Compatibility 1.1",
                         Application = application,
-                        PortID = 2,
                         RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseRangeRule,
                         RangeRule = "~1.1",
                         Configuration = new Configuration

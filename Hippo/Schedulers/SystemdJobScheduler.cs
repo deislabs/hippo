@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -9,19 +10,26 @@ namespace Hippo.Schedulers
 {
     public class SystemdJobScheduler : IJobScheduler
     {
+        // TODO: make this configurable
+        private PortMapper _portMapper = new(PortMapper.EphemeralPortStartRange, PortMapper.MaxPortNumber);
+
+        private Dictionary<Guid, int> _portMappings = new();
+
         public void OnSchedulerStart(IEnumerable<Application> applications)
         {
             // Nothing to do - apps run independently of scheduler object lifecycle
+            // TODO: we could populate _portMapper with any existing systemd jobs
         }
 
         public void Start(Channel c)
         {
+            int port = _portMapper.ReservePort();
             FileInfo wagiConfigFile = new(WagiConfigPath(c));
             wagiConfigFile.Directory.Create();
             File.WriteAllText(wagiConfigFile.FullName, WagiConfig(c));
             FileInfo systemdServiceFile = new(SystemdServicePath(c));
             systemdServiceFile.Directory.Create();
-            File.WriteAllText(systemdServiceFile.FullName, SystemdService(c));
+            File.WriteAllText(systemdServiceFile.FullName, SystemdService(c, port));
             var process = new Process
             {
                 StartInfo = new ProcessStartInfo
@@ -34,7 +42,8 @@ namespace Hippo.Schedulers
             process.WaitForExit();
             FileInfo traefikConfigFile = new(TraefikConfigPath(c));
             traefikConfigFile.Directory.Create();
-            File.WriteAllText(traefikConfigFile.FullName, TraefikConfig(c));
+            File.WriteAllText(traefikConfigFile.FullName, TraefikConfig(c, port));
+            _portMappings.Add(c.Id, port);
         }
 
         public void Stop(Channel c)
@@ -49,17 +58,20 @@ namespace Hippo.Schedulers
             };
             process.Start();
             process.WaitForExit();
+            if (_portMappings.TryGetValue(c.Id, out var port))
+            {
+                _portMappings.Remove(c.Id);
+                _portMapper.FreePort(port);
+            }
         }
 
-        public static string TraefikConfig(Channel c)
+        public static string TraefikConfig(Channel c, int port)
         {
             if (c.Domain == null)
             {
                 return "";
             }
 
-            // start from the ephemeral port range
-            var port = c.PortID + Channel.EphemeralPortRange;
             var serviceId = $"{c.Application.Name}-{c.Name}";
 
             var routers = new Dictionary<string, object> {
@@ -93,7 +105,7 @@ namespace Hippo.Schedulers
             return Path.Combine("/etc", "traefik", "conf.d", c.Name + ".toml");
         }
 
-        public static string SystemdService(Channel c)
+        public static string SystemdService(Channel c, int port)
         {
             var systemdService = new StringBuilder();
             systemdService.AppendLine("[Unit]");
@@ -102,7 +114,7 @@ namespace Hippo.Schedulers
             systemdService.AppendLine("[Service]");
             systemdService.AppendLine("Type=simple");
             // TODO: make wagi system path configurable
-            systemdService.AppendFormat("ExecStart=/usr/local/bin/wagi --config {0} --listen 0.0.0.0:{1}\n", WagiConfigPath(c), c.PortID + Channel.EphemeralPortRange);
+            systemdService.AppendFormat("ExecStart=/usr/local/bin/wagi --config {0} --listen 0.0.0.0:{1}\n", WagiConfigPath(c), port);
             systemdService.AppendLine();
             systemdService.AppendLine("[Install]");
             systemdService.AppendLine("WantedBy=multi-user.target");
@@ -129,6 +141,20 @@ namespace Hippo.Schedulers
         public static string WagiConfigPath(Channel c)
         {
             return Path.Combine("/etc", "wagi", c.Id.ToString(), "modules.toml");
+        }
+
+        public ChannelStatus Status(Channel c)
+        {
+            ChannelStatus status = new()
+            {
+                IsRunning = false
+            };
+            if (_portMappings.TryGetValue(c.Id, out var port))
+            {
+                status.IsRunning = true;
+                status.Port = port;
+            }
+            return status;
         }
     }
 }
