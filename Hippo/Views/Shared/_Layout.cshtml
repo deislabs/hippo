@@ -5,49 +5,41 @@
     <title>Hippo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="The Hippo Platform.">
-    <link href="~/lib/bootstrap/dist/css/bootstrap.css" rel="stylesheet" />
-    <link href="~/lib/fontawesome/dist/css/all.css" rel="stylesheet" />
-    <link href="~/css/site.css" rel="stylesheet" />
-    @* If one of the pages creates a section called styles, load it here
-    *@
-    @RenderSection("styles", false)
+    
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;600&display=swap" rel="stylesheet">
+    <link href="~/styles/hippo.css" rel="stylesheet" />
 </head>
 <body>
-    <header class="container">
-        <div class="row justify-content-md-center">
-            <h1><i class="fa fa-hippo"></i> Hippo</h1>
+  <partial name="_NavTopbar" />
+
+  <div class="wrapper">
+    <partial name="_NavSidebar" />
+
+    <main class="main" id="main">
+      <partial name="_NavBreadcrumb" />
+      
+      <div class="level mt-2 mr-2 content-title">
+        <div class="level-left">
+          <div class="level-item">
+            <div class="title has-text-primary">
+              <span><text>@ViewBag.Title</text></span>
+            </div>
+          </div>
         </div>
-    </header>
-    <div class="container">
-        <div class="row align-items-start">
-            <nav class="navbar navbar-light bg-light col-2 border">
-                <div id="menu">
-                    <ul class="nav navbar-nav">
-                        <li><a asp-controller="Home" asp-action="Index">Home</a></li>
-                        @if (User.Identity.IsAuthenticated)
-                        {
-                            <li><a asp-controller="App" asp-action="Index">Applications</a></li>
-                            <li><a asp-controller="Account" asp-action="Logout">Logout</a></li>
-                        }
-                        else
-                        {
-                            <li><a asp-controller="Account" asp-action="Register">Register</a></li>
-                            <li><a asp-controller="Account" asp-action="Login">Login</a></li>
-                        }
-                    </ul>
-                </div>
-            </nav>
-            <section class="col-8">
-                @RenderBody()
-            </section>
+      </div>
+      
+      <div class="columns is-multiline">
+        <div class="column is-12">
+          @RenderBody()
         </div>
-    </div>
-    <footer class="container fixed-bottom">
-        <div class="row justify-content-md-center"><small>Copyright 2021 Microsoft. All Rights Reserved.</small></div>
-    </footer>
-    <script src="~/lib/fontawesome/dist/js/all.js"></script>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
+      </div>
+      
+    </div> <!-- /main -->
+    <partial name="_Footer" />
+  </div> <!-- /wrapper -->
+  
+  <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
     @* If one of the pages creates a section called scripts, load it here
     *@
     @RenderSection("scripts", false)
