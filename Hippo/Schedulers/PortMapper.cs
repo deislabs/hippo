@@ -19,6 +19,10 @@ namespace Hippo.Schedulers
             {
                 throw new ArgumentException("starting range must be a positive integer");
             }
+            if (start >= MaxPortNumber || end >= MaxPortNumber)
+            {
+                throw new ArgumentException("starting and ending range must be below " + MaxPortNumber);
+            }
             if (end <= start)
             {
                 throw new ArgumentException("ending range must be larger than starting range");
