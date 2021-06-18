@@ -33,6 +33,7 @@ body {
 
 .wrapper {
   position: relative;
+  min-height: 100vh;
 }
 
 .main {
@@ -415,5 +416,3 @@ input[type=checkbox]:checked ~ .aside .menu .icon {
     padding-right: 1.125em;
   }
 }
-
-/*# sourceMappingURL=hippo.css.map */
