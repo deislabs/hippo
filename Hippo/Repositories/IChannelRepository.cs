@@ -8,5 +8,6 @@ namespace Hippo.Repositories
     {
         Channel GetChannelByName(Application owner, string name);
         Channel GetChannelById(Guid channelId);
+        Task AddNew(Channel channel);
     }
 }
