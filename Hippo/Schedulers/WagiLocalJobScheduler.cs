@@ -89,7 +89,11 @@ namespace Hippo.Schedulers
             {
                 using (var process = Process.Start(psi))
                 {
-                    process.Exited += (s, e) => _wagiProcessInfos.Remove(c.Id);
+                    process.Exited += (s, e) =>
+                    {
+                        _wagiProcessInfos.Remove(c.Id);
+                        _portAllocator.FreePort(port);
+                    };
                     _wagiProcessInfos[c.Id] = new()
                     {
                         ProcessId = process.Id,
