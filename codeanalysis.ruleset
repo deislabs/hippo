@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="Default Rule Set" Description=" " ToolsVersion="15.0">
+    <Rules AnalyzerId="Microsoft.ApiDesignGuidelines.Analyzers" RuleNamespace="Microsoft.ApiDesignGuidelines.Analyzers">
+        <Rule Id="CA2007" Action="None" /> <!-- Do not require configureawait https://devblogs.microsoft.com/dotnet/configureawait-faq/ -->
+        <!-- The following are temporarily disabled to make it easier to review and introduce changes -->
+        <Rule Id="CA1001" Action="None" />  
+        <Rule Id="CA1012" Action="None" /> 
+        <Rule Id="CA1014" Action="None" /> 
+        <Rule Id="CA1031" Action="None" /> 
+        <Rule Id="CA1051" Action="None" />         
+        <Rule Id="CA1052" Action="None" /> 
+        <Rule Id="CA1062" Action="None" /> 
+        <Rule Id="CA1063" Action="None" /> 
+        <Rule Id="CA1305" Action="None" />         
+        <Rule Id="CA1307" Action="None" />     
+        <Rule Id="CA1308" Action="None" />    
+        <Rule Id="CA1711" Action="None" />
+        <Rule Id="CA1716" Action="None" />  
+        <Rule Id="CA1724" Action="None" />      
+        <Rule Id="CA1725" Action="None" />         
+        <Rule Id="CA1801" Action="None" />         
+        <Rule Id="CA1815" Action="None" />  
+        <Rule Id="CA1816" Action="None" />        
+        <Rule Id="CA1822" Action="None" /> 
+        <Rule Id="CA1825" Action="None" /> 
+        <Rule Id="CA2000" Action="None" />        
+        <Rule Id="CA2227" Action="None" />         
+        <Rule Id="CA2234" Action="None" /> 
+        <Rule Id="CA5391" Action="None" />
+        <Rule Id="CA5395" Action="None" /> 
+    </Rules>
+	<Rules AnalyzerId="Microsoft.Analyzers.ManagedCodeAnalysis" RuleNamespace="Microsoft.Rules.Managed">
+        <Rule Id="CS1591" Action="None" />
+        <!-- The following are temporarily disabled to make it easier to review and introduce changes -->
+        <Rule Id="CS1573" Action="None" />
+    </Rules>
+</RuleSet>
