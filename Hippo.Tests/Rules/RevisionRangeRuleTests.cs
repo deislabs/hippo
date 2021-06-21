@@ -34,11 +34,13 @@ namespace Hippo.Tests.Rules
             "1.1.2",
             "1.1.3",
             "1.1.3-alice-2021.01.01.01.01.01.111",
-            "1.1.3-alice-2021.03.03.03.03.03.333",
+            "1.1.3-alice-2021.04.04.04.04.04.444",
             "1.1.3-bob-2021.02.02.02.02.02.222",
             "1.1.3-spongiforms-alice-2021.03.03.03.03.03.333",
+            "1.1.3-spongiforms-alice-2021.02.02.02.02.02.222",
             "1.1.3-spongiforms-bob-2021.02.02.02.02.02.222",
             "1.1.3-spongiforms-2021.05.05.05.05.05.555",
+            "1.1.3-spongiforms-2021.04.04.04.04.04.444",
             "1.1.4-alice-2021.01.02.03.04.05.678",
             "1.2.0",
             "1.2.1",
@@ -65,16 +67,36 @@ namespace Hippo.Tests.Rules
         [Fact]
         public void SupportsMostRecentReleaseByUser()
         {
-            AssertMatchResult("1.1.3-alice-2021.03.03.03.03.03.333", RevisionRangeRule.Parse("P:*-alice-*"));
+            AssertMatchResult("1.1.3-alice-2021.04.04.04.04.04.444", RevisionRangeRule.Parse("P:*-alice-*"));
             AssertMatchResult("1.1.3-bob-2021.02.02.02.02.02.222", RevisionRangeRule.Parse("P:*-bob-*"));
-            AssertMatchResult("2.1.2-canary-2021.03.03.03.03.03.333", RevisionRangeRule.Parse("P:*-canary-*"));
+            AssertMatchResult("2.1.1-canary-2021.04.04.04.04.04.444", RevisionRangeRule.Parse("P:*-canary-*"));
         }
 
         [Fact]
         public void SupportsMostRecentReleaseByUserWithinAVersion()
         {
-            AssertMatchResult("1.1.3-alice-2021.03.03.03.03.03.333", RevisionRangeRule.Parse("P:1.1.3-alice-*"));
+            AssertMatchResult("1.1.3-alice-2021.04.04.04.04.04.444", RevisionRangeRule.Parse("P:1.1.3-alice-*"));
             AssertMatchResult("1.1.4-alice-2021.01.02.03.04.05.678", RevisionRangeRule.Parse("P:1.1.4-alice-*"));
+        }
+
+        // [Fact]
+        // public void SupportsMostRecentReleaseByUserWithinVersionRange()
+        // {
+        //     // TODO: may not need this
+        //     AssertMatchResult("1.1.4-alice-2021.01.02.03.04.05.678", RevisionRangeRule.Parse("P:~1.1-alice-*"));
+        // }
+
+        // [Fact]
+        // public void SupportsLongRunningFeatureBranches()
+        // {
+        //     AssertMatchResult("1.1.3-spongiforms-2021.05.05.05.05.05.555", RevisionRangeRule.Parse("P:*-spongiforms-*"));
+        // }
+
+        [Fact]
+        public void SupportsContributorsInLongRunningFeatureBranches()
+        {
+            AssertMatchResult("1.1.3-spongiforms-alice-2021.03.03.03.03.03.333", RevisionRangeRule.Parse("P:*-spongiforms-alice-*"));
+            AssertMatchResult("1.1.3-spongiforms-bob-2021.02.02.02.02.02.222", RevisionRangeRule.Parse("P:*-spongiforms-bob-*"));
         }
     }
 }
