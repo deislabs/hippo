@@ -26,6 +26,7 @@ namespace Hippo.Tests.Rules
         // * Collaboration on a feature. If Alice and Bob are both working on a spongiforms
         //   feature for 1.4.0, we should be able to set up a channel for the 1.4.0-spongiforms
         //   latest prerelease.  (Alice and Bob may still want individual channels though.)
+        //   - This is also relevant for "canary deployment of a feature branch."
 
         private static readonly List<Revision> _revisions = new string[] {
             "1.1.0",
@@ -38,7 +39,7 @@ namespace Hippo.Tests.Rules
             "1.1.3-spongiforms-alice-2021.03.03.03.03.03.333",
             "1.1.3-spongiforms-bob-2021.02.02.02.02.02.222",
             "1.1.3-spongiforms-2021.05.05.05.05.05.555",
-            "1.1.4-alice-2021.01.01.01.01.01.001",
+            "1.1.4-alice-2021.01.02.03.04.05.678",
             "1.2.0",
             "1.2.1",
             "2.0.0",
@@ -59,6 +60,21 @@ namespace Hippo.Tests.Rules
             AssertMatchResult("1.1.3", RevisionRangeRule.Parse("~1.1"));
             AssertMatchResult("2.1.1", RevisionRangeRule.Parse("~2"));
             AssertMatchResult("1.2.1", RevisionRangeRule.Parse("^1.1"));
+        }
+
+        [Fact]
+        public void SupportsMostRecentReleaseByUser()
+        {
+            AssertMatchResult("1.1.3-alice-2021.03.03.03.03.03.333", RevisionRangeRule.Parse("P:*-alice-*"));
+            AssertMatchResult("1.1.3-bob-2021.02.02.02.02.02.222", RevisionRangeRule.Parse("P:*-bob-*"));
+            AssertMatchResult("2.1.2-canary-2021.03.03.03.03.03.333", RevisionRangeRule.Parse("P:*-canary-*"));
+        }
+
+        [Fact]
+        public void SupportsMostRecentReleaseByUserWithinAVersion()
+        {
+            AssertMatchResult("1.1.3-alice-2021.03.03.03.03.03.333", RevisionRangeRule.Parse("P:1.1.3-alice-*"));
+            AssertMatchResult("1.1.4-alice-2021.01.02.03.04.05.678", RevisionRangeRule.Parse("P:1.1.4-alice-*"));
         }
     }
 }
