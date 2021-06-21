@@ -7,7 +7,7 @@ namespace Hippo.Models
     /// that can be used for identities.
     /// By using IdentityUser to inherit we are saying that we want to add on to it.
     /// </summary>
-    public class Account: IdentityUser
+    public class Account : IdentityUser
     {
         /// <summary>
         /// Personal signing key used for signing off releases and determining trust.

@@ -82,16 +82,16 @@ namespace Hippo.ApiControllers
 
                 await _unitOfWork.Applications.AddNew(app);
                 await _unitOfWork.SaveChanges();
-                var response= new CreateApplicationResponse
+                var response = new CreateApplicationResponse
                 {
                     Id = app.Id,
                     ApplicationName = app.Name,
                     StorageId = app.StorageId
                 };
-                
+
                 TraceMessage($"Successfully Created Application Id: {app.Id}");
                 return Created("", response);
-                
+
             }
             catch (Exception ex)
             {

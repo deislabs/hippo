@@ -84,7 +84,7 @@ namespace Hippo.Schedulers
                 }
             };
 
-            var traefikConfig = new { http = new { routers, services}};
+            var traefikConfig = new { http = new { routers, services } };
             return Toml.WriteString(traefikConfig);
         }
 

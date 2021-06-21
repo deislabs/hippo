@@ -3,7 +3,7 @@ using Hippo.Logging;
 
 namespace Hippo.ViewModels
 {
-    public class ApiLoginForm: ITraceable
+    public class ApiLoginForm : ITraceable
     {
         [Required]
         [Display(Name = "username")]

@@ -4,7 +4,7 @@ using Hippo.Models;
 
 namespace Hippo.Messages
 {
-  
+
     public class ChannelMessage
     {
         /// <summary>

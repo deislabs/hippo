@@ -4,7 +4,7 @@ using Hippo.Logging;
 
 namespace Hippo.ViewModels
 {
-    public class RevisionRegistrationForm: ITraceable
+    public class RevisionRegistrationForm : ITraceable
     {
         [Required]
         public Guid AppId { get; set; }

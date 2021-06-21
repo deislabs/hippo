@@ -10,13 +10,13 @@ namespace Hippo.Tasks
         Task<T> Dequeue(CancellationToken cancellationToken);
     }
 
-    public class TaskQueue<T>: ITaskQueue<T>
+    public class TaskQueue<T> : ITaskQueue<T>
     {
         const int DEFAULT_BUFFER_CAPACITY = 1024;
 
         private readonly Channel<T> _queue;
 
-        public TaskQueue() : this(DEFAULT_BUFFER_CAPACITY) {}
+        public TaskQueue() : this(DEFAULT_BUFFER_CAPACITY) { }
 
         public TaskQueue(int capacity)
         {

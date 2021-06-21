@@ -13,7 +13,7 @@ namespace Hippo.ViewModels
         }
 
         internal static IList<SelectListItem> EnumValuesAsSelectList<T>()
-            where T: struct, Enum
+            where T : struct, Enum
         {
             return Enum.GetValues<T>().Select(o => new SelectListItem(Enum.GetName<T>(o), Enum.GetName<T>(o))).ToList();
         }
