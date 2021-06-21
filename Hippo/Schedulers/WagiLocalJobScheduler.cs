@@ -23,7 +23,7 @@ namespace Hippo.Schedulers
         // This assumes a singleton scheduler instance!
         private readonly Dictionary<Guid, WagiProcessInfo> _wagiProcessInfos = new();
         private readonly ILogger _logger;
-        private PortMapper _portMapper = new(PortMapper.EphemeralPortStartRange, PortMapper.MaxPortNumber);
+        private readonly PortAllocator _portAllocator = new(PortAllocator.EphemeralPortStartRange, PortAllocator.MaxPortNumber);
         private const string ENV_BINDLE = "BINDLE_SERVER_URL";
 
         private const string ENV_WAGI = "HIPPO_WAGI_PATH";
@@ -43,14 +43,14 @@ namespace Hippo.Schedulers
 
             lifetime.ApplicationStopping.Register(() =>
             {
-                foreach (var processInfos in _wagiProcessInfos)
+                foreach (var processInfo in _wagiProcessInfos)
                 {
-                    KillProcessById(processInfos.Value.ProcessId);
+                    KillProcessById(processInfo.Value.ProcessId);
                 }
             });
 
             // TODO: make this configurable
-            _portMapper = new PortMapper(PortMapper.EphemeralPortStartRange, PortMapper.MaxPortNumber);
+            _portAllocator = new PortAllocator(PortAllocator.EphemeralPortStartRange, PortAllocator.MaxPortNumber);
         }
 
         public void OnSchedulerStart(IEnumerable<Application> applications)
@@ -63,10 +63,9 @@ namespace Hippo.Schedulers
                 }
             }
         }
-
         public void Start(Channel c)
         {
-            var port = _portMapper.ReservePort();
+            var port = _portAllocator.ReservePort();
 
             var wagiProgram = WagiBinaryPath();
             var bindleUrl = Environment.GetEnvironmentVariable(ENV_BINDLE);
@@ -101,7 +100,7 @@ namespace Hippo.Schedulers
             catch (Win32Exception e)  // yes, even on Linux
             {
                 // free up port for re-use
-                _portMapper.FreePort(port);
+                _portAllocator.FreePort(port);
                 if (e.Message.Contains("No such file or directory"))
                 {
                     _logger.LogError($"Program '{wagiProgram}' not found: check system path or set {ENV_WAGI}");
@@ -117,7 +116,7 @@ namespace Hippo.Schedulers
             {
                 _wagiProcessInfos.Remove(c.Id);
                 KillProcessById(wagiProcessInfo.ProcessId);
-                _portMapper.FreePort(wagiProcessInfo.Port);
+                _portAllocator.FreePort(wagiProcessInfo.Port);
             }
         }
 
@@ -158,16 +157,11 @@ namespace Hippo.Schedulers
 
         public ChannelStatus Status(Channel c)
         {
-            ChannelStatus status = new()
-            {
-                IsRunning = false
-            };
             if (_wagiProcessInfos.TryGetValue(c.Id, out var processInfo))
             {
-                status.IsRunning = true;
-                status.Port = processInfo.Port;
+                return new ChannelStatus(true, processInfo.Port);
             }
-            return status;
+            return new ChannelStatus(false, 0);
         }
     }
 }

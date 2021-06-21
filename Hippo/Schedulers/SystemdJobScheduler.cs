@@ -11,19 +11,19 @@ namespace Hippo.Schedulers
     public class SystemdJobScheduler : IJobScheduler
     {
         // TODO: make this configurable
-        private PortMapper _portMapper = new(PortMapper.EphemeralPortStartRange, PortMapper.MaxPortNumber);
+        private PortAllocator _portAllocator = new(PortAllocator.EphemeralPortStartRange, PortAllocator.MaxPortNumber);
 
         private Dictionary<Guid, int> _portMappings = new();
 
         public void OnSchedulerStart(IEnumerable<Application> applications)
         {
             // Nothing to do - apps run independently of scheduler object lifecycle
-            // TODO: we could populate _portMapper with any existing systemd jobs
+            // TODO: we could populate _portAllocator with any existing systemd jobs
         }
 
         public void Start(Channel c)
         {
-            int port = _portMapper.ReservePort();
+            int port = _portAllocator.ReservePort();
             FileInfo wagiConfigFile = new(WagiConfigPath(c));
             wagiConfigFile.Directory.Create();
             File.WriteAllText(wagiConfigFile.FullName, WagiConfig(c));
@@ -61,7 +61,7 @@ namespace Hippo.Schedulers
             if (_portMappings.TryGetValue(c.Id, out var port))
             {
                 _portMappings.Remove(c.Id);
-                _portMapper.FreePort(port);
+                _portAllocator.FreePort(port);
             }
         }
 
@@ -145,16 +145,11 @@ namespace Hippo.Schedulers
 
         public ChannelStatus Status(Channel c)
         {
-            ChannelStatus status = new()
-            {
-                IsRunning = false
-            };
             if (_portMappings.TryGetValue(c.Id, out var port))
             {
-                status.IsRunning = true;
-                status.Port = port;
+                return new ChannelStatus(true, port);
             }
-            return status;
+            return new ChannelStatus(false, 0);
         }
     }
 }
