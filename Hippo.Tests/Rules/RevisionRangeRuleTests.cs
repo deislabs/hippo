@@ -83,14 +83,15 @@ namespace Hippo.Tests.Rules
         // public void SupportsMostRecentReleaseByUserWithinVersionRange()
         // {
         //     // TODO: may not need this
+        //     // TODO: define behaviour - should higher version or more recent timestamp take precedence?
         //     AssertMatchResult("1.1.4-alice-2021.01.02.03.04.05.678", RevisionRangeRule.Parse("P:~1.1-alice-*"));
         // }
 
-        // [Fact]
-        // public void SupportsLongRunningFeatureBranches()
-        // {
-        //     AssertMatchResult("1.1.3-spongiforms-2021.05.05.05.05.05.555", RevisionRangeRule.Parse("P:*-spongiforms-*"));
-        // }
+        [Fact]
+        public void SupportsLongRunningFeatureBranches()
+        {
+            AssertMatchResult("1.1.3-spongiforms-2021.05.05.05.05.05.555", RevisionRangeRule.Parse("P:*-spongiforms-*"));
+        }
 
         [Fact]
         public void SupportsContributorsInLongRunningFeatureBranches()

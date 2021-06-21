@@ -85,25 +85,38 @@ namespace Hippo.Rules
                     from c in candidates
                     from pr in ParsePrerelease(c.RevisionNumber)
                     where Matches(pr)
-                    orderby pr.Prerelease descending
-                    select new { Revision = c, Version = pr.Version, Prerelease = pr.Prerelease };
+                    orderby pr.Timestamp descending
+                    select c;
 
-                return candidatesByVersion.FirstOrDefault()?.Revision;
+                return candidatesByVersion.FirstOrDefault();
             }
 
-            private IEnumerable<(string Version, string Prerelease)> ParsePrerelease(string revisionNumber)
+            private IEnumerable<(string Version, string User, string Timestamp)> ParsePrerelease(string revisionNumber)
             {
                 var prereleaseParse = revisionNumber.IndexOf('-');
                 if (prereleaseParse <= 0)
                 {
                     yield break;
                 }
-                yield return (revisionNumber.Substring(0, prereleaseParse), revisionNumber.Substring(prereleaseParse + 1));
+
+                var version = revisionNumber.Substring(0, prereleaseParse);
+                var prerelease = revisionNumber.Substring(prereleaseParse + 1);
+
+                var tsParse = prerelease.LastIndexOf('-');
+                if (tsParse <= 0)
+                {
+                    yield break;
+                }
+
+                var user = prerelease.Substring(0, tsParse);
+                var timestamp = prerelease.Substring(tsParse + 1);
+
+                yield return (version, user, timestamp);
             }
 
-            private bool Matches((string Version, string Prerelease) revisionNumber)
+            private bool Matches((string Version, string User, string _) revisionNumber)
             {
-                return revisionNumber.Prerelease.StartsWith(_prereleasePrefix, StringComparison.InvariantCultureIgnoreCase) &&
+                return revisionNumber.User == _prereleasePrefix &&
                     _versionRange.IsSatisfied(revisionNumber.Version);
             }
         }
