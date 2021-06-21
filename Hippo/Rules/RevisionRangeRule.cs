@@ -84,8 +84,7 @@ namespace Hippo.Rules
                 var candidatesByVersion =
                     from c in candidates
                     from pr in ParsePrerelease(c.RevisionNumber)
-                    where pr.Prerelease.StartsWith(_prereleasePrefix, StringComparison.InvariantCultureIgnoreCase)
-                    where _versionRange.IsSatisfied(pr.Version)
+                    where Matches(pr)
                     orderby pr.Prerelease descending
                     select new { Revision = c, Version = pr.Version, Prerelease = pr.Prerelease };
 
@@ -100,6 +99,12 @@ namespace Hippo.Rules
                     yield break;
                 }
                 yield return (revisionNumber.Substring(0, prereleaseParse), revisionNumber.Substring(prereleaseParse + 1));
+            }
+
+            private bool Matches((string Version, string Prerelease) revisionNumber)
+            {
+                return revisionNumber.Prerelease.StartsWith(_prereleasePrefix, StringComparison.InvariantCultureIgnoreCase) &&
+                    _versionRange.IsSatisfied(revisionNumber.Version);
             }
         }
     }
