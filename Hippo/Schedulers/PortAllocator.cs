@@ -24,7 +24,7 @@ namespace Hippo.Schedulers
         public const int MaxPortNumber = 65535;
         private readonly int _start;
         private readonly int _end;
-        private readonly List<int> ReservedPorts;
+        private readonly List<int> _reservedPorts;
 
         private IPortIsInUseChecker _portIsInUseChecker;
 
@@ -47,13 +47,14 @@ namespace Hippo.Schedulers
             this._start = start;
             this._end = end;
             this._portIsInUseChecker = checker;
+            this._reservedPorts = new();
         }
 
         public bool IsPortReserved(int port)
         {
             // NOTE(bacongobbler): quick shortcut: check if the port has already been allocated
             // before doing a network lookup (computationally cheaper)
-            if (ReservedPorts.Contains(port))
+            if (_reservedPorts.Contains(port))
             {
                 return true;
             }
@@ -69,11 +70,11 @@ namespace Hippo.Schedulers
             // We are also assuming that there are not many ports reserved in the ephemeral port
             // range. This is an O(n+1) operation, where n is the number of ports reserved by
             // other programs.
-            foreach (int port in Enumerable.Range(_start + ReservedPorts.Count(), _end - _start))
+            foreach (int port in Enumerable.Range(_start + _reservedPorts.Count(), _end - _start))
             {
                 if (!IsPortReserved(port))
                 {
-                    ReservedPorts.Add(port);
+                    _reservedPorts.Add(port);
                     return port;
                 }
             }
@@ -82,7 +83,7 @@ namespace Hippo.Schedulers
 
         public void FreePort(int port)
         {
-            ReservedPorts.Remove(port);
+            _reservedPorts.Remove(port);
         }
     }
 }
