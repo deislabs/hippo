@@ -24,7 +24,7 @@ namespace Hippo.Schedulers
         public const int MaxPortNumber = 65535;
         private readonly int _start;
         private readonly int _end;
-        private List<int> ReservedPorts { get; }
+        private readonly List<int> ReservedPorts;
 
         private IPortIsInUseChecker _portIsInUseChecker;
 
