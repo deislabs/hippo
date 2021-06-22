@@ -1,5 +1,7 @@
 using System;
+using System.IO;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Hippo.Models;
 using Hippo.Repositories;
@@ -90,10 +92,35 @@ namespace Hippo
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "hippo", Version = "v1" });
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "hippo API", Version = "v1" });
+                var filePath = Path.Combine(AppContext.BaseDirectory, "Hippo.xml");
+                if (File.Exists(filePath))
+                {
+                    c.IncludeXmlComments(filePath);
+                }
+                c.AddSecurityDefinition("http", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.Http,
+                    BearerFormat = "JWT",
+                    Scheme = "Bearer"
+                });
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "http" }
+                        },
+                        Array.Empty<string>()
+                    }
+                });
             });
             services.AddRouting(options => options.LowercaseUrls = true);
-            services.AddMvc();
+            services
+              .AddMvc()
+              .AddJsonOptions(
+                  options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter())
+              );
         }
 
         public void Configure(IApplicationBuilder app, IServiceProvider serviceProvider)
