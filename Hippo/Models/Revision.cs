@@ -3,7 +3,7 @@ using System.Text;
 
 namespace Hippo.Models
 {
-    public class Revision: BaseEntity
+    public class Revision : BaseEntity
     {
         public virtual Application Application { get; set; }
 

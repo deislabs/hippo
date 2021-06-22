@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Hippo.Repositories
 {
-    public interface IUnitOfWork: IDisposable
+    public interface IUnitOfWork : IDisposable
     {
         IAccountRepository Accounts { get; }
         IApplicationRepository Applications { get; }

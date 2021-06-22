@@ -7,7 +7,7 @@ namespace Hippo.Rules
 {
     public class RevisionRangeRule
     {
-        private Range _range;
+        private readonly Range _range;
 
         public static RevisionRangeRule Parse(string rule)
         {

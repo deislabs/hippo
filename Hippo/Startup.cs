@@ -1,3 +1,6 @@
+using System;
+using System.Text;
+using System.Threading.Tasks;
 using Hippo.Models;
 using Hippo.Repositories;
 using Hippo.Schedulers;
@@ -12,9 +15,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Hippo
 {
@@ -58,7 +58,7 @@ namespace Hippo
             });
 
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-            
+
             if (HostingEnvironment.IsDevelopment())
             {
                 services.AddDbContext<DataContext>(

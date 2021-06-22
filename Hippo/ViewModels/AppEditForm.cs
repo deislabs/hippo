@@ -4,7 +4,7 @@ using Hippo.Logging;
 
 namespace Hippo.ViewModels
 {
-    public class AppEditForm: ITraceable
+    public class AppEditForm : ITraceable
     {
         [Required]
         public Guid Id { get; set; }

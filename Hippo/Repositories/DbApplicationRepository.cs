@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Hippo.Repositories
 {
-    public class DbApplicationRepository: IApplicationRepository
+    public class DbApplicationRepository : IApplicationRepository
     {
         private readonly DataContext _context;
         private readonly ICurrentUser _owner;
@@ -21,7 +21,7 @@ namespace Hippo.Repositories
 
         public IEnumerable<Application> ListApplications() =>
             _context.Applications
-                    .Where(application=>application.Owner.UserName == _owner.Name())
+                    .Where(application => application.Owner.UserName == _owner.Name())
                     .Include(a => a.Channels)
                     .Include(a => a.Revisions);
 

@@ -27,7 +27,7 @@ namespace Hippo.Messages
             // TODO : Should we validate that the revision exists or if its a range there is at least one revision in the range available?
 
             if (RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseSpecifiedRevision)
-            { 
+            {
                 if (String.IsNullOrEmpty(RevisionNumber))
                 {
                     yield return new ValidationResult(
@@ -36,13 +36,13 @@ namespace Hippo.Messages
                                 nameof(RevisionSelectionStrategy)});
                 }
 
-                if  (!SemVer.Version.TryParse(RevisionNumber, out _))
+                if (!SemVer.Version.TryParse(RevisionNumber, out _))
                 {
                     yield return new ValidationResult(
                         $"Revision Number does not comply with Semantic Versioning version number rules",
                         new[] { nameof(RevisionNumber) });
                 }
-            
+
             }
 
             if (RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseRangeRule)

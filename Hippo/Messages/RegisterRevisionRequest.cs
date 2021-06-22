@@ -4,7 +4,7 @@ using Hippo.Logging;
 
 namespace Hippo.Messages
 {
-    public class RegisterRevisionRequest: ITraceable
+    public class RegisterRevisionRequest : ITraceable
     {
         public Guid? AppId { get; set; }
 

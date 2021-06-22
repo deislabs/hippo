@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Hippo.ViewModels
 {
-    public class AppReleaseForm: ITraceable
+    public class AppReleaseForm : ITraceable
     {
         [Required]
         public Guid Id { get; set; }

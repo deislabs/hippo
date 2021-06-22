@@ -4,7 +4,7 @@ using Hippo.Models;
 
 namespace Hippo.Repositories
 {
-    public class DbAccountRepository: IAccountRepository
+    public class DbAccountRepository : IAccountRepository
     {
         private readonly DataContext _context;
 
