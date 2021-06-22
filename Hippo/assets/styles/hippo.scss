@@ -428,8 +428,9 @@ input#sidebar-toggler[type=checkbox]:checked ~ .aside {
 }
 
 .box-login {
-  .button {
-    margin-left: -1rem;
+
+  .field.is-grouped {
+    padding: 1rem 0 0 0;
   }
 
   label.checkbox {

@@ -29,9 +29,8 @@
                             <p asp-validation-for="Password" class="help is-warning"></p>
                         </div>
                     </div>
-                    <div class="field">
+                    <div class="field is-grouped">
                         <div class="control">
-                            <hr />
                             <button type="submit" value="Login" class="button is-rounded is-primary is-large">Login</button>
                             <label asp-for="RememberMe" class="checkbox">
                                 <input asp-for="RememberMe" type="checkbox" class="checkbox is-medium" placeholder="topsecret" />
@@ -39,10 +38,10 @@
                             </label>
                             <span asp-validation-for="RememberMe" class="help is-warning"></span>
                         </div>
-                        <div class="field">
-                            <div class="control">
-                                <div asp-validation-summary="ModelOnly" class="help is-alert"></div>
-                            </div>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <div asp-validation-summary="ModelOnly" class="help is-alert"></div>
                         </div>
                     </div>
                 </form>
