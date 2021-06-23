@@ -25,10 +25,11 @@ namespace Hippo.Schedulers
         private readonly int _start;
         private readonly int _end;
         private readonly List<int> _reservedPorts;
+        private readonly IPortIsInUseChecker _portIsInUseChecker;
 
-        private IPortIsInUseChecker _portIsInUseChecker;
-
-        public PortAllocator(int start, int end) : this(start, end, new PortSniffer()) {}
+        public PortAllocator(int start, int end) : this(start, end, new PortSniffer())
+        {
+        }
 
         public PortAllocator(int start, int end, IPortIsInUseChecker checker)
         {
@@ -70,7 +71,7 @@ namespace Hippo.Schedulers
             // We are also assuming that there are not many ports reserved in the ephemeral port
             // range. This is an O(n+1) operation, where n is the number of ports reserved by
             // other programs.
-            foreach (int port in Enumerable.Range(_start + _reservedPorts.Count(), _end - _start))
+            foreach (int port in Enumerable.Range(_start + _reservedPorts.Count, _end - _start))
             {
                 if (!IsPortReserved(port))
                 {
@@ -78,7 +79,7 @@ namespace Hippo.Schedulers
                     return port;
                 }
             }
-            throw new Exception("out of available ports");
+            throw new ApplicationException("out of available ports");
         }
 
         public void FreePort(int port)

@@ -11,9 +11,9 @@ namespace Hippo.Schedulers
     public class SystemdJobScheduler : IJobScheduler
     {
         // TODO: make this configurable
-        private PortAllocator _portAllocator = new(PortAllocator.EphemeralPortStartRange, PortAllocator.MaxPortNumber);
+        private readonly PortAllocator _portAllocator = new(PortAllocator.EphemeralPortStartRange, PortAllocator.MaxPortNumber);
 
-        private Dictionary<Guid, int> _portMappings = new();
+        private readonly Dictionary<Guid, int> _portMappings = new();
 
         public void OnSchedulerStart(IEnumerable<Application> applications)
         {

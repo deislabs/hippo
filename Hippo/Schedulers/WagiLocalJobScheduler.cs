@@ -15,7 +15,8 @@ namespace Hippo.Schedulers
     public class WagiLocalJobScheduler : IJobScheduler
     {
 
-        private class WagiProcessInfo {
+        private class WagiProcessInfo
+        {
             public int ProcessId { get; set; }
             public int Port { get; set; }
         }
