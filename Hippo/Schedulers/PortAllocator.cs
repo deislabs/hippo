@@ -79,7 +79,7 @@ namespace Hippo.Schedulers
                     return port;
                 }
             }
-            throw new ApplicationException("out of available ports");
+            throw new InvalidOperationException("out of available ports");
         }
 
         public void FreePort(int port)
