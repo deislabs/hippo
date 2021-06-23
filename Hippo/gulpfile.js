@@ -15,12 +15,12 @@ gulp.task('clean', function () {
 });
 
 gulp.task('default', async function() {
+    gulp.src(nodeRoot + "bulma/**/*").pipe(gulp.dest(targetPath + "/bulma/"));
+
     gulp.src(nodeRoot + "bootstrap/dist/js/*").pipe(gulp.dest(targetPath + "/bootstrap/dist/js"));
     gulp.src(nodeRoot + "bootstrap/dist/css/*").pipe(gulp.dest(targetPath + "/bootstrap/dist/css"));
 
-    gulp.src(nodeRoot + "@fortawesome/fontawesome-free/css/*").pipe(gulp.dest(targetPath + "/fontawesome/dist/css"));
-    gulp.src(nodeRoot + "@fortawesome/fontawesome-free/js/*").pipe(gulp.dest(targetPath + "/fontawesome/dist/js"));
-    gulp.src(nodeRoot + "@fortawesome/fontawesome-free/webfonts/*").pipe(gulp.dest(targetPath + "/fontawesome/dist/webfonts"));
+    gulp.src(nodeRoot + "font-awesome/**/*").pipe(gulp.dest(targetPath + "/font-awesome/"));
 
     gulp.src(nodeRoot + "jquery/dist/jquery.js").pipe(gulp.dest(targetPath + "/jquery/dist"));
     gulp.src(nodeRoot + "jquery/dist/jquery.min.js").pipe(gulp.dest(targetPath + "/jquery/dist"));

@@ -1,0 +1,541 @@
+/* Hippo UI Styles
+==================
+1. Imports
+2. Variables
+3. Layout Modifiers
+4. Nav
+5. Sidebar
+6. Content Base
+7. Responsive Adjustments
+*/
+
+/*
+  Note
+  Running `npm run styles:watch` will rebuild
+  these Sass files and recompile the hippo.css
+*/
+
+
+/* 1. Imports
+-------------
+*/
+@import "../lib/bulma/css/bulma.min.css";
+// @import "../lib/bulma/bulma.sass";
+// @import "../lib/font-awesome/scss/font-awesome.scss";
+@import "../lib/font-awesome/css/font-awesome.min.css";
+
+
+/* 2. Variables
+-------------
+*/
+$purple:  #5E51DC;
+
+$brand:    $purple;
+$primary:  $purple;
+$purplem: #6856FF;
+$blue:    #5683FF;
+$bluel:   #C9D0E3;
+
+// darkest
+$dark1:   #3E3B53;
+$dark2:   #3E3A55;
+$dark3:   #7F71F6;
+$dark4:   #BAB5DA;
+
+$light1:  #E0DDF4;
+$light2:  #ECEBF9;
+$light3:  #EFEEF9;
+$light4:  #F9F9FE;
+// lightest
+
+$green:   #59B252;
+$red:     #C0505E;
+
+$active:    $blue;
+$success:   $green;
+$alert:     $red;
+$successl:#54974E;
+$alertl:  #D0021B;
+$disabled:  $bluel;
+
+$navHeight: 80px;
+$sidebarWidth: 250px;
+$jost: 'Jost', sans-serif;
+
+@mixin jostType {
+  font-family: $jost;
+  letter-spacing: 0.02em;
+}
+
+@mixin transition($property:all, $duration:0.3s, $easing:ease-in-out) {
+  transition: $property $duration $easing;
+}
+
+@mixin border-radius($radius1:3px, $radius2:3px) {
+  -webkit-border-radius: $radius1 $radius2 $radius1 $radius2;
+  -moz-border-radius: $radius1 $radius2 $radius1 $radius2;
+  border-radius: $radius1 $radius2 $radius1 $radius2;
+}
+
+@mixin box-shadow($xlength:0, $ylength:2px, $size:0, $color:rgba(30,30,30,0.25)) {
+  -webkit-box-shadow: $xlength $ylength $size $color;
+  -moz-box-shadow: $xlength $ylength $size $color;
+  box-shadow: $xlength $ylength $size $color;
+}
+
+
+/* 3. Layout Modifiers
+-------------
+*/
+body {
+  background: $light3;
+  @include jostType;
+}
+
+.wrapper {
+  position: relative;
+  min-height: 100vh;
+}
+
+.main {
+  padding: calc(#{$navHeight} * 1.25) 2rem 7em calc(#{$sidebarWidth} + 2rem);
+  min-height: calc(100vh - #{$navHeight});
+  transition: 0.2s all ease-out;
+
+  &.sidebar--closed {
+    padding: 70px 1em 2em 70px;
+  }
+}
+
+footer {
+  background-color: $light3;
+  padding: 3rem 1.5rem 0rem;
+
+  .navbar {
+    background: transparent;
+    min-height: 1rem;
+    height: auto;
+    text-align: right;
+
+    .navbar-menu {
+      margin: -0.5rem 0 0;
+      padding: 0;
+
+      li.navbar-item {
+        line-height: 1;
+      }
+    }
+  }
+}
+
+.copyright {
+  margin-left: $sidebarWidth;
+  padding: 1.2rem 3vw;
+  transition: 0.2s all ease-out;
+  border-top: 2px solid $light1;
+}
+
+
+/* 4. Nav
+---------
+*/
+.hero {
+  background: white;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: $navHeight;
+  z-index: 20;
+}
+
+.navbar {
+  height: $navHeight;
+  border-bottom: 1px solid $light2;
+
+  .navbar-brand {
+    position: relative;
+
+    .hippo-logo {
+      background: $purple;
+      background: linear-gradient(90deg, #3F2B96 0%, #A8C0FF 100%);
+      width: 3rem;
+      height: 3rem;
+      border-radius: 50%;
+      display: block;
+      content: " ";
+      left: 1.1rem;
+      top: 0.925rem;
+      position: absolute;
+    }
+    
+    h1 {
+      position: absolute;
+      font-weight: 600;
+      font-size: 1.5rem;
+      left: 6.25vw;
+      top: 0.667rem;
+    }
+
+    h2 {
+      position: absolute;
+      font-weight: 400;
+      font-size: 0.825rem;
+      left: 6.25vw;
+      top: 2.825rem;
+    }
+  }
+
+  .navbar-menu {
+    padding-top: 1.125rem;
+  }
+
+  select {
+    border: 1px solid $dark3;
+    border-radius: 2rem;
+    padding: 0.667rem 1rem;
+    font-size: 1.125rem;
+    min-height: 3rem;
+    line-height: 1;
+    color: $dark2;
+    font-family: monospace;
+  }
+
+  .button.is-rounded {
+    min-width: 8rem !important;
+    font-size: 1rem;
+    padding: 1rem 2.25rem;
+    margin-top: -0.25rem;
+    margin-right: 2rem;
+  }
+
+  .navbar-link:not(.is-arrowless) {
+    margin-top: -1.125rem;
+  }
+}
+
+/* 5. Sidebar
+---------
+*/
+.aside {
+  background: white;
+  padding: 0;
+  height: calc(100vh - #{$navHeight});
+  overflow: hidden;
+  transition: 0.2s width ease-out;
+  position: fixed;
+  top: $navHeight;
+  left: 0;
+  z-index: 2;
+  width: $sidebarWidth;
+  @include transition;
+  border-right: 1px solid $light3;
+  
+  .menu {
+    background: transparent;
+    margin: 0;
+    padding: 1.5rem 1rem;
+    position: relative;
+    .menu-label {
+      margin-left: .5em;
+      font-weight: bold;
+    }
+  }
+  .icon {
+    transition: 0.3s linear transform;
+  }
+  a {
+    color: $dark2;
+  }
+  
+  ul.menu-list {
+    font-size: 1.125rem;
+    margin: 0;
+    overflow-x: hidden;
+
+    span {
+      @include transition;
+      opacity: 1;
+
+      &.menu-text {
+        position: absolute;
+        left: 4.75rem;
+      }
+    }
+    
+    li {
+      margin-top: .5em;
+    }
+
+    a {
+      border-radius: 2rem;
+      padding: 0.75rem 1rem;
+      color: $dark2;
+      overflow-x: hidden;
+      height: 2.925rem;
+
+      &.is-active,
+      &:hover,
+      &:not(.is-active):hover {
+        background: $light3;
+        color: $dark1;
+
+        span.icon {
+          color: $purplem;
+        }
+      }
+    }
+
+    .icon,
+    i {
+      margin-right: 10px;
+      margin-left: 7px;
+    }
+  }
+
+  a.button-back {
+    background: $light4;
+    margin: 0 auto;
+    position: fixed;
+    bottom: 0.75rem;
+    border: none;
+    width: calc(#{$sidebarWidth} - 60px);
+    margin: 0 30px;
+    color: $purplem;
+    font-weight: 400;
+  }
+}
+
+#sidebar-toggler {
+  cursor: pointer;
+  bottom: 1.25rem;
+  left: 15.5rem;
+  position: fixed;
+  z-index: 1520;
+  @include transition;
+
+  .icon {
+    width: 1px;
+    height: 1px;
+    @include transition;
+  }
+
+  .fa {
+    width: 2.5rem;
+    height: 2rem;
+    line-height: 2;
+    padding: 0 0.75rem;
+    border-radius: 2rem;
+    text-align: center;
+    background: $light4;
+    display: inline-block;
+    color: $purplem;
+  }
+}
+
+/* collapse sidebar */
+input[type=checkbox],
+input[type=checkbox]:checked ~ .remove-check {
+  display: none;
+}
+
+input[type=checkbox]:checked ~ #sidebar-toggler {
+  justify-content: center;
+  left: 5rem !important;
+
+  .icon {
+    transform: rotate(180deg);
+  }
+}
+
+input[type=checkbox]:checked ~ .aside {
+  width: 5rem !important;
+
+  .menu-label,
+  a.button-back {
+    display: none;
+  }
+
+  ul.menu-list {
+    span.menu-text {
+      opacity: 0;
+    }
+  }
+
+  
+
+  .menu .icon {
+    margin-left: 1px;
+  }
+}
+
+
+/* 6. Content Base
+---------
+*/
+.main {
+  h1, h2, h3, .title {
+    font-weight: 600;
+    color: $dark1;
+    margin-bottom: 0.67em;
+  }
+  
+  .has-text-primary {
+    color: $primary !important;
+  }
+
+  .breadcrumb {
+    border-bottom: 1px solid $light4;
+    padding-bottom: 1rem;
+    margin-bottom: 4rem;
+  }
+
+  .content-title {
+    margin: 2rem 0 2rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    color: $dark2;
+    margin: 2rem 0 1rem;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    color: $dark2;
+  }
+  
+  h4 {
+    text-transform: uppercase;
+    letter-spacing: 0.0875em;
+    margin-top: 2.5rem;
+    font-weight: 600;
+  }
+  h5 {
+    color: $purplem;
+    background: white;
+    padding: 0.5rem 0.975rem;
+    border-radius: 0.6rem;
+    display: inline-block;
+    margin: 1.25rem 0;
+  }
+
+
+
+  p {
+    margin: 1rem 0;
+  }
+
+}
+
+
+.block {
+  margin-top: .5em;
+}
+
+.message.is-dark .message-body {
+  background-color: $light2;
+}
+
+.breadcrumb:not(:last-child) {
+  margin-bottom: 0;
+}
+
+.icon-title {
+  margin-right: .5em;
+  height: 3rem !important;
+  width: 3rem !important;
+  background-color: #bd93f9;
+  color: #282a36;
+  border-radius: .25rem;
+}
+
+.field-label {
+  text-align: left;
+}
+
+.button.is-rounded {
+  background: $purple;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 1rem 1.5rem;
+  min-width: 6rem;
+  padding-bottom: 1.25rem 1.667rem;
+
+  .fa {
+    margin-right: 0.333rem;
+  }
+
+  &:hover {
+    background: darken($purple, 10%);
+  }
+
+  &:active,
+  &:focus {
+    background: $blue;
+  }
+
+  &.is-large {
+    padding: 1.5rem 2rem;
+    min-width: 7.25rem;
+  }
+}
+
+.button.is-primary {
+  background: $purple;
+}
+
+
+/* 7. Responsive
+---------
+*/
+
+/* Small + Mobile */
+@media (max-width: 768px) {
+  .main {
+    padding: 70px 1em 2em 70px;
+  }
+  .aside {
+    width: 60px;
+    overflow: auto;
+    #sidebar-toggler {
+      display: none;
+    }
+
+    &:hover {
+      width: $sidebarWidth;
+    }
+  }
+  .aside:not(:hover) {
+    .menu-label,
+    .menu-text {
+      display: none;
+    }
+  }
+
+  .menu {
+    padding-bottom: 70px;
+  }
+}
+
+
+/* Tablet + Medium */
+@media (max-width: 1023px) {
+  .navbar-menu {
+    padding: 2px 0 0 0;
+
+    .navbar-link {
+      display: flex;
+    }
+
+    .navbar-dropdown .navbar-item {
+      padding-left: 1.125em;
+      padding-right: 1.125em;
+    }
+  }
+}
