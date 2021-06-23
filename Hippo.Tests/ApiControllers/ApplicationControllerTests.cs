@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -25,7 +25,9 @@ namespace Hippo.Tests.ApiControllers
     public class ApplicationControllerTestFixture
     {
         public MockTokenIssuer TokenIssuer { get; private set; }
+
         public TestServer Server { get; private set; }
+
         public CreateApplicationRequest CreateApplicationRequest = new()
         {
             ApplicationName = "Test Application",
@@ -40,6 +42,7 @@ namespace Hippo.Tests.ApiControllers
             UserName = "user",
             Id = "2"
         };
+
         public ApplicationControllerTestFixture()
         {
             TokenIssuer = new MockTokenIssuer();
@@ -65,6 +68,7 @@ namespace Hippo.Tests.ApiControllers
     public class ApplicationControllerTest : IClassFixture<ApplicationControllerTestFixture>
     {
         private readonly ApplicationControllerTestFixture fixture;
+
         public ApplicationControllerTest(ApplicationControllerTestFixture fixture)
         {
             this.fixture = fixture;
@@ -77,15 +81,16 @@ namespace Hippo.Tests.ApiControllers
             var response = await client.PostAsJsonAsync<CreateApplicationRequest>("/api/application", fixture.CreateApplicationRequest);
             Assert.True(response.StatusCode == System.Net.HttpStatusCode.Unauthorized);
         }
+
         [Fact]
         public async Task PostApplication()
         {
             var claims = new[]
             {
-        new Claim(JwtRegisteredClaimNames.Sub, "testuser@test.com"),
-        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-        new Claim(JwtRegisteredClaimNames.UniqueName, "testuser")
-      };
+                new Claim(JwtRegisteredClaimNames.Sub, "testuser@test.com"),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(JwtRegisteredClaimNames.UniqueName, "testuser")
+            };
             var token = fixture.TokenIssuer.GetToken(claims);
             var client = fixture.Server.CreateClient();
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
@@ -95,8 +100,8 @@ namespace Hippo.Tests.ApiControllers
             Assert.NotEqual(createApplicationResponse.Id, Guid.Empty);
             Assert.Equal(createApplicationResponse.ApplicationName, fixture.CreateApplicationRequest.ApplicationName);
             Assert.Equal(createApplicationResponse.StorageId, fixture.CreateApplicationRequest.StorageId);
-
         }
+
         [Fact]
         public async Task CreateApplication()
         {

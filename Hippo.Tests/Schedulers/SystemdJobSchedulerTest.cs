@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Hippo.Models;
 using Hippo.Schedulers;
@@ -38,7 +38,6 @@ namespace Hippo.Tests.Schedulers
                         {
                             RevisionNumber = "1.0.0",
                         }
-
                     }
                 }
             };
