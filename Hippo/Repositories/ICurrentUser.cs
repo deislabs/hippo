@@ -1,4 +1,4 @@
-namespace Hippo.Repositories
+﻿namespace Hippo.Repositories
 {
     public interface ICurrentUser
     {

@@ -1,4 +1,4 @@
-using Hippo.Models;
+﻿using Hippo.Models;
 
 namespace Hippo.Repositories
 {

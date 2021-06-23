@@ -1,4 +1,4 @@
-namespace Hippo.Logging
+﻿namespace Hippo.Logging
 {
     public interface ITraceable
     {

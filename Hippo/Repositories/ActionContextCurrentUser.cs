@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc.Infrastructure;
+﻿using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace Hippo.Repositories
 {
