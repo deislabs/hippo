@@ -1,4 +1,4 @@
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 
@@ -7,6 +7,7 @@ namespace Hippo.Tasks
     public interface ITaskQueue<T>
     {
         Task Enqueue(T value, CancellationToken cancellationToken);
+
         Task<T> Dequeue(CancellationToken cancellationToken);
     }
 
@@ -16,7 +17,9 @@ namespace Hippo.Tasks
 
         private readonly Channel<T> _queue;
 
-        public TaskQueue() : this(DEFAULT_BUFFER_CAPACITY) { }
+        public TaskQueue() : this(DEFAULT_BUFFER_CAPACITY)
+        {
+        }
 
         public TaskQueue(int capacity)
         {

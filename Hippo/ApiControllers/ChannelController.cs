@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Hippo.Controllers;
@@ -23,7 +23,9 @@ namespace Hippo.ApiControllers
     public class ChannelController : HippoController
     {
         private readonly IUnitOfWork _unitOfWork;
+
         private readonly ITaskQueue<ChannelReference> _taskQueue;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ChannelController"/> class.
         /// </summary>
@@ -162,6 +164,7 @@ namespace Hippo.ApiControllers
                 {
                     return NotFound();
                 }
+
                 var response = new Messages.GetChannelResponse
                 {
                     AppId = channel.Application.Id,
@@ -180,4 +183,3 @@ namespace Hippo.ApiControllers
         }
     }
 }
-

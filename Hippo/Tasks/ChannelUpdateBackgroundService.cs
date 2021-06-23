@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Hippo.Models;
@@ -36,8 +36,10 @@ namespace Hippo.Tasks
                         try
                         {
                             var channel = unitOfWork.Channels.GetChannelById(channelReference.ChannelId);
+
                             // TODO: should we make this responsible for updating the active revision
                             var scheduler = scope.ServiceProvider.GetRequiredService<IJobScheduler>();
+
                             // TODO: do any schedulers need the channel info *before* ActiveRevision
                             // got updated in order to stop?
                             try
@@ -57,6 +59,7 @@ namespace Hippo.Tasks
                         {
                             _logger.LogError($"ChannelUpdateTask: error processing {channelReference.ChannelId}: {e}");
                         }
+
                         // TODO: should failed channels be retried or put on a manual queue or something?
                     }
                 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Hippo.Controllers;
 using Hippo.Messages;
@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-
 namespace Hippo.ApiControllers
 {
     /// <summary>
@@ -23,7 +22,9 @@ namespace Hippo.ApiControllers
     public class ApplicationController : HippoController
     {
         private readonly IUnitOfWork _unitOfWork;
+
         private readonly UserManager<Account> _userManager;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationController"/> class.
         /// </summary>
@@ -91,7 +92,6 @@ namespace Hippo.ApiControllers
 
                 TraceMessage($"Successfully Created Application Id: {app.Id}");
                 return Created("", response);
-
             }
             catch (Exception ex)
             {

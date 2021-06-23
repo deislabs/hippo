@@ -12,7 +12,6 @@ namespace Hippo.Models
 {
     public class Application : BaseEntity
     {
-
         [Required]
         public string Name { get; set; }
 
@@ -48,6 +47,7 @@ namespace Hippo.Models
             {
                 yield break;
             }
+
             foreach (var channel in Channels)
             {
                 if (channel.ReevaluateActiveRevision())
@@ -55,6 +55,7 @@ namespace Hippo.Models
                     yield return channel;
                 }
             }
+
             // TODO: should this trigger a redeploy?
         }
     }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Hippo.Logging;
@@ -23,17 +23,18 @@ namespace Hippo.Messages
         /// </summary>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-
             // TODO : Should we validate that the revision exists or if its a range there is at least one revision in the range available?
-
             if (RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseSpecifiedRevision)
             {
                 if (String.IsNullOrEmpty(RevisionNumber))
                 {
                     yield return new ValidationResult(
                         $"Revision Number must be specified when fixing a channel to a revision number",
-                        new[] { nameof(RevisionNumber) ,
-                                nameof(RevisionSelectionStrategy)});
+                        new[]
+                        {
+                            nameof(RevisionNumber) ,
+                            nameof(RevisionSelectionStrategy)
+                        });
                 }
 
                 if (!SemVer.Version.TryParse(RevisionNumber, out _))
@@ -42,19 +43,20 @@ namespace Hippo.Messages
                         $"Revision Number does not comply with Semantic Versioning version number rules",
                         new[] { nameof(RevisionNumber) });
                 }
-
             }
 
             if (RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseRangeRule)
             {
-                if (String.IsNullOrEmpty(RevisionRange))
+                if (string.IsNullOrEmpty(RevisionRange))
                 {
                     yield return new ValidationResult(
                         $"Revision Range must be specified when not fixing a channel to a revision number",
-                        new[] { nameof(RevisionRange),
-                                nameof(RevisionSelectionStrategy)});
+                        new[]
+                        {
+                            nameof(RevisionRange),
+                            nameof(RevisionSelectionStrategy)
+                        });
                 }
-
 
                 if (!SemVer.Range.TryParse(RevisionRange, out _))
                 {
@@ -62,9 +64,7 @@ namespace Hippo.Messages
                         $"Revision Range does not comply with Semantic Versioning version number range rules",
                         new[] { nameof(RevisionRange) });
                 }
-
             }
-
         }
     }
 }

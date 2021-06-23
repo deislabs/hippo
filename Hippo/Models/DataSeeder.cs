@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -37,6 +37,7 @@ namespace Hippo.Models
             {
                 throw new InvalidOperationException("Failed to create default user");
             }
+
             var roleResult = await userManager.AddToRoleAsync(user, "Administrator");
             if (!roleResult.Succeeded)
             {
@@ -52,6 +53,7 @@ namespace Hippo.Models
                     new Revision { RevisionNumber = "1.2.0-rc3" },
                     new Revision { RevisionNumber = "1.2.0-rc4" },
                     new Revision { RevisionNumber = "2.0.0" },
+                    
                     // The following revisions exist in the test server, but are not seeded
                     // as registered so they can be used for rulesy channel upgrade testing:
                     // 1.1.1, 1.1.3, 1.3.0, 2.0.1, 2.0.2, 2.1.0

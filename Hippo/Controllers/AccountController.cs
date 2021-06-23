@@ -39,6 +39,7 @@ namespace Hippo.Controllers
             {
                 return RedirectToAction("Index", "App");
             }
+
             return View();
         }
 
@@ -76,6 +77,7 @@ namespace Hippo.Controllers
                             _logger.LogInformation($"Register: {form.UserName} has been granted the 'Administrator' role");
                         }
                     }
+
                     return RedirectToAction("Login", "Account");
                 }
                 else
@@ -92,6 +94,7 @@ namespace Hippo.Controllers
             {
                 ModelState.AddModelError("", "failed to register");
             }
+
             return View();
         }
 
@@ -103,6 +106,7 @@ namespace Hippo.Controllers
             {
                 return RedirectToAction("Index", "App");
             }
+
             return View();
         }
 
@@ -146,6 +150,7 @@ namespace Hippo.Controllers
             {
                 ModelState.AddModelError("", "failed to login");
             }
+
             return View();
         }
 
@@ -185,8 +190,10 @@ namespace Hippo.Controllers
                         {
                             // Sub - name of the subject - which is user email here.
                             new Claim(JwtRegisteredClaimNames.Sub, user.Email),
+                            
                             // jti - unique string that is representative of each token so using a guid
                             new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                            
                             // unique name - username of the user mapped to the identity inside the user object
                             // that is available on every controller and view
                             new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName)
@@ -226,6 +233,7 @@ namespace Hippo.Controllers
                     }
                 }
             }
+
             return BadRequest();
         }
 
@@ -236,14 +244,17 @@ namespace Hippo.Controllers
             {
                 reasons.Add("not allowed");
             }
+
             if (result.IsLockedOut)
             {
                 reasons.Add("locked out");
             }
+
             if (result.RequiresTwoFactor)
             {
                 reasons.Add("needs 2FA");
             }
+
             return string.Join(",", reasons);
         }
     }

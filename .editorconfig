@@ -361,3 +361,8 @@ dotnet_analyzer_diagnostic.category-StyleCop.CSharp.SpacingRules.severity = none
 
 # Default severity for analyzer diagnostics with category 'StyleCop.CSharp.NamingRules'
 dotnet_analyzer_diagnostic.category-StyleCop.CSharp.NamingRules.severity = none
+
+dotnet_diagnostic.SA1201.severity = silent
+
+# AD0001: Analyzer Failure
+dotnet_diagnostic.AD0001.severity = none

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
@@ -19,15 +19,18 @@ namespace Hippo.Models
         public ChannelRevisionSelectionStrategy RevisionSelectionStrategy { get; set; }
 
         public Revision SpecifiedRevision { get; set; }
+
         public string RangeRule { get; set; }
 
         public Revision ActiveRevision { get; set; }
 
         public Application Application { get; set; }
+
         public Domain Domain { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public uint PortID { get; set; }
+
         public Configuration Configuration { get; set; }
 
         public bool ReevaluateActiveRevision()
@@ -44,10 +47,9 @@ namespace Hippo.Models
                     break;
                 default:
                     throw new InvalidOperationException($"Unknown revision strategy {RevisionSelectionStrategy}");
-
             }
-            // TODO: should this trigger a redeploy?
 
+            // TODO: should this trigger a redeploy?
             return ActiveRevision != previous;
         }
     }
@@ -59,10 +61,12 @@ namespace Hippo.Models
     {
         // IMPORTANT: The underlying values here are contractual with the database.
         // **DO NOT** change the underlying numeric value of any case.
+
         /// <summary>
         /// Use a range rule to select the most appropriate revision for the channel
         /// </summary>
         UseRangeRule = 0,
+
         /// <summary>
         /// Use a specific revision version for the channel
         /// </summary>

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Threading.Tasks;
 using Hippo.Models;
 
@@ -21,8 +21,11 @@ namespace Hippo.Repositories
         // We could make these lazy, but they are as cheap to construct as a Lazy would
         // be, so why bother
         public IAccountRepository Accounts { get; }
+
         public IApplicationRepository Applications { get; }
+
         public IChannelRepository Channels { get; }
+
         public IRevisionRepository Revisions { get; }
 
         public async Task SaveChanges() => await _dataContext.SaveChangesAsync();

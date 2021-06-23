@@ -1,14 +1,12 @@
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using Hippo.Logging;
 
 namespace Hippo.Messages
 {
-
     /// <summary>
     /// Request body for Hippo Register Revision API.
     /// </summary>
-
     public class RegisterRevisionRequest : ITraceable
     {
         /// <summary>

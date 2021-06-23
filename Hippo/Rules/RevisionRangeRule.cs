@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Hippo.Models;
 using SemVer;
@@ -28,6 +28,7 @@ namespace Hippo.Rules
             {
                 return null;
             }
+
             return candidatesByVersion[maxSatisfying];
         }
     }

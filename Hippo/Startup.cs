@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.IO;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -23,6 +23,7 @@ namespace Hippo
     public class Startup
     {
         public IConfiguration Configuration { get; }
+
         public IWebHostEnvironment HostingEnvironment { get; }
 
         public Startup(IConfiguration configuration, IWebHostEnvironment hostingEnvironment)
@@ -98,6 +99,7 @@ namespace Hippo
                 {
                     c.IncludeXmlComments(filePath);
                 }
+
                 c.AddSecurityDefinition("http", new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.Http,
@@ -181,6 +183,5 @@ namespace Hippo
                 roleResult.Wait();
             }
         }
-
     }
 }

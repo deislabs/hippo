@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -62,21 +62,27 @@ namespace Hippo.Schedulers
             var port = c.PortID + Channel.EphemeralPortRange;
             var serviceId = $"{c.Application.Name}-{c.Name}";
 
-            var routers = new Dictionary<string, object> {
+            var routers = new Dictionary<string, object>
+            {
                 {
                     $"to-{serviceId}",
-                    new {
+                    new
+                    {
                         rule = $"Host(`{c.Domain.Name}`) && PathPrefix(`/`)",
                         service = serviceId
                     }
                 }
             };
-            var services = new Dictionary<string, object> {
+            var services = new Dictionary<string, object>
+            {
                 {
                     serviceId,
-                    new {
-                        loadBalancer = new {
-                            servers = new [] {
+                    new
+                    {
+                        loadBalancer = new
+                        {
+                            servers = new []
+                            {
                                 new { url = $"http://localhost:{port}" }
                             }
                         }
@@ -101,6 +107,7 @@ namespace Hippo.Schedulers
             systemdService.AppendLine();
             systemdService.AppendLine("[Service]");
             systemdService.AppendLine("Type=simple");
+
             // TODO: make wagi system path configurable
             systemdService.AppendFormat("ExecStart=/usr/local/bin/wagi --config {0} --listen 0.0.0.0:{1}\n", WagiConfigPath(c), c.PortID + Channel.EphemeralPortRange);
             systemdService.AppendLine();
@@ -123,6 +130,7 @@ namespace Hippo.Schedulers
             {
                 wagiConfig.AppendFormat("environment.{0} = \"{1}\"\n", envvar.Key, envvar.Value);
             }
+
             return wagiConfig.ToString();
         }
 

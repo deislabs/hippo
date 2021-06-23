@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -15,15 +15,17 @@ namespace Hippo.ViewModels
 
         [Display(Name = "Channel to update")]
         public string SelectedChannelName { get; set; }
-        public IEnumerable<SelectListItem> Channels { get; set; }
 
+        public IEnumerable<SelectListItem> Channels { get; set; }
 
         [Display(Name = "Desired revision selection strategy")]
         public string SelectedRevisionSelectionStrategy { get; set; }
+
         public IEnumerable<SelectListItem> RevisionSelectionStrategies { get; set; }
 
         [Display(Name = "Revision to update it to (if UseSpecifiedRevision)")]
         public string SelectedRevisionNumber { get; set; }
+
         public IEnumerable<SelectListItem> Revisions { get; set; }
 
         [Display(Name = "Revision rule (if UseRangeRule)")]

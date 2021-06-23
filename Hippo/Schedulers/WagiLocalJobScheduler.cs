@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -14,12 +14,12 @@ namespace Hippo.Schedulers
     {
         // This assumes a singleton scheduler instance!
         private readonly Dictionary<Guid, int> _wagiProcessIds = new();
+
         private readonly ILogger _logger;
 
         private const string ENV_BINDLE = "BINDLE_SERVER_URL";
 
         private const string ENV_WAGI = "HIPPO_WAGI_PATH";
-
 
         public WagiLocalJobScheduler(IHostApplicationLifetime lifetime, ILogger<WagiLocalJobScheduler> logger)
         {
@@ -72,6 +72,7 @@ namespace Hippo.Schedulers
                 Arguments = $"-b {c.Application.StorageId}/{c.ActiveRevision.RevisionNumber} --bindle-server {bindleUrl} -l 127.0.0.1:{port}",
             };
             psi.Environment["BINDLE_SERVER_URL"] = bindleUrl;
+
             // TODO: drive this from outside
             psi.Environment["RUST_LOG"] = "warn,wagi=trace";
 
@@ -90,6 +91,7 @@ namespace Hippo.Schedulers
                     _logger.LogError($"Program '{wagiProgram}' not found: check system path or set {ENV_WAGI}");
                     return;
                 }
+
                 throw;
             }
         }

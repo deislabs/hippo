@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using Hippo.Logging;
 
@@ -15,6 +15,7 @@ namespace Hippo.Messages
         /// <example>4208d635-7618-4150-b8a8-bc3205e70e32</example>
         [Required]
         public Guid Id { get; set; }
+
         /// <summary>
         /// ITraceable.FormatTrace implementation.
         /// </summary>

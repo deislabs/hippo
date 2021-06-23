@@ -81,6 +81,7 @@ namespace Hippo.Controllers
                 await _unitOfWork.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
+
             return View(form);
         }
 
@@ -145,8 +146,10 @@ namespace Hippo.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             return View(form);
         }
 
@@ -161,6 +164,7 @@ namespace Hippo.Controllers
             {
                 return NotFound();
             }
+
             return View(a);
         }
 
@@ -224,6 +228,7 @@ namespace Hippo.Controllers
                         LogIfNotFound(revision, form.SelectedRevisionNumber);
                         return NotFound();
                     }
+
                     channel.RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseSpecifiedRevision;
                     channel.SpecifiedRevision = revision;
                 }
@@ -235,6 +240,7 @@ namespace Hippo.Controllers
                         _logger.LogError("Release: empty rule");
                         return BadRequest("rule was empty");  // TODO: this is a terrible way of handling it; await Ronan
                     }
+
                     channel.RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseRangeRule;
                     channel.RangeRule = rule;
                 }

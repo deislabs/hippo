@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Hippo.Logging;
@@ -55,7 +55,9 @@ namespace Hippo.Controllers
         protected struct MethodArgs
         {
             private readonly object[] _args;
+
             public MethodArgs(object[] args) => _args = args;
+
             public bool IsEmpty => _args == null || _args.Length == 0;
 
             public string Format()

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -90,6 +90,7 @@ namespace Hippo.Controllers
                     {
                         _logger.LogDebug($"Register Revision: no apps found for {request.AppStorageId}");
                     }
+
                     return apps;
                 }
                 else
@@ -97,7 +98,6 @@ namespace Hippo.Controllers
                     _logger.LogWarning($"Register Revision: neither app id nor storage id provided");
                     return new Application[0];
                 }
-
             }
         }
     }
