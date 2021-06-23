@@ -7,66 +7,66 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Hippo.Models
 {
-  public class DataSeeder
-  {
-    private const string adminUserName = "admin";
-    private readonly DataContext context;
-    private readonly UserManager<Account> userManager;
-
-    public DataSeeder(DataContext context, UserManager<Account> userManager)
+    public class DataSeeder
     {
-      this.context = context;
-      this.userManager = userManager;
-    }
+        private const string adminUserName = "admin";
+        private readonly DataContext context;
+        private readonly UserManager<Account> userManager;
 
-
-    public async Task CreateUser(string userName)
-    {
-      var user = await userManager.FindByEmailAsync($"{userName}@hippos.rocks");
-      if (user == null)
-      {
-        user = new Account
+        public DataSeeder(DataContext context, UserManager<Account> userManager)
         {
-          UserName = userName,
-          Email = $"{userName}@hippos.rocks",
-        };
-        var result = await userManager.CreateAsync(user, "Passw0rd!");
-        if (!result.Succeeded)
-        {
-          throw new InvalidOperationException($"Failed to create user {userName}");
+            this.context = context;
+            this.userManager = userManager;
         }
-      }
-      if (IsAdminUser(userName))
-      {
-        var roleResult = await userManager.AddToRoleAsync(user, "Administrator");
-        if (!roleResult.Succeeded)
+
+
+        public async Task CreateUser(string userName)
         {
-          throw new InvalidOperationException($"Failed to assign {userName} as Administrator");
+            var user = await userManager.FindByEmailAsync($"{userName}@hippos.rocks");
+            if (user == null)
+            {
+                user = new Account
+                {
+                    UserName = userName,
+                    Email = $"{userName}@hippos.rocks",
+                };
+                var result = await userManager.CreateAsync(user, "Passw0rd!");
+                if (!result.Succeeded)
+                {
+                    throw new InvalidOperationException($"Failed to create user {userName}");
+                }
+            }
+            if (IsAdminUser(userName))
+            {
+                var roleResult = await userManager.AddToRoleAsync(user, "Administrator");
+                if (!roleResult.Succeeded)
+                {
+                    throw new InvalidOperationException($"Failed to assign {userName} as Administrator");
+                }
+            }
+
         }
-      }
 
-    }
+        public bool IsAdminUser(string userName)
+            => userName == adminUserName;
 
-    public bool IsAdminUser(string userName) 
-        => userName == adminUserName;
+        public async Task<Account> GetAdminUser()
+            => await userManager.FindByNameAsync(adminUserName);
 
-    public async Task<Account> GetAdminUser()
-        => await userManager.FindByNameAsync(adminUserName);
+        public async Task Seed()
+        {
+            context.Database.EnsureCreated();
 
-    public async Task Seed()
-    {
-      context.Database.EnsureCreated();
+            var users = new string[] { "dev", adminUserName };
 
-      var users = new string[] { "dev", adminUserName };
+            foreach (var user in users)
+            {
+                await CreateUser(user);
+            }
 
-      foreach (var user in users)
-      {
-        await CreateUser(user);
-      }
-
-      if (!context.Applications.Any())
-      {
-        var revisions = new List<Revision>
+            if (!context.Applications.Any())
+            {
+                var revisions = new List<Revision>
                 {
                     new Revision { RevisionNumber = "1.0.0" },
                     new Revision { RevisionNumber = "1.1.0" },
@@ -80,7 +80,7 @@ namespace Hippo.Models
                     // (Don't use 1.1.2. I messed it up.)
                 };
 
-        var applications = new List<Application>
+                var applications = new List<Application>
                 {
                     new Application
                     {
@@ -91,9 +91,9 @@ namespace Hippo.Models
                     }
                 };
 
-        var application = applications[0];
+                var application = applications[0];
 
-        application.Channels = new List<Channel>
+                application.Channels = new List<Channel>
                 {
                     new Channel
                     {
@@ -152,15 +152,15 @@ namespace Hippo.Models
                     }
                 };
 
-        foreach (var app in applications)
-        {
-          app.ReevaluateActiveRevisions();
+                foreach (var app in applications)
+                {
+                    app.ReevaluateActiveRevisions();
+                }
+
+                context.Applications.AddRange(applications);
+            }
+
+            context.SaveChanges();
         }
-
-        context.Applications.AddRange(applications);
-      }
-
-      context.SaveChanges();
     }
-  }
 }
