@@ -69,7 +69,7 @@ namespace Hippo.Schedulers
             var psi = new ProcessStartInfo
             {
                 FileName = wagiProgram,
-                Arguments = $"-b {c.Application.StorageId}/{c.ActiveRevision.RevisionNumber} --bindle-server {bindleUrl} --default-host localhost:{port} -l 127.0.0.1:{port}",
+                Arguments = $"-b {c.Application.StorageId}/{c.ActiveRevision.RevisionNumber} --bindle-server {bindleUrl} -l 127.0.0.1:{port}",
             };
             psi.Environment["BINDLE_SERVER_URL"] = bindleUrl;
             // TODO: drive this from outside
