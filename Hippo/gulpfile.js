@@ -5,6 +5,7 @@ Click here to learn more. http://go.microsoft.com/fwlink/?LinkId=518007
 */
 
 var gulp = require('gulp');
+var sass = require('gulp-dart-sass');
 var del = require('del');
 
 var nodeRoot = './node_modules/';
@@ -14,7 +15,18 @@ gulp.task('clean', function () {
     return del([targetPath + '/**/*']);
 });
 
-gulp.task('default', async function() {
+// compile the css
+gulp.task('sass', function () {
+return gulp.src('./assets/styles/hippo.scss')
+    .pipe(sass().on('error', sass.logError))
+    .pipe(gulp.dest('./wwwroot/styles/'));
+});
+gulp.task('watch', function() {
+    gulp.watch('./assets/styles/hippo.scss', gulp.series('sass'));
+});
+
+// move assets from node_modules to wwwroot
+gulp.task('copy', async function() {
     gulp.src(nodeRoot + "bulma/**/*").pipe(gulp.dest(targetPath + "/bulma/"));
 
     gulp.src(nodeRoot + "bootstrap/dist/js/*").pipe(gulp.dest(targetPath + "/bootstrap/dist/js"));
@@ -33,3 +45,5 @@ gulp.task('default', async function() {
     gulp.src(nodeRoot + "xterm/css/xterm.css").pipe(gulp.dest(targetPath + "/xterm/dist/css"));
     gulp.src(nodeRoot + "xterm/lib/*").pipe(gulp.dest(targetPath + "/xterm/dist/js"));
 });
+
+gulp.task('default', gulp.series('copy', 'sass'), function() { });

@@ -11,11 +11,10 @@
   "devDependencies": {
     "del": "^6.0.0",
     "gulp": "^4.0.2",
+    "gulp-dart-sass": "^1.0.2",
     "xterm": "^4.13.0"
   },
   "scripts": {
-    "build": "npm install && gulp clean && gulp",
-    "styles": "npx sass ./assets/styles/hippo.scss ./wwwroot/styles/hippo.css",
-    "styles:watch": "npx sass --watch ./assets/styles/hippo.scss ./wwwroot/styles/hippo.css"
+    "build": "npm install && gulp clean && gulp"
   }
 }
