@@ -39,6 +39,16 @@ namespace Hippo.Repositories
 
         public async Task AddNew(Channel channel)
         {
+            // TODO: remove once we sort out the ports stuff
+            try
+            {
+                var lastPort = _context.Channels.Max(c => c.PortID);
+                channel.PortID = lastPort + 1;
+            }
+            catch (InvalidOperationException)
+            {
+                channel.PortID = 0;
+            }
             await _context.Channels.AddAsync(channel);
         }
     }
