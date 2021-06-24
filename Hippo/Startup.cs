@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Hippo.Models;
 using Hippo.Repositories;
 using Hippo.Schedulers;
+using Hippo.Services;
 using Hippo.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -89,6 +90,9 @@ namespace Hippo
             }
 
             services.AddSingleton<ITaskQueue<ChannelReference>, TaskQueue<ChannelReference>>();
+
+            services.AddSingleton<IHostedService, TraefikService>();
+            services.AddSingleton<ITraefikService, TraefikService>();
 
             services.AddSwaggerGen(c =>
             {

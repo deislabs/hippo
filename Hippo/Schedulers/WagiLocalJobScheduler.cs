@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using Hippo.Models;
+using Hippo.Services;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -15,16 +16,16 @@ namespace Hippo.Schedulers
         // This assumes a singleton scheduler instance!
         private readonly Dictionary<Guid, int> _wagiProcessIds = new();
         private readonly ILogger _logger;
-
+        private readonly ITraefikService _traefikService;
         private const string ENV_BINDLE = "BINDLE_SERVER_URL";
 
         private const string ENV_WAGI = "HIPPO_WAGI_PATH";
 
 
-        public WagiLocalJobScheduler(IHostApplicationLifetime lifetime, ILogger<WagiLocalJobScheduler> logger)
+        public WagiLocalJobScheduler(IHostApplicationLifetime lifetime, ILogger<WagiLocalJobScheduler> logger, ITraefikService traefikService)
         {
             _logger = logger;
-
+            _traefikService = traefikService;
             var bindleUrl = Environment.GetEnvironmentVariable(ENV_BINDLE);
 
             if (string.IsNullOrWhiteSpace(bindleUrl))
@@ -81,6 +82,7 @@ namespace Hippo.Schedulers
                 {
                     process.Exited += (s, e) => _wagiProcessIds.Remove(c.Id);
                     _wagiProcessIds[c.Id] = process.Id;
+                    _traefikService.StartProxy(c.UniqueName(), new Uri(c.Domain.Name), new Uri($"127.0.0.1:{port}"));
                 }
             }
             catch (Win32Exception e)  // yes, even on Linux
@@ -100,6 +102,7 @@ namespace Hippo.Schedulers
             {
                 _wagiProcessIds.Remove(c.Id);
                 KillProcessById(wagiProcessId);
+                _traefikService.StopProxy(c.UniqueName());
             }
         }
 

@@ -50,6 +50,12 @@ namespace Hippo.Models
 
             return ActiveRevision != previous;
         }
+
+        // TODO: bikeshed about this function name with Ivan
+        public string UniqueName()
+        {
+            return $"{Application.Name}-{Name}";
+        }
     }
 
     /// <summary>

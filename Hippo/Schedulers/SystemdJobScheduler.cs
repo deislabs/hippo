@@ -1,14 +1,23 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
 using Hippo.Models;
+using Hippo.Services;
 using Nett;
 
 namespace Hippo.Schedulers
 {
     public class SystemdJobScheduler : IJobScheduler
     {
+        private readonly ITraefikService _traefikService;
+
+        public SystemdJobScheduler(ITraefikService traefikService)
+        {
+            _traefikService = traefikService;
+        }
+
         public void OnSchedulerStart(IEnumerable<Application> applications)
         {
             // Nothing to do - apps run independently of scheduler object lifecycle
@@ -32,9 +41,10 @@ namespace Hippo.Schedulers
             };
             process.Start();
             process.WaitForExit();
-            FileInfo traefikConfigFile = new(TraefikConfigPath(c));
-            traefikConfigFile.Directory.Create();
-            File.WriteAllText(traefikConfigFile.FullName, TraefikConfig(c));
+
+            // start from the ephemeral port range
+            var port = c.PortID + Channel.EphemeralPortRange;
+            _traefikService.StartProxy(c.UniqueName(), new Uri(c.Domain.Name), new Uri($"http://localhost:{port}"));
         }
 
         public void Stop(Channel c)
@@ -49,48 +59,7 @@ namespace Hippo.Schedulers
             };
             process.Start();
             process.WaitForExit();
-        }
-
-        public static string TraefikConfig(Channel c)
-        {
-            if (c.Domain == null)
-            {
-                return "";
-            }
-
-            // start from the ephemeral port range
-            var port = c.PortID + Channel.EphemeralPortRange;
-            var serviceId = $"{c.Application.Name}-{c.Name}";
-
-            var routers = new Dictionary<string, object> {
-                {
-                    $"to-{serviceId}",
-                    new {
-                        rule = $"Host(`{c.Domain.Name}`) && PathPrefix(`/`)",
-                        service = serviceId
-                    }
-                }
-            };
-            var services = new Dictionary<string, object> {
-                {
-                    serviceId,
-                    new {
-                        loadBalancer = new {
-                            servers = new [] {
-                                new { url = $"http://localhost:{port}" }
-                            }
-                        }
-                    }
-                }
-            };
-
-            var traefikConfig = new { http = new { routers, services } };
-            return Toml.WriteString(traefikConfig);
-        }
-
-        public static string TraefikConfigPath(Channel c)
-        {
-            return Path.Combine("/etc", "traefik", "conf.d", c.Name + ".toml");
+            _traefikService.StopProxy(c.UniqueName());
         }
 
         public static string SystemdService(Channel c)

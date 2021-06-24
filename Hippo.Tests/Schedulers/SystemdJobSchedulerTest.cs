@@ -54,29 +54,5 @@ module = ""bindle:hippos.rocks/one/1.0.0""
 ".Trim(),
             SystemdJobScheduler.WagiConfig(application.Channels.First()).Trim());
         }
-
-        [Fact]
-        public void TestTraefikConfig()
-        {
-            Assert.Equal(
-@"[http]
-
-[http.routers]
-
-[http.routers.to-one-development]
-rule = ""Host(`hippos.rocks`) && PathPrefix(`/`)""
-service = ""one-development""
-
-[http.services]
-
-[http.services.one-development]
-
-[http.services.one-development.loadBalancer]
-
-[[http.services.one-development.loadBalancer.servers]]
-url = ""http://localhost:32768""
-".Trim(),
-                SystemdJobScheduler.TraefikConfig(application.Channels.First()).Trim());
-        }
     }
 }
