@@ -30,7 +30,7 @@ namespace Hippo.Services
             _logger = logger;
         }
 
-        public void StartProxy(string name, string hostname, string proxyUrl)
+        public void StartProxy(string name, string hostname, string backend)
         {
             FileInfo traefikConfigFile = new(Path.Combine(_configDirectory, $"{name}.toml"));
 
@@ -49,7 +49,7 @@ namespace Hippo.Services
                     new {
                         loadBalancer = new {
                             servers = new [] {
-                                new { url = $"{proxyUrl.ToString()}" }
+                                new { url = $"{backend.ToString()}" }
                             }
                         }
                     }
