@@ -15,6 +15,8 @@ using Microsoft.Extensions.Configuration;
 using Moq;
 using Xunit;
 
+[assembly: System.CLSCompliant(false)]
+
 namespace Hippo.Tests.Controllers
 {
     public class AccountControllerTest
