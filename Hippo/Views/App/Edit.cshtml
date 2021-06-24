@@ -8,6 +8,21 @@
         <input asp-for="Name" class="form-control" />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
+    <!-- TODO: a warning that isn't rubbish like this one -->
+    <div>
+        <p>WARNING!</p>
+        <p>If you change the bindle name, ALL channels will stop working until
+            you register revisions of the new bindle that satisfy the channels'
+            rules!</p>
+    </div>
+    <div class="form-group">
+        <label asp-for="StorageId" class="control-label"></label>
+        <input asp-for="StorageId" class="form-control" />
+        <span asp-validation-for="StorageId" class="text-danger"></span>
+    </div>
+    <div>
+        <p>WARNING!</p>
+    </div>
     <div class="form-group btn-group">
         <input type="submit" value="Save" class="btn btn-primary" />
         <a asp-action="Index" class="btn btn-secondary">Cancel</a>
