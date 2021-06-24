@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Reflection;
 using Hippo.Models;
 using Hippo.Repositories;
@@ -31,6 +31,7 @@ namespace Hippo.Tests.ApiControllers
         {
             _taskQueue = taskQueue;
         }
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddIdentity<Account, IdentityRole>(cfg =>
@@ -52,19 +53,18 @@ namespace Hippo.Tests.ApiControllers
                 }
             );
 
-
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("RequireAdministratorRole",
                     policy => policy.RequireRole("Administrator"));
             });
 
-
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddDbContext<DataContext>(
                 options =>
                 options.UseInMemoryDatabase(_testDatabaseName)
             );
+
             services.AddScoped<ICurrentUser, ActionContextCurrentUser>();
             services.AddScoped<IUnitOfWork, DbUnitOfWork>();
             if (_taskQueue != null)
@@ -78,21 +78,15 @@ namespace Hippo.Tests.ApiControllers
 
         public void Configure(IApplicationBuilder app, IServiceProvider serviceProvider)
         {
-
             app.UseRouting();
-
-
             app.UseAuthentication();
             app.UseAuthorization();
-
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
-
         }
     }
 }

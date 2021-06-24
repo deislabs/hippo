@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Net.Http.Headers;
@@ -26,13 +26,11 @@ namespace Hippo.Tests.ApiControllers
     public class ApplicationControllerTestFixture : BaseApiTestFixture
     {
         const string TestDatabaseName = "HippoApplicationApiControllerTest";
-
         public CreateApplicationRequest CreateApplicationRequest = new()
         {
             ApplicationName = "Test Application",
             StorageId = "hippo/test"
         };
-
         public readonly UserManager<Account> UserManager;
 
         public ApplicationControllerTestFixture() : base(TestDatabaseName)
@@ -58,7 +56,6 @@ namespace Hippo.Tests.ApiControllers
     public class ApplicationControllerTest : IClassFixture<ApplicationControllerTestFixture>
     {
         private readonly ApplicationControllerTestFixture _fixture;
-
         public ApplicationControllerTest(ApplicationControllerTestFixture fixture)
         {
             this._fixture = fixture;

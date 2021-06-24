@@ -26,13 +26,9 @@ namespace Hippo.Tests.ApiControllers
     public class ChannelControllerTestFixture : BaseApiTestFixture
     {
         const string TestDatabaseName = "HippoChannelApiControllerTest";
-
         public CreateChannelRequest CreateChannelRequestFixed { get; private set; }
-
         public CreateChannelRequest CreateChannelRequestRange { get; private set; }
-
         public CreateChannelRequest CreateChannelRequestInvalidApp { get; private set; }
-
         public readonly Mock<ITaskQueue<ChannelReference>> MockTaskQueue;
 
         public ChannelControllerTestFixture() : base(TestDatabaseName)

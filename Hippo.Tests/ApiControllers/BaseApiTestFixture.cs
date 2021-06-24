@@ -27,15 +27,10 @@ namespace Hippo.Tests.ApiControllers
     public class BaseApiTestFixture
     {
         public MockTokenIssuer TokenIssuer { get; private set; }
-
         public TestServer Server { get; protected set; }
-
         public DataContext Context { get; protected set; }
-
         public Guid AppId { get; private set; }
-
         public Application Application { get; private set; }
-
         public Account User { get; private set; }
 
         public BaseApiTestFixture(string testDatabaseName)
