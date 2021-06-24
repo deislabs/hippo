@@ -47,6 +47,8 @@ namespace Hippo.Models
 
             }
             // TODO: should this trigger a redeploy?
+            // TODO: if we end up with no active revision then we should put the channel into
+            // some kind of unhappy status
 
             return ActiveRevision != previous;
         }

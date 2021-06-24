@@ -42,10 +42,18 @@ namespace Hippo.Tasks
                             // got updated in order to stop?
                             try
                             {
-                                _logger.LogInformation($"ExecuteAsync: redeploying {channel.Application.Name} channel {channel.Name} at rev {channel.ActiveRevision}");
+                                _logger.LogInformation($"ExecuteAsync: stopping {channel.Application.Name} channel {channel.Name}");
                                 scheduler.Stop(channel);
-                                scheduler.Start(channel);
-                                _logger.LogTrace($"ExecuteAsync: redeployed {channel.Application.Name} channel {channel.Name} at rev {channel.ActiveRevision}");
+                                if (channel.ActiveRevision == null)
+                                {
+                                    _logger.LogWarning($"ExecuteAsync: not restarting {channel.Application.Name} channel {channel.Name}: no active revision");
+                                }
+                                else
+                                {
+                                    _logger.LogInformation($"ExecuteAsync: restarting {channel.Application.Name} channel {channel.Name} at rev {channel.ActiveRevision.RevisionNumber}");
+                                    scheduler.Start(channel);
+                                    _logger.LogTrace($"ExecuteAsync: redeployed {channel.Application.Name} channel {channel.Name} at rev {channel.ActiveRevision}");
+                                }
                             }
                             catch (Exception e)
                             {

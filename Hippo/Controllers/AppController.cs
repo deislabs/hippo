@@ -76,6 +76,7 @@ namespace Hippo.Controllers
                 await _unitOfWork.Applications.AddNew(new Application
                 {
                     Name = form.Name,
+                    StorageId = form.StorageId,
                     Owner = await _userManager.FindByNameAsync(User.Identity.Name),
                 });
                 await _unitOfWork.SaveChanges();
@@ -100,13 +101,14 @@ namespace Hippo.Controllers
             {
                 Id = a.Id,
                 Name = a.Name,
+                StorageId = a.StorageId,
             };
             return View(vm);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name")] AppEditForm form)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,StorageId")] AppEditForm form)
         {
             TraceMethodEntry(WithArgs(id, form));
 
@@ -128,9 +130,30 @@ namespace Hippo.Controllers
                         return NotFound();
                     }
 
+                    var storageIdChanged = (a.StorageId != form.StorageId);
+
                     a.Name = form.Name;
+                    a.StorageId = form.StorageId;
+
+                    IReadOnlyList<Channel> changedChannels = new List<Channel>();
+
+                    if (storageIdChanged)
+                    {
+                        a.Revisions.Clear();
+                        foreach (var channel in a.Channels)
+                        {
+                            channel.ActiveRevision = null;
+                        }
+                        changedChannels = new List<Channel>(a.Channels);
+                    }
+
                     _unitOfWork.Applications.Update(a);
                     await _unitOfWork.SaveChanges();
+
+                    if (storageIdChanged)
+                    {
+                        await QueueChangedChannelNotifications(a, changedChannels);
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -288,26 +311,31 @@ namespace Hippo.Controllers
                 var changedChannels = application.ReevaluateActiveRevisions();
                 await _unitOfWork.SaveChanges();
 
-                // TODO: deduplicate with RevisionController
-                var queueRescheduleTasks = changedChannels.Select(channel =>
-                    _channelsToReschedule.Enqueue(new ChannelReference(application.Id, channel.Id), CancellationToken.None)
-                );
-
-                try
-                {
-                    await Task.WhenAll(queueRescheduleTasks);
-                }
-                catch (Exception e)
-                {
-                    _logger.LogError($"RegisterRevision: failed to queue channel rescheduling for one or more of {String.Join(",", changedChannels.Select(c => c.Name))}: {e}");
-                    throw;
-                }
+                await QueueChangedChannelNotifications(application, changedChannels);
 
                 _logger.LogInformation($"RegisterRevision: application {form.Id} registered {form.RevisionNumber}");
                 return RedirectToAction(nameof(Index));
             }
 
             return View(form);
+        }
+
+        private async Task QueueChangedChannelNotifications(Application application, IReadOnlyList<Channel> changedChannels)
+        {
+            // TODO: deduplicate with RevisionController
+            var queueRescheduleTasks = changedChannels.Select(channel =>
+                _channelsToReschedule.Enqueue(new ChannelReference(application.Id, channel.Id), CancellationToken.None)
+            );
+
+            try
+            {
+                await Task.WhenAll(queueRescheduleTasks);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError($"RegisterRevision: failed to queue channel rescheduling for one or more of {String.Join(",", changedChannels.Select(c => c.Name))}: {e}");
+                throw;
+            }
         }
     }
 }
