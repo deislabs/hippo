@@ -82,7 +82,7 @@ namespace Hippo.Schedulers
                 {
                     process.Exited += (s, e) => _wagiProcessIds.Remove(c.Id);
                     _wagiProcessIds[c.Id] = process.Id;
-                    _traefikService.StartProxy(c.UniqueName(), new Uri(c.Domain.Name), new Uri($"127.0.0.1:{port}"));
+                    _traefikService.StartProxy(c.UniqueName(), c.Domain.Name, $"127.0.0.1:{port}");
                 }
             }
             catch (Win32Exception e)  // yes, even on Linux

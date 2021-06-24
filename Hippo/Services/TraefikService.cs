@@ -30,7 +30,7 @@ namespace Hippo.Services
             _logger = logger;
         }
 
-        public void StartProxy(string name, Uri hostname, Uri proxyUrl)
+        public void StartProxy(string name, string hostname, string proxyUrl)
         {
             FileInfo traefikConfigFile = new(Path.Combine(_configDirectory, $"{name}.toml"));
 

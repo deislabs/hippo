@@ -44,7 +44,7 @@ namespace Hippo.Schedulers
 
             // start from the ephemeral port range
             var port = c.PortID + Channel.EphemeralPortRange;
-            _traefikService.StartProxy(c.UniqueName(), new Uri(c.Domain.Name), new Uri($"http://localhost:{port}"));
+            _traefikService.StartProxy(c.UniqueName(), c.Domain.Name, $"http://localhost:{port}");
         }
 
         public void Stop(Channel c)
