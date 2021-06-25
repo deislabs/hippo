@@ -96,7 +96,7 @@ namespace Hippo.ApiControllers
                     Application = app,
                     Name = request.Name,
                     RevisionSelectionStrategy = request.RevisionSelectionStrategy,
-                    RangeRule = request.RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseRangeRule ? request.RevisionRange :  "",
+                    RangeRule = request.RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseRangeRule ? request.RevisionRange : "",
                     SpecifiedRevision = request.RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseSpecifiedRevision ? new Revision { RevisionNumber = request.RevisionNumber } : null
                 };
                 channel.ReevaluateActiveRevision();
@@ -108,12 +108,12 @@ namespace Hippo.ApiControllers
 
                 var response = new CreateChannelResponse()
                 {
-                   Id = channelId,
-                   AppId = app.Id,
-                   Name = request.Name,
-                   RevisionNumber = request.RevisionNumber,
-                   RevisionRange = request.RevisionRange,
-                   RevisionSelectionStrategy = request.RevisionSelectionStrategy
+                    Id = channelId,
+                    AppId = app.Id,
+                    Name = request.Name,
+                    RevisionNumber = request.RevisionNumber,
+                    RevisionRange = request.RevisionRange,
+                    RevisionSelectionStrategy = request.RevisionSelectionStrategy
                 };
                 return Created("", response);
             }

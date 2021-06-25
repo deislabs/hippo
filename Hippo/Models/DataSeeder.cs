@@ -9,6 +9,7 @@ namespace Hippo.Models
 {
     public class DataSeeder
     {
+        private const string adminUserName = "admin";
         private readonly DataContext context;
         private readonly UserManager<Account> userManager;
 
@@ -18,29 +19,49 @@ namespace Hippo.Models
             this.userManager = userManager;
         }
 
-        public async Task Seed()
-        {
-            context.Database.EnsureCreated();
 
-            var user = await userManager.FindByEmailAsync("admin@hippos.rocks");
+        public async Task CreateUser(string userName)
+        {
+            var user = await userManager.FindByEmailAsync($"{userName}@hippos.rocks");
             if (user == null)
             {
                 user = new Account
                 {
-                    UserName = "admin",
-                    Email = "admin@hippos.rocks",
+                    UserName = userName,
+                    Email = $"{userName}@hippos.rocks",
                 };
+                var result = await userManager.CreateAsync(user, "Passw0rd!");
+                if (!result.Succeeded)
+                {
+                    throw new InvalidOperationException($"Failed to create user {userName}");
+                }
+            }
+            if (IsAdminUser(userName))
+            {
+                var roleResult = await userManager.AddToRoleAsync(user, "Administrator");
+                if (!roleResult.Succeeded)
+                {
+                    throw new InvalidOperationException($"Failed to assign {userName} as Administrator");
+                }
             }
 
-            var result = await userManager.CreateAsync(user, "Passw0rd!");
-            if (!result.Succeeded)
+        }
+
+        public bool IsAdminUser(string userName)
+            => userName == adminUserName;
+
+        public async Task<Account> GetAdminUser()
+            => await userManager.FindByNameAsync(adminUserName);
+
+        public async Task Seed()
+        {
+            context.Database.EnsureCreated();
+
+            var users = new string[] { "dev", adminUserName };
+
+            foreach (var user in users)
             {
-                throw new InvalidOperationException("Failed to create default user");
-            }
-            var roleResult = await userManager.AddToRoleAsync(user, "Administrator");
-            if (!roleResult.Succeeded)
-            {
-                throw new InvalidOperationException("Failed to assign default user as Administrator");
+                await CreateUser(user);
             }
 
             if (!context.Applications.Any())
@@ -64,7 +85,7 @@ namespace Hippo.Models
                     new Application
                     {
                         Name = "helloworld",
-                        Owner = user,
+                        Owner = await GetAdminUser(),
                         StorageId = "hippos.rocks/helloworld",
                         Revisions = revisions,
                     }

@@ -1,5 +1,3 @@
-using Hippo.Rules;
-using Nett;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,17 +5,19 @@ using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Text.Json;
+using Hippo.Rules;
+using Nett;
 
 namespace Hippo.Models
 {
-    public class Channel: BaseEntity
+    public class Channel : BaseEntity
     {
         public const int EphemeralPortRange = 32768;
 
         public string Name { get; set; }
 
         public ChannelRevisionSelectionStrategy RevisionSelectionStrategy { get; set; }
-        
+
         public Revision SpecifiedRevision { get; set; }
         public string RangeRule { get; set; }
 
@@ -47,6 +47,8 @@ namespace Hippo.Models
 
             }
             // TODO: should this trigger a redeploy?
+            // TODO: if we end up with no active revision then we should put the channel into
+            // some kind of unhappy status
 
             return ActiveRevision != previous;
         }

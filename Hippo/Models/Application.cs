@@ -10,7 +10,7 @@ using Tomlyn;
 
 namespace Hippo.Models
 {
-    public class Application: BaseEntity
+    public class Application : BaseEntity
     {
 
         [Required]

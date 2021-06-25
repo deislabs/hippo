@@ -4,7 +4,9 @@ using Hippo.Models;
 
 namespace Hippo.Messages
 {
-  
+    /// <summary>
+    /// Base class for Hippo Channel API Messages.
+    /// </summary>
     public class ChannelMessage
     {
         /// <summary>

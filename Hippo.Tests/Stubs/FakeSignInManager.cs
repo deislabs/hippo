@@ -21,7 +21,7 @@ namespace Hippo.Tests.Stubs
                     new Mock<ILogger<SignInManager<Account>>>().Object,
                     new Mock<IAuthenticationSchemeProvider>().Object,
                     new Mock<IUserConfirmation<Account>>().Object)
-            { }
+        { }
 
         public FakeSignInManager(FakeUserManager userManager)
                 : base(userManager,
@@ -31,7 +31,7 @@ namespace Hippo.Tests.Stubs
                     new Mock<ILogger<SignInManager<Account>>>().Object,
                     new Mock<IAuthenticationSchemeProvider>().Object,
                     new Mock<IUserConfirmation<Account>>().Object)
-            { }
+        { }
     }
 
     public class FakeUserManager : UserManager<Account>

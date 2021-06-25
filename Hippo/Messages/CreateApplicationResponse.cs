@@ -7,7 +7,7 @@ namespace Hippo.Messages
     /// <summary>
     /// Response body for a new Hippo Application API.
     /// </summary>
-    public class CreateApplicationResponse: ApplicationMessage, ITraceable
+    public class CreateApplicationResponse : ApplicationMessage, ITraceable
     {
         /// <summary>
         /// The GUID of the new Application
@@ -19,7 +19,7 @@ namespace Hippo.Messages
         /// ITraceable.FormatTrace implementation.
         /// </summary>
         /// <returns>Trace string</returns>
-        public string FormatTrace() 
+        public string FormatTrace()
             => $"{GetType().Name}[ApplicationName={ApplicationName}, ApplicationGUID={Id}], StorageId={StorageId}]";
     }
 }

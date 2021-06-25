@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Hippo.Schedulers
 {
-    public class WagiLocalJobScheduler: IJobScheduler
+    public class WagiLocalJobScheduler : IJobScheduler
     {
         // This assumes a singleton scheduler instance!
         private readonly Dictionary<Guid, int> _wagiProcessIds = new();
@@ -33,7 +33,8 @@ namespace Hippo.Schedulers
                 _logger.LogCritical($"No channels will be able to run - this scheduler requires {ENV_BINDLE}");
             }
 
-            lifetime.ApplicationStopping.Register(() => {
+            lifetime.ApplicationStopping.Register(() =>
+            {
                 foreach (var processId in _wagiProcessIds)
                 {
                     KillProcessById(processId.Value);
@@ -51,7 +52,7 @@ namespace Hippo.Schedulers
                 }
             }
         }
-        
+
         public void Start(Channel c)
         {
             var port = c.PortID + Channel.EphemeralPortRange;
@@ -68,7 +69,7 @@ namespace Hippo.Schedulers
             var psi = new ProcessStartInfo
             {
                 FileName = wagiProgram,
-                Arguments = $"-b {c.Application.StorageId}/{c.ActiveRevision.RevisionNumber} --bindle-server {bindleUrl} --default-host localhost:{port} -l 127.0.0.1:{port}",
+                Arguments = $"-b {c.Application.StorageId}/{c.ActiveRevision.RevisionNumber} --bindle-server {bindleUrl} -l 127.0.0.1:{port}",
             };
             psi.Environment["BINDLE_SERVER_URL"] = bindleUrl;
             // TODO: drive this from outside

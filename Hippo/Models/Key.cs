@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Hippo.Models
 {
-    public class Key: BaseEntity
+    public class Key : BaseEntity
     {
         /// <summary>
         /// public key used for determining trust.

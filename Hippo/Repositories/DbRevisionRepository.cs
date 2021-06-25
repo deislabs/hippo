@@ -3,7 +3,7 @@ using Hippo.Models;
 
 namespace Hippo.Repositories
 {
-    public class DbRevisionRepository: IRevisionRepository
+    public class DbRevisionRepository : IRevisionRepository
     {
         private readonly DataContext _context;
 

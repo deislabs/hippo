@@ -47,7 +47,7 @@ namespace Hippo.Controllers
                     {
                         RevisionNumber = request.RevisionNumber,
                     });
-                    
+
                     var changedAppChannels = app.ReevaluateActiveRevisions();
                     changedChannels.AddRange(changedAppChannels);
                 }
@@ -81,7 +81,7 @@ namespace Hippo.Controllers
                 {
                     var app = _unitOfWork.Applications.GetApplicationById(request.AppId.Value);
                     LogIfNotFound(app, request.AppId);
-                    return new [] { app };
+                    return new[] { app };
                 }
                 else if (request.AppStorageId != null)
                 {

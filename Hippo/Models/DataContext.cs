@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Hippo.Models
 {
-    public class DataContext: IdentityDbContext<Account>
+    public class DataContext : IdentityDbContext<Account>
     {
         public DataContext(DbContextOptions<DataContext> dbContextOptions) : base(dbContextOptions)
         {

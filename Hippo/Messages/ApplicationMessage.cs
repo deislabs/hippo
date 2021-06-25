@@ -2,6 +2,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Hippo.Messages
 {
+    /// <summary>
+    /// Base class for Hippo Application API Messages.
+    /// </summary>
     public abstract class ApplicationMessage
     {
         /// <summary>
