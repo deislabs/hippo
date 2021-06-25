@@ -15,8 +15,6 @@
     "xterm": "^4.13.0"
   },
   "scripts": {
-    "build": "npm install && gulp clean && gulp",
-    "styles": "npx sass ./assets/styles/hippo.scss ./wwwroot/styles/hippo.css",
-    "styles:watch": "npx sass --watch ./assets/styles/hippo.scss ./wwwroot/styles/hippo.css"
+    "build": "npm install && gulp clean && gulp"
   }
 }

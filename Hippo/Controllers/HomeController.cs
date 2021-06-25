@@ -8,10 +8,6 @@ namespace Hippo.Controllers
     {
         public IActionResult Index()
         {
-            return View();
-        }
-
-        public ActionResult MyAction() {
             return RedirectToAction("Index", "App");
         }
     }
