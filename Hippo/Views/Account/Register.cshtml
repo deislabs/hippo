@@ -4,34 +4,70 @@
     ViewData["Title"] = "Register";
 }
 
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Register">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="UserName" class="control-label"></label>
-                <input asp-for="UserName" class="form-control" />
-                <span asp-validation-for="UserName" class="text-danger"></span>
+<div class="columns is-centered">
+    <div class="column is-two-thirds-tablet is-one-third-widescreen">
+        <h2 class="has-text-centered">Register a <span class="has-text-primary">Hippo</span> Account</h2>
+        
+        <div class="box box-register">
+            <div class="card-content">
+                <form asp-action="Login">
+                    <div class="field">
+                        <label asp-for="UserName" class="label">Username</label>
+                        <div class="control has-icons-left">
+                            <input asp-for="UserName" type="text" class="input is-rounded is-medium is-primary" placeholder="e.g. user123" />
+                            <span class="icon is-left">
+                                <i class="fa fa-user"></i>
+                            </span>
+                            <p asp-validation-for="UserName" class="help is-warning"></p>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label asp-for="Email" class="label">Email</label>
+                        <div class="control has-icons-left">
+                            <input asp-for="Email" type="email" class="input is-rounded is-medium is-primary" />
+                            <span class="icon is-left">
+                                <i class="fa fa-mail"></i>
+                            </span>
+                            <p asp-validation-for="Email" class="help is-warning"></p>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label asp-for="Password" class="label">Password</label>
+                        <div class="control has-icons-left">
+                            <input asp-for="Password" type="password" class="input is-rounded is-medium is-primary" />
+                            <span class="icon is-left">
+                                <i class="fa fa-lock"></i>
+                            </span>
+                            <p asp-validation-for="Password" class="help is-warning"></p>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label asp-for="PasswordConfirm" class="label">Confirm Password</label>
+                        <div class="control has-icons-left">
+                            <input asp-for="PasswordConfirm" type="password" class="input is-rounded is-medium is-primary" />
+                            <span class="icon is-left">
+                                <i class="fa fa-lock"></i>
+                            </span>
+                            <p asp-validation-for="PasswordConfirm" class="help is-warning"></p>
+                        </div>
+                    </div>
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <button type="submit" value="Register" class="button is-rounded is-primary is-large">Register</button>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <div asp-validation-summary="ModelOnly" class="help is-alert"></div>
+                        </div>
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PasswordConfirm" class="control-label"></label>
-                <input asp-for="PasswordConfirm" class="form-control" />
-                <span asp-validation-for="PasswordConfirm" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Register" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
+
+        <div class="has-text-centered">
+            <p class="has-text-centered">Already have an account? <a href="./login">Log in here</a>.
+        </div>
     </div>
 </div>
 

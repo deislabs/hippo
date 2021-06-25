@@ -1,5 +1,10 @@
 ﻿@model Hippo.Models.Application
 
+@{
+    ViewData["Title"] = @Html.DisplayFor(model => model.Name);
+    Layout = "_AppLayout";
+}
+
 <div class="container">
     <div class="row">
         <table class="table">
