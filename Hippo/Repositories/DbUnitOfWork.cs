@@ -29,7 +29,16 @@ namespace Hippo.Repositories
 
         public void Dispose()
         {
-            _dataContext.Dispose();
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _dataContext.Dispose();
+            }
         }
     }
 }

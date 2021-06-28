@@ -18,48 +18,48 @@ namespace Hippo.Models
         public DbSet<Key> Keys { get; set; }
         public DbSet<Revision> Revisions { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder builder)
         {
-            base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(builder);
 
             // TODO: there must be a cleaner way using the abstract BaseEntity class here...
             // meh. do what works for now.
-            modelBuilder.Entity<Application>().Property(x => x.Created).HasDefaultValueSql("now()");
-            modelBuilder.Entity<Application>().Property(x => x.Modified).HasDefaultValueSql("now()");
-            modelBuilder.Entity<Channel>().Property(x => x.Created).HasDefaultValueSql("now()");
-            modelBuilder.Entity<Channel>().Property(x => x.Modified).HasDefaultValueSql("now()");
-            modelBuilder.Entity<Configuration>().Property(x => x.Created).HasDefaultValueSql("now()");
-            modelBuilder.Entity<Configuration>().Property(x => x.Modified).HasDefaultValueSql("now()");
-            modelBuilder.Entity<Domain>().Property(x => x.Created).HasDefaultValueSql("now()");
-            modelBuilder.Entity<Domain>().Property(x => x.Modified).HasDefaultValueSql("now()");
-            modelBuilder.Entity<EnvironmentVariable>().Property(x => x.Created).HasDefaultValueSql("now()");
-            modelBuilder.Entity<EnvironmentVariable>().Property(x => x.Modified).HasDefaultValueSql("now()");
-            modelBuilder.Entity<Key>().Property(x => x.Created).HasDefaultValueSql("now()");
-            modelBuilder.Entity<Key>().Property(x => x.Modified).HasDefaultValueSql("now()");
-            modelBuilder.Entity<Revision>().Property(x => x.Created).HasDefaultValueSql("now()");
-            modelBuilder.Entity<Revision>().Property(x => x.Modified).HasDefaultValueSql("now()");
+            builder.Entity<Application>().Property(x => x.Created).HasDefaultValueSql("now()");
+            builder.Entity<Application>().Property(x => x.Modified).HasDefaultValueSql("now()");
+            builder.Entity<Channel>().Property(x => x.Created).HasDefaultValueSql("now()");
+            builder.Entity<Channel>().Property(x => x.Modified).HasDefaultValueSql("now()");
+            builder.Entity<Configuration>().Property(x => x.Created).HasDefaultValueSql("now()");
+            builder.Entity<Configuration>().Property(x => x.Modified).HasDefaultValueSql("now()");
+            builder.Entity<Domain>().Property(x => x.Created).HasDefaultValueSql("now()");
+            builder.Entity<Domain>().Property(x => x.Modified).HasDefaultValueSql("now()");
+            builder.Entity<EnvironmentVariable>().Property(x => x.Created).HasDefaultValueSql("now()");
+            builder.Entity<EnvironmentVariable>().Property(x => x.Modified).HasDefaultValueSql("now()");
+            builder.Entity<Key>().Property(x => x.Created).HasDefaultValueSql("now()");
+            builder.Entity<Key>().Property(x => x.Modified).HasDefaultValueSql("now()");
+            builder.Entity<Revision>().Property(x => x.Created).HasDefaultValueSql("now()");
+            builder.Entity<Revision>().Property(x => x.Modified).HasDefaultValueSql("now()");
 
-            modelBuilder.Entity<Application>()
+            builder.Entity<Application>()
                 .HasIndex(a => a.Name)
                 .IsUnique();
 
-            modelBuilder.Entity<Application>()
+            builder.Entity<Application>()
                 .HasMany(a => a.Channels)
                 .WithOne(c => c.Application);
 
-            modelBuilder.Entity<Application>()
+            builder.Entity<Application>()
                 .HasMany(a => a.Revisions)
                 .WithOne(r => r.Application);
 
-            modelBuilder.Entity<Configuration>()
+            builder.Entity<Configuration>()
                 .HasMany(c => c.EnvironmentVariables)
                 .WithOne(e => e.Configuration);
 
-            modelBuilder.Entity<Domain>()
+            builder.Entity<Domain>()
                 .HasIndex(d => d.Name)
                 .IsUnique();
 
-            modelBuilder.Entity<Channel>()
+            builder.Entity<Channel>()
                 .Property(c => c.RevisionSelectionStrategy)
                 .HasConversion<int>();
         }

@@ -90,7 +90,7 @@ namespace Hippo.ApiControllers
                 };
 
                 TraceMessage($"Successfully Created Application Id: {app.Id}");
-                return Created("", response);
+                return Created(response);
 
             }
             catch (Exception ex)

@@ -9,6 +9,7 @@ namespace Hippo.Controllers
 {
     public abstract class HippoController : Controller
     {
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1051:Do not declare visible instance fields", Justification = "Rule not applicable")]
         protected readonly ILogger _logger;
 
         protected HippoController(ILogger logger)
@@ -20,7 +21,7 @@ namespace Hippo.Controllers
         {
             if (entity == null)
             {
-                var entityType = typeof(T).Name.ToLowerInvariant();
+                var entityType = typeof(T).Name.ToUpperInvariant();
                 _logger.LogWarning($"{methodName}: {entityType} {entityId} not found");
             }
         }
@@ -37,7 +38,7 @@ namespace Hippo.Controllers
 
         protected void TraceMethodEntry([CallerMemberName] string methodName = null)
         {
-            TraceMethodEntry(WithArgs(new object[0]), methodName);
+            TraceMethodEntry(WithArgs(Array.Empty<object>()), methodName);
         }
 
         protected void TraceMethodEntry(MethodArgs args, [CallerMemberName] string methodName = null)
@@ -47,11 +48,14 @@ namespace Hippo.Controllers
             _logger.LogTrace($"{methodName}: entered{argsText}{modelStateText}");
         }
 
+        protected CreatedResult Created(object value) => new("", value);
+
         protected static MethodArgs WithArgs(params object[] args)
         {
             return new MethodArgs(args);
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1815:Override equals and operator equals on value types", Justification = "Not needed, not used externally or for equality")]
         protected struct MethodArgs
         {
             private readonly object[] _args;

@@ -7,7 +7,7 @@ using Microsoft.Extensions.Hosting;
 
 namespace Hippo
 {
-    public class Program
+    public static class Program
     {
         public static void Main(string[] args)
         {

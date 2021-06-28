@@ -7,7 +7,7 @@ namespace Hippo.Repositories
     public interface IChannelRepository
     {
         Channel GetChannelByName(Application owner, string name);
-        Channel GetChannelById(Guid channelId);
+        Channel GetChannelById(Guid id);
         Task AddNew(Channel channel);
     }
 }

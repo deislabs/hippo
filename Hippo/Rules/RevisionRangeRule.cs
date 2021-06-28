@@ -66,7 +66,7 @@ namespace Hippo.Rules
 
                 var body = rule.Substring(2, rule.Length - 4);
 
-                var splitAt = body.IndexOf('-');
+                var splitAt = body.IndexOf('-', StringComparison.InvariantCultureIgnoreCase);
                 var versionPattern = body.Substring(0, splitAt);
                 var prereleasePattern = body.Substring(splitAt + 1);
 
@@ -91,9 +91,9 @@ namespace Hippo.Rules
                 return candidatesByVersion.FirstOrDefault();
             }
 
-            private IEnumerable<(string Version, string User, string Timestamp)> ParsePrerelease(string revisionNumber)
+            private static IEnumerable<(string Version, string User, string Timestamp)> ParsePrerelease(string revisionNumber)
             {
-                var prereleaseParse = revisionNumber.IndexOf('-');
+                var prereleaseParse = revisionNumber.IndexOf('-', StringComparison.InvariantCultureIgnoreCase);
                 if (prereleaseParse <= 0)
                 {
                     yield break;
