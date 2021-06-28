@@ -15,7 +15,7 @@ using Microsoft.Extensions.Logging;
 namespace Hippo.ApiControllers
 {
     /// <summary>
-    /// ApplicationController providers an API to create Hippo Applications 
+    /// ApplicationController provides an API to create Hippo Applications 
     /// </summary>
     [Route("api/[controller]")]
     [ApiController]
