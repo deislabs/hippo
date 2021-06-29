@@ -36,7 +36,7 @@ indent_style = space
 indent_style = space
 indent_size = 4
 insert_final_newline = true
-charset = utf-8-bom
+charset = utf-8
 
 # IDE0055: Fix formatting
 dotnet_diagnostic.IDE0055.severity = warning
