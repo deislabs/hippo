@@ -69,7 +69,7 @@ namespace Hippo.Controllers
                 }
 
                 return apps.Any() ?
-                    Created("", null) :
+                    Created(null) :
                     NotFound();
             }
 
@@ -95,7 +95,7 @@ namespace Hippo.Controllers
                 else
                 {
                     _logger.LogWarning($"Register Revision: neither app id nor storage id provided");
-                    return new Application[0];
+                    return Array.Empty<Application>();
                 }
 
             }

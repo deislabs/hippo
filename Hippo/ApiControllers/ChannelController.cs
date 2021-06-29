@@ -28,6 +28,7 @@ namespace Hippo.ApiControllers
         /// Initializes a new instance of the <see cref="ChannelController"/> class.
         /// </summary>
         /// <param name="unitOfWork">Iunitofwork instance</param>
+        /// <param name="taskQueue"> ITaskQueue instance</param>
         /// <param name="logger">ILogger Instance</param>
         public ChannelController(IUnitOfWork unitOfWork, ITaskQueue<ChannelReference> taskQueue, ILogger<ChannelController> logger)
                 : base(logger)
@@ -115,7 +116,7 @@ namespace Hippo.ApiControllers
                     RevisionRange = request.RevisionRange,
                     RevisionSelectionStrategy = request.RevisionSelectionStrategy
                 };
-                return Created("", response);
+                return Created(response);
             }
             catch (Exception ex)
             {

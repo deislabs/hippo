@@ -278,67 +278,22 @@ csharp_style_var_elsewhere = true:warning
 # Code files
 [*.{cs,vb}]
 
-# The following are temporarily disabled to make it easier to review and introduce changes
-
-dotnet_diagnostic.CA1001.severity = none
-
-dotnet_diagnostic.CA1012.severity = none
-
-dotnet_diagnostic.CA1014.severity = none
+# TODO: Need to review exception hanling for web application.
 
 dotnet_diagnostic.CA1031.severity = none
 
-dotnet_diagnostic.CA1051.severity = none
-
-dotnet_diagnostic.CA1052.severity = none
+# TODO: Need to review - this rule is triggered on many HTTP Action methods
 
 dotnet_diagnostic.CA1062.severity = none
-
-dotnet_diagnostic.CA1063.severity = none
-
-dotnet_diagnostic.CA1305.severity = none
-
-dotnet_diagnostic.CA1307.severity = none
-
-dotnet_diagnostic.CA1308.severity = none
-
-dotnet_diagnostic.CA1711.severity = none
-
-dotnet_diagnostic.CA1716.severity = none
-
-dotnet_diagnostic.CA1724.severity = none
-
-dotnet_diagnostic.CA1725.severity = none
-
-dotnet_diagnostic.CA1801.severity = none
-
-dotnet_diagnostic.CA1815.severity = none
-
-dotnet_diagnostic.CA1816.severity = none
-
-dotnet_diagnostic.CA1822.severity = none
-
-dotnet_diagnostic.CA1825.severity = none
-
-dotnet_diagnostic.CA2000.severity = none
 
 # Do not require configureawait https://devblogs.microsoft.com/dotnet/configureawait-faq/
 
 dotnet_diagnostic.CA2007.severity = none
 
-# The following are temporarily disabled to make it easier to review and introduce changes
-
-dotnet_diagnostic.CA2227.severity = none
-
-dotnet_diagnostic.CA2234.severity = none
+# TODO: Enable Antiforgery 
 
 dotnet_diagnostic.CA5391.severity = none
-
 dotnet_diagnostic.CA5395.severity = none
-
-# The following are temporarily disabled to make it easier to review and introduce changes
-
-dotnet_diagnostic.CS1573.severity = none
 
 # Do not require XML comments (Documentation option is enabled to allow for swagger generation only) 
 

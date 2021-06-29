@@ -10,6 +10,7 @@ using Tomlyn;
 
 namespace Hippo.Models
 {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2227:Collection properties should be read only", Justification = "Model Class")]
     public class Application : BaseEntity
     {
 
@@ -32,6 +33,7 @@ namespace Hippo.Models
         public virtual ICollection<Account> Collaborators { get; set; }
 
         [Required]
+
         public virtual ICollection<Revision> Revisions { get; set; }
 
         [Required]

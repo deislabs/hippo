@@ -217,8 +217,7 @@ namespace Hippo.Controllers
                             expiration = token.ValidTo
                         };
 
-                        // empty quotes to say no source for this resource, just give a new object
-                        return Created("", results);
+                        return Created(results);
                     }
                     else
                     {

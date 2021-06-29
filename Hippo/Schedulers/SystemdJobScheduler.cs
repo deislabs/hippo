@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Text;
 using Hippo.Models;
@@ -22,7 +23,7 @@ namespace Hippo.Schedulers
             FileInfo systemdServiceFile = new(SystemdServicePath(c));
             systemdServiceFile.Directory.Create();
             File.WriteAllText(systemdServiceFile.FullName, SystemdService(c));
-            var process = new Process
+            using var process = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
@@ -39,7 +40,7 @@ namespace Hippo.Schedulers
 
         public void Stop(Channel c)
         {
-            var process = new Process
+            using var process = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
@@ -97,12 +98,12 @@ namespace Hippo.Schedulers
         {
             var systemdService = new StringBuilder();
             systemdService.AppendLine("[Unit]");
-            systemdService.AppendFormat("Description=Hippo runtime for app {0} channel {1}\n", c.Application.Name, c.Name);
+            systemdService.AppendFormat(CultureInfo.CurrentCulture, "Description=Hippo runtime for app {0} channel {1}\n", c.Application.Name, c.Name);
             systemdService.AppendLine();
             systemdService.AppendLine("[Service]");
             systemdService.AppendLine("Type=simple");
             // TODO: make wagi system path configurable
-            systemdService.AppendFormat("ExecStart=/usr/local/bin/wagi --config {0} --listen 0.0.0.0:{1}\n", WagiConfigPath(c), c.PortID + Channel.EphemeralPortRange);
+            systemdService.AppendFormat(CultureInfo.CurrentCulture, "ExecStart=/usr/local/bin/wagi --config {0} --listen 0.0.0.0:{1}\n", WagiConfigPath(c), c.PortID + Channel.EphemeralPortRange);
             systemdService.AppendLine();
             systemdService.AppendLine("[Install]");
             systemdService.AppendLine("WantedBy=multi-user.target");
@@ -118,10 +119,10 @@ namespace Hippo.Schedulers
         {
             var wagiConfig = new StringBuilder();
             wagiConfig.AppendLine("[[module]]");
-            wagiConfig.AppendFormat("module = \"bindle:{0}/{1}\"\n", c.Application.StorageId, c.ActiveRevision.RevisionNumber);
+            wagiConfig.AppendFormat(CultureInfo.CurrentCulture, "module = \"bindle:{0}/{1}\"\n", c.Application.StorageId, c.ActiveRevision.RevisionNumber);
             foreach (EnvironmentVariable envvar in c.Configuration.EnvironmentVariables)
             {
-                wagiConfig.AppendFormat("environment.{0} = \"{1}\"\n", envvar.Key, envvar.Value);
+                wagiConfig.AppendFormat(CultureInfo.CurrentCulture, "environment.{0} = \"{1}\"\n", envvar.Key, envvar.Value);
             }
             return wagiConfig.ToString();
         }
