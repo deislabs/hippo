@@ -119,7 +119,7 @@ namespace Hippo.ApiControllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Exception Creating Application");
+                _logger.LogError(ex, "Exception Creating Channel");
                 return StatusCode(StatusCodes.Status500InternalServerError);
             }
         }
@@ -151,7 +151,7 @@ namespace Hippo.ApiControllers
             try
             {
                 TraceMethodEntry(WithArgs(id));
-                if (!Guid.TryParse(id, out Guid guid))
+                if (!Guid.TryParse(id, out var guid))
                 {
                     return BadRequest($"{id} is not a valid Identifier");
                 }

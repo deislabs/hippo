@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Hippo.Messages
 {
@@ -25,5 +25,7 @@ namespace Hippo.Messages
         /// <example>contoso/weather</example>
         [Required]
         public string StorageId { get; set; }
+
+        // TODO: validate the storage id format.
     }
 }

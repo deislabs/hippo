@@ -23,12 +23,21 @@ namespace Hippo.Messages
         /// </summary>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
+            if (AppId == Guid.Empty)
+            {
+                yield return new ValidationResult(
+                    $"AppId is required",
+                    new[]
+                    {
+                        nameof(AppId)
+                    });
+            }
 
             // TODO : Should we validate that the revision exists or if its a range there is at least one revision in the range available?
 
             if (RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseSpecifiedRevision)
             {
-                if (String.IsNullOrEmpty(RevisionNumber))
+                if (string.IsNullOrEmpty(RevisionNumber))
                 {
                     yield return new ValidationResult(
                         $"Revision Number must be specified when fixing a channel to a revision number",
@@ -47,7 +56,7 @@ namespace Hippo.Messages
 
             if (RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseRangeRule)
             {
-                if (String.IsNullOrEmpty(RevisionRange))
+                if (string.IsNullOrEmpty(RevisionRange))
                 {
                     yield return new ValidationResult(
                         $"Revision Range must be specified when not fixing a channel to a revision number",

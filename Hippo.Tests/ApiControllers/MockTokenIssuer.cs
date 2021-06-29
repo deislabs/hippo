@@ -12,6 +12,7 @@ namespace Hippo.Tests.ApiControllers
         public readonly string Issuer;
         public readonly string Audience;
         public readonly SecurityKey SecurityKey;
+        private readonly Claim[] _claims;
 
         public MockTokenIssuer()
         {
@@ -22,6 +23,12 @@ namespace Hippo.Tests.ApiControllers
             SecurityKey = new SymmetricSecurityKey(key)
             {
                 KeyId = Guid.NewGuid().ToString()
+            };
+            _claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, "user@test.com"),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim(JwtRegisteredClaimNames.UniqueName, "user")
             };
         }
 
@@ -38,6 +45,11 @@ namespace Hippo.Tests.ApiControllers
                   new SigningCredentials(
                     key: SecurityKey,
                     algorithm: SecurityAlgorithms.HmacSha256)));
+        }
+
+        public string GetToken()
+        {
+            return GetToken(_claims);
         }
     }
 }
