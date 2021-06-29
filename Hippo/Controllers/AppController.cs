@@ -198,21 +198,6 @@ namespace Hippo.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult Release(Guid id)
-        {
-            TraceMethodEntry(WithArgs(id));
-
-            var a = _unitOfWork.Applications.GetApplicationById(id);
-            var vm = new AppReleaseForm
-            {
-                Id = a.Id,
-                Channels = a.Channels.AsSelectList(ch => ch.Name),
-                RevisionSelectionStrategies = Converters.EnumValuesAsSelectList<ChannelRevisionSelectionStrategy>(),
-                Revisions = a.Revisions.AsSelectList(r => r.RevisionNumber),
-            };
-            return View(vm);
-        }
-
         public IActionResult NewChannel(Guid id)
         {
             TraceMethodEntry(WithArgs(id));
@@ -294,6 +279,21 @@ namespace Hippo.Controllers
             }
 
             return View(form);
+        }
+
+        public IActionResult Release(Guid id)
+        {
+            TraceMethodEntry(WithArgs(id));
+
+            var a = _unitOfWork.Applications.GetApplicationById(id);
+            var vm = new AppReleaseForm
+            {
+                Id = a.Id,
+                Channels = a.Channels.AsSelectList(ch => ch.Name),
+                RevisionSelectionStrategies = Converters.EnumValuesAsSelectList<ChannelRevisionSelectionStrategy>(),
+                Revisions = a.Revisions.AsSelectList(r => r.RevisionNumber),
+            };
+            return View(vm);
         }
 
         [HttpPost]
