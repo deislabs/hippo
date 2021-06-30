@@ -19,6 +19,7 @@
             </tbody>
         </table>
     </div>
+
     <div class="row btn-group">
         <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
         <a asp-action="NewChannel" asp-route-id="@Model.Id" class="btn btn-secondary">Create a New Channel</a>
@@ -26,4 +27,24 @@
         <a asp-action="RegisterRevision" asp-route-id="@Model.Id" class="btn btn-secondary">Register a Revision</a>
         <a asp-action="Index" class="btn btn-secondary">Back to List</a>
     </div>
+
+    <div class="row" style="padding-bottom: 20px; padding-top: 20px;">
+        <h3>Channels</h3>
+    </div>
+    <div class="row">
+        @foreach (var item in Model.Channels) {
+        <div class="card">
+            <span class="card-header badge bg-success">Healthy (on @item.ActiveRevision.RevisionNumber)</span>
+            <div class="card-body">
+                <h5 class="card-title">@Html.DisplayFor(modelItem => item.Name)</h5>
+            </div>
+            <div class="card-body btn-group" role="group" aria-label="actions">
+                <a asp-action="EditChannel" asp-route-id="@item.Id" class="card-link btn btn-sml btn-secondary">Edit</a>
+                @* <a asp-action="Details" asp-route-id="@item.Id" class="card-link btn btn-sml btn-secondary">Details</a>
+                <a asp-action="Delete" asp-route-id="@item.Id" class="card-link btn btn-sml btn-danger">Delete</a> *@
+            </div>
+        </div>
+        }
+    </div>
+
 </div>
