@@ -52,6 +52,9 @@ namespace Hippo.Models
 
             return ActiveRevision != previous;
         }
+
+        public ICollection<EnvironmentVariable> GetEnvironmentVariables() =>
+            Configuration?.EnvironmentVariables ?? Array.Empty<EnvironmentVariable>();
     }
 
     /// <summary>

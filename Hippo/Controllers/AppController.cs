@@ -198,21 +198,6 @@ namespace Hippo.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult Release(Guid id)
-        {
-            TraceMethodEntry(WithArgs(id));
-
-            var a = _unitOfWork.Applications.GetApplicationById(id);
-            var vm = new AppReleaseForm
-            {
-                Id = a.Id,
-                Channels = a.Channels.AsSelectList(ch => ch.Name),
-                RevisionSelectionStrategies = Converters.EnumValuesAsSelectList<ChannelRevisionSelectionStrategy>(),
-                Revisions = a.Revisions.AsSelectList(r => r.RevisionNumber),
-            };
-            return View(vm);
-        }
-
         public IActionResult NewChannel(Guid id)
         {
             TraceMethodEntry(WithArgs(id));
@@ -283,6 +268,20 @@ namespace Hippo.Controllers
                 }
                 channel.ReevaluateActiveRevision();
 
+                var environmentVariables = ParseEnvironmentVariables(form.EnvironmentVariables).ToList();
+
+                channel.Configuration = new Configuration
+                {
+                    EnvironmentVariables = environmentVariables,
+                };
+                channel.Domain = new Domain { Name = form.Domain };
+
+                // TODO: not sure if this is needed
+                foreach (var ev in environmentVariables)
+                {
+                    ev.Configuration = channel.Configuration;
+                }
+
                 await _unitOfWork.Channels.AddNew(channel);
                 await _unitOfWork.SaveChanges();
 
@@ -296,29 +295,76 @@ namespace Hippo.Controllers
             return View(form);
         }
 
+        private static IEnumerable<EnvironmentVariable> ParseEnvironmentVariables(string text)
+        {
+            // TODO: assumes validation in web form - should not assume this
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                return Enumerable.Empty<EnvironmentVariable>();
+            }
+
+            return text.Split('\n', ';')
+                       .Select(e => e.Trim())
+                       .Select(e => e.Split('='))
+                       .Select(bits => new EnvironmentVariable { Key = bits[0], Value = bits[1] });
+        }
+
+        public IActionResult EditChannel(Guid id)
+        {
+            TraceMethodEntry(WithArgs(id));
+
+            var channel = _unitOfWork.Channels.GetChannelById(id);
+            var application = _unitOfWork.Applications.GetApplicationById(channel.Application.Id);  // To get the revisions
+            var vm = new AppEditChannelForm
+            {
+                ChannelId = channel.Id,
+                ApplicationId = application.Id,
+                ChannelName = channel.Name,
+                RevisionSelectionStrategies = Converters.EnumValuesAsSelectList<ChannelRevisionSelectionStrategy>(),
+                SelectedRevisionSelectionStrategy = Enum.GetName(channel.RevisionSelectionStrategy),
+                Revisions = application.Revisions.AsSelectList(r => r.RevisionNumber),
+                EnvironmentVariables = string.Join('\n', channel.GetEnvironmentVariables().Select(e => $"{e.Key}={e.Value}")),
+                Domain = channel.Domain?.Name,
+            };
+            if (channel.RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseSpecifiedRevision)
+            {
+                vm.SelectedRevisionNumber = channel.SpecifiedRevision?.RevisionNumber;
+            }
+            else if (channel.RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseRangeRule)
+            {
+                vm.SelectedRevisionRule = channel.RangeRule;
+            }
+            return View(vm);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Release(Guid id, AppReleaseForm form)
+        // NOTE: the arg has to be called id not channelId, and yes it is confusing
+        public async Task<IActionResult> EditChannel(Guid id, AppEditChannelForm form)
         {
-            // TODO: this method is now a bit ill-named.  It is really
-            // about changing the configuration of a channel.
             TraceMethodEntry(WithArgs(id, form));
 
-            if (id != form.Id)
+            if (id != form.ChannelId)
             {
-                LogIdMismatch("application", id, form.Id);
+                LogIdMismatch("channel", id, form.ChannelId);
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                var application = _unitOfWork.Applications.GetApplicationById(id);
-                var channel = _unitOfWork.Channels.GetChannelByName(application, form.SelectedChannelName);
+                var channel = _unitOfWork.Channels.GetChannelById(form.ChannelId);
+                var application = _unitOfWork.Applications.GetApplicationById(form.ApplicationId);
 
                 if (application == null || channel == null)
                 {
-                    LogIfNotFound(application, id);
-                    LogIfNotFound(channel, form.SelectedChannelName);
+                    LogIfNotFound(application, form.ApplicationId);
+                    LogIfNotFound(channel, form.ChannelId);
+                    return NotFound();
+                }
+
+                if (application.Id != channel.Application.Id)
+                {
+                    LogIdMismatch("application", channel.Application.Id, form.ApplicationId);
                     return NotFound();
                 }
 
@@ -338,7 +384,7 @@ namespace Hippo.Controllers
                     var rule = form.SelectedRevisionRule;
                     if (string.IsNullOrWhiteSpace(rule))
                     {
-                        _logger.LogError("Release: empty rule");
+                        _logger.LogError("EditChannel: empty rule");
                         return BadRequest("rule was empty");  // TODO: this is a terrible way of handling it; await Ronan
                     }
                     channel.RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseRangeRule;
@@ -346,16 +392,35 @@ namespace Hippo.Controllers
                 }
                 else
                 {
-                    _logger.LogError("Release: no strategy");
+                    _logger.LogError("EditChannel: no strategy");
                     return BadRequest("no strategy");  // TODO: this is a terrible way of handling it; await Ronan
                 }
 
                 channel.ReevaluateActiveRevision();
+
+                // TODO: SO MUCH DEDUPLICATION
+
+                // TODO: should probably only update the entities if stuff changes, otherwise
+                // we will leak many identical rows into the database
+                var environmentVariables = ParseEnvironmentVariables(form.EnvironmentVariables).ToList();
+
+                channel.Configuration = new Configuration
+                {
+                    EnvironmentVariables = environmentVariables,
+                };
+                channel.Domain = new Domain { Name = form.Domain };
+
+                // TODO: not sure if this is needed
+                foreach (var ev in environmentVariables)
+                {
+                    ev.Configuration = channel.Configuration;
+                }
+
                 await _unitOfWork.SaveChanges();
                 await _channelsToReschedule.Enqueue(new ChannelReference(application.Id, channel.Id), CancellationToken.None);
 
-                _logger.LogInformation($"Release: application {form.Id} channel {channel.Id} now at revision {channel.ActiveRevision.RevisionNumber}");
-                _logger.LogInformation($"Release: serving on port {channel.PortID + Channel.EphemeralPortRange}");
+                _logger.LogInformation($"EditChannel: application {form.ApplicationId} channel {channel.Id} now at revision {channel.ActiveRevision.RevisionNumber}");
+                _logger.LogInformation($"EditChannel: serving on port {channel.PortID + Channel.EphemeralPortRange}");
                 return RedirectToAction(nameof(Index));
             }
 
