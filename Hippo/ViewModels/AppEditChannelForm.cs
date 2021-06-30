@@ -28,6 +28,12 @@ namespace Hippo.ViewModels
         [Display(Name = "Revision rule (if UseRangeRule)")]
         public string SelectedRevisionRule { get; set; }
 
+        [Display(Name = "Environment variables (name=value separated by semicolon or newline")]
+        public string EnvironmentVariables { get; set; }
+
+        [Display(Name = "Domain name")]
+        public string Domain { get; set; }
+
         public string FormatTrace() =>
             $"{GetType().Name}[appid={ApplicationId}, chanid={ChannelId}, rev={SelectedRevisionNumber}]";
     }

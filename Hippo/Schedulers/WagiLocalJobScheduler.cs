@@ -67,8 +67,7 @@ namespace Hippo.Schedulers
                 return;
             }
 
-            var evs = (c.Configuration?.EnvironmentVariables ?? Array.Empty<EnvironmentVariable>());
-            var env = String.Join(' ', evs.Select(ev => $"--env {ev.Key}=\"{ev.Value}\""));
+            var env = String.Join(' ', c.GetEnvironmentVariables().Select(ev => $"--env {ev.Key}=\"{ev.Value}\""));
 
             var psi = new ProcessStartInfo
             {

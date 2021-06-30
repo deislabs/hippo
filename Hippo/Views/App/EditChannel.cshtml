@@ -25,6 +25,17 @@
         <input asp-for="SelectedRevisionRule" asp-items="Model.Revisions" class="form-control" />
         <span asp-validation-for="SelectedRevisionRule" class="text-danger"></span>
     </div>
+    <div class="form-group">
+        <label asp-for="EnvironmentVariables" class="control-label"></label>
+        <textarea asp-for="EnvironmentVariables" asp-items="Model.EnvironmentVariables" class="form-control">
+        </textarea>
+        <span asp-validation-for="EnvironmentVariables" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Domain" class="control-label"></label>
+        <input asp-for="Domain" asp-items="Model.Domain" class="form-control" />
+        <span asp-validation-for="Domain" class="text-danger"></span>
+    </div>
     <div class="form-group btn-group">
         <input type="submit" value="Save" class="btn btn-primary" />
         <a asp-action="Index" class="btn btn-secondary">Cancel</a>

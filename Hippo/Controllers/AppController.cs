@@ -321,8 +321,19 @@ namespace Hippo.Controllers
                 ApplicationId = application.Id,
                 ChannelName = channel.Name,
                 RevisionSelectionStrategies = Converters.EnumValuesAsSelectList<ChannelRevisionSelectionStrategy>(),
+                SelectedRevisionSelectionStrategy = Enum.GetName(channel.RevisionSelectionStrategy),
                 Revisions = application.Revisions.AsSelectList(r => r.RevisionNumber),
+                EnvironmentVariables = string.Join('\n', channel.GetEnvironmentVariables().Select(e => $"{e.Key}={e.Value}")),
+                Domain = channel.Domain?.Name,
             };
+            if (channel.RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseSpecifiedRevision)
+            {
+                vm.SelectedRevisionNumber = channel.SpecifiedRevision?.RevisionNumber;
+            }
+            else if (channel.RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseRangeRule)
+            {
+                vm.SelectedRevisionRule = channel.RangeRule;
+            }
             return View(vm);
         }
 
@@ -386,6 +397,25 @@ namespace Hippo.Controllers
                 }
 
                 channel.ReevaluateActiveRevision();
+
+                // TODO: SO MUCH DEDUPLICATION
+
+                // TODO: should probably only update the entities if stuff changes, otherwise
+                // we will leak many identical rows into the database
+                var environmentVariables = ParseEnvironmentVariables(form.EnvironmentVariables).ToList();
+
+                channel.Configuration = new Configuration
+                {
+                    EnvironmentVariables = environmentVariables,
+                };
+                channel.Domain = new Domain { Name = form.Domain };
+
+                // TODO: not sure if this is needed
+                foreach (var ev in environmentVariables)
+                {
+                    ev.Configuration = channel.Configuration;
+                }
+
                 await _unitOfWork.SaveChanges();
                 await _channelsToReschedule.Enqueue(new ChannelReference(application.Id, channel.Id), CancellationToken.None);
 
