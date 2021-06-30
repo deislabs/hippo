@@ -13,7 +13,7 @@
                 
             <div asp-validation-summary="ModelOnly" class="is-danger"></div>
             <form asp-action="New">
-                <div class="field is-horizontal has-background-light">
+                <div class="field is-horizontal">
                     <div class="field-label is-normal">
                         <label asp-for="Name" class="label">Name</label>
                     </div>
@@ -21,6 +21,17 @@
                         <div class="control">
                             <input asp-for="Name" type="text" class="input" placeholder="e.g. helloworld" />
                             <p asp-validation-for="UserName" class="help is-warning"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label asp-for="StorageId" class="control-label">Storage ID</label>
+                    </div>
+                    <div class="field-body is-normal">
+                        <div class="control">
+                            <input asp-for="StorageId" type="text" class="input" />
+                            <p asp-validation-for="StorageId" class="help is-warning"></p>
                         </div>
                     </div>
                 </div>
