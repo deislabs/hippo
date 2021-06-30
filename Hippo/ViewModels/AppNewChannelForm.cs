@@ -42,7 +42,7 @@ namespace Hippo.ViewModels
         {
             if (string.IsNullOrWhiteSpace(SelectedRevisionSelectionStrategy))
             {
-                yield return new ValidationResult("Must select a revision strategy", new [] { nameof(SelectedRevisionSelectionStrategy) });
+                yield return new ValidationResult("Must select a revision strategy", new[] { nameof(SelectedRevisionSelectionStrategy) });
             }
 
             // TODO: validate that we have a revision or rule according to chosen strategy
@@ -53,7 +53,7 @@ namespace Hippo.ViewModels
                 var invalidEntries = entries.Where(e => !IsValidEnvVar(e));
                 foreach (var invalidEntry in invalidEntries)
                 {
-                    yield return new ValidationResult($"'{invalidEntry} is not in a valid format for an environment variable", new [] { nameof(EnvironmentVariables) });
+                    yield return new ValidationResult($"'{invalidEntry} is not in a valid format for an environment variable", new[] { nameof(EnvironmentVariables) });
                 }
             }
 

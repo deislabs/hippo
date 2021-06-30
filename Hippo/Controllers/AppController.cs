@@ -354,7 +354,7 @@ namespace Hippo.Controllers
             {
                 var channel = _unitOfWork.Channels.GetChannelById(form.ChannelId);
                 var application = _unitOfWork.Applications.GetApplicationById(form.ApplicationId);
-                
+
                 if (application == null || channel == null)
                 {
                     LogIfNotFound(application, form.ApplicationId);
