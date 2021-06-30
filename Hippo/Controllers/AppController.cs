@@ -419,7 +419,7 @@ namespace Hippo.Controllers
                 await _unitOfWork.SaveChanges();
                 await _channelsToReschedule.Enqueue(new ChannelReference(application.Id, channel.Id), CancellationToken.None);
 
-                _logger.LogInformation($"EditChannel: application {form.ApplicationId} channel {channel.Id} now at revision {channel.ActiveRevision.RevisionNumber}");
+                _logger.LogInformation($"EditChannel: application {form.ApplicationId} channel {channel.Id} now at revision {channel.ActiveRevision?.RevisionNumber ?? "[none]"}");
                 _logger.LogInformation($"EditChannel: serving on port {channel.PortID + Channel.EphemeralPortRange}");
                 return RedirectToAction(nameof(Index));
             }

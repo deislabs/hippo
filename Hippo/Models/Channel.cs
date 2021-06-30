@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.Json;
 using Hippo.Rules;
@@ -53,6 +54,15 @@ namespace Hippo.Models
             return ActiveRevision != previous;
         }
 
+        public ChannelStatus Status()
+        {
+            if (ActiveRevision == null)
+            {
+                return ChannelStatus.Unhealthy("No active revision");
+            }
+            return ChannelStatus.Healthy;
+        }
+
         public ICollection<EnvironmentVariable> GetEnvironmentVariables() =>
             Configuration?.EnvironmentVariables ?? Array.Empty<EnvironmentVariable>();
     }
@@ -72,5 +82,31 @@ namespace Hippo.Models
         /// Use a specific revision version for the channel
         /// </summary>
         UseSpecifiedRevision = 1,
+    }
+
+    public enum ChannelHealth
+    {
+        Healthy,
+        Unhealthy,
+    }
+
+    public class ChannelStatus
+    {
+        public ChannelHealth Health { get; }
+        public IReadOnlyCollection<string> Messages { get; }
+
+        public static readonly ChannelStatus Healthy = new ChannelStatus(ChannelHealth.Healthy);
+
+        public static ChannelStatus Unhealthy(string message) =>
+            new ChannelStatus(ChannelHealth.Unhealthy, new[] { message });
+
+        public ChannelStatus(ChannelHealth health)
+            : this(health, Enumerable.Empty<string>()) { }
+
+        public ChannelStatus(ChannelHealth health, IEnumerable<string> messages)
+        {
+            Health = health;
+            Messages = new List<string>(messages).AsReadOnly();
+        }
     }
 }
