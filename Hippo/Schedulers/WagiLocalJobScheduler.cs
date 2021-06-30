@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Hippo.Models;
 using Microsoft.Extensions.Hosting;
@@ -66,10 +67,13 @@ namespace Hippo.Schedulers
                 return;
             }
 
+            var evs = (c.Configuration?.EnvironmentVariables ?? Array.Empty<EnvironmentVariable>());
+            var env = String.Join(' ', evs.Select(ev => $"--env {ev.Key}=\"{ev.Value}\""));
+
             var psi = new ProcessStartInfo
             {
                 FileName = wagiProgram,
-                Arguments = $"-b {c.Application.StorageId}/{c.ActiveRevision.RevisionNumber} --bindle-server {bindleUrl} -l 127.0.0.1:{port}",
+                Arguments = $"-b {c.Application.StorageId}/{c.ActiveRevision.RevisionNumber} --bindle-server {bindleUrl} -l 127.0.0.1:{port} {env}",
             };
             psi.Environment["BINDLE_SERVER_URL"] = bindleUrl;
             // TODO: drive this from outside

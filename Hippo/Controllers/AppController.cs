@@ -268,6 +268,20 @@ namespace Hippo.Controllers
                 }
                 channel.ReevaluateActiveRevision();
 
+                var environmentVariables = ParseEnvironmentVariables(form.EnvironmentVariables).ToList();
+
+                channel.Configuration = new Configuration
+                {
+                    EnvironmentVariables = environmentVariables,
+                };
+                channel.Domain = new Domain { Name = form.Domain };
+
+                // TODO: not sure if this is needed
+                foreach (var ev in environmentVariables)
+                {
+                    ev.Configuration = channel.Configuration;
+                }
+
                 await _unitOfWork.Channels.AddNew(channel);
                 await _unitOfWork.SaveChanges();
 
@@ -279,6 +293,20 @@ namespace Hippo.Controllers
             }
 
             return View(form);
+        }
+
+        private static IEnumerable<EnvironmentVariable> ParseEnvironmentVariables(string text)
+        {
+            // TODO: assumes validation in web form - should not assume this
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                return Enumerable.Empty<EnvironmentVariable>();
+            }
+
+            return text.Split('\n', ';')
+                       .Select(e => e.Trim())
+                       .Select(e => e.Split('='))
+                       .Select(bits => new EnvironmentVariable { Key = bits[0], Value = bits[1] });
         }
 
         public IActionResult Release(Guid id)
