@@ -1,17 +1,11 @@
-@model Hippo.ViewModels.AppReleaseForm
+@model Hippo.ViewModels.AppEditChannelForm
 
-<h2>Reconfigure a channel</h2>
+<h2>Edit channel @Model.ChannelName</h2>
 
-<form asp-action="Release">
+<form asp-action="EditChannel">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <input type="hidden" asp-for="Id" />
-    <div class="form-group">
-        <label asp-for="SelectedChannelName" class="control-label"></label>
-        <select asp-for="SelectedChannelName" asp-items="Model.Channels" class="form-control">
-            <option value="">Select channel to update</option>
-        </select>
-        <span asp-validation-for="SelectedChannelName" class="text-danger"></span>
-    </div>
+    <input type="hidden" asp-for="ChannelId" />
+    <input type="hidden" asp-for="ApplicationId" />
     <div class="form-group">
         <label asp-for="SelectedRevisionSelectionStrategy" class="control-label"></label>
         <select asp-for="SelectedRevisionSelectionStrategy" asp-items="Model.RevisionSelectionStrategies" class="form-control">

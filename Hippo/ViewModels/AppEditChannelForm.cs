@@ -8,14 +8,13 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Hippo.ViewModels
 {
-    public class AppReleaseForm : ITraceable
+    public class AppEditChannelForm : ITraceable
     {
         [Required]
-        public Guid Id { get; set; }
-
-        [Display(Name = "Channel to update")]
-        public string SelectedChannelName { get; set; }
-        public IEnumerable<SelectListItem> Channels { get; set; }
+        public Guid ApplicationId { get; set; }
+        [Required]
+        public Guid ChannelId { get; set; }
+        public string ChannelName { get; set; }
 
 
         [Display(Name = "Desired revision selection strategy")]
@@ -30,6 +29,6 @@ namespace Hippo.ViewModels
         public string SelectedRevisionRule { get; set; }
 
         public string FormatTrace() =>
-            $"{nameof(AppReleaseForm)}[id={Id}, rev={SelectedRevisionNumber}, chan={SelectedChannelName}]";
+            $"{GetType().Name}[appid={ApplicationId}, chanid={ChannelId}, rev={SelectedRevisionNumber}]";
     }
 }

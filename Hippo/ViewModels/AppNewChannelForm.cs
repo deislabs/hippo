@@ -36,7 +36,7 @@ namespace Hippo.ViewModels
         public string Domain { get; set; }
 
         public string FormatTrace() =>
-            $"{nameof(AppReleaseForm)}[id={Id}, rev={SelectedRevisionNumber}, chan={ChannelName}]";
+            $"{GetType().Name}[id={Id}, rev={SelectedRevisionNumber}, chan={ChannelName}]";
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
