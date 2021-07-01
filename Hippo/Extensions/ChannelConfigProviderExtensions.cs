@@ -11,7 +11,6 @@ namespace Hippo.Extensions
     {
         public static IReverseProxyBuilder LoadFromHippoChannels(this IReverseProxyBuilder builder)
         {
-
             builder.Services.AddSingleton<ChannelConfigProvider>();
             builder.Services.AddSingleton<IProxyConfigProvider>(f => f.GetRequiredService<ChannelConfigProvider>());
             builder.Services.AddSingleton<IReverseProxy>(f => f.GetRequiredService<ChannelConfigProvider>());

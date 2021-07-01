@@ -164,20 +164,17 @@ namespace Hippo
 
             CreateRoles(serviceProvider);
 
+            using var scope = app.ApplicationServices.CreateScope();
             if (HostingEnvironment.IsDevelopment())
             {
-                using var scope = app.ApplicationServices.CreateScope();
                 var seeder = scope.ServiceProvider.GetService<DataSeeder>();
                 seeder.Seed().Wait();
             }
 
-            {
-                using var scope = app.ApplicationServices.CreateScope();
-                var scheduler = scope.ServiceProvider.GetService<IJobScheduler>();
-                var unitOfWork = scope.ServiceProvider.GetService<IUnitOfWork>();
-                var allApplications = unitOfWork.Applications.ListApplicationsForAllUsers();
-                scheduler.OnSchedulerStart(allApplications);
-            }
+            var scheduler = scope.ServiceProvider.GetService<IJobScheduler>();
+            var unitOfWork = scope.ServiceProvider.GetService<IUnitOfWork>();
+            var allApplications = unitOfWork.Applications.ListApplicationsForAllUsers();
+            scheduler.OnSchedulerStart(allApplications);
         }
 
         private static void CreateRoles(IServiceProvider serviceProvider)
