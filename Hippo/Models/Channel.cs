@@ -1,12 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Diagnostics;
-using System.IO;
-using System.Text;
-using System.Text.Json;
 using Hippo.Rules;
-using Nett;
 
 namespace Hippo.Models
 {
@@ -51,6 +46,15 @@ namespace Hippo.Models
             // some kind of unhappy status
 
             return ActiveRevision != previous;
+        }
+
+        public HealthStatus Status()
+        {
+            if (ActiveRevision == null)
+            {
+                return HealthStatus.Unhealthy("No active revision");
+            }
+            return HealthStatus.Healthy;
         }
 
         public ICollection<EnvironmentVariable> GetEnvironmentVariables() =>

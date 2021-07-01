@@ -59,5 +59,22 @@ namespace Hippo.Models
             }
             // TODO: should this trigger a redeploy?
         }
+
+        public HealthStatus Status()
+        {
+            if (Channels != null)
+            {
+                var unhealthyChannels = Channels.Select(c => new { Name = c.Name, Status = c.Status() })
+                                                .Where(c => c.Status.Health == HealthLevel.Unhealthy)
+                                                .ToList();
+                if (unhealthyChannels.Any())
+                {
+                    var message = $"{unhealthyChannels.Count} channel(s) unhealthy: {string.Join(", ", unhealthyChannels.Select(c => c.Name))}";
+                    return HealthStatus.Unhealthy(message);
+                }
+            }
+            return HealthStatus.Healthy;
+        }
+
     }
 }
