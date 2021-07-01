@@ -7,7 +7,14 @@
   <div class="row">
     @foreach (var item in Model) {
       <div class="card">
+        @if (item.Status().Health == Hippo.Models.HealthLevel.Healthy)
+        {
         <span class="card-header badge bg-success">Healthy</span>
+        }
+        else
+        {
+        <span class="card-header badge bg-success">Unhealthy (@string.Join("; ", item.Status().Messages))</span>
+        }
         <div class="card-body">
           <h5 class="card-title">@Html.DisplayFor(modelItem => item.Name)</h5>
         </div>

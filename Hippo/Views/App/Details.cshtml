@@ -33,7 +33,7 @@
     <div class="row">
         @foreach (var item in Model.Channels) {
         <div class="card">
-            @if (item.Status().Health == Hippo.Models.ChannelHealth.Healthy)
+            @if (item.Status().Health == Hippo.Models.HealthLevel.Healthy)
             {
             <span class="card-header badge bg-success">Healthy (on @item.ActiveRevision.RevisionNumber)</span>
             }
