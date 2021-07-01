@@ -17,7 +17,7 @@ namespace Hippo.Schedulers
         private readonly Dictionary<Guid, int> _wagiProcessIds = new();
         private readonly ILogger _logger;
 
-        private const string ENV_BINDLE = "BINDLE_SERVER_URL";
+        private const string ENV_BINDLE = "BINDLE_URL";
 
         private const string ENV_WAGI = "HIPPO_WAGI_PATH";
 
@@ -74,7 +74,7 @@ namespace Hippo.Schedulers
                 FileName = wagiProgram,
                 Arguments = $"-b {c.Application.StorageId}/{c.ActiveRevision.RevisionNumber} --bindle-server {bindleUrl} -l 127.0.0.1:{port} {env}",
             };
-            psi.Environment["BINDLE_SERVER_URL"] = bindleUrl;
+            psi.Environment["BINDLE_URL"] = bindleUrl;
             // TODO: drive this from outside
             psi.Environment["RUST_LOG"] = "warn,wagi=trace";
 

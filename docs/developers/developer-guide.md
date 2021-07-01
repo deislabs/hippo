@@ -42,7 +42,7 @@ $ update-ca-certificates
 ```
 
 ```console
-$ export BINDLE_SERVER_URL=https://bindle.deislabs.io/v1
+$ export BINDLE_URL=https://bindle.deislabs.io/v1
 $ dotnet run
 ```
 
