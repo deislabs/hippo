@@ -60,14 +60,14 @@
         <thead>
             <tr>
                 <th class=""><abbr title="Revision">Revision</abbr></th>
-                <th class=""><abbr title="Usage">Usage</abbr></th>
+                <th class=""><abbr title="Active">Active On</abbr></th>
             </tr>
         </thead>
         <tbody>
         @foreach (var item in Model.Revisions) {
             <tr>
                 <td>@Html.DisplayFor(modelItem => item.RevisionNumber)</td>
-                <td>TBA</td>
+                <td>@string.Join(", ", item.ActiveOn().Select(c => c.Name))</td>
             </tr>
         }
         </tbody>
