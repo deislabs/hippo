@@ -64,7 +64,7 @@
             </tr>
         </thead>
         <tbody>
-        @foreach (var item in Model.Revisions) {
+        @foreach (var item in Model.Revisions.OrderByDescending(r => r.OrderKey())) {
             <tr>
                 <td>@Html.DisplayFor(modelItem => item.RevisionNumber)</td>
                 <td>@string.Join(", ", item.ActiveOn().Select(c => c.Name))</td>

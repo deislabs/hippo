@@ -16,5 +16,14 @@ namespace Hippo.Models
 
         public IEnumerable<Channel> ActiveOn() =>
             Application.Channels.Where(c => c.ActiveRevision?.RevisionNumber == RevisionNumber);
+
+        public string OrderKey()
+        {
+            if (SemVer.Version.TryParse(RevisionNumber, out var version))
+            {
+                return $"{version.Major:D9}{version.Minor:D9}{version.Patch:D9}{RevisionNumber}";
+            }
+            return RevisionNumber;
+        }
     }
 }
