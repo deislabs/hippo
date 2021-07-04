@@ -237,7 +237,11 @@ namespace Hippo.Controllers
                 var channel = new Channel
                 {
                     Application = application,
+                    Name = form.ChannelName,
                 };
+                
+                // TODO: in memory seems not to wire up FKs
+                application.Channels.Add(channel);
 
                 if (form.SelectedRevisionSelectionStrategy == Enum.GetName(ChannelRevisionSelectionStrategy.UseSpecifiedRevision))
                 {
