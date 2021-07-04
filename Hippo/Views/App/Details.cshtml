@@ -35,7 +35,7 @@
         <div class="card">
             @if (item.Status().Health == Hippo.Models.HealthLevel.Healthy)
             {
-            <span class="card-header badge bg-success">Healthy (on @item.ActiveRevision.RevisionNumber)</span>
+            <span class="card-header badge bg-success">Healthy (on @item.ActiveRevision.RevisionNumber) - served on @item.ServedOn()</span>
             }
             else
             {

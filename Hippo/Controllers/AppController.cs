@@ -239,7 +239,7 @@ namespace Hippo.Controllers
                     Application = application,
                     Name = form.ChannelName,
                 };
-                
+
                 // TODO: in memory seems not to wire up FKs
                 application.Channels.Add(channel);
 

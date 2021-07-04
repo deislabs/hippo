@@ -23,23 +23,27 @@ namespace Hippo.Repositories
             _context.Applications
                     .Where(application => application.Owner.UserName == _owner.Name())
                     .Include(a => a.Channels)
+                        .ThenInclude(c => c.Domain)
                     .Include(a => a.Revisions);
 
         public IEnumerable<Application> ListApplicationsForAllUsers() =>
             _context.Applications
                     .Include(a => a.Channels)
+                        .ThenInclude(c => c.Domain)
                     .Include(a => a.Revisions);
 
         public IEnumerable<Application> ListApplicationsByStorageId(string storageId) =>
             _context.Applications
                     .Where(application => application.StorageId == storageId && application.Owner.UserName == _owner.Name())
                     .Include(a => a.Channels)
+                        .ThenInclude(c => c.Domain)
                     .Include(a => a.Revisions);
 
         public Application GetApplicationById(Guid id) =>
             _context.Applications
                     .Where(application => application.Id == id && application.Owner.UserName == _owner.Name())
                     .Include(a => a.Channels)
+                        .ThenInclude(c => c.Domain)
                     .Include(a => a.Revisions)
                     .SingleOrDefault();
 
