@@ -65,7 +65,7 @@ namespace Hippo
             {
                 services.AddDbContext<DataContext>(
                     options =>
-                    options.UseInMemoryDatabase("Hippo")
+                    options.UseSqlite(Configuration.GetConnectionString("Hippo"))
                 );
             }
             else
@@ -148,6 +148,13 @@ namespace Hippo
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            if (HostingEnvironment.IsDevelopment())
+            {
+                using var scope = app.ApplicationServices.CreateScope();
+                var dataContext = scope.ServiceProvider.GetService<DataContext>();
+                dataContext.Database.Migrate();
+            }
 
             CreateRoles(serviceProvider);
 
