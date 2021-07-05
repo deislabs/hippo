@@ -56,7 +56,7 @@ namespace Hippo.ApiControllers
         /// <response code="400">The request is invalid</response> 
         /// <response code="500">An error occured in the server when processing the request</response> 
         [HttpPost(Name = "CreateHippoApplication")]
-        [ProducesResponseType(typeof(Messages.CreateApplicationResponse), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(CreateApplicationResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [Consumes("application/json")]

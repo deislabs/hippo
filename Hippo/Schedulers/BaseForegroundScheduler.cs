@@ -1,21 +1,21 @@
 using System.Collections.Generic;
 using Hippo.Messages;
 using Hippo.Models;
-using Hippo.Providers;
+using Hippo.Proxies;
 using Microsoft.Extensions.Logging;
 
 namespace Hippo.Schedulers
 {
-    public abstract class BaseScheduler : IJobScheduler
+    public abstract class BaseForegroundScheduler : IForegroundJobScheduler
     {
         private protected readonly ILogger _logger;
-        private protected readonly IProxyConfigUpdater _proxyConfigUpdater;
+        private protected readonly IReverseProxy _reverseProxy;
 
-        private protected BaseScheduler(ILogger<WagiLocalJobScheduler> logger, IProxyConfigUpdater proxyConfigUpdater)
+        private protected BaseForegroundScheduler(ILogger logger, IReverseProxy reverseProxy)
 
         {
             _logger = logger;
-            _proxyConfigUpdater = proxyConfigUpdater;
+            _reverseProxy = reverseProxy;
         }
 
         public virtual void OnSchedulerStart(IEnumerable<Application> applications)
@@ -35,9 +35,14 @@ namespace Hippo.Schedulers
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Don't care about VB")]
         public abstract void Stop(Channel c);
 
-        public virtual void UpdateYarp(YarpConfigurationRequest request)
+        public virtual void StartProxy(Channel channel, string address)
         {
-            _proxyConfigUpdater.UpdateConfig(request);
+            _reverseProxy.StartProxy(channel, address);
+        }
+
+        public virtual void StopProxy(Channel channel)
+        {
+            _reverseProxy.StopProxy(channel);
         }
 
     }

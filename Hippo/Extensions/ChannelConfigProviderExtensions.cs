@@ -1,4 +1,4 @@
-using Hippo.Providers;
+using Hippo.Proxies;
 using Microsoft.Extensions.DependencyInjection;
 using Yarp.ReverseProxy.Configuration;
 
@@ -14,7 +14,7 @@ namespace Hippo.Extensions
 
             builder.Services.AddSingleton<ChannelConfigProvider>();
             builder.Services.AddSingleton<IProxyConfigProvider>(f => f.GetRequiredService<ChannelConfigProvider>());
-            builder.Services.AddSingleton<IProxyConfigUpdater>(f => f.GetRequiredService<ChannelConfigProvider>());
+            builder.Services.AddSingleton<IReverseProxy>(f => f.GetRequiredService<ChannelConfigProvider>());
             return builder;
         }
     }

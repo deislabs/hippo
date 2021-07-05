@@ -85,8 +85,13 @@ namespace Hippo
             var schedulerVar = Environment.GetEnvironmentVariable("HIPPO_JOB_SCHEDULER");
             switch (schedulerVar)
             {
-                case "systemd": services.AddSingleton<IJobScheduler, SystemdJobScheduler>(); break;
-                default: services.AddSingleton<IJobScheduler, WagiLocalJobScheduler>(); break;
+                case "systemd":
+                    services.AddSingleton<IJobScheduler, SystemdJobScheduler>();
+                    break;
+                default:
+                    services.AddSingleton<IForegroundJobScheduler, WagiLocalJobScheduler>();
+                    services.AddSingleton<IJobScheduler>(f => f.GetRequiredService<IForegroundJobScheduler>());
+                    break;
             }
 
             services.AddSingleton<ITaskQueue<ChannelReference>, TaskQueue<ChannelReference>>();
@@ -163,10 +168,13 @@ namespace Hippo
                 seeder.Seed().Wait();
             }
 
-            var scheduler = scope.ServiceProvider.GetService<IJobScheduler>();
             var unitOfWork = scope.ServiceProvider.GetService<IUnitOfWork>();
             var allApplications = unitOfWork.Applications.ListApplicationsForAllUsers();
-            scheduler.OnSchedulerStart(allApplications);
+            var scheduler = scope.ServiceProvider.GetService<IForegroundJobScheduler>();
+            if (scheduler is not null)
+            {
+                scheduler.OnSchedulerStart(allApplications);
+            }
         }
 
         private static void CreateRoles(IServiceProvider serviceProvider)

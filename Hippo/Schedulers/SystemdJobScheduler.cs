@@ -4,28 +4,15 @@ using System.Globalization;
 using System.IO;
 using System.Text;
 using Hippo.Models;
-using Hippo.Providers;
+using Hippo.Proxies;
 using Nett;
 using Microsoft.Extensions.Logging;
 
 namespace Hippo.Schedulers
 {
-    public class SystemdJobScheduler : BaseScheduler
+    public class SystemdJobScheduler : IJobScheduler
     {
-        public SystemdJobScheduler(ILogger<WagiLocalJobScheduler> logger, IProxyConfigUpdater proxyConfigUpdater)
-            : base(logger, proxyConfigUpdater)
-        {
-
-        }
-
-        public override void OnSchedulerStart(IEnumerable<Application> applications)
-        {
-            // Nothing to do - apps run independently of scheduler object lifecycle
-        }
-
-        // TODO add logging 
-
-        public override void Start(Channel c)
+        public void Start(Channel c)
         {
             FileInfo wagiConfigFile = new(WagiConfigPath(c));
             wagiConfigFile.Directory.Create();
@@ -48,7 +35,7 @@ namespace Hippo.Schedulers
             File.WriteAllText(traefikConfigFile.FullName, TraefikConfig(c));
         }
 
-        public override void Stop(Channel c)
+        public void Stop(Channel c)
         {
             using var process = new Process
             {
