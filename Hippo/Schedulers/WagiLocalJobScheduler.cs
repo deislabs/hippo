@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
+using System.Threading.Tasks;
 using Hippo.Models;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -14,7 +14,7 @@ namespace Hippo.Schedulers
     public class WagiLocalJobScheduler : IJobScheduler
     {
         // This assumes a singleton scheduler instance!
-        private readonly Dictionary<Guid, int> _wagiProcessIds = new();
+        private readonly Dictionary<Guid, (int, Task)> _wagiProcessIds = new();
         private readonly ILogger _logger;
 
         private const string ENV_BINDLE = "BINDLE_URL";
@@ -38,7 +38,9 @@ namespace Hippo.Schedulers
             {
                 foreach (var processId in _wagiProcessIds)
                 {
-                    KillProcessById(processId.Value);
+                    var (id, log) = processId.Value;
+                    KillProcessById(id);
+                    log.GetAwaiter().GetResult();
                 }
             });
         }
@@ -73,6 +75,9 @@ namespace Hippo.Schedulers
             {
                 FileName = wagiProgram,
                 Arguments = $"-b {c.Application.StorageId}/{c.ActiveRevision.RevisionNumber} --bindle-server {bindleUrl} -l 127.0.0.1:{port} {env}",
+                RedirectStandardError = true,
+                RedirectStandardOutput = true,
+                UseShellExecute = false,
             };
             psi.Environment["BINDLE_URL"] = bindleUrl;
             // TODO: drive this from outside
@@ -82,8 +87,13 @@ namespace Hippo.Schedulers
             {
                 using (var process = Process.Start(psi))
                 {
+                    process.EnableRaisingEvents = true;
                     process.Exited += (s, e) => _wagiProcessIds.Remove(c.Id);
-                    _wagiProcessIds[c.Id] = process.Id;
+                    var log = Task.WhenAll(
+                        ForwardLogs(process.StandardOutput, $"{c.Application.Name}:{c.Name}:wagi:stdout", LogLevel.Trace),
+                        ForwardLogs(process.StandardError, $"{c.Application.Name}:{c.Name}:wagi:stderr")
+                    );
+                    _wagiProcessIds[c.Id] = (process.Id, log);
                 }
             }
             catch (Win32Exception e)  // yes, even on Linux
@@ -99,12 +109,59 @@ namespace Hippo.Schedulers
 
         public void Stop(Channel c)
         {
-            if (_wagiProcessIds.TryGetValue(c.Id, out var wagiProcessId))
+            if (_wagiProcessIds.TryGetValue(c.Id, out var wagiProcess))
             {
                 _wagiProcessIds.Remove(c.Id);
+
+                var (wagiProcessId, log) = wagiProcess;
                 KillProcessById(wagiProcessId);
+                log.GetAwaiter().GetResult();
             }
         }
+
+        // TODO: deduplicate without incurring a check on every line
+
+        private async Task ForwardLogs(StreamReader source, string streamId)
+        {
+            string line;
+            while ((line = await source.ReadLineAsync()) != null)
+            {
+                _logger.Log(ConvertLogLevel(line), $"{streamId}: {line}");
+            }
+        }
+
+        private async Task ForwardLogs(StreamReader source, string streamId, LogLevel logLevel)
+        {
+            string line;
+            while ((line = await source.ReadLineAsync()) != null)
+            {
+                _logger.Log(logLevel, $"{streamId}: {line}");
+            }
+        }
+
+        private static readonly IReadOnlyList<string> RUST_TRACE_LEVELS = new List<string> {
+            "TRACE", "DEBUG", "INFO", "WARN", "ERROR" // TODO: check
+        }.AsReadOnly();
+
+        private static LogLevel ConvertLogLevel(string rustTraceLine)
+        {
+            var rustLevel = ExtractRustTraceLevel(rustTraceLine);
+            return rustLevel switch
+            {
+                "TRACE" => LogLevel.Trace,
+                "DEBUG" => LogLevel.Debug,
+                "INFO" => LogLevel.Information,
+                "WARN" => LogLevel.Warning,
+                "ERROR" => LogLevel.Error,
+                _ => LogLevel.Warning,
+            };
+        }
+
+        private static string ExtractRustTraceLevel(string rustTraceLine) =>
+            rustTraceLine.Split(' ').Select(AsRustTraceLevel).FirstOrDefault(s => s != null);
+
+        private static string AsRustTraceLevel(string fragment) =>
+            RUST_TRACE_LEVELS.Where(level => fragment.Contains(level, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
 
         private static string WagiBinaryPath()
         {
