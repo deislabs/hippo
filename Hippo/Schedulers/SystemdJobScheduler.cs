@@ -35,7 +35,7 @@ namespace Hippo.Schedulers
             File.WriteAllText(traefikConfigFile.FullName, TraefikConfig(c));
         }
 
-        public override void Stop(Channel c)
+        public void Stop(Channel c)
         {
             using var process = new Process
             {

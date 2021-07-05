@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Hippo.Models;
@@ -69,26 +70,8 @@ namespace Hippo.Schedulers
 
             try
             {
-                // TODO: There is a problem here in that the process object goes out of scope at the end of the function:
-                // There are at least 2 problems with this:
-                // 
-                // There is a race condition, sometimes the Exited event does not fire, this means that Yarpconfigs can stay around if the process immediately exits.
-                // I think that the output from the process gets lost once the process goes out of scope.
-                // We cannot detect reliably if the process immediately exits (which could be an indicator of a bad command line where there is a new version of wagi that has changed 
-                // arguments and/or environment variables. 
-                // 
-                // It also makes it hard/error prone to redirect the stdout and stderr to ILogger.
-                // May be better to use a Task for each process and have the task live for as long as the process is running by using process.WaitForExit()
-                // Can then kill the task/process with a cancellation token.
-
                 using var process = new Process();
-                process.EnableRaisingEvents = true;
                 process.StartInfo = psi;
-                process.Exited += (s, e) =>
-                {
-                    _wagiProcessIds.Remove(c.Id);
-                    RemoveChannelFromWarpConfig(c);
-                };
                 process.Start();
 
                 if (!process.HasExited)
