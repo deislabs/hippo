@@ -53,4 +53,24 @@
         }
     </div>
 
+    <div class="row" style="padding-bottom: 20px; padding-top: 20px;">
+        <h3>Revisions</h3>
+    </div>
+    <table class="table is-bordered is-striped is-narrow is-fullwidth mt-4">
+        <thead>
+            <tr>
+                <th class=""><abbr title="Revision">Revision</abbr></th>
+                <th class=""><abbr title="Active">Active On</abbr></th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.Revisions.OrderByDescending(r => r.OrderKey())) {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.RevisionNumber)</td>
+                <td>@string.Join(", ", item.ActiveOn().Select(c => c.Name))</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
 </div>
