@@ -4,29 +4,55 @@
     ViewData["Title"] = "Log In";
 }
 
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Login">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="UserName" class="control-label"></label>
-                <input asp-for="UserName" class="form-control" />
-                <span asp-validation-for="UserName" class="text-warning"></span>
+<div class="columns is-centered">
+    <div class="column is-two-thirds-tablet is-one-third-widescreen">
+        <h2 class="has-text-centered">Log in to <span class="has-text-primary">Hippo</span></h2>
+        
+        <div class="box box-login">
+            <div class="card-content">
+                <form asp-action="Login">
+                    <div class="field">
+                        <label asp-for="UserName" class="label">Username</label>
+                        <div class="control has-icons-left">
+                            <input asp-for="UserName" type="text" class="input is-rounded is-medium is-primary" placeholder="e.g. rhymenoceros" />
+                            <span class="icon is-left">
+                                <i class="fa fa-user"></i>
+                            </span>
+                            <p asp-validation-for="UserName" class="help is-warning"></p>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label asp-for="Password" class="label">Password</label>
+                        <div class="control has-icons-left">
+                            <input asp-for="Password" type="password" class="input is-rounded is-medium is-primary" placeholder="make it strong!" />
+                            <span class="icon is-left">
+                                <i class="fa fa-lock"></i>
+                            </span>
+                            <p asp-validation-for="Password" class="help is-warning"></p>
+                        </div>
+                    </div>
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <button type="submit" value="Login" class="button is-rounded is-primary is-large">Login</button>
+                            <label asp-for="RememberMe" class="checkbox">
+                                <input asp-for="RememberMe" type="checkbox" class="checkbox is-medium" placeholder="topsecret" />
+                                Remember me?
+                            </label>
+                            <span asp-validation-for="RememberMe" class="help is-warning"></span>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <div asp-validation-summary="ModelOnly" class="help is-alert"></div>
+                        </div>
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" type="password" class="form-control" />
-                <span asp-validation-for="Password" class="text-warning"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="RememberMe" class="control-label">Remember me?</label>
-                <input asp-for="RememberMe" type="checkbox" class="checkbox-inline" />
-                <span asp-validation-for="RememberMe" class="text-warning"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Login" class="btn btn-primary" />
-            </div>
-        </form>
+        </div>
+
+        <div class="has-text-centered">
+            <p class="has-text-centered">Don't have an account yet? <a href="./register">Register</a> here.</p>
+        </div>
     </div>
 </div>
 

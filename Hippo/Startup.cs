@@ -152,7 +152,7 @@ namespace Hippo
                 endpoints.MapReverseProxy();
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=App}/{action=Index}/{id?}");
             });
 
             if (HostingEnvironment.IsDevelopment() && Configuration["InMemoryDB"] != "true")

@@ -1,29 +1,61 @@
 ﻿@model IEnumerable<Hippo.Models.Application>
 
-<div class="container">
-  <div class="row" style="padding-bottom: 20px;">
-    <a asp-action="New" class="btn btn-primary btn-sm">Create a new Application</a>
-  </div>
-  <div class="row">
-    @foreach (var item in Model) {
-      <div class="card">
-        @if (item.Status().Health == Hippo.Models.HealthLevel.Healthy)
-        {
-        <span class="card-header badge bg-success">Healthy</span>
-        }
-        else
-        {
-        <span class="card-header badge bg-success">Unhealthy (@string.Join("; ", item.Status().Messages))</span>
-        }
-        <div class="card-body">
-          <h5 class="card-title">@Html.DisplayFor(modelItem => item.Name)</h5>
-        </div>
-        <div class="card-body btn-group" role="group" aria-label="actions">
-          <a asp-action="Edit" asp-route-id="@item.Id" class="card-link btn btn-sml btn-secondary">Edit</a>
-          <a asp-action="Details" asp-route-id="@item.Id" class="card-link btn btn-sml btn-secondary">Details</a>
-          <a asp-action="Delete" asp-route-id="@item.Id" class="card-link btn btn-sml btn-danger">Delete</a>
+@{
+  ViewData["Title"] = "Your Apps";
+  Layout = "_Layout";
+}
+
+<div class="columns is-multiline is-mobile app-listing">
+  @foreach (var item in Model) {
+    <div class="column is-half-desktop is-third-widescnreen">
+      <div class="box app-box">
+        <a asp-action="Details" asp-route-id="@item.Id" class="app-link">
+          <h3>@Html.DisplayFor(modelItem => item.Name) <span class="fa fa-chevron-right"></span></h3>
+          <h4>WASM Application</h4>
+
+          <section class="app-state is-success has-background-success">
+            <span class="icon-text has-text-white">
+              <span class="icon">
+                <i class="fa fa-check"></i>
+              </span>
+              <span>Healthy</span>
+            </span>
+          </section>
+        </a>
+
+        <div class="dropdown is-hoverable">
+          <div class="dropdown-trigger">
+            <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+              <span>Options</span>
+              <span class="icon is-small">
+                <i class="fa fa-angle-down" aria-hidden="true"></i>
+              </span>
+            </button>
+          </div>
+          <div class="dropdown-menu" id="dropdown-menu" role="menu">
+            <div class="dropdown-content">
+              <a asp-action="Details" asp-route-id="@item.Id" class="dropdown-item">
+                View
+              </a>
+              <a asp-action="Edit" asp-route-id="@item.Id" class="dropdown-item">
+                Edit
+              </a>
+              <hr class="dropdown-divider">
+              <a asp-action="Delete" asp-route-id="@item.Id" class="dropdown-item has-text-danger">
+                Delete
+              </a>
+            </div>
+          </div>
         </div>
       </div>
-    }
+    </div>
+  }
+  
+  <div class="column is-half-desktop is-third-widescnreen">
+    <div class="box has-text-centered">
+      <section class="app-add">
+        <a asp-action="New" class="button is-rounded is-outlined is-link">Create a new Application</a>
+      </section>
+    </div>
   </div>
 </div>

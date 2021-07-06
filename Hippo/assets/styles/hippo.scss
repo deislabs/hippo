@@ -105,6 +105,15 @@ body {
   &.sidebar--closed {
     padding: 70px 1em 2em 70px;
   }
+
+  &.logged-out,
+  &.no-app {
+    padding: calc(#{$navHeight} * 1.25) 10vw 7em;
+
+    & + .copyright {
+      margin-left: 0;
+    }
+  }
 }
 
 footer {
@@ -334,12 +343,12 @@ footer {
 }
 
 /* collapse sidebar */
-input[type=checkbox],
-input[type=checkbox]:checked ~ .remove-check {
+input#sidebar-trigger[type=checkbox],
+input#sidebar-trigger[type=checkbox]:checked ~ .remove-check {
   display: none;
 }
 
-input[type=checkbox]:checked ~ #sidebar-toggler {
+input#sidebar-trigger[type=checkbox]:checked ~ #sidebar-toggler {
   justify-content: center;
   left: 5rem !important;
 
@@ -348,24 +357,28 @@ input[type=checkbox]:checked ~ #sidebar-toggler {
   }
 }
 
-input[type=checkbox]:checked ~ .aside {
-  width: 5rem !important;
+input#sidebar-trigger[type=checkbox]:checked {
+  & ~ .aside {
+    width: 5rem !important;
 
-  .menu-label,
-  a.button-back {
-    display: none;
-  }
+    .menu-label,
+    a.button-back {
+      display: none;
+    }
 
-  ul.menu-list {
-    span.menu-text {
-      opacity: 0;
+    ul.menu-list {
+      span.menu-text {
+        opacity: 0;
+      }
+    }
+
+    .menu .icon {
+      margin-left: 1px;
     }
   }
 
-  
-
-  .menu .icon {
-    margin-left: 1px;
+  & ~ .copyright {
+    margin-left: 5rem;
   }
 }
 
@@ -424,12 +437,108 @@ input[type=checkbox]:checked ~ .aside {
     margin: 1.25rem 0;
   }
 
-
-
   p {
     margin: 1rem 0;
   }
+}
 
+.box {
+  padding: 1.75rem 2rem;
+
+  h2 {
+    margin: 0.25rem 0 2rem 0;
+  }
+
+  .is-grouped {
+    padding-top: 2rem;
+  }
+}
+
+.box-login,
+.box-register {
+  margin-top: 5vw;
+
+  .field.is-grouped {
+    padding: 1rem 0 0 0;
+  }
+
+  label.checkbox {
+    margin: 1rem 0 0 2vw;
+  }
+  
+  .validation-summary-errors {
+    li {
+      color: $red;
+    }
+  }
+}
+
+.box-register {
+  margin-top: 3.5vw;
+}
+
+.app-listing {
+  .box {
+    position: relative;
+    min-height: 10rem;
+
+    a.app-link {
+      color: $dark2;
+      width: 100%;
+      display: inline-block;
+      min-height: 8rem;
+
+      h3 {
+        font-size: 2rem;
+        color: $dark2;
+        padding-bottom: 0.67rem;
+        margin-bottom: 1.25rem;
+        border-bottom: 2px solid $light2;
+
+        .fa {
+          color: $blue;
+          font-size: 1.125rem;
+          opacity: 0;
+          padding-left: 0.25rem;
+          @include transition;
+        }
+      }
+
+      h4 {
+        color: $dark4;
+        margin-top: 0;
+        position: absolute;
+        top: 7.35rem;
+        left: 10.25rem;
+      }
+
+      &:hover {
+        h3 .fa {
+          opacity: 1;
+          padding-left: 1rem
+        }
+      }
+    }
+
+    .dropdown {
+      position: absolute;
+      right: 1.25rem;
+      top: 1.5rem;
+    }
+  }
+
+  .app-state {
+    padding: 0.5rem 1.125rem 0.5rem 0.7rem;
+    border-radius: 3rem;
+    display: inline-block;
+  }
+
+  .app-add {
+    border: 3px dashed $light2;
+    background: $light4;
+    padding: 2.5rem 0;
+    border-radius: 0.2rem;
+  }
 }
 
 

@@ -1,5 +1,10 @@
 ﻿@model Hippo.ViewModels.AppDetails
 
+@{
+    ViewData["Title"] = @Html.DisplayFor(model => model.Name);
+    Layout = "_AppLayout";
+}
+
 <div class="container">
     <div class="row">
         <table class="table">
@@ -19,11 +24,11 @@
             </tbody>
         </table>
     </div>
-
     <div class="row btn-group">
-        <a asp-action="Edit" asp-route-id="@Model.Application.Id" class="btn btn-primary">Edit</a>
-        <a asp-action="NewChannel" asp-route-id="@Model.Application.Id" class="btn btn-secondary">Create a New Channel</a>
-        <a asp-action="RegisterRevision" asp-route-id="@Model.Application.Id" class="btn btn-secondary">Register a Revision</a>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
+        <a asp-action="NewChannel" asp-route-id="@Model.Id" class="btn btn-secondary">Create a New Channel</a>
+        <a asp-action="Release" asp-route-id="@Model.Id" class="btn btn-secondary">Configure a Channel</a>
+        <a asp-action="RegisterRevision" asp-route-id="@Model.Id" class="btn btn-secondary">Register a Revision</a>
         <a asp-action="Index" class="btn btn-secondary">Back to List</a>
     </div>
 
