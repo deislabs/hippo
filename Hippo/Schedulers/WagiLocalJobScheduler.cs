@@ -70,11 +70,7 @@ namespace Hippo.Schedulers
 
             try
             {
-                using var process = new Process();
-                process.StartInfo = psi;
-                process.Start();
-
-                if (!process.HasExited)
+                using (var process = Process.Start(psi))
                 {
                     process.EnableRaisingEvents = true;
                     // TODO: this event handler does not always fire, if the program immediately exits (for example because the command line is wrong because an old version
@@ -87,8 +83,8 @@ namespace Hippo.Schedulers
                     };
                     process.Start();
                     var log = Task.WhenAll(
-                        ForwardLogs(process.StandardOutput, $"{c.Application.Name}:{c.Name}:wagi:stdout", LogLevel.Trace),
-                        ForwardLogs(process.StandardError, $"{c.Application.Name}:{c.Name}:wagi:stderr")
+                           ForwardLogs(process.StandardOutput, $"{c.Application.Name}:{c.Name}:wagi:stdout", LogLevel.Trace),
+                           ForwardLogs(process.StandardError, $"{c.Application.Name}:{c.Name}:wagi:stderr")
                     );
                     if (process.HasExited)
                     {
