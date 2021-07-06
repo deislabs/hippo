@@ -1,12 +1,16 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace Hippo.Models
 {
     public class DataContext : IdentityDbContext<Account>
     {
-        public DataContext(DbContextOptions<DataContext> dbContextOptions) : base(dbContextOptions)
+        private protected readonly IConfiguration _configuration;
+
+        public DataContext(IConfiguration configuration)
         {
+            _configuration = configuration;
         }
 
         public DbSet<Account> Accounts { get; set; }
@@ -62,6 +66,30 @@ namespace Hippo.Models
             builder.Entity<Channel>()
                 .Property(c => c.RevisionSelectionStrategy)
                 .HasConversion<int>();
+        }
+    }
+
+    public class PostgresDataContext : DataContext
+    {
+        public PostgresDataContext(IConfiguration configuration) : base(configuration)
+        {
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseNpgsql(_configuration.GetConnectionString("Hippo"));
+        }
+    }
+
+    public class SqliteDataContext : DataContext
+    {
+        public SqliteDataContext(IConfiguration configuration) : base(configuration)
+        {
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlite(_configuration.GetConnectionString("Hippo"));
         }
     }
 }

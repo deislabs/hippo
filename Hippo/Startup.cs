@@ -63,17 +63,11 @@ namespace Hippo
 
             if (HostingEnvironment.IsDevelopment())
             {
-                services.AddDbContext<DataContext>(
-                    options =>
-                    options.UseSqlite(Configuration.GetConnectionString("Hippo"))
-                );
+                services.AddDbContext<DataContext, SqliteDataContext>();
             }
             else
             {
-                services.AddDbContext<DataContext>(
-                    options =>
-                    options.UseNpgsql(Configuration.GetConnectionString("Hippo"))
-                );
+                services.AddDbContext<DataContext, PostgresDataContext>();
             }
 
             services.AddScoped<ICurrentUser, ActionContextCurrentUser>();

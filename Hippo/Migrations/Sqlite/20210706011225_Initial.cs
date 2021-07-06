@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Hippo.Migrations
+namespace Hippo.Migrations.Sqlite
 {
     public partial class Initial : Migration
     {
