@@ -48,10 +48,7 @@ namespace Hippo.Tests.ApiControllers
                 StorageId = "hippo/test",
                 Owner = User
             };
-            Context = new DataContext(
-              new DbContextOptionsBuilder<DataContext>()
-                .UseInMemoryDatabase(databaseName: testDatabaseName)
-                .Options);
+            Context = new InMemoryDataContext(testDatabaseName);
             Context.Database.EnsureDeleted();
             Context.Database.EnsureCreated();
             Context.Applications.Add(Application);

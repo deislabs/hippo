@@ -39,10 +39,7 @@ namespace Hippo.Tests.Controllers
                 UserName = "user",
                 Id = "2"
             };
-            var options = new DbContextOptionsBuilder<DataContext>()
-                .UseInMemoryDatabase(databaseName: "Hippo")
-                .Options;
-            _context = new DataContext(options);
+            _context = new InMemoryDataContext();
             var configuration = new Mock<IConfiguration>();
             _controller = new AccountController(new FakeSignInManager(new FakeUserManager(_context)), new DbUnitOfWork(_context, new FakeCurrentUser(_admin.UserName)), configuration.Object, new NullLogger<AccountController>());
             var identity = new GenericIdentity(_admin.UserName);
