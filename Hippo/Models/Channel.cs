@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Globalization;
 using Hippo.Rules;
 
 namespace Hippo.Models
@@ -55,6 +56,12 @@ namespace Hippo.Models
                 return HealthStatus.Unhealthy("No active revision");
             }
             return HealthStatus.Healthy;
+        }
+
+        // TODO: this will change to the domain when we get the reverse proxy working
+        public string ServedOn()
+        {
+            return (PortID + EphemeralPortRange).ToString(CultureInfo.InvariantCulture) + (Domain == null ? "" : $" or {Domain.Name}");
         }
 
         public ICollection<EnvironmentVariable> GetEnvironmentVariables() =>
