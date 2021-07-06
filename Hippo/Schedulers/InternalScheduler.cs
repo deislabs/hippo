@@ -6,12 +6,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Hippo.Schedulers
 {
-    public abstract class BaseForegroundScheduler : IForegroundJobScheduler
+    public abstract class InternalScheduler : IJobScheduler
     {
         private protected readonly ILogger _logger;
         private protected readonly IReverseProxy _reverseProxy;
 
-        private protected BaseForegroundScheduler(ILogger logger, IReverseProxy reverseProxy)
+        private protected InternalScheduler(ILogger logger, IReverseProxy reverseProxy)
 
         {
             _logger = logger;

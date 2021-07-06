@@ -12,7 +12,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Hippo.Schedulers
 {
-    public class WagiLocalJobScheduler : BaseForegroundScheduler
+    public class WagiLocalJobScheduler : InternalScheduler
     {
         // This assumes a singleton scheduler instance!
         private readonly Dictionary<Guid, (int, Task)> _wagiProcessIds = new();
@@ -73,24 +73,28 @@ namespace Hippo.Schedulers
 
             try
             {
-                using var process = new Process();
-                process.StartInfo = psi;
-                process.Start();
-
-                if (!process.HasExited)
+                using (var process = Process.Start(psi))
                 {
                     process.EnableRaisingEvents = true;
+                    // TODO: this event handler does not always fire, if the program immediately exits (for example because the command line is wrong because an old version
+                    // of wagi is being used then the process object may go out of scope before the event handler fires.
+                    // Should probably capture the process not just the Id in the dictionary and then the issue will be resolved.
                     process.Exited += (s, e) =>
                     {
                         _wagiProcessIds.Remove(c.Id);
                         StopProxy(c);
                     };
+                    process.Start();
                     var log = Task.WhenAll(
-                        ForwardLogs(process.StandardOutput, $"{c.Application.Name}:{c.Name}:wagi:stdout", LogLevel.Trace),
-                        ForwardLogs(process.StandardError, $"{c.Application.Name}:{c.Name}:wagi:stderr")
+                           ForwardLogs(process.StandardOutput, $"{c.Application.Name}:{c.Name}:wagi:stdout", LogLevel.Trace),
+                           ForwardLogs(process.StandardError, $"{c.Application.Name}:{c.Name}:wagi:stderr")
                     );
-                    _wagiProcessIds[c.Id] = (process.Id, log);
-                    StartProxy(c, $"http://{listenAddress}");
+                    if (!process.HasExited)
+                    {
+                        StartProxy(c, $"http://{listenAddress}");
+                        _wagiProcessIds[c.Id] = (process.Id, log);
+                    }
+
                 }
             }
             catch (Win32Exception e)  // yes, even on Linux

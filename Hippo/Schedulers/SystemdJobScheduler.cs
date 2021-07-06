@@ -10,9 +10,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Hippo.Schedulers
 {
-    public class SystemdJobScheduler : IJobScheduler
+    public class SystemdJobScheduler : ExternalScheduler
     {
-        public void Start(Channel c)
+        public override void Start(Channel c)
         {
             FileInfo wagiConfigFile = new(WagiConfigPath(c));
             wagiConfigFile.Directory.Create();
@@ -35,7 +35,7 @@ namespace Hippo.Schedulers
             File.WriteAllText(traefikConfigFile.FullName, TraefikConfig(c));
         }
 
-        public void Stop(Channel c)
+        public override void Stop(Channel c)
         {
             using var process = new Process
             {

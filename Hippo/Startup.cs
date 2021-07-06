@@ -89,8 +89,7 @@ namespace Hippo
                     services.AddSingleton<IJobScheduler, SystemdJobScheduler>();
                     break;
                 default:
-                    services.AddSingleton<IForegroundJobScheduler, WagiLocalJobScheduler>();
-                    services.AddSingleton<IJobScheduler>(f => f.GetRequiredService<IForegroundJobScheduler>());
+                    services.AddSingleton<IJobScheduler, WagiLocalJobScheduler>();
                     break;
             }
 
@@ -161,18 +160,18 @@ namespace Hippo
 
             CreateRoles(serviceProvider);
 
-            using var scope = app.ApplicationServices.CreateScope();
             if (HostingEnvironment.IsDevelopment())
             {
+                using var scope = app.ApplicationServices.CreateScope();
                 var seeder = scope.ServiceProvider.GetService<DataSeeder>();
                 seeder.Seed().Wait();
             }
 
-            var unitOfWork = scope.ServiceProvider.GetService<IUnitOfWork>();
-            var allApplications = unitOfWork.Applications.ListApplicationsForAllUsers();
-            var scheduler = scope.ServiceProvider.GetService<IForegroundJobScheduler>();
-            if (scheduler is not null)
             {
+                using var scope = app.ApplicationServices.CreateScope();
+                var scheduler = scope.ServiceProvider.GetService<IJobScheduler>();
+                var unitOfWork = scope.ServiceProvider.GetService<IUnitOfWork>();
+                var allApplications = unitOfWork.Applications.ListApplicationsForAllUsers();
                 scheduler.OnSchedulerStart(allApplications);
             }
         }

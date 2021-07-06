@@ -6,6 +6,11 @@ namespace Hippo.Tests.Schedulers
 {
     public class FakeJobScheduler : IJobScheduler
     {
+        public void OnSchedulerStart(IEnumerable<Application> applications)
+        {
+            // no-op
+        }
+
         public void Start(Channel c)
         {
             // no-op

@@ -16,5 +16,7 @@ namespace Hippo.Schedulers
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Don't care about VB")]
         void Stop(Channel c);
+
+        void OnSchedulerStart(IEnumerable<Application> applications);
     }
 }
