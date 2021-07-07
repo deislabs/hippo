@@ -86,12 +86,8 @@ namespace Hippo
             var schedulerVar = Environment.GetEnvironmentVariable("HIPPO_JOB_SCHEDULER");
             switch (schedulerVar)
             {
-                case "systemd":
-                    services.AddSingleton<IJobScheduler, SystemdJobScheduler>();
-                    break;
-                default:
-                    services.AddSingleton<IJobScheduler, WagiLocalJobScheduler>();
-                    break;
+                case "systemd": services.AddSingleton<IJobScheduler, SystemdJobScheduler>(); break;
+                default: services.AddSingleton<IJobScheduler, WagiLocalJobScheduler>(); break;
             }
 
             services.AddSingleton<ITaskQueue<ChannelReference>, TaskQueue<ChannelReference>>();

@@ -83,8 +83,8 @@ namespace Hippo.Schedulers
                     };
                     process.Start();
                     var log = Task.WhenAll(
-                           ForwardLogs(process.StandardOutput, $"{c.Application.Name}:{c.Name}:wagi:stdout", LogLevel.Trace),
-                           ForwardLogs(process.StandardError, $"{c.Application.Name}:{c.Name}:wagi:stderr")
+                        ForwardLogs(process.StandardOutput, $"{c.Application.Name}:{c.Name}:wagi:stdout", LogLevel.Trace),
+                        ForwardLogs(process.StandardError, $"{c.Application.Name}:{c.Name}:wagi:stderr")
                     );
                     if (process.HasExited)
                     {
