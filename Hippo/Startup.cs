@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Hippo.Extensions;
+using Hippo.Proxies;
 using Hippo.Models;
 using Hippo.Repositories;
 using Hippo.Schedulers;
@@ -23,8 +23,8 @@ namespace Hippo
 {
     public class Startup
     {
-        public IConfiguration Configuration { get; }
-        public IWebHostEnvironment HostingEnvironment { get; }
+        private IConfiguration Configuration { get; }
+        private IWebHostEnvironment HostingEnvironment { get; }
 
         public Startup(IConfiguration configuration, IWebHostEnvironment hostingEnvironment)
         {
@@ -34,6 +34,8 @@ namespace Hippo
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<ChannelConfigProvider>();
+            services.AddSingleton<IReverseProxy, YarpReverseProxy>();
             services.AddIdentity<Account, IdentityRole>(cfg =>
             {
                 cfg.User.RequireUniqueEmail = true;
@@ -91,6 +93,7 @@ namespace Hippo
             }
 
             services.AddSingleton<ITaskQueue<ChannelReference>, TaskQueue<ChannelReference>>();
+            services.AddSingleton<ITaskQueue<ReverseProxyUpdateRequest>, TaskQueue<ReverseProxyUpdateRequest>>();
 
             services.AddSwaggerGen(c =>
             {
@@ -122,10 +125,7 @@ namespace Hippo
                 .AddMvc()
                 .AddJsonOptions(
                     options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter())
-                );
-            services
-                .AddReverseProxy()
-                .LoadFromHippoChannels();
+            );
         }
 
         public void Configure(IApplicationBuilder app, IServiceProvider serviceProvider)
@@ -149,7 +149,6 @@ namespace Hippo
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapReverseProxy();
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");

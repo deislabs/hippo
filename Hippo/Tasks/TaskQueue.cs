@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Channels;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ namespace Hippo.Tasks
     {
         Task Enqueue(T value, CancellationToken cancellationToken);
         Task<T> Dequeue(CancellationToken cancellationToken);
+        (bool, T) TryRead();
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix", Justification = "Not applicable for this type")]
@@ -35,5 +37,12 @@ namespace Hippo.Tasks
         {
             return await _queue.Reader.ReadAsync(cancellationToken);
         }
+
+        public (bool, T) TryRead()
+        {
+            var result = _queue.Reader.TryRead(out var item);
+            return (result, item);
+        }
+
     }
 }

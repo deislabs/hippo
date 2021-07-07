@@ -19,5 +19,11 @@ namespace Hippo.Tests.Fakes
             _impl.Enqueue(value);
             return Task.CompletedTask;
         }
+
+        public (bool, T) TryRead()
+        {
+            var item = _impl.Dequeue();
+            return (item is not null, item);
+        }
     }
 }
