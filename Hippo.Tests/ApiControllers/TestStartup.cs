@@ -3,6 +3,7 @@ using System.Reflection;
 using Hippo.Models;
 using Hippo.Repositories;
 using Hippo.Tasks;
+using Hippo.Tests.Stubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -60,7 +61,7 @@ namespace Hippo.Tests.ApiControllers
             });
 
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-            services.AddDbContext<DataContext>(
+            services.AddDbContext<DataContext, InMemoryDataContext>(
                 options =>
                 options.UseInMemoryDatabase(_testDatabaseName)
             );

@@ -82,3 +82,23 @@ Bonjour from la belle version 1.1.1
 ```console
 $ dotnet test
 ```
+
+## Migrations
+
+We provide migrations for two databases: SQLite for local development, PostgreSQL for
+production use. If you change the model then you need to create migrations for both
+databases.  To do this:
+
+```
+dotnet ef migrations add <name> --context SqliteDataContext --output-dir Migrations/Sqlit
+ASPNETCORE_ENVIRONMENT=Production dotnet ef migrations add <name> --context PostgresDataContext --output-dir Migrations/Postgres
+```
+
+Sometimes manual fixups are required:
+
+* **SQLite:** EF generates `"now()"` for database-generated columns. This doesn't exist. Change
+  it to `"datetime('now')"` in both the migration and the designer.
+
+## Backing out
+
+If you foul up your dev configuration beyond repair, or just want a clean start, delete `Hippo/hippo.db`.

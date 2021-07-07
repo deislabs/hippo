@@ -52,7 +52,7 @@ namespace Hippo.Tests.Stubs
             var options = new DbContextOptionsBuilder<DataContext>()
                 .UseInMemoryDatabase(databaseName: "Hippo")
                 .Options;
-            _context = new DataContext(options);
+            _context = new InMemoryDataContext();
         }
 
         public FakeUserManager(DataContext context)

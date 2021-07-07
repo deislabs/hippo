@@ -62,10 +62,7 @@ namespace Hippo.Tests.Controllers
 
         private static DataContext DbContext(string dbName)
         {
-            var options = new DbContextOptionsBuilder<DataContext>()
-                .UseInMemoryDatabase(databaseName: dbName)
-                .Options;
-            return new DataContext(options);
+            return new InMemoryDataContext(dbName);
         }
 
         [Fact]

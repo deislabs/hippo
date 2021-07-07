@@ -22,7 +22,8 @@ namespace Hippo.Models
         public Application Application { get; set; }
         public Domain Domain { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        // TODO: doesn't work in memory or with SQLite
+        // [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public uint PortID { get; set; }
         public Configuration Configuration { get; set; }
 

@@ -35,16 +35,16 @@ namespace Hippo.Models
                 {
                     throw new InvalidOperationException($"Failed to create user {userName}");
                 }
-            }
-            if (IsAdminUser(userName))
-            {
-                var roleResult = await userManager.AddToRoleAsync(user, "Administrator");
-                if (!roleResult.Succeeded)
+
+                if (IsAdminUser(userName))
                 {
-                    throw new InvalidOperationException($"Failed to assign {userName} as Administrator");
+                    var roleResult = await userManager.AddToRoleAsync(user, "Administrator");
+                    if (!roleResult.Succeeded)
+                    {
+                        throw new InvalidOperationException($"Failed to assign {userName} as Administrator");
+                    }
                 }
             }
-
         }
 
         public bool IsAdminUser(string userName)

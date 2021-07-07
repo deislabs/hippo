@@ -39,10 +39,7 @@ namespace Hippo.Tests.ApiControllers
             store
               .Setup(x => x.FindByIdAsync("2", CancellationToken.None))
               .ReturnsAsync(User);
-            Context = new DataContext(
-              new DbContextOptionsBuilder<DataContext>()
-                .UseInMemoryDatabase(databaseName: TestDatabaseName)
-                .Options);
+            Context = new InMemoryDataContext(TestDatabaseName);
             UserManager = new UserManager<Account>(store.Object, null, null, null, null, null, null, null, null);
             Server = new TestServer(
               new WebHostBuilder().

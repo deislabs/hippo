@@ -6,17 +6,17 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
-namespace Hippo.Migrations
+namespace Hippo.Migrations.Postgres
 {
-    [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(PostgresDataContext))]
+    partial class PostgresDataContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 63)
-                .HasAnnotation("ProductVersion", "5.0.5")
+                .HasAnnotation("ProductVersion", "5.0.7")
                 .HasAnnotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn);
 
             modelBuilder.Entity("Hippo.Models.Account", b =>
@@ -39,9 +39,6 @@ namespace Hippo.Migrations
                         .HasColumnType("character varying(256)");
 
                     b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("boolean");
-
-                    b.Property<bool>("IsSuperUser")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("LockoutEnabled")
@@ -119,6 +116,10 @@ namespace Hippo.Migrations
                     b.Property<string>("OwnerId")
                         .HasColumnType("text");
 
+                    b.Property<string>("StorageId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
@@ -133,6 +134,9 @@ namespace Hippo.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ActiveRevisionId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("ApplicationId")
@@ -157,10 +161,21 @@ namespace Hippo.Migrations
                     b.Property<string>("Name")
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("ReleaseId")
+                    b.Property<long>("PortID")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("RangeRule")
+                        .HasColumnType("text");
+
+                    b.Property<int>("RevisionSelectionStrategy")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("SpecifiedRevisionId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ActiveRevisionId");
 
                     b.HasIndex("ApplicationId");
 
@@ -168,7 +183,7 @@ namespace Hippo.Migrations
 
                     b.HasIndex("DomainId");
 
-                    b.HasIndex("ReleaseId");
+                    b.HasIndex("SpecifiedRevisionId");
 
                     b.ToTable("Channels");
                 });
@@ -285,7 +300,7 @@ namespace Hippo.Migrations
                     b.ToTable("Keys");
                 });
 
-            modelBuilder.Entity("Hippo.Models.Release", b =>
+            modelBuilder.Entity("Hippo.Models.Revision", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -304,11 +319,7 @@ namespace Hippo.Migrations
                         .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("now()");
 
-                    b.Property<string>("Revision")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("UploadUrl")
+                    b.Property<string>("RevisionNumber")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -316,7 +327,7 @@ namespace Hippo.Migrations
 
                     b.HasIndex("ApplicationId");
 
-                    b.ToTable("Releases");
+                    b.ToTable("Revisions");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -473,6 +484,10 @@ namespace Hippo.Migrations
 
             modelBuilder.Entity("Hippo.Models.Channel", b =>
                 {
+                    b.HasOne("Hippo.Models.Revision", "ActiveRevision")
+                        .WithMany()
+                        .HasForeignKey("ActiveRevisionId");
+
                     b.HasOne("Hippo.Models.Application", "Application")
                         .WithMany("Channels")
                         .HasForeignKey("ApplicationId");
@@ -485,9 +500,11 @@ namespace Hippo.Migrations
                         .WithMany()
                         .HasForeignKey("DomainId");
 
-                    b.HasOne("Hippo.Models.Release", "Release")
+                    b.HasOne("Hippo.Models.Revision", "SpecifiedRevision")
                         .WithMany()
-                        .HasForeignKey("ReleaseId");
+                        .HasForeignKey("SpecifiedRevisionId");
+
+                    b.Navigation("ActiveRevision");
 
                     b.Navigation("Application");
 
@@ -495,7 +512,7 @@ namespace Hippo.Migrations
 
                     b.Navigation("Domain");
 
-                    b.Navigation("Release");
+                    b.Navigation("SpecifiedRevision");
                 });
 
             modelBuilder.Entity("Hippo.Models.EnvironmentVariable", b =>
@@ -507,10 +524,10 @@ namespace Hippo.Migrations
                     b.Navigation("Configuration");
                 });
 
-            modelBuilder.Entity("Hippo.Models.Release", b =>
+            modelBuilder.Entity("Hippo.Models.Revision", b =>
                 {
                     b.HasOne("Hippo.Models.Application", "Application")
-                        .WithMany("Releases")
+                        .WithMany("Revisions")
                         .HasForeignKey("ApplicationId");
 
                     b.Navigation("Application");
@@ -573,7 +590,7 @@ namespace Hippo.Migrations
 
                     b.Navigation("Collaborators");
 
-                    b.Navigation("Releases");
+                    b.Navigation("Revisions");
                 });
 
             modelBuilder.Entity("Hippo.Models.Configuration", b =>
