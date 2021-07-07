@@ -12,7 +12,6 @@ namespace Hippo.Schedulers
         private protected readonly IReverseProxy _reverseProxy;
 
         private protected InternalScheduler(ILogger logger, IReverseProxy reverseProxy)
-
         {
             _logger = logger;
             _reverseProxy = reverseProxy;

@@ -16,11 +16,8 @@ namespace Hippo.Schedulers
     {
         // This assumes a singleton scheduler instance!
         private readonly Dictionary<Guid, (int, Task)> _wagiProcessIds = new();
-
         private const string ENV_BINDLE = "BINDLE_URL";
-
         private const string ENV_WAGI = "HIPPO_WAGI_PATH";
-
 
         public WagiLocalJobScheduler(IHostApplicationLifetime lifetime, ILogger<WagiLocalJobScheduler> logger, IReverseProxy reverseProxy)
             : base(logger, reverseProxy)
@@ -86,10 +83,14 @@ namespace Hippo.Schedulers
                     };
                     process.Start();
                     var log = Task.WhenAll(
-                           ForwardLogs(process.StandardOutput, $"{c.Application.Name}:{c.Name}:wagi:stdout", LogLevel.Trace),
-                           ForwardLogs(process.StandardError, $"{c.Application.Name}:{c.Name}:wagi:stderr")
+                        ForwardLogs(process.StandardOutput, $"{c.Application.Name}:{c.Name}:wagi:stdout", LogLevel.Trace),
+                        ForwardLogs(process.StandardError, $"{c.Application.Name}:{c.Name}:wagi:stderr")
                     );
-                    if (!process.HasExited)
+                    if (process.HasExited)
+                    {
+                        _logger.LogError($"Process {psi.FileName} with arguments {psi.Arguments} terminated unexpectedly");
+                    }
+                    else
                     {
                         StartProxy(c, $"http://{listenAddress}");
                         _wagiProcessIds[c.Id] = (process.Id, log);

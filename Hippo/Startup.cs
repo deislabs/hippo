@@ -85,12 +85,8 @@ namespace Hippo
             var schedulerVar = Environment.GetEnvironmentVariable("HIPPO_JOB_SCHEDULER");
             switch (schedulerVar)
             {
-                case "systemd":
-                    services.AddSingleton<IJobScheduler, SystemdJobScheduler>();
-                    break;
-                default:
-                    services.AddSingleton<IJobScheduler, WagiLocalJobScheduler>();
-                    break;
+                case "systemd": services.AddSingleton<IJobScheduler, SystemdJobScheduler>(); break;
+                default: services.AddSingleton<IJobScheduler, WagiLocalJobScheduler>(); break;
             }
 
             services.AddSingleton<ITaskQueue<ChannelReference>, TaskQueue<ChannelReference>>();
@@ -122,10 +118,10 @@ namespace Hippo
             });
             services.AddRouting(options => options.LowercaseUrls = true);
             services
-            .AddMvc()
-            .AddJsonOptions(
-                options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter())
-            );
+                .AddMvc()
+                .AddJsonOptions(
+                    options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter())
+                );
             services
                 .AddReverseProxy()
                 .LoadFromHippoChannels();

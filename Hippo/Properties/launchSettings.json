@@ -20,8 +20,6 @@
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
-        "BINDLE_URL": "https://bindle.deislabs.io/v1",
-        "HIPPO_WAGI_PATH": "C:\\Users\\sdavies\\source\\repos\\wagi\\target\\release\\wagi.exe",
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": "true",
