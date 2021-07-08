@@ -92,4 +92,24 @@ namespace Hippo.Models
             optionsBuilder.UseSqlite(_configuration.GetConnectionString("Hippo"));
         }
     }
+
+    // Convenient for dev-test when the feature requires exploratory changes to
+    // the database schema
+    public class InMemoryDataContext : DataContext
+    {
+        private readonly string _databaseName;
+
+        public InMemoryDataContext(string databaseName = "Hippo") : base(null)
+        {
+            _databaseName = databaseName;
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseInMemoryDatabase(_databaseName);
+            }
+        }
+    }
 }

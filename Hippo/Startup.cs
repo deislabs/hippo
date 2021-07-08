@@ -64,7 +64,14 @@ namespace Hippo
 
             if (HostingEnvironment.IsDevelopment())
             {
-                services.AddDbContext<DataContext, SqliteDataContext>();
+                if (Configuration["InMemoryDB"] == "true")
+                {
+                    services.AddDbContext<DataContext, InMemoryDataContext>();
+                }
+                else
+                {
+                    services.AddDbContext<DataContext, SqliteDataContext>();
+                }
             }
             else
             {
@@ -148,7 +155,7 @@ namespace Hippo
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
 
-            if (HostingEnvironment.IsDevelopment())
+            if (HostingEnvironment.IsDevelopment() && Configuration["InMemoryDB"] != "true")
             {
                 using var scope = app.ApplicationServices.CreateScope();
                 var dataContext = scope.ServiceProvider.GetService<DataContext>();
