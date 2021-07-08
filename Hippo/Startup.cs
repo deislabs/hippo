@@ -3,6 +3,7 @@ using System.IO;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Hippo.Extensions;
 using Hippo.Models;
 using Hippo.Repositories;
 using Hippo.Schedulers;
@@ -111,10 +112,13 @@ namespace Hippo
             });
             services.AddRouting(options => options.LowercaseUrls = true);
             services
-              .AddMvc()
-              .AddJsonOptions(
-                  options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter())
-              );
+                .AddMvc()
+                .AddJsonOptions(
+                    options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter())
+                );
+            services
+                .AddReverseProxy()
+                .LoadFromHippoChannels();
         }
 
         public void Configure(IApplicationBuilder app, IServiceProvider serviceProvider)
@@ -138,6 +142,7 @@ namespace Hippo
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapReverseProxy();
                 endpoints.MapControllerRoute(
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");

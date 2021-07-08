@@ -9,8 +9,7 @@ namespace Hippo.Controllers
 {
     public abstract class HippoController : Controller
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1051:Do not declare visible instance fields", Justification = "Rule not applicable")]
-        protected readonly ILogger _logger;
+        private protected readonly ILogger _logger;
 
         protected HippoController(ILogger logger)
         {

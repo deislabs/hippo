@@ -6,26 +6,22 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Hippo.Models;
+using Hippo.Proxies;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace Hippo.Schedulers
 {
-    public class WagiLocalJobScheduler : IJobScheduler
+    public class WagiLocalJobScheduler : InternalScheduler
     {
         // This assumes a singleton scheduler instance!
         private readonly Dictionary<Guid, (int, Task)> _wagiProcessIds = new();
-        private readonly ILogger _logger;
-
         private const string ENV_BINDLE = "BINDLE_URL";
-
         private const string ENV_WAGI = "HIPPO_WAGI_PATH";
 
-
-        public WagiLocalJobScheduler(IHostApplicationLifetime lifetime, ILogger<WagiLocalJobScheduler> logger)
+        public WagiLocalJobScheduler(IHostApplicationLifetime lifetime, ILogger<WagiLocalJobScheduler> logger, IReverseProxy reverseProxy)
+            : base(logger, reverseProxy)
         {
-            _logger = logger;
-
             var bindleUrl = Environment.GetEnvironmentVariable(ENV_BINDLE);
 
             if (string.IsNullOrWhiteSpace(bindleUrl))
@@ -45,23 +41,12 @@ namespace Hippo.Schedulers
             });
         }
 
-        public void OnSchedulerStart(IEnumerable<Application> applications)
-        {
-            foreach (var application in applications)
-            {
-                foreach (var channel in application.Channels)
-                {
-                    Start(channel);
-                }
-            }
-        }
-
-        public void Start(Channel c)
+        public override void Start(Channel c)
         {
             var port = c.PortID + Channel.EphemeralPortRange;
-
             var wagiProgram = WagiBinaryPath();
             var bindleUrl = Environment.GetEnvironmentVariable(ENV_BINDLE);
+            var listenAddress = $"127.0.0.1:{port}";
 
             if (string.IsNullOrWhiteSpace(bindleUrl))
             {
@@ -88,12 +73,29 @@ namespace Hippo.Schedulers
                 using (var process = Process.Start(psi))
                 {
                     process.EnableRaisingEvents = true;
-                    process.Exited += (s, e) => _wagiProcessIds.Remove(c.Id);
+                    // TODO: this event handler does not always fire, if the program immediately exits (for example because the command line is wrong because an old version
+                    // of wagi is being used then the process object may go out of scope before the event handler fires.
+                    // Should probably capture the process not just the Id in the dictionary and then the issue will be resolved.
+                    process.Exited += (s, e) =>
+                    {
+                        _wagiProcessIds.Remove(c.Id);
+                        StopProxy(c);
+                    };
+                    process.Start();
                     var log = Task.WhenAll(
                         ForwardLogs(process.StandardOutput, $"{c.Application.Name}:{c.Name}:wagi:stdout", LogLevel.Trace),
                         ForwardLogs(process.StandardError, $"{c.Application.Name}:{c.Name}:wagi:stderr")
                     );
-                    _wagiProcessIds[c.Id] = (process.Id, log);
+                    if (process.HasExited)
+                    {
+                        _logger.LogError($"Process {psi.FileName} with arguments {psi.Arguments} terminated unexpectedly");
+                    }
+                    else
+                    {
+                        StartProxy(c, $"http://{listenAddress}");
+                        _wagiProcessIds[c.Id] = (process.Id, log);
+                    }
+
                 }
             }
             catch (Win32Exception e)  // yes, even on Linux
@@ -107,7 +109,7 @@ namespace Hippo.Schedulers
             }
         }
 
-        public void Stop(Channel c)
+        public override void Stop(Channel c)
         {
             if (_wagiProcessIds.TryGetValue(c.Id, out var wagiProcess))
             {
@@ -116,6 +118,7 @@ namespace Hippo.Schedulers
                 var (wagiProcessId, log) = wagiProcess;
                 KillProcessById(wagiProcessId);
                 log.GetAwaiter().GetResult();
+                StopProxy(c);
             }
         }
 
@@ -173,22 +176,20 @@ namespace Hippo.Schedulers
         {
             try
             {
-                using (var wagiProcess = Process.GetProcessById(wagiProcessId))
+                using var wagiProcess = Process.GetProcessById(wagiProcessId);
+                if (wagiProcess != null && !wagiProcess.HasExited)
                 {
-                    if (wagiProcess != null && !wagiProcess.HasExited)
+                    // TODO: check it is an actual wagi process and not something that reused the ID
+                    // TODO: a better way to do this might be to hang onto the Process object not
+                    // just the ID
+                    try
                     {
-                        // TODO: check it is an actual wagi process and not something that reused the ID
-                        // TODO: a better way to do this might be to hang onto the Process object not
-                        // just the ID
-                        try
-                        {
-                            wagiProcess.Kill(true); // I don't think there's a less awful way to do this
-                            wagiProcess.WaitForExit();
-                        }
-                        catch
-                        {
-                            // TODO: log it and move on
-                        }
+                        wagiProcess.Kill(true); // I don't think there's a less awful way to do this
+                        wagiProcess.WaitForExit();
+                    }
+                    catch
+                    {
+                        // TODO: log it and move on
                     }
                 }
             }
