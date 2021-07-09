@@ -156,7 +156,7 @@ namespace Hippo.Controllers
             TraceMethodEntry();
 
             await _signInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "App");
         }
 
         [HttpPost]
