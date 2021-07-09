@@ -27,7 +27,7 @@ namespace Hippo.Models
         public uint PortID { get; set; }
         public Configuration Configuration { get; set; }
 
-        public bool ReevaluateActiveRevision()
+        public ActiveRevisionChange ReevaluateActiveRevision()
         {
             var previous = ActiveRevision;
 
@@ -47,7 +47,12 @@ namespace Hippo.Models
             // TODO: if we end up with no active revision then we should put the channel into
             // some kind of unhappy status
 
-            return ActiveRevision != previous;
+            if (ActiveRevision?.RevisionNumber == previous?.RevisionNumber)
+            {
+                return null;
+            }
+
+            return new ActiveRevisionChange(previous?.RevisionNumber, ActiveRevision?.RevisionNumber, this);
         }
 
         public HealthStatus Status()
@@ -85,4 +90,10 @@ namespace Hippo.Models
         /// </summary>
         UseSpecifiedRevision = 1,
     }
+
+    public record ActiveRevisionChange(
+        string ChangedFrom,
+        string ChangedTo,
+        Channel Channel
+    );
 }

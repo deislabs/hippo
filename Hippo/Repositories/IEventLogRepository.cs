@@ -9,5 +9,6 @@ namespace Hippo.Repositories
     {
         Task LoginSucceeded(EventOrigin source, string userName);
         Task LoginFailed(EventOrigin source, string userName, string reason);
+        Task ChannelRevisionChanged(EventOrigin source, Channel channel, string oldRevision, string reason);
     }
 }

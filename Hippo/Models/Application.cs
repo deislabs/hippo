@@ -39,12 +39,12 @@ namespace Hippo.Models
         [Required]
         public virtual ICollection<Channel> Channels { get; set; }
 
-        public IReadOnlyList<Channel> ReevaluateActiveRevisions()
+        public IReadOnlyList<ActiveRevisionChange> ReevaluateActiveRevisions()
         {
             return ReevaluateActiveRevisionsLazy().ToList().AsReadOnly();
         }
 
-        public IEnumerable<Channel> ReevaluateActiveRevisionsLazy()
+        public IEnumerable<ActiveRevisionChange> ReevaluateActiveRevisionsLazy()
         {
             if (Channels == null)
             {
@@ -52,9 +52,10 @@ namespace Hippo.Models
             }
             foreach (var channel in Channels)
             {
-                if (channel.ReevaluateActiveRevision())
+                var change = channel.ReevaluateActiveRevision();
+                if (change != null)
                 {
-                    yield return channel;
+                    yield return change;
                 }
             }
             // TODO: should this trigger a redeploy?

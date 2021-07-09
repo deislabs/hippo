@@ -287,6 +287,7 @@ namespace Hippo.Controllers
                 }
 
                 await _unitOfWork.Channels.AddNew(channel);
+                await _unitOfWork.EventLog.ChannelRevisionChanged(EventOrigin.UI, channel, "(none)", "channel created");
                 await _unitOfWork.SaveChanges();
 
                 await _channelsToReschedule.Enqueue(new ChannelReference(application.Id, channel.Id), CancellationToken.None);
@@ -400,7 +401,7 @@ namespace Hippo.Controllers
                     return BadRequest("no strategy");  // TODO: this is a terrible way of handling it; await Ronan
                 }
 
-                channel.ReevaluateActiveRevision();
+                var revChange = channel.ReevaluateActiveRevision();
 
                 // TODO: SO MUCH DEDUPLICATION
 
@@ -418,6 +419,11 @@ namespace Hippo.Controllers
                 foreach (var ev in environmentVariables)
                 {
                     ev.Configuration = channel.Configuration;
+                }
+
+                if (revChange != null)
+                {
+                    await _unitOfWork.EventLog.ChannelRevisionChanged(EventOrigin.UI, channel, revChange.ChangedFrom, "channel reconfigured");
                 }
 
                 await _unitOfWork.SaveChanges();
@@ -460,10 +466,15 @@ namespace Hippo.Controllers
                 var application = _unitOfWork.Applications.GetApplicationById(id);
 
                 application.Revisions.Add(new Revision { RevisionNumber = form.RevisionNumber });
-                var changedChannels = application.ReevaluateActiveRevisions();
+
+                var changes = application.ReevaluateActiveRevisions();
+                foreach (var change in changes)
+                {
+                    await _unitOfWork.EventLog.ChannelRevisionChanged(EventOrigin.UI, change.Channel, change.ChangedFrom, "revision registered");
+                }
                 await _unitOfWork.SaveChanges();
 
-                await QueueChangedChannelNotifications(application, changedChannels);
+                await QueueChangedChannelNotifications(application, changes);
 
                 _logger.LogInformation($"RegisterRevision: application {form.Id} registered {form.RevisionNumber}");
                 return RedirectToAction(nameof(Index));
@@ -472,7 +483,10 @@ namespace Hippo.Controllers
             return View(form);
         }
 
-        private async Task QueueChangedChannelNotifications(Application application, IReadOnlyList<Channel> changedChannels)
+        private async Task QueueChangedChannelNotifications(Application application, IReadOnlyList<ActiveRevisionChange> changes) =>
+            await QueueChangedChannelNotifications(application, changes.Select(c => c.Channel));
+
+        private async Task QueueChangedChannelNotifications(Application application, IEnumerable<Channel> changedChannels)
         {
             // TODO: deduplicate with RevisionController
             var queueRescheduleTasks = changedChannels.Select(channel =>

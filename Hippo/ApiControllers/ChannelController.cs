@@ -103,6 +103,7 @@ namespace Hippo.ApiControllers
                 channel.ReevaluateActiveRevision();
 
                 await _unitOfWork.Channels.AddNew(channel);
+                await _unitOfWork.EventLog.ChannelRevisionChanged(EventOrigin.API, channel, "(none)", "channel created");
                 await _unitOfWork.SaveChanges();
 
                 await _taskQueue.Enqueue(new ChannelReference(channel.Application.Id, channel.Id), CancellationToken.None);

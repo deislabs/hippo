@@ -42,5 +42,20 @@ namespace Hippo.Repositories
             };
             await _context.EventLogEntries.AddAsync(entry);
         }
+
+        public async Task ChannelRevisionChanged(EventOrigin source, Channel channel, string oldRevision, string reason)
+        {
+            var entry = new EventLogEntry
+            {
+                EventKind = EventKind.ChannelRevisionChanged,
+                EventSource = source,
+                Timestamp = DateTime.UtcNow,
+                ApplicationId = channel.Application.Id,
+                ChannelId = channel.Id,
+                UserName = _user.Name(),
+                Description = $"changed from {oldRevision} to {channel.ActiveRevision?.RevisionNumber ?? "(none)"} because {reason}",
+            };
+            await _context.EventLogEntries.AddAsync(entry);
+        }
     }
 }
