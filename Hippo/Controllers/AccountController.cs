@@ -114,6 +114,8 @@ namespace Hippo.Controllers
             if (ModelState.IsValid)
             {
                 var result = await _signInManager.PasswordSignInAsync(form.UserName, form.Password, form.RememberMe, false);
+                await RecordLoginAttempt(EventOrigin.UI, form.UserName, result);
+
                 if (result.Succeeded)
                 {
                     _logger.LogTrace($"Login {form.UserName}: succeeded: {SigninFailureLogMessage(result)}");
@@ -168,6 +170,8 @@ namespace Hippo.Controllers
                 if (user != null)
                 {
                     var result = await _signInManager.CheckPasswordSignInAsync(user, form.Password, lockoutOnFailure: false);
+                    await RecordLoginAttempt(EventOrigin.API, form.UserName, result);
+
                     if (result.Succeeded)
                     {
                         _logger.LogTrace($"CreateToken {form.UserName}: sign in succeeded");
@@ -244,6 +248,19 @@ namespace Hippo.Controllers
                 reasons.Add("needs 2FA");
             }
             return string.Join(",", reasons);
+        }
+
+        private async Task RecordLoginAttempt(EventOrigin source, string userName, Microsoft.AspNetCore.Identity.SignInResult result)
+        {
+            if (result.Succeeded)
+            {
+                await _unitOfWork.EventLog.LoginSucceeded(source, userName);
+            }
+            else
+            {
+                await _unitOfWork.EventLog.LoginFailed(source, userName, SigninFailureLogMessage(result));
+            }
+            await _unitOfWork.SaveChanges();
         }
     }
 }

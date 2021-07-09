@@ -15,6 +15,7 @@ namespace Hippo.Repositories
             Accounts = new DbAccountRepository(_dataContext);
             Applications = new DbApplicationRepository(_dataContext, currentUser);
             Channels = new DbChannelRepository(_dataContext);
+            EventLog = new DbEventLogRepository(_dataContext, currentUser);
             Revisions = new DbRevisionRepository(_dataContext);
         }
 
@@ -23,6 +24,7 @@ namespace Hippo.Repositories
         public IAccountRepository Accounts { get; }
         public IApplicationRepository Applications { get; }
         public IChannelRepository Channels { get; }
+        public IEventLogRepository EventLog { get; }
         public IRevisionRepository Revisions { get; }
 
         public async Task SaveChanges() => await _dataContext.SaveChangesAsync();
