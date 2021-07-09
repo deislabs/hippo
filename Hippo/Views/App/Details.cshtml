@@ -5,103 +5,159 @@
     Layout = "_AppLayout";
 }
 
-<div class="container">
-    <div class="row">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">@Html.DisplayNameFor(model => model.Application.Name)</th>
-                    <th scope="col">@Html.DisplayNameFor(model => model.Application.Created)</th>
-                    <th scope="col">@Html.DisplayNameFor(model => model.Application.Modified)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>@Html.DisplayFor(model => model.Application.Name)</td>
-                    <td>@Html.DisplayFor(model => model.Application.Created)</td>
-                    <td>@Html.DisplayFor(model => model.Application.Modified)</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="row btn-group">
-        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
-        <a asp-action="NewChannel" asp-route-id="@Model.Id" class="btn btn-secondary">Create a New Channel</a>
-        <a asp-action="Release" asp-route-id="@Model.Id" class="btn btn-secondary">Configure a Channel</a>
-        <a asp-action="RegisterRevision" asp-route-id="@Model.Id" class="btn btn-secondary">Register a Revision</a>
-        <a asp-action="Index" class="btn btn-secondary">Back to List</a>
-    </div>
+<div class="rev-list">
 
-    <div class="row" style="padding-bottom: 20px; padding-top: 20px;">
-        <h3>Channels</h3>
-    </div>
-    <div class="row">
-        @foreach (var item in Model.Channels) {
-        <div class="card">
-            @if (item.Status().Health == Hippo.Models.HealthLevel.Healthy)
-            {
-            <span class="card-header badge bg-success">Healthy (on @item.ActiveRevision.RevisionNumber) - served on @item.ServedOn()</span>
-            }
-            else
-            {
-            <span class="card-header badge bg-success">Unhealthy (@string.Join("; ", item.Status().Messages))</span>
-            }
-            <div class="card-body">
-                <h5 class="card-title">@Html.DisplayFor(modelItem => item.Name)</h5>
-            </div>
-            <div class="card-body btn-group" role="group" aria-label="actions">
-                <a asp-action="EditChannel" asp-route-id="@item.Id" class="card-link btn btn-sml btn-secondary">Edit</a>
-                @* <a asp-action="Details" asp-route-id="@item.Id" class="card-link btn btn-sml btn-secondary">Details</a>
-                <a asp-action="Delete" asp-route-id="@item.Id" class="card-link btn btn-sml btn-danger">Delete</a> *@
+    <h4>Recent Activity</h4>
+
+    <div class="tab-pane env-default" asp-class="default">
+        <div class="columns is-mobile">
+            <div class="column">
+                <div class="card">
+                    <div class="card-content has-text-centered">
+                        Showing all activity.
+                    </div>
+                </div>
             </div>
         </div>
-        }
+        <div class="columns">
+            <div class="column">
+                <ul class="rev-list">
+                    @foreach (var revision in Model.Revisions.OrderByDescending(r => r.OrderKey())) {
+                        <li class="rev-item">
+                            @* <span class="tag">
+                                @Html.DisplayFor(modelItem => channel.Name)
+                            </span> *@
+                            <strong>@Html.DisplayFor(modelItem => revision.RevisionNumber)</strong>&nbsp;
+                            @* @if (modelItem => revision.revisionName) {
+                                <span>was pushed</span>.
+                            } else { *@
+                                <span>was deployed</span> to&nbsp;
+                                <span class="tag">@string.Join(", ", revision.ActiveOn().Select(c => c.Name))</span>
+                            @* via <span>@Html.DisplayFor(modelItem => revision.revisionSelectionStrategy)</span> *@
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+
+        <nav class="pagination" role="navigation" aria-label="pagination">
+            <a class="pagination-previous" title="This is the first page" disabled>Previous</a>
+            <a class="pagination-next">Next page</a>
+            <ul class="pagination-list">
+                <li>
+                    <a class="pagination-link is-current" aria-label="Page 1" aria-current="page">1</a>
+                </li>
+                <li>
+                    <a class="pagination-link" aria-label="Goto page 2">2</a>
+                </li>
+                <li>
+                    <a class="pagination-link" aria-label="Goto page 3">3</a>
+                </li>
+            </ul>
+        </nav>
     </div>
 
-    <div class="row" style="padding-bottom: 20px; padding-top: 20px;">
-        <h3>Revisions</h3>
-    </div>
-    <table class="table is-bordered is-striped is-narrow is-fullwidth mt-4">
-        <thead>
-            <tr>
-                <th class=""><abbr title="Revision">Revision</abbr></th>
-                <th class=""><abbr title="Active">Active On</abbr></th>
-            </tr>
-        </thead>
-        <tbody>
-        @foreach (var item in Model.Revisions.OrderByDescending(r => r.OrderKey())) {
-            <tr>
-                <td>@item.RevisionNumber</td>
-                <td>@string.Join(", ", item.ActiveOn().Select(c => c.Name))</td>
-            </tr>
-        }
-        </tbody>
-    </table>
+    @foreach (var channel in Model.Channels) {
+        <div class="tab-pane" asp-class="@channel.Id">
+            <div class="card">
+                <div class="card-content has-text-centered">
+                    <h4>Environment Info</h4>
 
-    <div class="row" style="padding-bottom: 20px; padding-top: 20px;">
-        <h3>Recent Activity</h3>
-    </div>
-    <table class="table is-bordered is-striped is-narrow is-fullwidth mt-4">
-        <thead>
-            <tr>
-                <th class=""><abbr title="When">When</abbr></th>
-                <th class=""><abbr title="What">What</abbr></th>
-                <th class=""><abbr title="Channel">Channel</abbr></th>
-                <th class=""><abbr title="What">What</abbr></th>
-                <th class=""><abbr title="Who">Who</abbr></th>
-            </tr>
-        </thead>
-        <tbody>
-        @foreach (var item in Model.RecentActivity) {
-            <tr>
-                <td>@item.Timestamp</td>
-                <td>@item.EventKind</td>
-                <td>@Model.ChannelNameFor(item)</td>
-                <td>@item.Description</td>
-                <td>@item.UserName</td>
-            </tr>
-        }
-        </tbody>
-    </table>
+                    @* @if (ChannelRevisionSelectionStrategy == SelectedRevisionNumber) {
+                        <span>Deployment locked to version </span>
+                        @Html.DisplayFor(modelItem => channel.SelectedRevisionNumber)
+                    } else {
+                        <span>Auto deploying </span>
+                        @Html.DisplayFor(modelItem => channel.RangeRule)
+                    } *@
 
+                    <button asp-action="EditChannel" asp-route-id="@channel.Id" class="button is-small">Edit</button>
+
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">@Html.DisplayNameFor(model => model.Application.Name)</th>
+                                <th scope="col">@Html.DisplayNameFor(model => model.Application.Created)</th>
+                                <th scope="col">@Html.DisplayNameFor(model => model.Application.Modified)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>@Html.DisplayFor(model => model.Application.Name)</td>
+                                <td>@Html.DisplayFor(model => model.Application.Created)</td>
+                                <td>@Html.DisplayFor(model => model.Application.Modified)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <ul>
+                        <li class="has-text-success">@Html.DisplayFor(modelItem => channel.Id)</li>
+                        <li class="has-text-danger">@Html.DisplayFor(modelItem => channel.RevisionSelectionStrategy)</li>
+                        <li></li>
+                        <li>@Html.DisplayFor(modelItem => channel)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="columns">
+                <div class="column">
+                    <ul class="rev-list">
+                        @foreach (var revision in Model.Revisions.OrderByDescending(r => r.OrderKey())) {
+                            <li class="rev-item">
+                                @* <span class="tag">
+                                    @Html.DisplayFor(modelItem => channel.Name)
+                                </span> *@
+                                <strong>@Html.DisplayFor(modelItem => revision.RevisionNumber)</strong>&nbsp;
+                                @* @if (modelItem => revision.revisionName) {
+                                    <span>was pushed</span>.
+                                } else { *@
+                                    <span>was deployed</span> to&nbsp;
+                                    <span class="tag">@string.Join(", ", revision.ActiveOn().Select(c => c.Name))</span>
+                                @* via <span>@Html.DisplayFor(modelItem => revision.revisionSelectionStrategy)</span> *@
+                            </li>
+                        }
+                    </ul>
+
+                    <table class="table is-bordered is-striped is-narrow is-fullwidth mt-4">
+                        <thead>
+                            <tr>
+                                <th class=""><abbr title="When">When</abbr></th>
+                                <th class=""><abbr title="What">What</abbr></th>
+                                <th class=""><abbr title="Channel">Channel</abbr></th>
+                                <th class=""><abbr title="What">What</abbr></th>
+                                <th class=""><abbr title="Who">Who</abbr></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var item in Model.RecentActivity) {
+                            <tr>
+                                <td>@item.Timestamp</td>
+                                <td>@item.EventKind</td>
+                                <td>@Model.ChannelNameFor(item)</td>
+                                <td>@item.Description</td>
+                                <td>@item.UserName</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <nav class="pagination" role="navigation" aria-label="pagination">
+                <a class="pagination-previous" title="This is the first page" disabled>Previous</a>
+                <a class="pagination-next">Next page</a>
+                <ul class="pagination-list">
+                    <li>
+                    <a class="pagination-link is-current" aria-label="Page 1" aria-current="page">1</a>
+                    </li>
+                    <li>
+                    <a class="pagination-link" aria-label="Goto page 2">2</a>
+                    </li>
+                    <li>
+                    <a class="pagination-link" aria-label="Goto page 3">3</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    }
 </div>

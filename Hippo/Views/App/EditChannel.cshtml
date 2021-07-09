@@ -1,12 +1,120 @@
 @model Hippo.ViewModels.AppEditChannelForm
 
-<h2>Edit channel @Model.ChannelName</h2>
+@{
+  ViewData["Title"] = "Configure Environment";
+}
 
-<form asp-action="EditChannel">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <input type="hidden" asp-for="ChannelId" />
-    <input type="hidden" asp-for="ApplicationId" />
-    <div class="form-group">
+<div class="columns is-centered">
+    <div class="column is-two-thirds">
+
+        <form asp-action="EditChannel" class="form env-new-form">
+            <input type="hidden" asp-for="ChannelId" />
+            <input type="hidden" asp-for="ApplicationId" />
+
+            <div class="field">
+                <label class="label is-large">Edit Environment</label>
+            </div>
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label asp-for="ChannelName" class="label">Name</label>
+                </div>
+                <div class="field-body is-normal">
+                    <div class="field">
+                        <input class="input is-normal is-medium is-primary" asp-model="Model.ChannelName" value="@Model.ChannelName" disabled />
+                    </div>
+                </div>
+            </div>
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label asp-for="Domain" class="label">Domain</label>
+                </div>
+                <div class="field-body is-normal">
+                    <div class="field">
+                        <input asp-for="Domain" asp-items="Model.Domain" class="input is-medium is-primary" />
+                        <p asp-validation-for="Domain" class="help is-warning"></p>
+                    </div>
+                </div>
+            </div>
+            @* <div class="field is-horizontal is-narrow">
+                <div class="field-label is-normal">
+                    <label class="label">
+                        <!-- Left empty for spacing -->
+                    </label>
+                </div>
+                <div class="field-body is-normal">
+                    <a title="Add Environment Variables" class="env-var-toggle is-link" id="envVarToggle"><small><i class="fa fa-plus"></i>&nbsp;<strong>Add Environment Variables</strong></small></a>
+                </div>
+            </div> *@
+            <div class="field is-horizontal" id="envVars">
+                <div class="field-label is-normal">
+                    <label asp-for="EnvironmentVariables" class="label">Environment Variables
+                        <small>(optional)</small>
+                    </label>
+                </div>
+                <div class="field-body is-normal">
+                    <div class="field">
+                        <textarea asp-for="EnvironmentVariables" asp-items="Model.EnvironmentVariables" class="input is-normal is-medium is-primary"></textarea>
+                        <p asp-validation-for="EnvironmentVariables" class="help is-warning"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label is-large">Deployment</label>
+            </div>
+            <div class="field has-background-white">
+                <div class="field is-horizontal">
+                    <div class="field-body is-normal radio-wrapper">
+                        <input type="radio" name="deploystyle" id="envAuto" value="UseRangeRule" asp-for="SelectedRevisionSelectionStrategy" asp-items="Model.RevisionSelectionStrategies" class="is-large env-radio env-radio-auto">
+                        <label class="radio radio-label env-deploy-label has-text-left" for="envAuto">
+                            <strong>Auto-deploy</strong>
+                            <small>Deploy versions as they are created.</small>
+                        </label>
+                        <input type="radio" name="deploystyle" id="envManual" value="UseSpecifiedRevision" asp-for="SelectedRevisionSelectionStrategy" asp-items="Model.RevisionSelectionStrategies" class="is-large env-radio env-radio-manual">
+                        <label class="radio radio-label env-deploy-label has-text-left" for="envManual">
+                            <strong>Selective deploy</strong>
+                            <small>Lock deploys to a specific version.</small>
+                        </label>
+                    </div>
+
+                    <p asp-validation-for="SelectedRevisionSelectionStrategy" class="help is-danger"></p>
+                </div>
+                <!-- if manual (UseSpecifiedRevision) -->
+                <div class="field field-padded is-horizontal hide" id="envManualField">
+                    <div class="field-label is-normal">
+                        <label asp-for="SelectedRevisionNumber" class="label">Choose a version</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field is-narrow">
+                            <div class="control">
+                                <div class="select is-fullwidth">
+                                    <select asp-for="SelectedRevisionNumber" asp-items="Model.Revisions"></select>
+                                </div>
+                            </div>
+                            <p asp-validation-for="SelectedRevisionNumber" class="help is-warning"></p>
+                        </div>
+                    </div>
+                </div>
+                <!-- if auto (UseRangeRule) -->
+                <div class="field field-padded is-horizontal hide" id="envAutoField">
+                    <div class="field-label is-normal">
+                        <label asp-for="SelectedRevisionRule" class="label">Version range</label>
+                    </div>
+                    <div class="field-body is-normal">
+                        <div class="field">
+                            <input asp-for="SelectedRevisionRule" asp-items="Model.Revisions" class="input is-normal is-medium is-primary" />
+                            <p><small class="is-info">You can choose to deply all versions of your app (enter an <code>*</code>) or limit deploys to a specific range.</small></p>
+
+                            <p><small class="is-info">Examples:<br>
+                            To deploy minor releases that follow v1.0, set the range to <code>1<</code>. To follow v1.0 but exclude releases beyond v2.0, set the range to <code>1-2</code>.</small></p>
+                            <p asp-validation-for="SelectedRevisionRule" class="help is-warning"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+    @* <div class="form-group">
         <label asp-for="SelectedRevisionSelectionStrategy" class="control-label"></label>
         <select asp-for="SelectedRevisionSelectionStrategy" asp-items="Model.RevisionSelectionStrategies" class="form-control">
             <option value="">Select revision selection strategy</option>
@@ -39,8 +147,35 @@
     <div class="form-group btn-group">
         <input type="submit" value="Save" class="btn btn-primary" />
         <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </div> *@
+
+            <hr>
+            <div class="field is-grouped is-horizontal">
+                <div class="field-body is-normal">
+                    <div class="field">
+                        <div class="control is-centered has-text-centered">
+                            <input type="submit" value="Save Environment" class="button is-rounded is-success" />
+                            @* <button type="submit" value="Save Environment" class="button is-rounded is-success">Save Environment</button> *@
+                            <a asp-action="Index" class="button is-danger is-outlined is-rounded">Discard Changes</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <div class="field-label">
+                    <!-- Left empty for spacing -->
+                </div>
+                <div class="field-body is-normal">
+                    <div class="field">
+                        <div class="control">
+                            <p asp-validation-summary="ModelOnly" class="help is-alert"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
-</form>
+</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

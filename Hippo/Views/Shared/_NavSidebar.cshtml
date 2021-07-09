@@ -1,46 +1,86 @@
+@model Hippo.Models.Application
+
 <input type="checkbox" id="sidebar-trigger" role="button">
 <label for="sidebar-trigger" id="sidebar-toggler">
-  <span class="icon">
-    <i class="fa fa-angle-double-left"></i>
-  </span>
+    <span class="icon">
+        <i class="fa fa-angle-double-left"></i>
+    </span>
 </label>
 
-<aside id="main-sidebar" class="aside">
-  <nav class="menu active-menu--home">
-    <ul class="menu-list">
-      <li class="menu-link menu-link-overview">
-        <a class="is-active" href="/">
-          <span class="icon is-small">
-            <i class="fa fa-cubes"></i>
-          </span>
-          <span class="menu-text">Overview</span>
-        </a>
-      </li>
-      <li class="menu-link menu-link-releases">
-        <a class="" href="/releases">
-          <span class="icon is-small">
-            <i class="fa fa-history"></i>
-          </span>
-          <span class="menu-text">Releases</span>
-        </a>
-      </li>
-      <li class="menu-link menu-link-domains">
-        <a class="" href="/channels/">
-          <span class="icon is-small">
-            <i class="fa fa-link"></i>
-          </span>
-          <span class="menu-text">Domains</span>
-        </a>
-      </li>
-      <li class="menu-link menu-link-environment">
-        <a class="" href="/environment-vars">
-          <span class="icon is-small">
-            <i class="fa fa-sliders"></i>
-          </span>
-          <span class="menu-text">Environment</span>
-        </a>
-      </li>
-    </ul>
-  </nav>
-  <a asp-controller="App" asp-action="Index" title="Dashboard" class="button button-back">Back to Dashboard</a>
+<aside id="main-sidebar" class="aside env-list">
+  
+    <h4>Environments</h4>
+
+    <div class="tabs">
+        <ul>
+            <!-- an initial/default environment, auto-generate when creating an app -->
+            <li class="tab env-default">
+                <a class="env-block" asp-id="default" class="is-active">
+                    <p class="env-name">
+                        Hippo Dev
+                    </p>
+                </a>
+                <a class="env-url" href="https://foo123.hippo.rocks/" target="_blank">
+                    foo123.hippo.rocks <i class="fa fa-external-link"></i>
+                </a>
+            </li>
+            @foreach (var item in Model.Channels) {
+                <li class="tab">
+                    <a class="env-block" asp-id="@item.Id">
+                        @if (item.Status().Health == Hippo.Models.HealthLevel.Healthy) {
+                            <section class="app-state is-success has-background-success">
+                                <span class="icon-text has-text-white">
+                                    <span class="icon">
+                                        <i class="fa fa-check"></i>
+                                    </span>
+                                    <span>Healthy</span>
+                                </span>
+                            </section>
+                        } else {
+                            <section class="app-state is-success has-background-error">
+                                <span class="icon-text has-text-white">
+                                    <span class="icon">
+                                        <i class="fa fa-times-circle"></i>
+                                    </span>
+                                    <span>Healthy</span>
+                                </span>
+                            </section>
+                        }
+                        <p class="env-name">
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </p>
+                    </a>
+                    <a class="env-url" target="_blank">
+                        @Html.DisplayFor(modelItem => item.Domain.Name) <i class="fa fa-external-link"></i>
+                    </a>
+
+                    <div class="dropdown env-dropdown is-hoverable is-right">
+                        <div class="dropdown-trigger">
+                            <button class="button is-rounded is-outlined is-link" aria-haspopup="true" aria-controls="dropdown-menu">
+                                <span class="fa fa-ellipsis-h fa-lg"></span>
+                            </button>
+                        </div>
+                        <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                            <div class="dropdown-content">
+                                <a asp-action="EditChannel" asp-route-id="@item.Id" class="dropdown-item">
+                                    Edit
+                                </a>
+                                <hr class="dropdown-divider">
+                                <a class="dropdown-item has-text-danger is-disabled">
+                                    Delete
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            }
+            <li class="env-add">
+                <a asp-action="NewChannel" asp-route-id="@Model.Id" class="button is-rounded is-outlined is-link"><i class="fa fa-add"></i> Add an Environment</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="env-back">
+        <a asp-controller="App" asp-action="Index" title="Dashboard" class="button button-back is-fullwidth">Back to Dashboard</a>
+    </div>
 </aside>
