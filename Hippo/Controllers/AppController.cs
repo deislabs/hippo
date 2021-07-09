@@ -56,7 +56,16 @@ namespace Hippo.Controllers
                 return NotFound();
             }
 
-            return View(a);
+            // TODO: some of this logic should be in the viewmodel
+            var vm = new AppDetails
+            {
+                Application = a,
+                Channels = a.Channels.ToList(),
+                Revisions = a.Revisions.OrderByDescending(r => r.OrderKey()).ToList(),
+                RecentActivity = _unitOfWork.EventLog.GetRecentByApplication(a, 20).ToList()
+            };
+
+            return View(vm);
         }
 
         public IActionResult New()

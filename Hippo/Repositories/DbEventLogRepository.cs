@@ -57,5 +57,13 @@ namespace Hippo.Repositories
             };
             await _context.EventLogEntries.AddAsync(entry);
         }
+
+        public IEnumerable<EventLogEntry> GetRecentByApplication(Application application, int maxCount)
+        {
+            return _context.EventLogEntries
+                .Where(e => e.ApplicationId == application.Id)
+                .OrderByDescending(e => e.Timestamp)
+                .Take(maxCount);
+        }
     }
 }

@@ -76,6 +76,5 @@ namespace Hippo.Models
             }
             return HealthStatus.Healthy;
         }
-
     }
 }
