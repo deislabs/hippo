@@ -43,6 +43,36 @@ namespace Hippo.Repositories
             await _context.EventLogEntries.AddAsync(entry);
         }
 
+        public async Task ChannelCreated(EventOrigin source, Channel channel)
+        {
+            var entry = new EventLogEntry
+            {
+                EventKind = EventKind.ChannelCreated,
+                EventSource = source,
+                Timestamp = DateTime.UtcNow,
+                ApplicationId = channel.Application.Id,
+                ChannelId = channel.Id,
+                UserName = _user.Name(),
+                Description = channel.ConfigurationSummary(),
+            };
+            await _context.EventLogEntries.AddAsync(entry);
+        }
+
+        public async Task ChannelEdited(EventOrigin source, Channel channel)
+        {
+            var entry = new EventLogEntry
+            {
+                EventKind = EventKind.ChannelEdited,
+                EventSource = source,
+                Timestamp = DateTime.UtcNow,
+                ApplicationId = channel.Application.Id,
+                ChannelId = channel.Id,
+                UserName = _user.Name(),
+                Description = channel.ConfigurationSummary(),
+            };
+            await _context.EventLogEntries.AddAsync(entry);
+        }
+
         public async Task ChannelRevisionChanged(EventOrigin source, Channel channel, string oldRevision, string reason)
         {
             var entry = new EventLogEntry

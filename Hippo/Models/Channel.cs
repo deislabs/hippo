@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
+using System.Text;
 using Hippo.Rules;
 
 namespace Hippo.Models
@@ -72,6 +73,23 @@ namespace Hippo.Models
 
         public ICollection<EnvironmentVariable> GetEnvironmentVariables() =>
             Configuration?.EnvironmentVariables ?? Array.Empty<EnvironmentVariable>();
+
+        public string ConfigurationSummary()
+        {
+            var strategy = RevisionSelectionStrategy switch
+            {
+                ChannelRevisionSelectionStrategy.UseSpecifiedRevision =>
+                    $"fixed revision {SpecifiedRevision?.RevisionNumber ?? "(none)"}",
+                ChannelRevisionSelectionStrategy.UseRangeRule =>
+                    $"rule {RangeRule}",
+                _ => "invalid",
+            };
+            var domain = Domain?.Name ?? "(none)";
+
+            var sb = new StringBuilder();
+            sb.AppendFormat(CultureInfo.InvariantCulture, $"strategy: {strategy}; domain: {domain}");
+            return sb.ToString();
+        }
     }
 
     /// <summary>

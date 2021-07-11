@@ -296,6 +296,7 @@ namespace Hippo.Controllers
                 }
 
                 await _unitOfWork.Channels.AddNew(channel);
+                await _unitOfWork.EventLog.ChannelCreated(EventOrigin.UI, channel);
                 await _unitOfWork.EventLog.ChannelRevisionChanged(EventOrigin.UI, channel, "(none)", "channel created");
                 await _unitOfWork.SaveChanges();
 
@@ -429,6 +430,8 @@ namespace Hippo.Controllers
                 {
                     ev.Configuration = channel.Configuration;
                 }
+
+                await _unitOfWork.EventLog.ChannelEdited(EventOrigin.UI, channel);
 
                 if (revChange != null)
                 {
