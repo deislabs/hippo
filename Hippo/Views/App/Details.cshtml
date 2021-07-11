@@ -81,6 +81,7 @@
             <tr>
                 <th class=""><abbr title="When">When</abbr></th>
                 <th class=""><abbr title="What">What</abbr></th>
+                <th class=""><abbr title="Channel">Channel</abbr></th>
                 <th class=""><abbr title="What">What</abbr></th>
                 <th class=""><abbr title="Who">Who</abbr></th>
             </tr>
@@ -90,6 +91,7 @@
             <tr>
                 <td>@item.Timestamp</td>
                 <td>@item.EventKind</td>
+                <td>@Model.ChannelNameFor(item)</td>
                 <td>@item.Description</td>
                 <td>@item.UserName</td>
             </tr>
