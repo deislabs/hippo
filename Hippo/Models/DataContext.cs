@@ -19,6 +19,7 @@ namespace Hippo.Models
         public DbSet<Configuration> Configuration { get; set; }
         public DbSet<Domain> Domains { get; set; }
         public DbSet<EnvironmentVariable> EnvironmentVariables { get; set; }
+        public DbSet<EventLogEntry> EventLogEntries { get; set; }
         public DbSet<Key> Keys { get; set; }
         public DbSet<Revision> Revisions { get; set; }
 
@@ -38,6 +39,8 @@ namespace Hippo.Models
             builder.Entity<Domain>().Property(x => x.Modified).HasDefaultValueSql("now()");
             builder.Entity<EnvironmentVariable>().Property(x => x.Created).HasDefaultValueSql("now()");
             builder.Entity<EnvironmentVariable>().Property(x => x.Modified).HasDefaultValueSql("now()");
+            builder.Entity<EventLogEntry>().Property(x => x.Created).HasDefaultValueSql("now()");
+            builder.Entity<EventLogEntry>().Property(x => x.Modified).HasDefaultValueSql("now()");
             builder.Entity<Key>().Property(x => x.Created).HasDefaultValueSql("now()");
             builder.Entity<Key>().Property(x => x.Modified).HasDefaultValueSql("now()");
             builder.Entity<Revision>().Property(x => x.Created).HasDefaultValueSql("now()");
@@ -65,6 +68,14 @@ namespace Hippo.Models
 
             builder.Entity<Channel>()
                 .Property(c => c.RevisionSelectionStrategy)
+                .HasConversion<int>();
+
+            builder.Entity<EventLogEntry>()
+                .Property(c => c.EventKind)
+                .HasConversion<int>();
+
+            builder.Entity<EventLogEntry>()
+                .Property(c => c.EventSource)
                 .HasConversion<int>();
         }
     }

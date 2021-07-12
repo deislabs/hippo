@@ -38,7 +38,7 @@ namespace Hippo.Controllers
             if (ModelState.IsValid)
             {
                 var apps = FindApps();
-                var changedChannels = new List<Channel>();
+                var changes = new List<ActiveRevisionChange>();
 
                 foreach (var app in apps)
                 {
@@ -48,11 +48,18 @@ namespace Hippo.Controllers
                         RevisionNumber = request.RevisionNumber,
                     });
 
-                    var changedAppChannels = app.ReevaluateActiveRevisions();
-                    changedChannels.AddRange(changedAppChannels);
+                    var appChannelChanges = app.ReevaluateActiveRevisions();
+                    changes.AddRange(appChannelChanges);
+                }
+
+                foreach (var change in changes)
+                {
+                    await _unitOfWork.EventLog.ChannelRevisionChanged(EventOrigin.API, change.Channel, change.ChangedFrom, "registered revision");
                 }
 
                 await _unitOfWork.SaveChanges();
+
+                var changedChannels = changes.Select(c => c.Channel).ToList().AsReadOnly();
 
                 var queueRescheduleTasks = changedChannels.Select(c =>
                     _channelsToReschedule.Enqueue(new ChannelReference(c.Application.Id, c.Id), CancellationToken.None)

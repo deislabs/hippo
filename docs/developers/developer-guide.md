@@ -90,7 +90,7 @@ production use. If you change the model then you need to create migrations for b
 databases.  To do this:
 
 ```
-dotnet ef migrations add <name> --context SqliteDataContext --output-dir Migrations/Sqlit
+dotnet ef migrations add <name> --context SqliteDataContext --output-dir Migrations/Sqlite
 ASPNETCORE_ENVIRONMENT=Production dotnet ef migrations add <name> --context PostgresDataContext --output-dir Migrations/Postgres
 ```
 

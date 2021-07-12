@@ -1,29 +1,29 @@
-﻿@model Hippo.Models.Application
+﻿@model Hippo.ViewModels.AppDetails
 
 <div class="container">
     <div class="row">
         <table class="table">
             <thead>
                 <tr>
-                    <th scope="col">@Html.DisplayNameFor(model => model.Name)</th>
-                    <th scope="col">@Html.DisplayNameFor(model => model.Created)</th>
-                    <th scope="col">@Html.DisplayNameFor(model => model.Modified)</th>
+                    <th scope="col">@Html.DisplayNameFor(model => model.Application.Name)</th>
+                    <th scope="col">@Html.DisplayNameFor(model => model.Application.Created)</th>
+                    <th scope="col">@Html.DisplayNameFor(model => model.Application.Modified)</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>@Html.DisplayFor(model => model.Name)</td>
-                    <td>@Html.DisplayFor(model => model.Created)</td>
-                    <td>@Html.DisplayFor(model => model.Modified)</td>
+                    <td>@Html.DisplayFor(model => model.Application.Name)</td>
+                    <td>@Html.DisplayFor(model => model.Application.Created)</td>
+                    <td>@Html.DisplayFor(model => model.Application.Modified)</td>
                 </tr>
             </tbody>
         </table>
     </div>
 
     <div class="row btn-group">
-        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a>
-        <a asp-action="NewChannel" asp-route-id="@Model.Id" class="btn btn-secondary">Create a New Channel</a>
-        <a asp-action="RegisterRevision" asp-route-id="@Model.Id" class="btn btn-secondary">Register a Revision</a>
+        <a asp-action="Edit" asp-route-id="@Model.Application.Id" class="btn btn-primary">Edit</a>
+        <a asp-action="NewChannel" asp-route-id="@Model.Application.Id" class="btn btn-secondary">Create a New Channel</a>
+        <a asp-action="RegisterRevision" asp-route-id="@Model.Application.Id" class="btn btn-secondary">Register a Revision</a>
         <a asp-action="Index" class="btn btn-secondary">Back to List</a>
     </div>
 
@@ -66,8 +66,34 @@
         <tbody>
         @foreach (var item in Model.Revisions.OrderByDescending(r => r.OrderKey())) {
             <tr>
-                <td>@Html.DisplayFor(modelItem => item.RevisionNumber)</td>
+                <td>@item.RevisionNumber</td>
                 <td>@string.Join(", ", item.ActiveOn().Select(c => c.Name))</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+    <div class="row" style="padding-bottom: 20px; padding-top: 20px;">
+        <h3>Recent Activity</h3>
+    </div>
+    <table class="table is-bordered is-striped is-narrow is-fullwidth mt-4">
+        <thead>
+            <tr>
+                <th class=""><abbr title="When">When</abbr></th>
+                <th class=""><abbr title="What">What</abbr></th>
+                <th class=""><abbr title="Channel">Channel</abbr></th>
+                <th class=""><abbr title="What">What</abbr></th>
+                <th class=""><abbr title="Who">Who</abbr></th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.RecentActivity) {
+            <tr>
+                <td>@item.Timestamp</td>
+                <td>@item.EventKind</td>
+                <td>@Model.ChannelNameFor(item)</td>
+                <td>@item.Description</td>
+                <td>@item.UserName</td>
             </tr>
         }
         </tbody>

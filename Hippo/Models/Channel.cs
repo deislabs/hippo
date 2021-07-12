@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
+using System.Text;
 using Hippo.Rules;
 
 namespace Hippo.Models
@@ -27,7 +28,7 @@ namespace Hippo.Models
         public uint PortID { get; set; }
         public Configuration Configuration { get; set; }
 
-        public bool ReevaluateActiveRevision()
+        public ActiveRevisionChange ReevaluateActiveRevision()
         {
             var previous = ActiveRevision;
 
@@ -47,7 +48,12 @@ namespace Hippo.Models
             // TODO: if we end up with no active revision then we should put the channel into
             // some kind of unhappy status
 
-            return ActiveRevision != previous;
+            if (ActiveRevision?.RevisionNumber == previous?.RevisionNumber)
+            {
+                return null;
+            }
+
+            return new ActiveRevisionChange(previous?.RevisionNumber, ActiveRevision?.RevisionNumber, this);
         }
 
         public HealthStatus Status()
@@ -67,6 +73,23 @@ namespace Hippo.Models
 
         public ICollection<EnvironmentVariable> GetEnvironmentVariables() =>
             Configuration?.EnvironmentVariables ?? Array.Empty<EnvironmentVariable>();
+
+        public string ConfigurationSummary()
+        {
+            var strategy = RevisionSelectionStrategy switch
+            {
+                ChannelRevisionSelectionStrategy.UseSpecifiedRevision =>
+                    $"fixed revision {SpecifiedRevision?.RevisionNumber ?? "(none)"}",
+                ChannelRevisionSelectionStrategy.UseRangeRule =>
+                    $"rule {RangeRule}",
+                _ => "invalid",
+            };
+            var domain = Domain?.Name ?? "(none)";
+
+            var sb = new StringBuilder();
+            sb.AppendFormat(CultureInfo.InvariantCulture, $"strategy: {strategy}; domain: {domain}");
+            return sb.ToString();
+        }
     }
 
     /// <summary>
@@ -85,4 +108,10 @@ namespace Hippo.Models
         /// </summary>
         UseSpecifiedRevision = 1,
     }
+
+    public record ActiveRevisionChange(
+        string ChangedFrom,
+        string ChangedTo,
+        Channel Channel
+    );
 }
