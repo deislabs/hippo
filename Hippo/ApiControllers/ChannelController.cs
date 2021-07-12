@@ -91,11 +91,16 @@ namespace Hippo.ApiControllers
                 }
 
                 var channelId = System.Guid.NewGuid();
+                var domain = new Models.Domain
+                {
+                    Name = request.Domain
+                };
                 var channel = new Models.Channel
                 {
                     Id = channelId,
                     Application = app,
                     Name = request.Name,
+                    Domain = domain,
                     RevisionSelectionStrategy = request.RevisionSelectionStrategy,
                     RangeRule = request.RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseRangeRule ? request.RevisionRange : "",
                     SpecifiedRevision = request.RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseSpecifiedRevision ? new Revision { RevisionNumber = request.RevisionNumber } : null
@@ -112,6 +117,7 @@ namespace Hippo.ApiControllers
                     Id = channelId,
                     AppId = app.Id,
                     Name = request.Name,
+                    Domain = domain.Name,
                     RevisionNumber = request.RevisionNumber,
                     RevisionRange = request.RevisionRange,
                     RevisionSelectionStrategy = request.RevisionSelectionStrategy

@@ -24,6 +24,13 @@ namespace Hippo.Messages
         public string Name { get; set; }
 
         /// <summary>
+        /// The name of the Domain being served by the Channel.
+        /// </summary>
+        /// <example>myapp.hippos.rocks</example>
+        [Required]
+        public string Domain { get; set; }
+
+        /// <summary>
         /// Specifies if the channels is fixed to a revision or uses a revision range.
         /// </summary>
         /// <example>true</example>
