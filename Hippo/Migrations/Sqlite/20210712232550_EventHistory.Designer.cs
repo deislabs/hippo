@@ -3,14 +3,16 @@ using System;
 using Hippo.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Hippo.Migrations.Sqlite
 {
     [DbContext(typeof(SqliteDataContext))]
-    partial class SqliteDataContextModelSnapshot : ModelSnapshot
+    [Migration("20210712232550_EventHistory")]
+    partial class EventHistory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -99,12 +101,12 @@ namespace Hippo.Migrations.Sqlite
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
-                        .HasDefaultValueSql("now()");
+                        .HasDefaultValueSql("datetime('now')");
 
                     b.Property<DateTime>("Modified")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("TEXT")
-                        .HasDefaultValueSql("now()");
+                        .HasDefaultValueSql("datetime('now')");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -145,7 +147,7 @@ namespace Hippo.Migrations.Sqlite
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
-                        .HasDefaultValueSql("now()");
+                        .HasDefaultValueSql("datetime('now')");
 
                     b.Property<Guid?>("DomainId")
                         .HasColumnType("TEXT");
@@ -153,7 +155,7 @@ namespace Hippo.Migrations.Sqlite
                     b.Property<DateTime>("Modified")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("TEXT")
-                        .HasDefaultValueSql("now()");
+                        .HasDefaultValueSql("datetime('now')");
 
                     b.Property<string>("Name")
                         .HasColumnType("TEXT");
@@ -194,12 +196,12 @@ namespace Hippo.Migrations.Sqlite
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
-                        .HasDefaultValueSql("now()");
+                        .HasDefaultValueSql("datetime('now')");
 
                     b.Property<DateTime>("Modified")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("TEXT")
-                        .HasDefaultValueSql("now()");
+                        .HasDefaultValueSql("datetime('now')");
 
                     b.HasKey("Id");
 
@@ -215,12 +217,12 @@ namespace Hippo.Migrations.Sqlite
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
-                        .HasDefaultValueSql("now()");
+                        .HasDefaultValueSql("datetime('now')");
 
                     b.Property<DateTime>("Modified")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("TEXT")
-                        .HasDefaultValueSql("now()");
+                        .HasDefaultValueSql("datetime('now')");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -246,7 +248,7 @@ namespace Hippo.Migrations.Sqlite
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
-                        .HasDefaultValueSql("now()");
+                        .HasDefaultValueSql("datetime('now')");
 
                     b.Property<string>("Key")
                         .IsRequired()
@@ -255,7 +257,7 @@ namespace Hippo.Migrations.Sqlite
                     b.Property<DateTime>("Modified")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("TEXT")
-                        .HasDefaultValueSql("now()");
+                        .HasDefaultValueSql("datetime('now')");
 
                     b.Property<string>("Value")
                         .IsRequired()
@@ -283,7 +285,7 @@ namespace Hippo.Migrations.Sqlite
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
-                        .HasDefaultValueSql("now()");
+                        .HasDefaultValueSql("datetime('now')");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -298,7 +300,7 @@ namespace Hippo.Migrations.Sqlite
                     b.Property<DateTime>("Modified")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("TEXT")
-                        .HasDefaultValueSql("now()");
+                        .HasDefaultValueSql("datetime('now')");
 
                     b.Property<DateTime>("Timestamp")
                         .HasColumnType("TEXT");
@@ -320,12 +322,12 @@ namespace Hippo.Migrations.Sqlite
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
-                        .HasDefaultValueSql("now()");
+                        .HasDefaultValueSql("datetime('now')");
 
                     b.Property<DateTime>("Modified")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("TEXT")
-                        .HasDefaultValueSql("now()");
+                        .HasDefaultValueSql("datetime('now')");
 
                     b.Property<string>("PrivateKey")
                         .IsRequired()
@@ -352,12 +354,12 @@ namespace Hippo.Migrations.Sqlite
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
-                        .HasDefaultValueSql("now()");
+                        .HasDefaultValueSql("datetime('now')");
 
                     b.Property<DateTime>("Modified")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("TEXT")
-                        .HasDefaultValueSql("now()");
+                        .HasDefaultValueSql("datetime('now')");
 
                     b.Property<string>("RevisionNumber")
                         .IsRequired()
