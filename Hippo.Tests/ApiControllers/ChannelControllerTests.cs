@@ -37,6 +37,7 @@ namespace Hippo.Tests.ApiControllers
             {
                 AppId = AppId,
                 Name = "Test Channel with Fixed Revision",
+                Domain = "test.hippos.rocks",
                 RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseSpecifiedRevision,
                 RevisionNumber = "1.2.3"
             };
@@ -45,6 +46,7 @@ namespace Hippo.Tests.ApiControllers
             {
                 AppId = Guid.NewGuid(),
                 Name = "Test Channel with Invalid App",
+                Domain = "test.hippos.rocks",
                 RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseSpecifiedRevision,
                 RevisionNumber = "1.2.3"
             };
@@ -53,6 +55,7 @@ namespace Hippo.Tests.ApiControllers
             {
                 AppId = AppId,
                 Name = "Test Channel with Range Revision",
+                Domain = "test.hippos.rocks",
                 RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseRangeRule,
                 RevisionRange = "~1.2.3"
             };
@@ -141,12 +144,21 @@ namespace Hippo.Tests.ApiControllers
                 new()
                 {
                   Name = "AppID is Missing",
+                  Domain = "appidmissing.hippos.rocks",
                   RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseSpecifiedRevision,
                   RevisionNumber = "1.2.3"
                 },
                 new()
                 {
                   AppId = Guid.NewGuid(),
+                  Domain = "namemissing.hippos.rocks",
+                  RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseSpecifiedRevision,
+                  RevisionNumber = "1.2.3"
+                },
+                new()
+                {
+                  AppId = Guid.NewGuid(),
+                  Name = "Domain is Missing",
                   RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseSpecifiedRevision,
                   RevisionNumber = "1.2.3"
                 },
@@ -154,12 +166,14 @@ namespace Hippo.Tests.ApiControllers
                 {
                   AppId = Guid.NewGuid(),
                   Name = "Revision Strategy is Missing",
+                  Domain = "revisionstrategymissing.hippos.rocks",
                   RevisionNumber = "1.2.3"
                 },
                 new()
                 {
                   AppId = Guid.NewGuid(),
                   Name = "Revision Range is Missing",
+                  Domain = "revisionrangemissing.hippos.rocks",
                   RevisionNumber = "1.2.3",
                   RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseRangeRule,
                 },
@@ -167,6 +181,7 @@ namespace Hippo.Tests.ApiControllers
                 {
                   AppId = Guid.NewGuid(),
                   Name = "Revision Version is Missing",
+                  Domain = "revisionversionmissing.hippos.rocks",
                   RevisionRange = "~1.2.3",
                   RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseSpecifiedRevision,
                 }
