@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Hippo.Messages;
 using Hippo.Models;
@@ -23,8 +24,22 @@ namespace Hippo.Schedulers
             {
                 foreach (var channel in application.Channels)
                 {
-                    _logger.LogTrace($"Starting Channel:{channel.Id} Application: {application.Id}");
-                    Start(channel);
+                    if (channel.ActiveRevision == null)
+                    {
+                        _logger.LogWarning($"Scheduler start: Skipping channel {channel.Name} in application {application.Name}: no active revision");
+                    }
+                    else
+                    {
+                        _logger.LogTrace($"Scheduler start: Starting channel {channel.Name} in application {application.Name}");
+                        try
+                        {
+                            Start(channel);
+                        }
+                        catch (Exception e)
+                        {
+                            _logger.LogWarning($"Scheduler start: Error starting channel {channel.Name} in application {application.Name}: {e}");
+                        }
+                    }
                 }
             }
         }
