@@ -302,7 +302,7 @@ namespace Hippo.Controllers
 
                 await _channelsToReschedule.Enqueue(new ChannelReference(application.Id, channel.Id), CancellationToken.None);
 
-                _logger.LogInformation($"NewChannel: application {form.Id} channel {channel.Id} now at revision {channel.ActiveRevision.RevisionNumber}");
+                _logger.LogInformation($"NewChannel: application {form.Id} channel {channel.Id} now at revision {channel.ActiveRevision?.RevisionNumber ?? "[none]"}");
                 _logger.LogInformation($"NewChannel: serving on port {channel.PortID + Channel.EphemeralPortRange}");
                 return RedirectToAction(nameof(Index));
             }
