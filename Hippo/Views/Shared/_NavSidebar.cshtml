@@ -13,17 +13,6 @@
 
     <div class="tabs">
         <ul>
-            <!-- an initial/default environment, auto-generate when creating an app -->
-            <li class="tab env-default">
-                <a class="env-block" asp-id="default" class="is-active">
-                    <p class="env-name">
-                        Hippo Dev
-                    </p>
-                </a>
-                <a class="env-url" href="https://foo123.hippo.rocks/" target="_blank">
-                    foo123.hippo.rocks <i class="fa fa-external-link"></i>
-                </a>
-            </li>
             @foreach (var item in Model.Channels) {
                 <li class="tab">
                     <a class="env-block" asp-id="@item.Id">
@@ -50,7 +39,7 @@
                             @Html.DisplayFor(modelItem => item.Name)
                         </p>
                     </a>
-                    <a class="env-url" target="_blank">
+                    <a class="env-url" target="_blank" href="https://@item.Domain.Name">
                         @Html.DisplayFor(modelItem => item.Domain.Name) <i class="fa fa-external-link"></i>
                     </a>
 
