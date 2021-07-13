@@ -761,12 +761,11 @@ p.card-header-title {
   }
 
   label.env-deploy-label {
-    max-width: 38vw;
-    padding-left: 4rem;
+    max-width: 40vw;
     background: $light4;
-    padding: 1.25rem 2rem 1rem 3.85rem;
+    padding: 1.25rem 1rem 1.125rem 3.5rem;
     border-radius: 0.67rem;
-    margin: 1rem 0.67rem;
+    margin: 1rem 1rem;
     border: 1px solid $light1;
     
     strong,
@@ -818,13 +817,17 @@ p.card-header-title {
       width: 1.425em;
       height: 1.4em;
       position: absolute;
-      top: 1.25em;
-      left: 1.2rem;
+      top: 1.75em;
+      left: 1rem;
       margin-right: 1em;
       vertical-align: top;
       cursor: pointer;
       text-align: center;
       transition: all 250ms ease;
+    }
+    p {
+      margin: 0;
+      padding: 0;
     }
   }
 

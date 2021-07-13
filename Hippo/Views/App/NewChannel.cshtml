@@ -64,12 +64,10 @@
             </div>
             <div class="field has-background-white radio-wrapper">
                 @foreach (var strategy in Model.RevisionSelectionStrategies) {
-                    <div class="radio-wrapper">
-                        <label class="radio radio-label env-deploy-label has-text-left">
-                            <input type="radio" value="@strategy.Value" asp-for="SelectedRevisionSelectionStrategy" class="is-large env-radio env-radio-auto">
-                            <p>@Html.DisplayFor(modelItem => strategy.Text)</p>
-                        </label>
-                    </div>
+                    <label class="radio radio-label env-deploy-label has-text-left">
+                        <input type="radio" value="@strategy.Value" asp-for="SelectedRevisionSelectionStrategy" class="is-large env-radio env-radio-auto">
+                        <p>@Html.DisplayFor(modelItem => strategy.Text)</p>
+                    </label>
                 }
                 <p asp-validation-for="SelectedRevisionSelectionStrategy" class="help is-danger"></p>
                 <!-- if manual (UseSpecifiedRevision) -->

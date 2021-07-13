@@ -32,8 +32,8 @@ jQuery(function () {
 
   // update radio button text labels
   $.fn.radioLabels = function() {
-    $('input[value="UseRangeRule"]').next("p").html("<strong>Auto-deploy</strong> <small>Deploy versions as they are created.</small>.");
-    $('input[value="UseSpecifiedRevision"]').next("p").html("<strong>Selective deploy</strong> <small>Lock deployment to a specific version.</small>.");
+    $('input[value="UseRangeRule"]').next("p").html("<strong>Auto-deploy</strong> <small>Deploy versions as they are created.</small>");
+    $('input[value="UseSpecifiedRevision"]').next("p").html("<strong>Selective deploy</strong> <small>Lock deployment to a specific version.</small>");
   }
 
   // show form fields based on selection
