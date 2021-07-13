@@ -5,34 +5,65 @@
     Layout = "_Layout";
 }
 
-<form asp-action="Edit">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <input type="hidden" asp-for="Id" />
-    <div class="form-group">
-        <label asp-for="Name" class="control-label"></label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
+<div class="columns is-centered">
+    <div class="column is-two-thirds-desktop is-half-widescreen">
+        
+        <div class="box">
+            <h2>Edit Application</h2>
+            
+            <form asp-action="Edit">
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label asp-for="Name" class="label">Name</label>
+                    </div>
+                    <div class="field-body is-normal">
+                        <div class="control">
+                            <input asp-for="Name" type="text" class="input" />
+                            <p asp-validation-for="Name" class="help is-warning"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label asp-for="StorageId" class="label">Bindle Name</label>
+                    </div>
+                    <div class="field-body is-normal">
+                        <div class="control">
+                            <input asp-for="StorageId" type="text" class="input" />
+                            <p asp-validation-for="StorageId" class="help is-warning"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel is-danger">
+                    <p class="panel-heading">
+                        Warning
+                    </p>
+                    <div class="panel-block">
+                        <div class="field is-horizontal">
+                            <div class="field-body">
+                                <div class="field is-horizontal">
+                                    <p class="control">If you change the Bindle name, ALL channels will stop working until you register revisions of the new bindle that satisfy the channels' rules!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="field is-grouped">
+                    <div class="control">
+                        <button type="submit" value="Save" class="button is-success is-rounded">Save</button>
+                        <a asp-action="Index" class="button is-danger is-outlined is-rounded">Cancel</a>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        <div asp-validation-summary="ModelOnly" class="is-danger"></div>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
-    <!-- TODO: a warning that isn't rubbish like this one -->
-    <div>
-        <p>WARNING!</p>
-        <p>If you change the bindle name, ALL channels will stop working until
-            you register revisions of the new bindle that satisfy the channels'
-            rules!</p>
-    </div>
-    <div class="form-group">
-        <label asp-for="StorageId" class="control-label"></label>
-        <input asp-for="StorageId" class="form-control" />
-        <span asp-validation-for="StorageId" class="text-danger"></span>
-    </div>
-    <div>
-        <p>WARNING!</p>
-    </div>
-    <div class="form-group btn-group">
-        <input type="submit" value="Save" class="btn btn-primary" />
-        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
-    </div>
-</form>
+</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
