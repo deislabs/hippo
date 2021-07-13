@@ -35,16 +35,6 @@
                     </div>
                 </div>
             </div>
-            @* <div class="field is-horizontal is-narrow">
-                <div class="field-label is-normal">
-                    <label class="label">
-                        <!-- Left empty for spacing -->
-                    </label>
-                </div>
-                <div class="field-body is-normal">
-                    <a title="Add Environment Variables" class="env-var-toggle is-link" id="envVarToggle"><small><i class="fa fa-plus"></i>&nbsp;<strong>Add Environment Variables</strong></small></a>
-                </div>
-            </div> *@
             <div class="field is-horizontal" id="envVars">
                 <div class="field-label is-normal">
                     <label asp-for="EnvironmentVariables" class="label">Environment Variables
@@ -61,23 +51,15 @@
             <div class="field">
                 <label class="label is-large">Deployment</label>
             </div>
-            <div class="field has-background-white">
-                <div class="field is-horizontal">
-                    <div class="field-body is-normal radio-wrapper">
-                        <input type="radio" name="deploystyle" id="envAuto" value="UseRangeRule" asp-for="SelectedRevisionSelectionStrategy" asp-items="Model.RevisionSelectionStrategies" class="is-large env-radio env-radio-auto">
-                        <label class="radio radio-label env-deploy-label has-text-left" for="envAuto">
-                            <strong>Auto-deploy</strong>
-                            <small>Deploy versions as they are created.</small>
-                        </label>
-                        <input type="radio" name="deploystyle" id="envManual" value="UseSpecifiedRevision" asp-for="SelectedRevisionSelectionStrategy" asp-items="Model.RevisionSelectionStrategies" class="is-large env-radio env-radio-manual">
-                        <label class="radio radio-label env-deploy-label has-text-left" for="envManual">
-                            <strong>Selective deploy</strong>
-                            <small>Lock deploys to a specific version.</small>
-                        </label>
-                    </div>
 
-                    <p asp-validation-for="SelectedRevisionSelectionStrategy" class="help is-danger"></p>
-                </div>
+            <div class="field has-background-white radio-wrapper">
+                @foreach (var strategy in Model.RevisionSelectionStrategies) {
+                    <label class="radio radio-label env-deploy-label has-text-left">
+                        <input type="radio" value="@strategy.Value" asp-for="SelectedRevisionSelectionStrategy" class="is-large env-radio env-radio-auto">
+                        <p>@Html.DisplayFor(modelItem => strategy.Text)</p>
+                    </label>
+                }
+                <p asp-validation-for="SelectedRevisionSelectionStrategy" class="help is-danger"></p>
                 <!-- if manual (UseSpecifiedRevision) -->
                 <div class="field field-padded is-horizontal hide" id="envManualField">
                     <div class="field-label is-normal">
@@ -95,7 +77,7 @@
                     </div>
                 </div>
                 <!-- if auto (UseRangeRule) -->
-                <div class="field field-padded is-horizontal hide" id="envAutoField">
+                <div class="field field-padded is-horizontal" id="envAutoField">
                     <div class="field-label is-normal">
                         <label asp-for="SelectedRevisionRule" class="label">Version range</label>
                     </div>
@@ -168,7 +150,7 @@
                 <div class="field-body is-normal">
                     <div class="field">
                         <div class="control">
-                            <p asp-validation-summary="ModelOnly" class="help is-alert"></p>
+                            <p asp-validation-summary="EditChannel" class="help is-alert"></p>
                         </div>
                     </div>
                 </div>

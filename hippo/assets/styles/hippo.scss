@@ -794,63 +794,59 @@ p.card-header-title {
 }
 
 .radio-wrapper {
-  margin: 0.5rem;
+  margin: 0;
   
   input[type="radio"] {
     position: absolute;
     opacity: 0;
-    + .radio-label {
-      &:before {
-        content: '';
-        background: white;
-        border-radius: 100%;
-        border: 2px solid darken($dark3, 25%);
-        display: inline-block;
-        width: 1.425em;
-        height: 1.4em;
-        position: absolute;
-        top: 1.5755em;
-        left: 1.2rem;
-        margin-right: 1em;
-        vertical-align: top;
-        cursor: pointer;
-        text-align: center;
-        transition: all 250ms ease;
-      }
-    }
-    &:checked {
-      + .radio-label {
-        border-color: $dark3;
-        
-        &:before {
-          background-color: $blue;
-          box-shadow: inset 0 0 0 4px $light2;
-        }
-      }
-    }
-    &:focus {
-      + .radio-label {
-        &:before {
-          outline: none;
-          border-color: $blue;
-        }
-      }
-    }
-    &:disabled {
-      + .radio-label {
-        &:before {
-          box-shadow: inset 0 0 0 4px $light1;
-          border-color: darken($light2, 25%);
-          background: darken($light2, 25%);
-        }
-      }
-    }
     + .radio-label {
       &:empty {
         &:before {
           margin-right: 0;
         }
       }
+    }
+  }
+
+  .radio-label {
+    &:before {
+      content: '';
+      background: white;
+      border-radius: 100%;
+      border: 2px solid darken($dark3, 25%);
+      display: inline-block;
+      width: 1.425em;
+      height: 1.4em;
+      position: absolute;
+      top: 1.25em;
+      left: 1.2rem;
+      margin-right: 1em;
+      vertical-align: top;
+      cursor: pointer;
+      text-align: center;
+      transition: all 250ms ease;
+    }
+  }
+
+  .radio-label.is-active {
+    border-color: $dark3;
+    &:before {
+      background-color: $blue;
+      box-shadow: inset 0 0 0 4px $light2;
+    }
+  }
+  &:focus,
+  &:hover {
+    &:before {
+      outline: none;
+      border-color: $blue;
+    }
+  }
+  &:disabled {
+    &:before {
+      box-shadow: inset 0 0 0 4px $light1;
+      border-color: darken($light2, 25%);
+      background: darken($light2, 25%);
     }
   }
 }
