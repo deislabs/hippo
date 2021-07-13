@@ -59,7 +59,7 @@ namespace Hippo.Schedulers
             var psi = new ProcessStartInfo
             {
                 FileName = wagiProgram,
-                Arguments = $"-b {c.Application.StorageId}/{c.ActiveRevision.RevisionNumber} --bindle-server {bindleUrl} -l 127.0.0.1:{port} {env}",
+                Arguments = $"-b {c.Application.StorageId}/{c.ActiveRevision.RevisionNumber} --bindle-url {bindleUrl} -l 127.0.0.1:{port} {env}",
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
