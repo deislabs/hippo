@@ -1,4 +1,4 @@
-@model Hippo.Models.Application
+@model Hippo.ViewModels.AppDetails
 
 <input type="checkbox" id="sidebar-trigger" role="button">
 <label for="sidebar-trigger" id="sidebar-toggler">
@@ -75,7 +75,7 @@
                 </li>
             }
             <li class="env-add">
-                <a asp-action="NewChannel" asp-route-id="@Model.Id" class="button is-rounded is-outlined is-link"><i class="fa fa-add"></i> Add an Environment</a>
+                <a asp-action="NewChannel" asp-route-id="@Model.Application.Id" class="button is-rounded is-outlined is-link"><i class="fa fa-add"></i> Add an Environment</a>
             </li>
         </ul>
     </div>
