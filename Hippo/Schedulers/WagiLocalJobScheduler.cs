@@ -54,6 +54,12 @@ namespace Hippo.Schedulers
                 return;
             }
 
+            if (c.ActiveRevision == null || string.IsNullOrWhiteSpace(c.ActiveRevision.RevisionNumber))
+            {
+                _logger.LogWarning($"Can't start {c.Application.Name}:{c.Name}: no active revision");
+                return;
+            }
+
             var env = String.Join(' ', c.GetEnvironmentVariables().Select(ev => $"--env {ev.Key}=\"{ev.Value}\""));
 
             var psi = new ProcessStartInfo
