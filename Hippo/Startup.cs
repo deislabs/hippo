@@ -125,7 +125,7 @@ namespace Hippo
                 .AddMvc()
                 .AddJsonOptions(
                     options => options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter())
-            );
+                );
         }
 
         public void Configure(IApplicationBuilder app, IServiceProvider serviceProvider)
