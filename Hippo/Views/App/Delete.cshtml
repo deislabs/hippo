@@ -1,18 +1,42 @@
 ﻿@model Hippo.Models.Application
 
-<div class="container">
-    <div class="row">
-        <div class="col">
-            <h3>Are you sure?</h3>
-        </div>
-        <div class="col">
-            <form asp-action="Delete">
-                <input type="hidden" asp-for="Id" />
-                <div class="form-group btn-group">
-                    <input type="submit" value="Delete" class="btn btn-danger" />
-                    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+@{
+    ViewData["Title"] = "Delete Application";
+    Layout = "_Layout";
+}
+
+<div class="columns is-centered">
+    <div class="column is-two-thirds-tablet is-two-thirds-desktop is-two-thirds-widescreen is-half-fullhd">
+        <div class="card is-danger">
+            <header class="card-header has-background-danger">
+                <p class="card-header-title has-text-white">Are you sure?</p>
+            </header>
+
+            <div class="card-content">
+                <div class="content">
+                    <p>Application <code>@Html.DisplayFor(model => model.Name)</code> will be deleted.</p>
                 </div>
-            </form>
+            </div>
+
+            <footer class="card-content">
+                <form asp-action="Delete">
+                    <input type="hidden" asp-for="Id" />
+                    <button type="submit" value="Delete" class="button button is-danger is-outline is-rounded">Delete Application</button>
+                    <a asp-action="Index" class="button is-link is-outlined is-rounded">Cancel</a>
+                </form>
+            </footer>
+
+            @* <div class="panel-block">
+                <form asp-action="Delete">
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <input type="hidden" asp-for="Id" />
+                            <button type="submit" value="Delete" class="button button is-danger is-outline is-rounded">Delete Application</button>
+                            <a asp-action="Index" class="button is-link is-outlined is-rounded">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div> *@
         </div>
     </div>
 </div>

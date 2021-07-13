@@ -27,6 +27,8 @@ gulp.task('watch', function() {
 
 // move assets from node_modules to wwwroot
 gulp.task('copy', async function() {
+    gulp.src("./assets/js/*").pipe(gulp.dest("./wwwroot/js/"));
+    
     gulp.src(nodeRoot + "bulma/**/*").pipe(gulp.dest(targetPath + "/bulma/"));
 
     gulp.src(nodeRoot + "bootstrap/dist/js/*").pipe(gulp.dest(targetPath + "/bootstrap/dist/js"));

@@ -307,7 +307,7 @@ namespace Hippo.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            return View(form);
+            return RedirectToAction(nameof(Index));
         }
 
         private static IEnumerable<EnvironmentVariable> ParseEnvironmentVariables(string text)
