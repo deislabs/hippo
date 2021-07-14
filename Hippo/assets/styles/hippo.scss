@@ -94,13 +94,13 @@ body {
 
 .wrapper {
   position: relative;
-  min-height: 100vh;
+  min-height: calc(100vh - #{$navHeight});
   overflow: hidden;
 }
 
 .main {
-  padding: calc(#{$navHeight} * 0.925) 2rem 7em calc(#{$sidebarWidth} + 2rem);
-  min-height: calc(100vh - 96px);
+  padding: calc(#{$navHeight}) 2rem 7em calc(#{$sidebarWidth} + 2rem);
+  min-height: calc(100vh - 7em);
   transition: 0.2s all ease-out;
   overflow: hidden;
 
@@ -154,7 +154,7 @@ body {
   left: 0;
   width: 100%;
   height: $navHeight;
-  z-index: 20;
+  z-index: 1920;
 }
 
 .navbar {
