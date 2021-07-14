@@ -25,6 +25,19 @@ namespace Hippo.Rules
             return new NpmRevisionRangeRule(rule);
         }
 
+        public static Exception? Validate(string? rule)
+        {
+            try
+            {
+                Parse(rule);
+                return null;
+            }
+            catch (Exception e)
+            {
+                return e;
+            }
+        }
+
         public abstract Revision? Match(ICollection<Revision> candidates);
 
         private class NpmRevisionRangeRule : RevisionRangeRule
