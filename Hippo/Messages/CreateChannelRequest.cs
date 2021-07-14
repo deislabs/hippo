@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Hippo.Logging;
 using Hippo.Models;
+using Hippo.Rules;
 
 namespace Hippo.Messages
 {
@@ -65,10 +66,11 @@ namespace Hippo.Messages
                 }
 
 
-                if (!SemVer.Range.TryParse(RevisionRange, out _))
+                var ruleError = RevisionRangeRule.Validate(RevisionRange);
+                if (ruleError != null)
                 {
                     yield return new ValidationResult(
-                        $"Revision Range does not comply with Semantic Versioning version number range rules",
+                        $"Revision range is not valid rule syntax: {ruleError.Message}",
                         new[] { nameof(RevisionRange) });
                 }
 
