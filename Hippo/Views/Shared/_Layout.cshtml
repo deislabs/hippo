@@ -11,46 +11,31 @@
     <link href="~/styles/hippo.css" rel="stylesheet" />
 </head>
 <body>
-  @if (User.Identity.IsAuthenticated) {
-    <partial name="_NavTopbar" />
+  <partial name="_NavTopbar" />
 
-    <div class="wrapper">
-      <main class="main no-app" id="main">
-        <partial name="_NavBreadcrumb" />
-        
-        <div class="level mt-2 mr-2 content-title">
-          <div class="level-left">
-            <div class="level-item">
-              <div class="title has-text-primary">
-                <span><text>@ViewBag.Title</text></span>
-              </div>
+  <div class="wrapper">
+    <main class="main no-app" id="main">
+      <partial name="_NavBreadcrumb" />
+      
+      <div class="level mt-2 mr-2 content-title">
+        <div class="level-left">
+          <div class="level-item">
+            <div class="title has-text-primary">
+              <span><text>@ViewBag.Title</text></span>
             </div>
           </div>
         </div>
-        
-        <div class="columns is-multiline">
-          <div class="column is-12">
-            @RenderBody()
-          </div>
+      </div>
+      
+      <div class="columns is-multiline">
+        <div class="column is-12">
+          @RenderBody()
         </div>
-        
-      </main>
-      <partial name="_Footer" />
-    </div>
-
-  } else {
-    
-    <div class="wrapper">
-
-      <main class="main logged-out" id="main">
-        <div class="columns is-multiline">
-          <div class="column is-12">
-            @RenderBody()
-          </div>
-        </div>
-      </main>
-    </div>
-  }
+      </div>
+      
+    </main>
+    <partial name="_Footer" />
+  </div>
   
   <script src="~/lib/jquery/dist/jquery.min.js"></script>
   <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
