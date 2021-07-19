@@ -19,6 +19,7 @@ using Hippo.Repositories;
 using Microsoft.Extensions.Logging;
 using Hippo.Tasks;
 using System.Threading;
+using Hippo.ControllerCore;
 
 namespace Hippo.Controllers
 {

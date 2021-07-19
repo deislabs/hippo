@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using Hippo.ControllerCore;
 using Hippo.Models;
 using Hippo.Repositories;
 using Hippo.ViewModels;

@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using Hippo.ControllerCore;
 using Hippo.Controllers;
 using Hippo.Messages;
 using Hippo.Models;
