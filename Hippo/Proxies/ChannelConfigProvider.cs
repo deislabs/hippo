@@ -1,14 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using Hippo.Config;
 using Hippo.Models;
+using Hippo.Tasks;
 using Microsoft.Extensions.Logging;
 using Yarp.ReverseProxy.Configuration;
 
 namespace Hippo.Proxies
 {
-    public class ChannelConfigProvider : IProxyConfigProvider, IReverseProxy
+    public class ChannelConfigProvider : IProxyConfigProvider, IReverseProxyUpdater
     {
         private volatile ChannelConfig _config;
         private readonly ILogger<ChannelConfigProvider> _logger;
@@ -38,33 +40,25 @@ namespace Hippo.Proxies
             existingConfig.SignalChange();
         }
 
-        public void StopProxy(Channel channel)
+        public bool UpdateProxyRecord(ReverseProxyUpdateRequest record)
         {
-            _logger.LogTrace($"Processing Proxy Stop Request for Application: {channel.Application.Id} Channel: {channel.Id} Host: {channel.Domain.Name}");
-            var key = GetKey(channel);
-            var removedRoute = _routes.Remove(key);
-            if (!removedRoute)
+            if (record.Action == ReverseProxyAction.Stop)
             {
-                _logger.LogError($"Attempted to remove route for key:{key} but it did not exist in Dictionary");
+                return DeleteProxyRecord(record);
             }
 
-            var removedCluster = _clusters.Remove(key);
-            if (!removedCluster)
+            if (record.Action == ReverseProxyAction.Start)
             {
-                _logger.LogError($"Attempted to remove cluster for key:{key} but it did not exist in Dictionary");
+                AddOrUpdateProxyRecord(record);
+                return true;
             }
 
-            if (removedRoute || removedCluster)
-            {
-                UpdateConfig();
-            }
-
+            return false;
         }
-
-        public void StartProxy(Channel channel, string address)
+        private void AddOrUpdateProxyRecord(ReverseProxyUpdateRequest record)
         {
-            _logger.LogTrace($"Processing Proxy Start Request for Application: {channel.Application.Id} Channel: {channel.Id} Host: {channel.Domain.Name} Address: {address}");
-            var key = GetKey(channel);
+            _logger.LogTrace($"Processing Proxy Start Request for Application: {record.ApplicationId} Channel: {record.ChannelId} Host: {record.Domain} Address: {record.Host}");
+            var key = GetKey(record.ApplicationId, record.ChannelId);
             var clusterConfig = new ClusterConfig()
             {
                 ClusterId = key,
@@ -73,7 +67,7 @@ namespace Hippo.Proxies
                             {
                                 key, new DestinationConfig()
                                 {
-                                    Address = address
+                                    Address = record.Host
                                 }
                             }
                         }
@@ -89,15 +83,33 @@ namespace Hippo.Proxies
                 {
                     Hosts = new List<string>()
                         {
-                            channel.Domain.Name
+                            record.Domain
                         }
                 }
             };
 
             _routes[key] = routeConfig;
-            UpdateConfig();
         }
 
-        private static string GetKey(Channel c) => $"{c.Id}-{c.Application.Id}";
+        private bool DeleteProxyRecord(ReverseProxyUpdateRequest record)
+        {
+            _logger.LogTrace($"Processing Proxy Stop Request for Application: {record.ApplicationId} Channel: {record.ChannelId} Host: {record.Domain}");
+            var key = GetKey(record.ApplicationId, record.ChannelId);
+            var removedRoute = _routes.Remove(key);
+            if (!removedRoute)
+            {
+                _logger.LogError($"Attempted to remove route for key:{key} but it did not exist in Dictionary");
+            }
+
+            var removedCluster = _clusters.Remove(key);
+            if (!removedCluster)
+            {
+                _logger.LogError($"Attempted to remove cluster for key:{key} but it did not exist in Dictionary");
+            }
+
+            return removedCluster || removedRoute;
+        }
+
+        private static string GetKey(Guid appId, Guid channelId) => $"App:{appId}-Channel:{channelId}";
     }
 }
