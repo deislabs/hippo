@@ -24,18 +24,11 @@ using Hippo.ControllerCore;
 namespace Hippo.Controllers
 {
     [Authorize]
-    public class AppController : HippoController
+    public class AppController : ApplicationControllerCore
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly UserManager<Account> _userManager;
-        private readonly ITaskQueue<ChannelReference> _channelsToReschedule;
-
         public AppController(IUnitOfWork unitOfWork, UserManager<Account> userManager, ITaskQueue<ChannelReference> channelsToReschedule, ILogger<AppController> logger)
-            : base(logger)
+            : base(unitOfWork, userManager, channelsToReschedule, logger)
         {
-            this._unitOfWork = unitOfWork;
-            this._userManager = userManager;
-            this._channelsToReschedule = channelsToReschedule;
         }
 
         public IActionResult Index()

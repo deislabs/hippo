@@ -11,6 +11,8 @@ using Hippo.ApiControllers;
 using Hippo.Messages;
 using Hippo.Models;
 using Hippo.Repositories;
+using Hippo.Tasks;
+using Hippo.Tests.Fakes;
 using Hippo.Tests.Stubs;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -44,7 +46,7 @@ namespace Hippo.Tests.ApiControllers
             Server = new TestServer(
               new WebHostBuilder().
                 UseStartup<TestStartup>(
-                context => new TestStartup(TokenIssuer, TestDatabaseName)
+                context => new TestStartup(TokenIssuer, TestDatabaseName, new FakeTaskQueue<ChannelReference>())
               )
             );
         }
@@ -83,7 +85,7 @@ namespace Hippo.Tests.ApiControllers
         [Fact]
         public async Task CreateApplicationSucceeds()
         {
-            var controller = new ApplicationController(new DbUnitOfWork(_fixture.Context, new FakeCurrentUser(_fixture.User.UserName)), _fixture.UserManager, new NullLogger<ApplicationController>())
+            var controller = new ApplicationController(new DbUnitOfWork(_fixture.Context, new FakeCurrentUser(_fixture.User.UserName)), _fixture.UserManager, new FakeTaskQueue<ChannelReference>(), new NullLogger<ApplicationController>())
             {
                 ControllerContext = new()
                 {
@@ -139,7 +141,7 @@ namespace Hippo.Tests.ApiControllers
         }
 
         private ApplicationController GetController()
-            => new(new DbUnitOfWork(_fixture.Context, new FakeCurrentUser(_fixture.User.UserName)), _fixture.UserManager, new NullLogger<ApplicationController>())
+            => new(new DbUnitOfWork(_fixture.Context, new FakeCurrentUser(_fixture.User.UserName)), _fixture.UserManager, new FakeTaskQueue<ChannelReference>(), new NullLogger<ApplicationController>())
             {
                 ControllerContext = new()
                 {

@@ -10,6 +10,7 @@ using Hippo.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -21,21 +22,18 @@ namespace Hippo.ApiControllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class ChannelController : HippoController
+    public class ChannelController : ApplicationControllerCore
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly ITaskQueue<ChannelReference> _taskQueue;
         /// <summary>
         /// Initializes a new instance of the <see cref="ChannelController"/> class.
         /// </summary>
         /// <param name="unitOfWork">Iunitofwork instance</param>
+        /// <param name="userManager" />
         /// <param name="taskQueue"> ITaskQueue instance</param>
         /// <param name="logger">ILogger Instance</param>
-        public ChannelController(IUnitOfWork unitOfWork, ITaskQueue<ChannelReference> taskQueue, ILogger<ChannelController> logger)
-                : base(logger)
+        public ChannelController(IUnitOfWork unitOfWork, UserManager<Account> userManager, ITaskQueue<ChannelReference> taskQueue, ILogger<ChannelController> logger)
+                : base(unitOfWork, userManager, taskQueue, logger)
         {
-            _unitOfWork = unitOfWork;
-            _taskQueue = taskQueue;
         }
 
         /// <summary>
@@ -113,7 +111,7 @@ namespace Hippo.ApiControllers
                 await _unitOfWork.EventLog.ChannelRevisionChanged(EventOrigin.API, channel, "(none)", "channel created");
                 await _unitOfWork.SaveChanges();
 
-                await _taskQueue.Enqueue(new ChannelReference(channel.Application.Id, channel.Id), CancellationToken.None);
+                await _channelsToReschedule.Enqueue(new ChannelReference(channel.Application.Id, channel.Id), CancellationToken.None);
 
                 var response = new CreateChannelResponse()
                 {
