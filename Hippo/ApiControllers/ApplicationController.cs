@@ -32,7 +32,7 @@ namespace Hippo.ApiControllers
         /// <param name="channelsToReschedule" />
         /// <param name="logger">ILogger Instance</param>
         public ApplicationController(IUnitOfWork unitOfWork, UserManager<Account> userManager, ITaskQueue<ChannelReference> channelsToReschedule, ILogger<ApplicationController> logger)
-            : base(unitOfWork, userManager, channelsToReschedule, logger)
+            : base(unitOfWork, userManager, channelsToReschedule, logger, EventOrigin.API)
         {
         }
 

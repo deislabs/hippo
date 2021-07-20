@@ -27,7 +27,7 @@ namespace Hippo.Controllers
     public class AppController : ApplicationControllerCore
     {
         public AppController(IUnitOfWork unitOfWork, UserManager<Account> userManager, ITaskQueue<ChannelReference> channelsToReschedule, ILogger<AppController> logger)
-            : base(unitOfWork, userManager, channelsToReschedule, logger)
+            : base(unitOfWork, userManager, channelsToReschedule, logger, EventOrigin.UI)
         {
         }
 
@@ -290,8 +290,8 @@ namespace Hippo.Controllers
                 }
 
                 await _unitOfWork.Channels.AddNew(channel);
-                await _unitOfWork.EventLog.ChannelCreated(EventOrigin.UI, channel);
-                await _unitOfWork.EventLog.ChannelRevisionChanged(EventOrigin.UI, channel, "(none)", "channel created");
+                await _unitOfWork.EventLog.ChannelCreated(_eventSource, channel);
+                await _unitOfWork.EventLog.ChannelRevisionChanged(_eventSource, channel, "(none)", "channel created");
                 await _unitOfWork.SaveChanges();
 
                 await _channelsToReschedule.Enqueue(new ChannelReference(application.Id, channel.Id), CancellationToken.None);
@@ -425,11 +425,11 @@ namespace Hippo.Controllers
                     ev.Configuration = channel.Configuration;
                 }
 
-                await _unitOfWork.EventLog.ChannelEdited(EventOrigin.UI, channel);
+                await _unitOfWork.EventLog.ChannelEdited(_eventSource, channel);
 
                 if (revChange != null)
                 {
-                    await _unitOfWork.EventLog.ChannelRevisionChanged(EventOrigin.UI, channel, revChange.ChangedFrom, "channel reconfigured");
+                    await _unitOfWork.EventLog.ChannelRevisionChanged(_eventSource, channel, revChange.ChangedFrom, "channel reconfigured");
                 }
 
                 await _unitOfWork.SaveChanges();
@@ -476,7 +476,7 @@ namespace Hippo.Controllers
                 var changes = application.ReevaluateActiveRevisions();
                 foreach (var change in changes)
                 {
-                    await _unitOfWork.EventLog.ChannelRevisionChanged(EventOrigin.UI, change.Channel, change.ChangedFrom, "revision registered");
+                    await _unitOfWork.EventLog.ChannelRevisionChanged(_eventSource, change.Channel, change.ChangedFrom, "revision registered");
                 }
                 await _unitOfWork.SaveChanges();
 

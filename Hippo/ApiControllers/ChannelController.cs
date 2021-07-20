@@ -32,7 +32,7 @@ namespace Hippo.ApiControllers
         /// <param name="taskQueue"> ITaskQueue instance</param>
         /// <param name="logger">ILogger Instance</param>
         public ChannelController(IUnitOfWork unitOfWork, UserManager<Account> userManager, ITaskQueue<ChannelReference> taskQueue, ILogger<ChannelController> logger)
-                : base(unitOfWork, userManager, taskQueue, logger)
+                : base(unitOfWork, userManager, taskQueue, logger, EventOrigin.API)
         {
         }
 
@@ -107,8 +107,8 @@ namespace Hippo.ApiControllers
                 channel.ReevaluateActiveRevision();
 
                 await _unitOfWork.Channels.AddNew(channel);
-                await _unitOfWork.EventLog.ChannelCreated(EventOrigin.API, channel);
-                await _unitOfWork.EventLog.ChannelRevisionChanged(EventOrigin.API, channel, "(none)", "channel created");
+                await _unitOfWork.EventLog.ChannelCreated(_eventSource, channel);
+                await _unitOfWork.EventLog.ChannelRevisionChanged(_eventSource, channel, "(none)", "channel created");
                 await _unitOfWork.SaveChanges();
 
                 await _channelsToReschedule.Enqueue(new ChannelReference(channel.Application.Id, channel.Id), CancellationToken.None);
