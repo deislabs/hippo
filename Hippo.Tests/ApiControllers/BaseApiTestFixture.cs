@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -46,7 +47,10 @@ namespace Hippo.Tests.ApiControllers
                 Id = AppId,
                 Name = "Test Application",
                 StorageId = "hippo/test",
-                Owner = User
+                Owner = User,
+                Revisions = new List<Revision> {
+                    new Revision { RevisionNumber = "1.2.3" },
+                },
             };
             Context = new InMemoryDataContext(testDatabaseName);
             Context.Database.EnsureDeleted();

@@ -227,80 +227,21 @@ namespace Hippo.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var application = _unitOfWork.Applications.GetApplicationById(id);
-
-                if (application == null)
-                {
-                    LogIfNotFound(application, id);
-                    return NotFound();
-                }
-
-                var channel = new Channel
-                {
-                    Application = application,
-                    Name = form.ChannelName,
-                };
-
-                // TODO: in memory seems not to wire up FKs
-                application.Channels.Add(channel);
-
-                if (form.SelectedRevisionSelectionStrategy == Enum.GetName(ChannelRevisionSelectionStrategy.UseSpecifiedRevision))
-                {
-                    var revision = _unitOfWork.Revisions.GetRevisionByNumber(application, form.SelectedRevisionNumber);
-                    if (revision == null)
-                    {
-                        LogIfNotFound(revision, form.SelectedRevisionNumber);
-                        return NotFound();
-                    }
-                    channel.RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseSpecifiedRevision;
-                    channel.SpecifiedRevision = revision;
-                }
-                else if (form.SelectedRevisionSelectionStrategy == Enum.GetName(ChannelRevisionSelectionStrategy.UseRangeRule))
-                {
-                    var rule = form.SelectedRevisionRule;
-                    if (string.IsNullOrWhiteSpace(rule))
-                    {
-                        _logger.LogError("Release: empty rule");
-                        return BadRequest("rule was empty");  // TODO: this is a terrible way of handling it; await Ronan
-                    }
-                    channel.RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseRangeRule;
-                    channel.RangeRule = rule;
-                }
-                else
-                {
-                    _logger.LogError("Release: no strategy");
-                    return BadRequest("no strategy");  // TODO: this is a terrible way of handling it; await Ronan
-                }
-                channel.ReevaluateActiveRevision();
-
-                var environmentVariables = ParseEnvironmentVariables(form.EnvironmentVariables).ToList();
-
-                channel.Configuration = new Configuration
-                {
-                    EnvironmentVariables = environmentVariables,
-                };
-                channel.Domain = new Domain { Name = form.Domain };
-
-                // TODO: not sure if this is needed
-                foreach (var ev in environmentVariables)
-                {
-                    ev.Configuration = channel.Configuration;
-                }
-
-                await _unitOfWork.Channels.AddNew(channel);
-                await _unitOfWork.EventLog.ChannelCreated(_eventSource, channel);
-                await _unitOfWork.EventLog.ChannelRevisionChanged(_eventSource, channel, "(none)", "channel created");
-                await _unitOfWork.SaveChanges();
-
-                await _channelsToReschedule.Enqueue(new ChannelReference(application.Id, channel.Id), CancellationToken.None);
-
-                _logger.LogInformation($"NewChannel: application {form.Id} channel {channel.Id} now at revision {channel.ActiveRevision?.RevisionNumber ?? "[none]"}");
-                _logger.LogInformation($"NewChannel: serving on port {channel.PortID + Channel.EphemeralPortRange}");
                 return RedirectToAction(nameof(Index));
             }
 
+            var result = await CreateChannel(form);
+
+            if (result.Result != null)
+            {
+                return result.Result;
+            }
+
+            var channel = result.Value;
+            _logger.LogInformation($"NewChannel: application {form.Id} channel {channel.Id} now at revision {channel.ActiveRevision?.RevisionNumber ?? "[none]"}");
+            _logger.LogInformation($"NewChannel: serving on port {channel.PortID + Channel.EphemeralPortRange}");
             return RedirectToAction(nameof(Index));
         }
 
