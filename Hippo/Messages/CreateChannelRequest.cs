@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Hippo.Logging;
 using Hippo.Models;
+using Hippo.OperationData;
 using Hippo.Rules;
 
 namespace Hippo.Messages
@@ -10,13 +11,13 @@ namespace Hippo.Messages
     /// <summary>
     /// Request body for a new ChannelMessage API Request.
     /// </summary>
-    public class CreateChannelRequest : ChannelMessage, ITraceable, IValidatableObject
+    public sealed class CreateChannelRequest : ChannelMessage, ITraceable, IValidatableObject, ICreateChannelParameters
     {
         /// <summary>
         /// ITraceable.FormatTrace implementation.
         /// </summary>
         /// <returns>Trace striing</returns>
-        public virtual string FormatTrace()
+        public string FormatTrace()
         => $"{GetType().Name}[Appid={AppId}, Name={Name}, RevisionSelectionStrategy={RevisionSelectionStrategy}, RevisionNumber={RevisionNumber}, RevisionRange={RevisionRange}]";
 
         /// <summary>
@@ -75,7 +76,13 @@ namespace Hippo.Messages
                 }
 
             }
-
         }
+
+        // Adapters for ICreateChannelParameters
+        Guid ICreateChannelParameters.ApplicationId => AppId;
+        string ICreateChannelParameters.ChannelName => Name;
+        string ICreateChannelParameters.DomainName => Domain;
+        Dictionary<string, string> ICreateChannelParameters.EnvironmentVariables => new();
+        string ICreateChannelParameters.RangeRule => RevisionRange;
     }
 }

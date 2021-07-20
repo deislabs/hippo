@@ -4,11 +4,13 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using Hippo.Logging;
 using Hippo.Models;
+using Hippo.OperationData;
+using Hippo.Rules;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Hippo.ViewModels
 {
-    public class AppNewChannelForm : ITraceable, IValidatableObject
+    public sealed class AppNewChannelForm : ITraceable, IValidatableObject, ICreateChannelParameters
     {
         [Required]
         public Guid Id { get; set; }
@@ -16,7 +18,6 @@ namespace Hippo.ViewModels
         [Display(Name = "Channel name")]
         [Required]
         public string ChannelName { get; set; }
-
 
         [Display(Name = "Desired revision selection strategy")]
         public string SelectedRevisionSelectionStrategy { get; set; }
@@ -45,7 +46,43 @@ namespace Hippo.ViewModels
                 yield return new ValidationResult("Must select a revision strategy", new[] { nameof(SelectedRevisionSelectionStrategy) });
             }
 
-            // TODO: validate that we have a revision or rule according to chosen strategy
+            if (SelectedRevisionSelectionStrategy == Enum.GetName(ChannelRevisionSelectionStrategy.UseSpecifiedRevision))
+            {
+                if (string.IsNullOrWhiteSpace(SelectedRevisionNumber))
+                {
+                    yield return new ValidationResult(
+                        $"Revision number must be specified when fixing a channel to a revision number",
+                        new[] { nameof(SelectedRevisionNumber) });
+                }
+
+                if (!SemVer.Version.TryParse(SelectedRevisionNumber, out _))
+                {
+                    yield return new ValidationResult(
+                        $"Revision number is not in a valid format",
+                        new[] { nameof(SelectedRevisionNumber) });
+                }
+
+            }
+
+            if (SelectedRevisionSelectionStrategy == Enum.GetName(ChannelRevisionSelectionStrategy.UseRangeRule))
+            {
+                if (string.IsNullOrWhiteSpace(SelectedRevisionRule))
+                {
+                    yield return new ValidationResult(
+                        $"Revision range rule must be specified when not fixing a channel to a revision number",
+                        new[] { nameof(SelectedRevisionRule) });
+                }
+
+
+                var ruleError = RevisionRangeRule.Validate(SelectedRevisionRule);
+                if (ruleError != null)
+                {
+                    yield return new ValidationResult(
+                        $"Revision range rule is not valid rule syntax: {ruleError.Message}",
+                        new[] { nameof(SelectedRevisionRule) });
+                }
+
+            }
 
             if (!string.IsNullOrWhiteSpace(EnvironmentVariables))
             {
@@ -69,5 +106,29 @@ namespace Hippo.ViewModels
             var bits = entry.Split('=');
             return bits.Length == 2 && !string.IsNullOrWhiteSpace(bits[0]) && !string.IsNullOrWhiteSpace(bits[1]);
         }
+
+        private static Dictionary<string, string> ParseEnvironmentVariables(string text)
+        {
+            // TODO: assumes validation in web form - should not assume this
+            if (string.IsNullOrWhiteSpace(text))
+            {
+                return new();
+            }
+
+            return text.Split('\n', ';')
+                       .Select(e => e.Trim())
+                       .Select(e => e.Split('='))
+                       .ToDictionary(bits => bits[0], bits => bits[1]);
+        }
+
+        // Adapters for ICreateChannelParameters
+        Guid ICreateChannelParameters.ApplicationId => Id;
+        string ICreateChannelParameters.DomainName => Domain;
+        Dictionary<string, string> ICreateChannelParameters.EnvironmentVariables =>
+            ParseEnvironmentVariables(EnvironmentVariables);
+        ChannelRevisionSelectionStrategy ICreateChannelParameters.RevisionSelectionStrategy =>
+            Enum.Parse<ChannelRevisionSelectionStrategy>(SelectedRevisionSelectionStrategy);
+        string ICreateChannelParameters.RevisionNumber => SelectedRevisionNumber;
+        string ICreateChannelParameters.RangeRule => SelectedRevisionRule;
     }
 }
