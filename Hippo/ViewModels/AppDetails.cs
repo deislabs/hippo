@@ -12,6 +12,6 @@ namespace Hippo.ViewModels
         public IReadOnlyCollection<EventLogEntry> RecentActivity { get; set; }
 
         public string ChannelNameFor(EventLogEntry evt) =>
-            Channels.FirstOrDefault(c => c.Id == evt.ChannelId)?.Name;
+            Channels.FirstOrDefault(c => c.Id == evt.ChannelId)?.Name ?? evt.ChannelId.ToString();
     }
 }
