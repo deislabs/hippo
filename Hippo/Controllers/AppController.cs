@@ -483,7 +483,7 @@ namespace Hippo.Controllers
             _unitOfWork.Channels.DeleteChannelById(id);
             await _unitOfWork.EventLog.ChannelDeleted(EventOrigin.UI, id, application, channelName);
             await _unitOfWork.SaveChanges();
-            
+
             _logger.LogInformation($"DeleteChannelConfirmed: deleted channel {id}");
             return RedirectToAction(nameof(Index));
         }
