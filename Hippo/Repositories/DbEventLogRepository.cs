@@ -98,7 +98,7 @@ namespace Hippo.Repositories
                 ApplicationId = application.Id,
                 ChannelId = channelId,
                 UserName = _user.Name(),
-                Description = $"deleted environment formerly known as ${channelName}",
+                Description = $"deleted environment formerly known as {channelName}",
             };
             await _context.EventLogEntries.AddAsync(entry);
         }
