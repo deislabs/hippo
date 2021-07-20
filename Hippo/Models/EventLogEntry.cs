@@ -46,6 +46,7 @@ namespace Hippo.Models
         ChannelEdited = 6,
         ChannelRevisionChanged = 7,
         RevisionRegistered = 8,
+        ChannelDeleted = 9,
     }
 
     public enum EventOrigin

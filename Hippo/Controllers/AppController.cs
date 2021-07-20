@@ -469,8 +469,21 @@ namespace Hippo.Controllers
         {
             TraceMethodEntry(WithArgs(id));
 
+            var channel = _unitOfWork.Channels.GetChannelById(id);
+            LogIfNotFound(channel, id);
+
+            if (channel == null)
+            {
+                return NotFound();
+            }
+
+            var channelName = channel.Name;
+            var application = channel.Application;
+
             _unitOfWork.Channels.DeleteChannelById(id);
+            await _unitOfWork.EventLog.ChannelDeleted(EventOrigin.UI, id, application, channelName);
             await _unitOfWork.SaveChanges();
+            
             _logger.LogInformation($"DeleteChannelConfirmed: deleted channel {id}");
             return RedirectToAction(nameof(Index));
         }
