@@ -51,5 +51,11 @@ namespace Hippo.Repositories
             }
             await _context.Channels.AddAsync(channel);
         }
+
+        public void DeleteChannelById(Guid id)
+        {
+            var c = GetChannelById(id);
+            _context.Channels.Remove(c);
+        }
     }
 }

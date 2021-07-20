@@ -88,6 +88,21 @@ namespace Hippo.Repositories
             await _context.EventLogEntries.AddAsync(entry);
         }
 
+        public async Task ChannelDeleted(EventOrigin source, Guid channelId, Application application, string channelName)
+        {
+            var entry = new EventLogEntry
+            {
+                EventKind = EventKind.ChannelDeleted,
+                EventSource = source,
+                Timestamp = DateTime.UtcNow,
+                ApplicationId = application.Id,
+                ChannelId = channelId,
+                UserName = _user.Name(),
+                Description = $"deleted environment formerly known as {channelName}",
+            };
+            await _context.EventLogEntries.AddAsync(entry);
+        }
+
         public IEnumerable<EventLogEntry> GetRecentByApplication(Application application, int maxCount)
         {
             return _context.EventLogEntries

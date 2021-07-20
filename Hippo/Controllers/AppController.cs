@@ -449,6 +449,45 @@ namespace Hippo.Controllers
             return View(form);
         }
 
+        public IActionResult DeleteChannel(Guid id)
+        {
+            TraceMethodEntry(WithArgs(id));
+
+            var channel = _unitOfWork.Channels.GetChannelById(id);
+            LogIfNotFound(channel, id);
+
+            if (channel == null)
+            {
+                return NotFound();
+            }
+            return View(channel);
+        }
+
+        [HttpPost, ActionName("DeleteChannel")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteChannelConfirmed(Guid id)
+        {
+            TraceMethodEntry(WithArgs(id));
+
+            var channel = _unitOfWork.Channels.GetChannelById(id);
+            LogIfNotFound(channel, id);
+
+            if (channel == null)
+            {
+                return NotFound();
+            }
+
+            var channelName = channel.Name;
+            var application = channel.Application;
+
+            _unitOfWork.Channels.DeleteChannelById(id);
+            await _unitOfWork.EventLog.ChannelDeleted(EventOrigin.UI, id, application, channelName);
+            await _unitOfWork.SaveChanges();
+
+            _logger.LogInformation($"DeleteChannelConfirmed: deleted channel {id}");
+            return RedirectToAction(nameof(Index));
+        }
+
         public IActionResult RegisterRevision(Guid id)
         {
             TraceMethodEntry(WithArgs(id));

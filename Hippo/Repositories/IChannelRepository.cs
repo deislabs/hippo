@@ -9,5 +9,6 @@ namespace Hippo.Repositories
         Channel GetChannelByName(Application owner, string name);
         Channel GetChannelById(Guid id);
         Task AddNew(Channel channel);
+        void DeleteChannelById(Guid id);
     }
 }
