@@ -1,10 +1,11 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using Hippo.ControllerCore;
 using Hippo.Logging;
 
 namespace Hippo.ViewModels
 {
-    public class AppNewForm : ITraceable, IValidatableObject
+    public sealed class AppNewForm : ITraceable, IValidatableObject, ICreateApplicationParameters
     {
         [Required]
         public string Name { get; set; }
@@ -34,5 +35,8 @@ namespace Hippo.ViewModels
                 );
             }
         }
+
+        // Adapter
+        string ICreateApplicationParameters.ApplicationName => Name;
     }
 }

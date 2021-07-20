@@ -71,24 +71,22 @@ namespace Hippo.ApiControllers
                     return BadRequest(ModelState);
                 }
 
-                var app = new Models.Application
-                {
-                    Id = System.Guid.NewGuid(),
-                    Name = request.ApplicationName,
-                    StorageId = request.StorageId,
-                    Owner = await _userManager.FindByNameAsync(User.Identity.Name),
-                };
+                var result = await CreateApplication(request);
 
-                await _unitOfWork.Applications.AddNew(app);
-                await _unitOfWork.SaveChanges();
+                if (result.Result != null)
+                {
+                    return result.Result;
+                }
+
+                var application = result.Value;
+                TraceMessage($"Successfully Created Application Id: {application.Id}");
+
                 var response = new CreateApplicationResponse
                 {
-                    Id = app.Id,
-                    ApplicationName = app.Name,
-                    StorageId = app.StorageId
+                    Id = application.Id,
+                    ApplicationName = application.Name,
+                    StorageId = application.StorageId,
                 };
-
-                TraceMessage($"Successfully Created Application Id: {app.Id}");
                 return Created(response);
 
             }

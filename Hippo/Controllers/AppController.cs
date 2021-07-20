@@ -74,18 +74,21 @@ namespace Hippo.Controllers
         {
             TraceMethodEntry(WithArgs(form));
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await _unitOfWork.Applications.AddNew(new Application
-                {
-                    Name = form.Name,
-                    StorageId = form.StorageId,
-                    Owner = await _userManager.FindByNameAsync(User.Identity.Name),
-                });
-                await _unitOfWork.SaveChanges();
-                return RedirectToAction(nameof(Index));
+                return View(form);
             }
-            return View(form);
+
+            var result = await CreateApplication(form);
+
+            if (result.Result != null)
+            {
+                return result.Result;
+            }
+
+            var application = result.Value;
+            _logger.LogInformation($"New: application {application.Id} created");
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Edit(Guid id)

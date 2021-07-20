@@ -28,6 +28,23 @@ namespace Hippo.ControllerCore
             _eventSource = eventSource;
         }
 
+        protected async Task<ActionResult<Application>> CreateApplication(ICreateApplicationParameters request)
+        {
+            var applicationId = Guid.NewGuid();
+            var application = new Application
+            {
+                Id = applicationId,
+                Name = request.ApplicationName,
+                StorageId = request.StorageId,
+                Owner = await _userManager.FindByNameAsync(User.Identity.Name),
+            };
+
+            await _unitOfWork.Applications.AddNew(application);
+            await _unitOfWork.SaveChanges();
+
+            return application;
+        }
+
         protected async Task<ActionResult<Channel>> CreateChannel(ICreateChannelParameters request)
         {
             var application = _unitOfWork.Applications.GetApplicationById(request.ApplicationId);
