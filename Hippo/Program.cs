@@ -18,7 +18,7 @@ namespace Hippo
     {
         public static void Main(string[] args)
         {
-            var hippoHostBuilder = CreateHippoHostBuilder(args);
+            var hippoHostBuilder = CreateHostBuilder(args);
             var hippoHost = hippoHostBuilder.Build();
             var proxyUpdateTaskQueue = hippoHost.Services.GetRequiredService<ITaskQueue<ReverseProxyUpdateRequest>>();
             var proxyHostBuilder = CreateProxyHostBuilder(proxyUpdateTaskQueue);
@@ -28,7 +28,9 @@ namespace Hippo
             Task.WaitAll(new Task[] { hippoTask, proxyTask });
         }
 
-        static IHostBuilder CreateHippoHostBuilder(string[] args) =>
+        // This has to be called CreateHostBuilder because the migrations tool looks specifically
+        // for that method name.
+        static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .UseConsoleLifetime()
                 .ConfigureWebHostDefaults(webBuilder =>
