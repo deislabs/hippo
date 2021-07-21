@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "hippo": {
+    "hippo-server": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
       "launchBrowser": true,

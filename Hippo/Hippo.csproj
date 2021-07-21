@@ -4,6 +4,7 @@
     <TargetFramework>net5.0</TargetFramework>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningLevel>5</WarningLevel>
+    <TargetName>hippo-server</TargetName>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
