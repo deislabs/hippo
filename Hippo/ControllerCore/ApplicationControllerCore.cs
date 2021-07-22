@@ -60,8 +60,7 @@ namespace Hippo.ControllerCore
             if (request.RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseSpecifiedRevision && revision == null)
             {
                 LogIfNotFound(revision, request.RevisionNumber);
-                // TODO: not sure if this is the right response
-                return NotFound();
+                return BadRequest($"Cannot create a channel at revision {request.RevisionNumber} as bindle {application.StorageId}/{request.RevisionNumber} does not exist or is not registered");
             }
 
             // Set up ancillary entites
