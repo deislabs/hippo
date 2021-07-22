@@ -27,9 +27,6 @@ namespace Hippo.Migrations.Postgres
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("integer");
 
-                    b.Property<Guid?>("ApplicationId")
-                        .HasColumnType("uuid");
-
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("text");
@@ -78,8 +75,6 @@ namespace Hippo.Migrations.Postgres
                         .HasColumnType("character varying(256)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ApplicationId");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -186,6 +181,37 @@ namespace Hippo.Migrations.Postgres
                     b.HasIndex("SpecifiedRevisionId");
 
                     b.ToTable("Channels");
+                });
+
+            modelBuilder.Entity("Hippo.Models.Collaboration", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ApplicationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("Created")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<DateTime>("Modified")
+                        .ValueGeneratedOnAddOrUpdate()
+                        .HasColumnType("timestamp without time zone")
+                        .HasDefaultValueSql("now()");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("collaborations");
                 });
 
             modelBuilder.Entity("Hippo.Models.Configuration", b =>
@@ -505,10 +531,6 @@ namespace Hippo.Migrations.Postgres
 
             modelBuilder.Entity("Hippo.Models.Account", b =>
                 {
-                    b.HasOne("Hippo.Models.Application", null)
-                        .WithMany("Collaborators")
-                        .HasForeignKey("ApplicationId");
-
                     b.HasOne("Hippo.Models.Key", "SigningKey")
                         .WithMany()
                         .HasForeignKey("SigningKeyId");
@@ -556,6 +578,21 @@ namespace Hippo.Migrations.Postgres
                     b.Navigation("Domain");
 
                     b.Navigation("SpecifiedRevision");
+                });
+
+            modelBuilder.Entity("Hippo.Models.Collaboration", b =>
+                {
+                    b.HasOne("Hippo.Models.Application", "Application")
+                        .WithMany("Collaborations")
+                        .HasForeignKey("ApplicationId");
+
+                    b.HasOne("Hippo.Models.Account", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Application");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Hippo.Models.EnvironmentVariable", b =>
@@ -631,7 +668,7 @@ namespace Hippo.Migrations.Postgres
                 {
                     b.Navigation("Channels");
 
-                    b.Navigation("Collaborators");
+                    b.Navigation("Collaborations");
 
                     b.Navigation("Revisions");
                 });
