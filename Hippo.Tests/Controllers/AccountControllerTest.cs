@@ -54,12 +54,12 @@ namespace Hippo.Tests.Controllers
         }
 
         [Fact]
-        public void TestRegister()
+        public async void TestRegister()
         {
             var viewResult = _controller.Register();
             Assert.NotNull(viewResult);
 
-            var registerResult = _controller.Register(new AccountRegisterForm
+            var registerResult = await _controller.Register(new AccountRegisterForm
             {
                 UserName = "test",
                 Email = "test@hippos.rocks",
@@ -67,6 +67,8 @@ namespace Hippo.Tests.Controllers
                 PasswordConfirm = "foobar",
             });
             Assert.NotNull(registerResult);
+            Assert.Equal(typeof(RedirectToActionResult), registerResult.GetType());
+            Assert.Equal("Login", ((RedirectToActionResult)registerResult).ActionName);
 
             Assert.NotNull(_context.Accounts.Where(a => a.UserName == "test").SingleOrDefault());
         }
