@@ -48,6 +48,17 @@
                         </div>
                     </div>
                 </div>
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label asp-for="Collaborators" class="label">Collaborators (separate using semicolons)</label>
+                    </div>
+                    <div class="field-body is-normal">
+                        <div class="control">
+                            <input asp-for="Collaborators" type="text" class="input" />
+                            <p asp-validation-for="Collaborators" class="help is-warning"></p>
+                        </div>
+                    </div>
+                </div>
                 <hr>
                 <div class="field is-grouped">
                     <div class="control">

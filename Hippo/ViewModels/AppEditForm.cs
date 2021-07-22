@@ -17,6 +17,9 @@ namespace Hippo.ViewModels
         [Display(Name = "Bindle name")]
         public string StorageId { get; set; }
 
+        [Required]
+        public string Collaborators { get; set; }
+
         public string FormatTrace() =>
             $"{nameof(AppEditForm)}[id={Id}, name={Name}, stg={StorageId}]";
 
@@ -37,6 +40,16 @@ namespace Hippo.ViewModels
                     new[] { nameof(StorageId) }
                 );
             }
+        }
+
+        public ICollection<string> ParseCollaborators()
+        {
+            if (string.IsNullOrWhiteSpace(Collaborators))
+            {
+                return Array.Empty<string>();
+            }
+
+            return Collaborators.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
         }
     }
 }

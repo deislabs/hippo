@@ -75,5 +75,8 @@ namespace Hippo.Models
             }
             return HealthStatus.Healthy;
         }
+
+        public ICollection<Collaboration> SafeCollaborations() =>
+            Collaborations ?? Array.Empty<Collaboration>();
     }
 }
