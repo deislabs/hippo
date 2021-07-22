@@ -3,8 +3,8 @@ using System.IO;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Hippo.Models;
 using Hippo.Proxies;
+using Hippo.Models;
 using Hippo.Repositories;
 using Hippo.Schedulers;
 using Hippo.Tasks;
@@ -83,7 +83,17 @@ namespace Hippo
             services.AddScoped<ICurrentUser, ActionContextCurrentUser>();
             services.AddScoped<IUnitOfWork, DbUnitOfWork>();
 
-            services.AddSingleton<IJobScheduler, WagiLocalJobScheduler>();
+            // TODO: Use config rather than env var.
+            var schedulerVar = Environment.GetEnvironmentVariable("HIPPO_JOB_SCHEDULER");
+            switch (schedulerVar)
+            {
+                case "wagi-dotnet":
+                    services.AddSingleton<IJobScheduler, WagiDotnetJobScheduler>();
+                    break;
+                default:
+                    services.AddSingleton<IJobScheduler, WagiLocalJobScheduler>();
+                    break;
+            }
 
             services.AddSingleton<ITaskQueue<ChannelReference>, TaskQueue<ChannelReference>>();
             services.AddSingleton<ITaskQueue<ReverseProxyUpdateRequest>, TaskQueue<ReverseProxyUpdateRequest>>();

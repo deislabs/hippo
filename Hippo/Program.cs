@@ -1,14 +1,16 @@
 
+using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Net;
 using System.Threading.Tasks;
+using Hippo.Config;
 using Hippo.Proxies;
 using Hippo.Tasks;
+using Hippo.WagiDotnet;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 
 [assembly: System.CLSCompliant(false)]
 
@@ -18,29 +20,59 @@ namespace Hippo
     {
         public static void Main(string[] args)
         {
-            var hippoHostBuilder = CreateHostBuilder(args);
+            var tasks = new List<Task>();
+            IHostBuilder hippoHostBuilder;
+            // TODO: Make this part of configuration
+            var schedulerVar = Environment.GetEnvironmentVariable("HIPPO_JOB_SCHEDULER");
+            if (!string.IsNullOrEmpty(schedulerVar) && schedulerVar.ToUpperInvariant() == "WAGI-DOTNET")
+            {
+                var channelConfigProvider = new ChannelConfigurationProvider();
+                var wagiDotnetBuilder = CreateWagiDotnetHostBuilder(channelConfigProvider);
+                var wagiDotnetHost = wagiDotnetBuilder.Build();
+                tasks.Add(wagiDotnetHost.RunAsync());
+                hippoHostBuilder = CreateHostBuilder(args, channelConfigProvider);
+            }
+            else
+            {
+                hippoHostBuilder = CreateHostBuilder(args);
+            }
+
             var hippoHost = hippoHostBuilder.Build();
             var proxyUpdateTaskQueue = hippoHost.Services.GetRequiredService<ITaskQueue<ReverseProxyUpdateRequest>>();
             var proxyHostBuilder = CreateProxyHostBuilder(proxyUpdateTaskQueue);
             var proxyHost = proxyHostBuilder.Build();
-            var hippoTask = hippoHost.RunAsync();
-            var proxyTask = proxyHost.RunAsync();
-            Task.WaitAll(new Task[] { hippoTask, proxyTask });
+            tasks.Add(hippoHost.RunAsync());
+            tasks.Add(proxyHost.RunAsync());
+            Task.WaitAny(tasks.ToArray());
         }
 
         // This has to be called CreateHostBuilder because the migrations tool looks specifically
         // for that method name.
-        static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .UseConsoleLifetime()
-                .ConfigureWebHostDefaults(webBuilder =>
+
+        // Review Question - Will this still work with migrations as it now has an optional parameter?
+        static IHostBuilder CreateHostBuilder(string[] args, ChannelConfigurationProvider channelConfigurationProvider = null)
+        {
+            var hostBuilder = Host.CreateDefaultBuilder(args)
+                                  .UseConsoleLifetime()
+                                  .ConfigureWebHostDefaults(webBuilder =>
+                                  {
+                                      webBuilder.UseStartup<Startup>();
+                                  })
+                                  .ConfigureServices(services =>
+                                  {
+                                      services.AddHostedService<ChannelUpdateBackgroundService>();
+                                  });
+
+            if (channelConfigurationProvider is not null)
+            {
+                hostBuilder.ConfigureServices(services =>
                 {
-                    webBuilder.UseStartup<Startup>();
-                })
-                .ConfigureServices(services =>
-                {
-                    services.AddHostedService<ChannelUpdateBackgroundService>();
+                    services.AddSingleton<IChannelConfigurationProvider>(channelConfigurationProvider);
                 });
+            }
+
+            return hostBuilder;
+        }
 
         static IHostBuilder CreateProxyHostBuilder(ITaskQueue<ReverseProxyUpdateRequest> proxyUpdateTaskQueue) =>
             Host.CreateDefaultBuilder()
@@ -54,8 +86,8 @@ namespace Hippo
                 {
                     config.Sources.Clear();
                     config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                            .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", optional: false, reloadOnChange: true)
-                            .AddEnvironmentVariables("HIPPO_REVERSE_PROXY_");
+                          .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", optional: false, reloadOnChange: true)
+                          .AddEnvironmentVariables("HIPPO_REVERSE_PROXY_");
                 })
                 .ConfigureServices(services =>
                 {
@@ -63,5 +95,26 @@ namespace Hippo
                     services.AddHostedService<ReverseProxyUpdateBackgroundService>();
                 });
 
+        static IHostBuilder CreateWagiDotnetHostBuilder(ChannelConfigurationProvider channelConfigurationProvider) =>
+            Host.CreateDefaultBuilder()
+                .UseConsoleLifetime()
+                .UseContentRoot(Path.Combine(Directory.GetCurrentDirectory(), "WagiDotnet"))
+                .ConfigureWebHostDefaults(webBuilder =>
+                {
+                    webBuilder.UseStartup<WagiDotnetStartup>();
+                })
+                .ConfigureAppConfiguration((hostingContext, config) =>
+                {
+                    config.Sources.Clear();
+                    config.AddChannelConfiguration(channelConfigurationProvider)
+                          .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                          .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+                          .AddEnvironmentVariables("WAGI_DOTNET_");
+
+                })
+                .ConfigureServices(services =>
+                {
+                    services.AddSingleton<IChannelConfigurationProvider>(channelConfigurationProvider);
+                });
     }
 }
