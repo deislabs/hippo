@@ -19,16 +19,12 @@ namespace Hippo.Tests.ApiControllers
         private readonly ITaskQueue<ChannelReference> _taskQueue;
         private readonly string _testDatabaseName;
 
-        public TestStartup(MockTokenIssuer tokenIssuer, string testDatabaseName)
+        public TestStartup(MockTokenIssuer tokenIssuer, string testDatabaseName, ITaskQueue<ChannelReference> taskQueue)
         {
             Assert.NotNull(tokenIssuer);
             _tokenIssuer = tokenIssuer;
             Assert.False(string.IsNullOrEmpty(testDatabaseName));
             _testDatabaseName = testDatabaseName;
-        }
-
-        public TestStartup(MockTokenIssuer tokenIssuer, string testDatabaseName, ITaskQueue<ChannelReference> taskQueue) : this(tokenIssuer, testDatabaseName)
-        {
             _taskQueue = taskQueue;
         }
 

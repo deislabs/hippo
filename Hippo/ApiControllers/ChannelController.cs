@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Hippo.ControllerCore;
 using Hippo.Controllers;
 using Hippo.Messages;
 using Hippo.Models;
@@ -9,6 +10,7 @@ using Hippo.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -20,21 +22,18 @@ namespace Hippo.ApiControllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class ChannelController : HippoController
+    public class ChannelController : ApplicationControllerCore
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly ITaskQueue<ChannelReference> _taskQueue;
         /// <summary>
         /// Initializes a new instance of the <see cref="ChannelController"/> class.
         /// </summary>
         /// <param name="unitOfWork">Iunitofwork instance</param>
+        /// <param name="userManager" />
         /// <param name="taskQueue"> ITaskQueue instance</param>
         /// <param name="logger">ILogger Instance</param>
-        public ChannelController(IUnitOfWork unitOfWork, ITaskQueue<ChannelReference> taskQueue, ILogger<ChannelController> logger)
-                : base(logger)
+        public ChannelController(IUnitOfWork unitOfWork, UserManager<Account> userManager, ITaskQueue<ChannelReference> taskQueue, ILogger<ChannelController> logger)
+                : base(unitOfWork, userManager, taskQueue, logger, EventOrigin.API)
         {
-            _unitOfWork = unitOfWork;
-            _taskQueue = taskQueue;
         }
 
         /// <summary>
@@ -83,43 +82,20 @@ namespace Hippo.ApiControllers
                     return BadRequest(ModelState);
                 }
 
-                var app = _unitOfWork.Applications.GetApplicationById(request.AppId);
-                LogIfNotFound(app, request.AppId);
-                if (app == null)
+                var result = await CreateChannel(request);
+
+                if (result.Result != null)
                 {
-                    return NotFound();
+                    return result.Result;
                 }
 
-                var channelId = System.Guid.NewGuid();
-                var domain = new Models.Domain
-                {
-                    Name = request.Domain
-                };
-                var channel = new Models.Channel
-                {
-                    Id = channelId,
-                    Application = app,
-                    Name = request.Name,
-                    Domain = domain,
-                    RevisionSelectionStrategy = request.RevisionSelectionStrategy,
-                    RangeRule = request.RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseRangeRule ? request.RevisionRange : "",
-                    SpecifiedRevision = request.RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseSpecifiedRevision ? new Revision { RevisionNumber = request.RevisionNumber } : null
-                };
-                channel.ReevaluateActiveRevision();
-
-                await _unitOfWork.Channels.AddNew(channel);
-                await _unitOfWork.EventLog.ChannelCreated(EventOrigin.API, channel);
-                await _unitOfWork.EventLog.ChannelRevisionChanged(EventOrigin.API, channel, "(none)", "channel created");
-                await _unitOfWork.SaveChanges();
-
-                await _taskQueue.Enqueue(new ChannelReference(channel.Application.Id, channel.Id), CancellationToken.None);
-
+                var channel = result.Value;
                 var response = new CreateChannelResponse()
                 {
-                    Id = channelId,
-                    AppId = app.Id,
+                    Id = channel.Id,
+                    AppId = channel.Application.Id,
                     Name = request.Name,
-                    Domain = domain.Name,
+                    Domain = channel.Domain.Name,
                     RevisionNumber = request.RevisionNumber,
                     RevisionRange = request.RevisionRange,
                     RevisionSelectionStrategy = request.RevisionSelectionStrategy

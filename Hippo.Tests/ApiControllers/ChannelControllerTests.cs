@@ -234,7 +234,7 @@ namespace Hippo.Tests.ApiControllers
         }
 
         private ChannelController GetController()
-            => new(new DbUnitOfWork(_fixture.Context, new FakeCurrentUser(_fixture.User.UserName)), _fixture.MockTaskQueue.Object, new NullLogger<ChannelController>())
+            => new(new DbUnitOfWork(_fixture.Context, new FakeCurrentUser(_fixture.User.UserName)), null, _fixture.MockTaskQueue.Object, new NullLogger<ChannelController>())
             {
                 ControllerContext = new()
                 {

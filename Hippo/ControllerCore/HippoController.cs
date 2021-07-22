@@ -5,7 +5,7 @@ using Hippo.Logging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace Hippo.Controllers
+namespace Hippo.ControllerCore
 {
     public abstract class HippoController : Controller
     {

@@ -11,6 +11,8 @@ using Hippo.ApiControllers;
 using Hippo.Messages;
 using Hippo.Models;
 using Hippo.Repositories;
+using Hippo.Tasks;
+using Hippo.Tests.Fakes;
 using Hippo.Tests.Stubs;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -44,7 +46,7 @@ namespace Hippo.Tests.ApiControllers
             Server = new TestServer(
               new WebHostBuilder().
                 UseStartup<TestStartup>(
-                context => new TestStartup(TokenIssuer, TestDatabaseName)
+                context => new TestStartup(TokenIssuer, TestDatabaseName, new FakeTaskQueue<ChannelReference>())
               )
             );
         }
@@ -76,14 +78,14 @@ namespace Hippo.Tests.ApiControllers
             Assert.True(response.IsSuccessStatusCode);
             var createApplicationResponse = await response.Content.ReadFromJsonAsync<CreateApplicationResponse>();
             Assert.NotEqual(createApplicationResponse.Id, Guid.Empty);
-            Assert.Equal(createApplicationResponse.ApplicationName, _fixture.CreateApplicationRequest.ApplicationName);
-            Assert.Equal(createApplicationResponse.StorageId, _fixture.CreateApplicationRequest.StorageId);
+            Assert.Equal(_fixture.CreateApplicationRequest.ApplicationName, createApplicationResponse.ApplicationName);
+            Assert.Equal(_fixture.CreateApplicationRequest.StorageId, createApplicationResponse.StorageId);
         }
 
         [Fact]
         public async Task CreateApplicationSucceeds()
         {
-            var controller = new ApplicationController(new DbUnitOfWork(_fixture.Context, new FakeCurrentUser(_fixture.User.UserName)), _fixture.UserManager, new NullLogger<ApplicationController>())
+            var controller = new ApplicationController(new DbUnitOfWork(_fixture.Context, new FakeCurrentUser(_fixture.User.UserName)), _fixture.UserManager, new FakeTaskQueue<ChannelReference>(), new NullLogger<ApplicationController>())
             {
                 ControllerContext = new()
                 {
@@ -100,8 +102,8 @@ namespace Hippo.Tests.ApiControllers
             Assert.IsType<CreateApplicationResponse>(createdResult.Value);
             var result = createdResult.Value as CreateApplicationResponse;
             Assert.NotEqual(result.Id, Guid.Empty);
-            Assert.Equal(result.ApplicationName, _fixture.CreateApplicationRequest.ApplicationName);
-            Assert.Equal(result.StorageId, _fixture.CreateApplicationRequest.StorageId);
+            Assert.Equal(_fixture.CreateApplicationRequest.ApplicationName, result.ApplicationName);
+            Assert.Equal(_fixture.CreateApplicationRequest.StorageId, result.StorageId);
         }
 
         [Fact]
@@ -139,7 +141,7 @@ namespace Hippo.Tests.ApiControllers
         }
 
         private ApplicationController GetController()
-            => new(new DbUnitOfWork(_fixture.Context, new FakeCurrentUser(_fixture.User.UserName)), _fixture.UserManager, new NullLogger<ApplicationController>())
+            => new(new DbUnitOfWork(_fixture.Context, new FakeCurrentUser(_fixture.User.UserName)), _fixture.UserManager, new FakeTaskQueue<ChannelReference>(), new NullLogger<ApplicationController>())
             {
                 ControllerContext = new()
                 {

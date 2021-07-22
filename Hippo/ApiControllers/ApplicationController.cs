@@ -1,9 +1,11 @@
 using System;
 using System.Threading.Tasks;
+using Hippo.ControllerCore;
 using Hippo.Controllers;
 using Hippo.Messages;
 using Hippo.Models;
 using Hippo.Repositories;
+using Hippo.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -20,21 +22,18 @@ namespace Hippo.ApiControllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class ApplicationController : HippoController
+    public class ApplicationController : ApplicationControllerCore
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly UserManager<Account> _userManager;
         /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationController"/> class.
         /// </summary>
         /// <param name="unitOfWork">Iunitofwork instance</param>
         /// <param name="userManager">UserManager  instance</param>
+        /// <param name="channelsToReschedule" />
         /// <param name="logger">ILogger Instance</param>
-        public ApplicationController(IUnitOfWork unitOfWork, UserManager<Account> userManager, ILogger<ApplicationController> logger)
-            : base(logger)
+        public ApplicationController(IUnitOfWork unitOfWork, UserManager<Account> userManager, ITaskQueue<ChannelReference> channelsToReschedule, ILogger<ApplicationController> logger)
+            : base(unitOfWork, userManager, channelsToReschedule, logger, EventOrigin.API)
         {
-            this._unitOfWork = unitOfWork;
-            this._userManager = userManager;
         }
 
         /// <summary>
@@ -72,24 +71,22 @@ namespace Hippo.ApiControllers
                     return BadRequest(ModelState);
                 }
 
-                var app = new Models.Application
-                {
-                    Id = System.Guid.NewGuid(),
-                    Name = request.ApplicationName,
-                    StorageId = request.StorageId,
-                    Owner = await _userManager.FindByNameAsync(User.Identity.Name),
-                };
+                var result = await CreateApplication(request);
 
-                await _unitOfWork.Applications.AddNew(app);
-                await _unitOfWork.SaveChanges();
+                if (result.Result != null)
+                {
+                    return result.Result;
+                }
+
+                var application = result.Value;
+                TraceMessage($"Successfully Created Application Id: {application.Id}");
+
                 var response = new CreateApplicationResponse
                 {
-                    Id = app.Id,
-                    ApplicationName = app.Name,
-                    StorageId = app.StorageId
+                    Id = application.Id,
+                    ApplicationName = application.Name,
+                    StorageId = application.StorageId,
                 };
-
-                TraceMessage($"Successfully Created Application Id: {app.Id}");
                 return Created(response);
 
             }

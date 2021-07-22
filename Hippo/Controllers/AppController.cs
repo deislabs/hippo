@@ -19,22 +19,16 @@ using Hippo.Repositories;
 using Microsoft.Extensions.Logging;
 using Hippo.Tasks;
 using System.Threading;
+using Hippo.ControllerCore;
 
 namespace Hippo.Controllers
 {
     [Authorize]
-    public class AppController : HippoController
+    public class AppController : ApplicationControllerCore
     {
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly UserManager<Account> _userManager;
-        private readonly ITaskQueue<ChannelReference> _channelsToReschedule;
-
         public AppController(IUnitOfWork unitOfWork, UserManager<Account> userManager, ITaskQueue<ChannelReference> channelsToReschedule, ILogger<AppController> logger)
-            : base(logger)
+            : base(unitOfWork, userManager, channelsToReschedule, logger, EventOrigin.UI)
         {
-            this._unitOfWork = unitOfWork;
-            this._userManager = userManager;
-            this._channelsToReschedule = channelsToReschedule;
         }
 
         public IActionResult Index()
@@ -80,18 +74,21 @@ namespace Hippo.Controllers
         {
             TraceMethodEntry(WithArgs(form));
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                await _unitOfWork.Applications.AddNew(new Application
-                {
-                    Name = form.Name,
-                    StorageId = form.StorageId,
-                    Owner = await _userManager.FindByNameAsync(User.Identity.Name),
-                });
-                await _unitOfWork.SaveChanges();
-                return RedirectToAction(nameof(Index));
+                return View(form);
             }
-            return View(form);
+
+            var result = await CreateApplication(form);
+
+            if (result.Result != null)
+            {
+                return result.Result;
+            }
+
+            var application = result.Value;
+            _logger.LogInformation($"New: application {application.Id} created");
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Edit(Guid id)
@@ -233,80 +230,21 @@ namespace Hippo.Controllers
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var application = _unitOfWork.Applications.GetApplicationById(id);
-
-                if (application == null)
-                {
-                    LogIfNotFound(application, id);
-                    return NotFound();
-                }
-
-                var channel = new Channel
-                {
-                    Application = application,
-                    Name = form.ChannelName,
-                };
-
-                // TODO: in memory seems not to wire up FKs
-                application.Channels.Add(channel);
-
-                if (form.SelectedRevisionSelectionStrategy == Enum.GetName(ChannelRevisionSelectionStrategy.UseSpecifiedRevision))
-                {
-                    var revision = _unitOfWork.Revisions.GetRevisionByNumber(application, form.SelectedRevisionNumber);
-                    if (revision == null)
-                    {
-                        LogIfNotFound(revision, form.SelectedRevisionNumber);
-                        return NotFound();
-                    }
-                    channel.RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseSpecifiedRevision;
-                    channel.SpecifiedRevision = revision;
-                }
-                else if (form.SelectedRevisionSelectionStrategy == Enum.GetName(ChannelRevisionSelectionStrategy.UseRangeRule))
-                {
-                    var rule = form.SelectedRevisionRule;
-                    if (string.IsNullOrWhiteSpace(rule))
-                    {
-                        _logger.LogError("Release: empty rule");
-                        return BadRequest("rule was empty");  // TODO: this is a terrible way of handling it; await Ronan
-                    }
-                    channel.RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseRangeRule;
-                    channel.RangeRule = rule;
-                }
-                else
-                {
-                    _logger.LogError("Release: no strategy");
-                    return BadRequest("no strategy");  // TODO: this is a terrible way of handling it; await Ronan
-                }
-                channel.ReevaluateActiveRevision();
-
-                var environmentVariables = ParseEnvironmentVariables(form.EnvironmentVariables).ToList();
-
-                channel.Configuration = new Configuration
-                {
-                    EnvironmentVariables = environmentVariables,
-                };
-                channel.Domain = new Domain { Name = form.Domain };
-
-                // TODO: not sure if this is needed
-                foreach (var ev in environmentVariables)
-                {
-                    ev.Configuration = channel.Configuration;
-                }
-
-                await _unitOfWork.Channels.AddNew(channel);
-                await _unitOfWork.EventLog.ChannelCreated(EventOrigin.UI, channel);
-                await _unitOfWork.EventLog.ChannelRevisionChanged(EventOrigin.UI, channel, "(none)", "channel created");
-                await _unitOfWork.SaveChanges();
-
-                await _channelsToReschedule.Enqueue(new ChannelReference(application.Id, channel.Id), CancellationToken.None);
-
-                _logger.LogInformation($"NewChannel: application {form.Id} channel {channel.Id} now at revision {channel.ActiveRevision?.RevisionNumber ?? "[none]"}");
-                _logger.LogInformation($"NewChannel: serving on port {channel.PortID + Channel.EphemeralPortRange}");
                 return RedirectToAction(nameof(Index));
             }
 
+            var result = await CreateChannel(form);
+
+            if (result.Result != null)
+            {
+                return result.Result;
+            }
+
+            var channel = result.Value;
+            _logger.LogInformation($"NewChannel: application {form.Id} channel {channel.Id} now at revision {channel.ActiveRevision?.RevisionNumber ?? "[none]"}");
+            _logger.LogInformation($"NewChannel: serving on port {channel.PortID + Channel.EphemeralPortRange}");
             return RedirectToAction(nameof(Index));
         }
 
@@ -431,11 +369,11 @@ namespace Hippo.Controllers
                     ev.Configuration = channel.Configuration;
                 }
 
-                await _unitOfWork.EventLog.ChannelEdited(EventOrigin.UI, channel);
+                await _unitOfWork.EventLog.ChannelEdited(_eventSource, channel);
 
                 if (revChange != null)
                 {
-                    await _unitOfWork.EventLog.ChannelRevisionChanged(EventOrigin.UI, channel, revChange.ChangedFrom, "channel reconfigured");
+                    await _unitOfWork.EventLog.ChannelRevisionChanged(_eventSource, channel, revChange.ChangedFrom, "channel reconfigured");
                 }
 
                 await _unitOfWork.SaveChanges();
@@ -521,7 +459,7 @@ namespace Hippo.Controllers
                 var changes = application.ReevaluateActiveRevisions();
                 foreach (var change in changes)
                 {
-                    await _unitOfWork.EventLog.ChannelRevisionChanged(EventOrigin.UI, change.Channel, change.ChangedFrom, "revision registered");
+                    await _unitOfWork.EventLog.ChannelRevisionChanged(_eventSource, change.Channel, change.ChangedFrom, "revision registered");
                 }
                 await _unitOfWork.SaveChanges();
 
