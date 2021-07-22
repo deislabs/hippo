@@ -4,11 +4,11 @@ using Microsoft.Extensions.Configuration;
 
 namespace Hippo.Models
 {
-    public class DataContext : IdentityDbContext<Account>
+    public abstract class DataContext : IdentityDbContext<Account>
     {
         private protected readonly IConfiguration _configuration;
 
-        public DataContext(IConfiguration configuration)
+        protected DataContext(IConfiguration configuration)
         {
             _configuration = configuration;
         }
@@ -23,28 +23,30 @@ namespace Hippo.Models
         public DbSet<Key> Keys { get; set; }
         public DbSet<Revision> Revisions { get; set; }
 
+        private protected abstract string SqlNow { get; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
             // TODO: there must be a cleaner way using the abstract BaseEntity class here...
             // meh. do what works for now.
-            builder.Entity<Application>().Property(x => x.Created).HasDefaultValueSql("now()");
-            builder.Entity<Application>().Property(x => x.Modified).HasDefaultValueSql("now()");
-            builder.Entity<Channel>().Property(x => x.Created).HasDefaultValueSql("now()");
-            builder.Entity<Channel>().Property(x => x.Modified).HasDefaultValueSql("now()");
-            builder.Entity<Configuration>().Property(x => x.Created).HasDefaultValueSql("now()");
-            builder.Entity<Configuration>().Property(x => x.Modified).HasDefaultValueSql("now()");
-            builder.Entity<Domain>().Property(x => x.Created).HasDefaultValueSql("now()");
-            builder.Entity<Domain>().Property(x => x.Modified).HasDefaultValueSql("now()");
-            builder.Entity<EnvironmentVariable>().Property(x => x.Created).HasDefaultValueSql("now()");
-            builder.Entity<EnvironmentVariable>().Property(x => x.Modified).HasDefaultValueSql("now()");
-            builder.Entity<EventLogEntry>().Property(x => x.Created).HasDefaultValueSql("now()");
-            builder.Entity<EventLogEntry>().Property(x => x.Modified).HasDefaultValueSql("now()");
-            builder.Entity<Key>().Property(x => x.Created).HasDefaultValueSql("now()");
-            builder.Entity<Key>().Property(x => x.Modified).HasDefaultValueSql("now()");
-            builder.Entity<Revision>().Property(x => x.Created).HasDefaultValueSql("now()");
-            builder.Entity<Revision>().Property(x => x.Modified).HasDefaultValueSql("now()");
+            builder.Entity<Application>().Property(x => x.Created).HasDefaultValueSql(SqlNow);
+            builder.Entity<Application>().Property(x => x.Modified).HasDefaultValueSql(SqlNow);
+            builder.Entity<Channel>().Property(x => x.Created).HasDefaultValueSql(SqlNow);
+            builder.Entity<Channel>().Property(x => x.Modified).HasDefaultValueSql(SqlNow);
+            builder.Entity<Configuration>().Property(x => x.Created).HasDefaultValueSql(SqlNow);
+            builder.Entity<Configuration>().Property(x => x.Modified).HasDefaultValueSql(SqlNow);
+            builder.Entity<Domain>().Property(x => x.Created).HasDefaultValueSql(SqlNow);
+            builder.Entity<Domain>().Property(x => x.Modified).HasDefaultValueSql(SqlNow);
+            builder.Entity<EnvironmentVariable>().Property(x => x.Created).HasDefaultValueSql(SqlNow);
+            builder.Entity<EnvironmentVariable>().Property(x => x.Modified).HasDefaultValueSql(SqlNow);
+            builder.Entity<EventLogEntry>().Property(x => x.Created).HasDefaultValueSql(SqlNow);
+            builder.Entity<EventLogEntry>().Property(x => x.Modified).HasDefaultValueSql(SqlNow);
+            builder.Entity<Key>().Property(x => x.Created).HasDefaultValueSql(SqlNow);
+            builder.Entity<Key>().Property(x => x.Modified).HasDefaultValueSql(SqlNow);
+            builder.Entity<Revision>().Property(x => x.Created).HasDefaultValueSql(SqlNow);
+            builder.Entity<Revision>().Property(x => x.Modified).HasDefaultValueSql(SqlNow);
 
             builder.Entity<Application>()
                 .HasIndex(a => a.Name)
@@ -90,6 +92,8 @@ namespace Hippo.Models
         {
             optionsBuilder.UseNpgsql(_configuration.GetConnectionString("Hippo"));
         }
+
+        private protected override string SqlNow => "now()";
     }
 
     public class SqliteDataContext : DataContext
@@ -102,6 +106,8 @@ namespace Hippo.Models
         {
             optionsBuilder.UseSqlite(_configuration.GetConnectionString("Hippo"));
         }
+
+        private protected override string SqlNow => "datetime('now')";
     }
 
     // Convenient for dev-test when the feature requires exploratory changes to
@@ -122,5 +128,7 @@ namespace Hippo.Models
                 optionsBuilder.UseInMemoryDatabase(_databaseName);
             }
         }
+
+        private protected override string SqlNow => "now()";
     }
 }
