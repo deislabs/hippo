@@ -1,4 +1,8 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -25,28 +29,34 @@ namespace Hippo.Models
 
         private protected abstract string SqlNow { get; }
 
+        private IEnumerable<Type> BaseEntitySetTypes()
+        {
+            IEnumerable<Type> BaseEntitySetTypesImpl(PropertyInfo p)
+            {
+                var type = p.PropertyType;
+                if (type.IsGenericType &&
+                    type.GetGenericTypeDefinition() == typeof(DbSet<>) &&
+                    type.GetGenericArguments().Length == 1)
+                {
+                    var entityType = type.GetGenericArguments()[0];
+                    if (entityType.IsAssignableTo(typeof(BaseEntity)))
+                    {
+                        yield return entityType;
+                    }
+                }
+            }
+            return GetType().GetProperties().SelectMany(BaseEntitySetTypesImpl);
+        }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-            // TODO: there must be a cleaner way using the abstract BaseEntity class here...
-            // meh. do what works for now.
-            builder.Entity<Application>().Property(x => x.Created).HasDefaultValueSql(SqlNow);
-            builder.Entity<Application>().Property(x => x.Modified).HasDefaultValueSql(SqlNow);
-            builder.Entity<Channel>().Property(x => x.Created).HasDefaultValueSql(SqlNow);
-            builder.Entity<Channel>().Property(x => x.Modified).HasDefaultValueSql(SqlNow);
-            builder.Entity<Configuration>().Property(x => x.Created).HasDefaultValueSql(SqlNow);
-            builder.Entity<Configuration>().Property(x => x.Modified).HasDefaultValueSql(SqlNow);
-            builder.Entity<Domain>().Property(x => x.Created).HasDefaultValueSql(SqlNow);
-            builder.Entity<Domain>().Property(x => x.Modified).HasDefaultValueSql(SqlNow);
-            builder.Entity<EnvironmentVariable>().Property(x => x.Created).HasDefaultValueSql(SqlNow);
-            builder.Entity<EnvironmentVariable>().Property(x => x.Modified).HasDefaultValueSql(SqlNow);
-            builder.Entity<EventLogEntry>().Property(x => x.Created).HasDefaultValueSql(SqlNow);
-            builder.Entity<EventLogEntry>().Property(x => x.Modified).HasDefaultValueSql(SqlNow);
-            builder.Entity<Key>().Property(x => x.Created).HasDefaultValueSql(SqlNow);
-            builder.Entity<Key>().Property(x => x.Modified).HasDefaultValueSql(SqlNow);
-            builder.Entity<Revision>().Property(x => x.Created).HasDefaultValueSql(SqlNow);
-            builder.Entity<Revision>().Property(x => x.Modified).HasDefaultValueSql(SqlNow);
+            foreach (var t in BaseEntitySetTypes())
+            {
+                builder.Entity(t).Property(nameof(BaseEntity.Created)).HasDefaultValueSql(SqlNow);
+                builder.Entity(t).Property(nameof(BaseEntity.Modified)).HasDefaultValueSql(SqlNow);
+            }
 
             builder.Entity<Application>()
                 .HasIndex(a => a.Name)
