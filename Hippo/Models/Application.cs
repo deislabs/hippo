@@ -30,10 +30,9 @@ namespace Hippo.Models
         public virtual Account Owner { get; set; }
 
         [Required]
-        public virtual ICollection<Account> Collaborators { get; set; }
+        public virtual ICollection<Collaboration> Collaborations { get; set; }
 
         [Required]
-
         public virtual ICollection<Revision> Revisions { get; set; }
 
         [Required]
@@ -76,5 +75,8 @@ namespace Hippo.Models
             }
             return HealthStatus.Healthy;
         }
+
+        public ICollection<Collaboration> SafeCollaborations() =>
+            Collaborations ?? Array.Empty<Collaboration>();
     }
 }

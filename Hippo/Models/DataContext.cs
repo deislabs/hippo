@@ -20,6 +20,7 @@ namespace Hippo.Models
         public DbSet<Account> Accounts { get; set; }
         public DbSet<Application> Applications { get; set; }
         public DbSet<Channel> Channels { get; set; }
+        public DbSet<Collaboration> collaborations { get; set; }
         public DbSet<Configuration> Configuration { get; set; }
         public DbSet<Domain> Domains { get; set; }
         public DbSet<EnvironmentVariable> EnvironmentVariables { get; set; }

@@ -21,29 +21,37 @@ namespace Hippo.Repositories
 
         public IEnumerable<Application> ListApplications() =>
             _context.Applications
-                    .Where(application => application.Owner.UserName == _owner.Name())
+                    .Where(application => application.Owner.UserName == _owner.Name() || application.Collaborations.Any(c => c.User.UserName == _owner.Name()))
                     .Include(a => a.Channels)
                         .ThenInclude(c => c.Domain)
+                    .Include(a => a.Collaborations)
+                        .ThenInclude(c => c.User)
                     .Include(a => a.Revisions);
 
         public IEnumerable<Application> ListApplicationsForAllUsers() =>
             _context.Applications
                     .Include(a => a.Channels)
                         .ThenInclude(c => c.Domain)
+                    .Include(a => a.Collaborations)
+                        .ThenInclude(c => c.User)
                     .Include(a => a.Revisions);
 
         public IEnumerable<Application> ListApplicationsByStorageId(string storageId) =>
             _context.Applications
-                    .Where(application => application.StorageId == storageId && application.Owner.UserName == _owner.Name())
+                    .Where(application => application.StorageId == storageId && (application.Owner.UserName == _owner.Name() || application.Collaborations.Any(c => c.User.UserName == _owner.Name())))
                     .Include(a => a.Channels)
                         .ThenInclude(c => c.Domain)
+                    .Include(a => a.Collaborations)
+                        .ThenInclude(c => c.User)
                     .Include(a => a.Revisions);
 
         public Application GetApplicationById(Guid id) =>
             _context.Applications
-                    .Where(application => application.Id == id && application.Owner.UserName == _owner.Name())
+                    .Where(application => application.Id == id && (application.Owner.UserName == _owner.Name() || application.Collaborations.Any(c => c.User.UserName == _owner.Name())))
                     .Include(a => a.Channels)
                         .ThenInclude(c => c.Domain)
+                    .Include(a => a.Collaborations)
+                        .ThenInclude(c => c.User)
                     .Include(a => a.Revisions)
                     .SingleOrDefault();
 

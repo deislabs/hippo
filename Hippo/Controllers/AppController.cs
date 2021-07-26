@@ -108,13 +108,14 @@ namespace Hippo.Controllers
                 Id = a.Id,
                 Name = a.Name,
                 StorageId = a.StorageId,
+                Collaborators = string.Join("; ", a.SafeCollaborations().Select(c => c.User.UserName)),
             };
             return View(vm);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,StorageId")] AppEditForm form)
+        public async Task<IActionResult> Edit(Guid id, [Bind("Id,Name,StorageId,Collaborators")] AppEditForm form)
         {
             TraceMethodEntry(WithArgs(id, form));
 
@@ -152,6 +153,10 @@ namespace Hippo.Controllers
                         }
                         changedChannels = new List<Channel>(a.Channels);
                     }
+
+                    var getCollaborationsTasks = form.ParseCollaborators().Select(async c => new Collaboration { Application = a, User = await _userManager.FindByNameAsync(c) });
+                    var collaborations = await Task.WhenAll(getCollaborationsTasks);
+                    a.Collaborations = collaborations.ToList();  // Yes, you need to convert it to a List or you get weird errors on save
 
                     _unitOfWork.Applications.Update(a);
                     await _unitOfWork.SaveChanges();
