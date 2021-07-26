@@ -8,7 +8,7 @@ namespace Hippo.Config
 {
     public class ChannelConfigurationProvider : ConfigurationProvider, IChannelConfigurationProvider
     {
-        const string ConfigPrefix = "WASM:Bindles";
+        const string ConfigPrefix = "Wagi:Bindles";
         const string DefaultEndpointKey = "Kestrel:Endpoints:Http:Url";
         const string DefaultEndpointValue = "http://127.0.0.1:0";
         private readonly Dictionary<Guid, ChannelDetails> _channelDetailsDictionary = new();
@@ -17,11 +17,10 @@ namespace Hippo.Config
         {
             // Kestrel needs at least one endpoint to listen on this is removed as soon as the first channel is added.
             Data.Add(DefaultEndpointKey, DefaultEndpointValue);
-            ListenForReload();
         }
 
         public void SetBindleServer(string bindleServer)
-            => Data.AddOrUpdate("WASM:BindleServer", bindleServer);
+            => Data.AddOrUpdate("Wagi:BindleServer", bindleServer);
 
         public void AddChannel(Channel channel, string listenAddress, ICollection<EnvironmentVariable> env)
         {
@@ -80,20 +79,6 @@ namespace Hippo.Config
             OnReload();
         }
 
-        private void ListenForReload()
-        {
-            var token = GetReloadToken();
-            token.RegisterChangeCallback((s) =>
-            {
-                // TODO: use ILogger
-                Console.WriteLine($"Change Callback called the following Channels are active");
-                foreach (var channelDetails in _channelDetailsDictionary)
-                {
-                    Console.WriteLine($"Channel Id {channelDetails.Key}");
-                }
-                ListenForReload();
-            }, null);
-        }
     }
 
     public static class IDictionaryExtension
