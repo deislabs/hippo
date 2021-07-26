@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Hippo.Migrations.Sqlite
+namespace Hippo.Migrations.Postgres
 {
     public partial class Collaborations : Migration
     {
@@ -23,11 +23,11 @@ namespace Hippo.Migrations.Sqlite
                 name: "collaborations",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ApplicationId = table.Column<Guid>(type: "TEXT", nullable: true),
-                    UserId = table.Column<string>(type: "TEXT", nullable: true),
-                    Created = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "datetime('now')"),
-                    Modified = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "datetime('now')")
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    ApplicationId = table.Column<Guid>(type: "uuid", nullable: false),
+                    UserId = table.Column<string>(type: "text", nullable: true),
+                    Created = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()"),
+                    Modified = table.Column<DateTime>(type: "timestamp without time zone", nullable: false, defaultValueSql: "now()")
                 },
                 constraints: table =>
                 {
@@ -37,7 +37,7 @@ namespace Hippo.Migrations.Sqlite
                         column: x => x.ApplicationId,
                         principalTable: "Applications",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_collaborations_AspNetUsers_UserId",
                         column: x => x.UserId,
@@ -65,7 +65,7 @@ namespace Hippo.Migrations.Sqlite
             migrationBuilder.AddColumn<Guid>(
                 name: "ApplicationId",
                 table: "AspNetUsers",
-                type: "TEXT",
+                type: "uuid",
                 nullable: true);
 
             migrationBuilder.CreateIndex(

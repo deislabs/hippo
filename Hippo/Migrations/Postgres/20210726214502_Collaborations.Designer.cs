@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Hippo.Migrations.Postgres
 {
     [DbContext(typeof(PostgresDataContext))]
-    [Migration("20210722233258_Collaborations")]
+    [Migration("20210726214502_Collaborations")]
     partial class Collaborations
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -191,7 +191,7 @@ namespace Hippo.Migrations.Postgres
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("ApplicationId")
+                    b.Property<Guid>("ApplicationId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("Created")
@@ -586,7 +586,9 @@ namespace Hippo.Migrations.Postgres
                 {
                     b.HasOne("Hippo.Models.Application", "Application")
                         .WithMany("Collaborations")
-                        .HasForeignKey("ApplicationId");
+                        .HasForeignKey("ApplicationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Hippo.Models.Account", "User")
                         .WithMany()

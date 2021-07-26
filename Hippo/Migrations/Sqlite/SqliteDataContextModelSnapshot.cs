@@ -186,7 +186,7 @@ namespace Hippo.Migrations.Sqlite
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("ApplicationId")
+                    b.Property<Guid>("ApplicationId")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("Created")
@@ -579,7 +579,9 @@ namespace Hippo.Migrations.Sqlite
                 {
                     b.HasOne("Hippo.Models.Application", "Application")
                         .WithMany("Collaborations")
-                        .HasForeignKey("ApplicationId");
+                        .HasForeignKey("ApplicationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("Hippo.Models.Account", "User")
                         .WithMany()
