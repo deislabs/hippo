@@ -2,8 +2,8 @@
 
 Hippo is the easiest way to deploy and serve applications compiled to WASI.
 
-**WARNING:** This is experimental code. It is not considered production-grade by
-its developers, nor is it "supported" software.
+**WARNING:** This is experimental code. It is not considered production-grade
+by its developers, nor is it "supported" software.
 
 > DeisLabs is experimenting with many WASM technologies right now. This is one
 > of a multitude of projects (including
@@ -16,20 +16,22 @@ manage domain routing and TLS certificates, and view agrregated logs. Hippo
 provides a simple permissions model to manage your users and groups.
 
 Hippo comes integrated with a powerful Layer 7 Load Balancer so you and your
-developers can spend more time writing applications, and less time managing your
-load balancer. After initial setup, create an application, attach a domain and a
-TLS certificate, and let Hippo handle the backend routing.
+developers can spend more time writing applications, and less time managing
+your load balancer. After initial setup, create an application, attach a domain
+and a TLS certificate, and let Hippo handle the backend routing.
 
-All of Hippo's functionality is exposed through a web application and (coming
-soon) a command line interface.
+All of Hippo's functionality is exposed through a web application and a
+[command line interface](https://github.com/deislabs/hippo-cli).
 
 ## Documentation
 
 If you're new to the project, get started with [the
-introduction](docs/intro/README.md). For more in-depth information about
-Hippo, plunge right into the [topic guides](docs/topics/README.md).
+introduction](https://hippo-docs.netlify.app/intro/). For more in-depth
+information about Hippo, plunge right into the [topic
+guides](https://hippo-docs.netlify.app/topics/).
 
-Looking for the developer guide? [Start here](docs/developers/developer-guide.md).
+Looking for the developer guide? [Start
+here](https://hippo-docs.netlify.app/developers).
 
 ## Community, discussion, contribution, and support
 
