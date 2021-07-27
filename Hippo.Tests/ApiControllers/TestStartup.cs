@@ -34,7 +34,7 @@ namespace Hippo.Tests.ApiControllers
             {
                 cfg.User.RequireUniqueEmail = true;
             }).AddEntityFrameworkStores<DataContext>();
-            services.AddControllers().AddApplicationPart(Assembly.Load("Hippo")).AddControllersAsServices();
+            services.AddControllers().AddApplicationPart(Assembly.Load("hippo-server")).AddControllersAsServices();
 
             services.AddAuthentication().AddJwtBearer(
                 cfg => cfg.TokenValidationParameters = new TokenValidationParameters
