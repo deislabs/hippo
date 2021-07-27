@@ -83,6 +83,11 @@ $jost: 'Jost', sans-serif;
   box-shadow: $xlength $ylength $size $color;
 }
 
+@mixin ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 /* 3. Layout Modifiers
 -------------
@@ -183,6 +188,7 @@ body {
       font-size: 1.67rem;
       left: 7.35vw;
       top: 1.2rem;
+      min-width: 50vw;
     }
 
     h2 {
@@ -327,6 +333,12 @@ body {
   }
 }
 
+.truncate {
+  @include ellipsis;
+  display: inline-block;
+  max-width: 82.5%;
+}
+
 .box {
   padding: 1.75rem 2rem;
 
@@ -377,11 +389,16 @@ input[type="submit"].is-rounded {
     position: relative;
     min-height: 10rem;
 
-    a.app-link {
-      color: $dark2;
+    .app-link {
       width: 100%;
-      display: inline-block;
       min-height: 8rem;
+      display: block;
+
+      a.app-url {
+        color: $dark2;
+        display: block;
+        width: 100%;
+      }
 
       h3 {
         font-size: 2rem;
@@ -389,6 +406,9 @@ input[type="submit"].is-rounded {
         padding-bottom: 0.67rem;
         margin-bottom: 1.25rem;
         border-bottom: 2px solid $light2;
+        overflow-x: hidden;
+        display: block;
+        width: 100%;
 
         .fa {
           color: $blue;
@@ -577,6 +597,8 @@ p.card-header-title {
         font-weight: bold;
         color: $dark1;
         font-size: 1.333rem;
+        @include ellipsis;
+        max-width: 14.5rem;
       }
 
       a.env-url {
@@ -603,6 +625,12 @@ p.card-header-title {
             opacity: 1;
           }
         }
+      }
+
+      a.dropdown-item.is-active,
+      button.dropdown-item.is-active {
+        background: transparent;
+        color: $dark2;
       }
 
       .env-dropdown {
