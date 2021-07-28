@@ -30,7 +30,7 @@ namespace Hippo
                 var wagiDotnetBuilder = CreateWagiDotnetHostBuilder(channelConfigProvider);
                 var wagiDotnetHost = wagiDotnetBuilder.Build();
                 tasks.Add(wagiDotnetHost.RunAsync());
-                hippoHostBuilder = CreateHostBuilder(args, channelConfigProvider);
+                hippoHostBuilder = CreateHippoHostBuilder(args, channelConfigProvider);
             }
             else
             {
@@ -46,11 +46,16 @@ namespace Hippo
             Task.WaitAny(tasks.ToArray());
         }
 
-        // This has to be called CreateHostBuilder because the migrations tool looks specifically
+        // This has to be called CreateHostBuilder because the ef migrations tool looks specifically
         // for that method name.
+        // NOTE do not run the ef migrations tool with env var HIPPO_JOB_SCHEDULER set as it will fail.
 
-        // Review Question - Will this still work with migrations as it now has an optional parameter?
-        static IHostBuilder CreateHostBuilder(string[] args, ChannelConfigurationProvider channelConfigurationProvider = null)
+        static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            return CreateHippoHostBuilder(args, null);
+        }
+
+        static IHostBuilder CreateHippoHostBuilder(string[] args, ChannelConfigurationProvider channelConfigurationProvider)
         {
             var hostBuilder = Host.CreateDefaultBuilder(args)
                                   .UseConsoleLifetime()

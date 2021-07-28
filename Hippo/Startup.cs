@@ -84,10 +84,10 @@ namespace Hippo
             services.AddScoped<IUnitOfWork, DbUnitOfWork>();
 
             // TODO: Use config rather than env var.
-            var schedulerVar = Environment.GetEnvironmentVariable("HIPPO_JOB_SCHEDULER");
+            var schedulerVar = Environment.GetEnvironmentVariable("HIPPO_JOB_SCHEDULER")?.ToUpperInvariant() ?? default;
             switch (schedulerVar)
             {
-                case "wagi-dotnet":
+                case "WAGI-DOTNET":
                     services.AddSingleton<IJobScheduler, WagiDotnetJobScheduler>();
                     break;
                 default:
