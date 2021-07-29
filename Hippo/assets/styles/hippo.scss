@@ -401,10 +401,8 @@ input[type="submit"].is-rounded {
 
       h4 {
         color: $dark4;
-        margin-top: 0;
-        position: absolute;
-        top: 7.35rem;
-        left: 10.25rem;
+        margin-top: 0.5rem;
+        float: left;
       }
 
       &:hover {
@@ -426,6 +424,8 @@ input[type="submit"].is-rounded {
     padding: 0.5rem 1.125rem 0.5rem 0.7rem;
     border-radius: 3rem;
     display: inline-block;
+    float: left;
+    margin-right: 1.25rem;
   }
 
   .app-add {
