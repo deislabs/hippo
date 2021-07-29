@@ -13,9 +13,19 @@
             </div>
             
             <div class="navbar-menu navbar-end" id="navMenu">
+                <div class="navbar-item">
+					<a class="button is-outlined is-info env-block" asp-id="app-history">
+						<i class="fa fa-history"></i>&nbsp;History
+					</a>
+
+				</div>
                 <div class="navbar-item has-dropdown is-hoverable">
                     <a class="navbar-link">
-                        <span class="icon is-small"><i class="fa fa-user-o"></i> </span>
+                        <span class="icon is-small">
+                            <i class="fa fa-user-o"></i>
+                            <span class="icon is-small"><i class="fa fa-user-o"></i></span>
+                            <em>@Html.DisplayFor(modelItem => User.Identity.Name)</em>
+                        </span>
                     </a>
                     <div class="navbar-dropdown is-right">
                         <a class="navbar-item" href="/account">
