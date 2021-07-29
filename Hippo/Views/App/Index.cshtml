@@ -11,16 +11,30 @@
       <div class="box app-box">
         <a asp-action="Details" asp-route-id="@item.Id" class="app-link">
           <h3>@Html.DisplayFor(modelItem => item.Name) <span class="fa fa-chevron-right"></span></h3>
+          @if (item.Status().Health == Hippo.Models.HealthLevel.Healthy) {
+              <section class="app-state is-success has-background-success">
+                  <span class="icon-text has-text-white">
+                      <span class="icon">
+                          <i class="fa fa-check"></i>
+                      </span>
+                      <span>
+                            @Html.DisplayFor(modelItem => item.Status().Health)
+                      </span>
+                  </span>
+              </section>
+          } else {
+              <section class="app-state is-danger has-background-danger">
+                  <span class="icon-text has-text-white">
+                      <span class="icon">
+                          <i class="fa fa-times-circle"></i>
+                      </span>
+                      <span>
+                          @Html.DisplayFor(modelItem => item.Status().Messages)
+                      </span>
+                  </span>
+              </section>
+          }
           <h4>WASM Application</h4>
-
-          <section class="app-state is-success has-background-success">
-            <span class="icon-text has-text-white">
-              <span class="icon">
-                <i class="fa fa-check"></i>
-              </span>
-              <span>Healthy</span>
-            </span>
-          </section>
         </a>
 
         <div class="dropdown is-hoverable">
