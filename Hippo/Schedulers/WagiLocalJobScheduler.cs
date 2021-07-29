@@ -106,7 +106,7 @@ namespace Hippo.Schedulers
             }
             catch (Win32Exception e)  // yes, even on Linux
             {
-                if (e.Message.Contains("No such file or directory", StringComparison.InvariantCultureIgnoreCase))
+                if (e.Message.Contains("No such file or directory", StringComparison.InvariantCultureIgnoreCase) || e.Message.Contains("The system cannot find the file specified", StringComparison.InvariantCultureIgnoreCase))
                 {
                     _logger.LogError($"Program '{wagiProgram}' not found: check system path or set {ENV_WAGI}");
                     return;
