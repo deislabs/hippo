@@ -32,6 +32,7 @@ namespace Hippo.Controllers
             this._configuration = configuration;
         }
 
+        [HttpGet]
         public IActionResult Register()
         {
             TraceMethodEntry();
@@ -44,6 +45,7 @@ namespace Hippo.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(AccountRegisterForm form)
         {
             TraceMethodEntry(WithArgs(form));
@@ -96,6 +98,7 @@ namespace Hippo.Controllers
             return View();
         }
 
+        [HttpGet]
         public IActionResult Login()
         {
             TraceMethodEntry();
@@ -108,6 +111,7 @@ namespace Hippo.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginForm form)
         {
             TraceMethodEntry(WithArgs(form));
@@ -152,6 +156,7 @@ namespace Hippo.Controllers
             return View();
         }
 
+        [HttpGet]
         public async Task<IActionResult> Logout()
         {
             TraceMethodEntry();
@@ -160,7 +165,10 @@ namespace Hippo.Controllers
             return RedirectToAction("Index", "App");
         }
 
+        // TODO: This is an API so needs swagger attributes and moving under APIControllers Directory, needs to be co-ordinated with changes to HippoFactory
+
         [HttpPost]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA5391: Method New handles a HttpPost request without performing antiforgery token validation.You also need to ensure that your HTML form sends an antiforgery token.", Justification = "This is used as an API.")]
         public async Task<IActionResult> CreateToken([FromBody] ApiLoginForm form)
         {
             TraceMethodEntry(WithArgs(form));

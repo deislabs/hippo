@@ -2,3 +2,6 @@
 # Require XML comments (Documentation option is enabled to allow for swagger generation) 
 [*.cs]
 dotnet_diagnostic.CS1591.severity = warning
+
+# Antiforgery not needed for APIs.
+dotnet_diagnostic.CA5391.severity = none

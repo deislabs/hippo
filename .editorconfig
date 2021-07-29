@@ -292,11 +292,6 @@ dotnet_diagnostic.CA1062.severity = none
 
 dotnet_diagnostic.CA2007.severity = none
 
-# TODO: Enable Antiforgery 
-
-dotnet_diagnostic.CA5391.severity = none
-dotnet_diagnostic.CA5395.severity = none
-
 # Do not require XML comments (Documentation option is enabled to allow for swagger generation only) 
 
 dotnet_diagnostic.CS1591.severity = none

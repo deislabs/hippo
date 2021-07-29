@@ -31,6 +31,7 @@ namespace Hippo.Controllers
         {
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             TraceMethodEntry();
@@ -38,6 +39,7 @@ namespace Hippo.Controllers
             return View(_unitOfWork.Applications.ListApplications());
         }
 
+        [HttpGet]
         public IActionResult Details(Guid id)
         {
             TraceMethodEntry(WithArgs(id));
@@ -62,6 +64,7 @@ namespace Hippo.Controllers
             return View(vm);
         }
 
+        [HttpGet]
         public IActionResult New()
         {
             TraceMethodEntry();
@@ -91,6 +94,7 @@ namespace Hippo.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpGet]
         public IActionResult Edit(Guid id)
         {
             TraceMethodEntry(WithArgs(id));
@@ -184,6 +188,7 @@ namespace Hippo.Controllers
             return View(form);
         }
 
+        [HttpGet]
         public IActionResult Delete(Guid id)
         {
             TraceMethodEntry(WithArgs(id));
@@ -209,6 +214,7 @@ namespace Hippo.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpGet]
         public IActionResult NewChannel(Guid id)
         {
             TraceMethodEntry(WithArgs(id));
@@ -267,6 +273,7 @@ namespace Hippo.Controllers
                        .Select(bits => new EnvironmentVariable { Key = bits[0], Value = bits[1] });
         }
 
+        [HttpGet]
         public IActionResult EditChannel(Guid id)
         {
             TraceMethodEntry(WithArgs(id));
@@ -392,6 +399,7 @@ namespace Hippo.Controllers
             return View(form);
         }
 
+        [HttpGet]
         public IActionResult DeleteChannel(Guid id)
         {
             TraceMethodEntry(WithArgs(id));
@@ -431,6 +439,7 @@ namespace Hippo.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpGet]
         public IActionResult RegisterRevision(Guid id)
         {
             TraceMethodEntry(WithArgs(id));
