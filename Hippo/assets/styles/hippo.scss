@@ -209,12 +209,29 @@ body {
     font-family: monospace;
   }
 
-  .button.is-rounded {
-    min-width: 8rem !important;
-    font-size: 1rem;
-    padding: 1rem 2.25rem;
-    margin-top: -0.25rem;
-    margin-right: 2rem;
+  .navbar-item.has-dropdown {
+    a.navbar-link {
+      border-left: 1px solid $light2;
+      padding-left: 1.35rem;
+    }
+    
+    em {
+      font-style: normal;
+      font-weight: bold;
+      color: $dark2;
+      padding: 0 1.25rem 0 0.425rem;
+    }
+  }
+
+  .button.app-history {
+    border-radius: 3rem;
+    margin: -1.075rem 0.5rem 0 0;
+
+    .fa {
+      margin-right: 0.5rem;
+
+    }
+
   }
 
   .navbar-link:not(.is-arrowless) {
@@ -520,19 +537,6 @@ p.card-header-title {
         display: block;
         justify-content: normal;
       }
-
-      &:after {
-        width: 4px;
-        height: 8rem;
-        content: " ";
-        background: $dark4;
-        opacity: 0;
-        position: absolute;
-        right: -1.5rem;
-        border-radius: 1rem;
-        z-index: 300;
-        @include transition;
-      }
       
       a.env-block {
         background: $light4;
@@ -545,6 +549,20 @@ p.card-header-title {
         position: relative;
         min-height: 8rem;
         box-shadow: 0 1px 3px 0px $dark4;
+
+        &:after {
+          width: 4px;
+          height: 8rem;
+          content: " ";
+          background: $dark4;
+          opacity: 0;
+          position: absolute;
+          top: 0;
+          right: -1.5rem;
+          border-radius: 1rem;
+          z-index: 300;
+          @include transition;
+        }
       }
 
       .app-state {
@@ -613,10 +631,9 @@ p.card-header-title {
       }
 
       // tab states
-      &.is-active {
-        a.env-block {
-          background: white;
-        }
+      a.env-block.is-active {
+        background: white;
+        box-shadow: 0 0 3px 1px $dark4;
         
         &:after {
           background: $brand;
@@ -624,7 +641,7 @@ p.card-header-title {
         }
       }
 
-      &:hover {
+      &:hover a.env-block {
         &:after {
           background: $dark2;
           opacity: 1;
@@ -664,7 +681,7 @@ p.card-header-title {
   }
 }
 
-.rev-list {
+.content-list {
   position: relative;
   flex-direction: column;
 
@@ -698,20 +715,108 @@ p.card-header-title {
     .card {
       background: white;
       margin: 2rem;
+      min-height: 6.67rem;
+
+      .card-content,
+      .columns,
+      .column {
+        flex-direction: row;
+      }
+
+      .has-text-centered {
+        padding-top: 2.67rem;
+      }
+
+      h2 {
+        margin: 0.67rem 0.5rem;
+      }
+    }
+
+    section.env-rule-summary {
+      border-radius: 1.65rem;
+      border: 3px solid $light2;
+      position: relative;
+
+      small {
+        background: white;
+        position: absolute;
+        padding: 0 0.5rem;
+        top: -0.75rem;
+        left: 0.925rem;
+        color: darken($dark4, 33%)
+      }
+
+      p {
+        margin: 1.125rem 1.5rem 0.8rem;
+      }
+
+      .button {
+        position: absolute;
+        top: 0.475rem;
+        right: 0.825rem;
+        border: none;
+        padding: 0.67rem 1.125rem
+      }
+    }
+
+    code {
+      color: $dark2;
+      border-radius: 0.2em;
+      background: $light3;
     }
 
     ul.rev-list {
       margin: 0 2.5vw;
       
       li.rev-item {
-        line-height: 1.75;
-        margin: 0.5rem auto 0.67rem;
+        line-height: 2.5;
+        margin: 0.67rem auto 0.725rem;
+        position: relative;
+
         strong {
           border-radius: 0.5rem;
           background: $dark3;
           color: white;
           padding: 0.25rem 0.5rem;
+          margin-right: 0.33rem;
         }
+
+        .rev-not-deployed {
+          strong {
+            background: darken(desaturate($dark3, 42.5%), 7.5%);
+          }
+        }
+
+        .fa {
+          position: absolute;
+          right: 0.75rem;
+          cursor: pointer;
+          color: $dark3;
+
+          &:hover {
+            opacity: 0.7;
+          }
+        }
+
+        .tag {
+          font-weight: bold;
+          padding: 0.25rem 0.5rem;
+          border-radius: 0.5rem;
+          background: $light3;
+          color: $dark2;
+          font-size: 1rem;
+          margin-left: 0.25rem;
+          margin-right: 0.25rem;
+        }
+      }
+
+      pre {
+        line-height: 0.67;
+        padding: 0.5rem 0.825rem 0;
+        margin: 0.5rem 0 0;
+        border-radius: 0.67rem;
+        display: none;
+        background: darken($light1, 3.5%);
       }
     }
 
@@ -720,7 +825,27 @@ p.card-header-title {
       bottom: 6rem;
       left: calc(#{$sidebarWidth} + 2rem);
       right: 2rem;
+
+      .pagination-link.is-current {
+        background:$light1;
+        color: $dark3;
+        border-color: $dark3;
+      }
     }
+  }
+}
+
+.history-wrapper {
+  padding: 1rem 1.5rem;
+}
+
+table.table {
+  background: $light3;
+  margin-bottom: 2rem;
+
+  .table td, .table th {
+    padding: 0.35rem 0.5rem;
+    border: none;
   }
 }
 

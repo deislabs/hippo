@@ -22,7 +22,9 @@
                                     <span class="icon">
                                         <i class="fa fa-check"></i>
                                     </span>
-                                    <span>Healthy</span>
+                                    <span>
+                                         @Html.DisplayFor(modelItem => item.Status().Health)
+                                    </span>
                                 </span>
                             </section>
                         } else {
@@ -31,7 +33,9 @@
                                     <span class="icon">
                                         <i class="fa fa-times-circle"></i>
                                     </span>
-                                    <span>Unhealthy</span>
+                                    <span>
+                                        @Html.DisplayFor(modelItem => item.Status().Messages)
+                                    </span>
                                 </span>
                             </section>
                         }
