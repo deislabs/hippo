@@ -26,9 +26,8 @@ namespace Hippo.Schedulers
         public override void Start(Channel c)
         {
             var port = c.PortID + Channel.EphemeralPortRange;
-            var env = c.GetEnvironmentVariables();
             var listenAddress = $"http://127.0.0.1:{port}";
-            _channelConfigurationProvider.AddChannel(c, listenAddress, env);
+            _channelConfigurationProvider.AddChannel(c, listenAddress);
             StartProxy(c, listenAddress);
         }
 

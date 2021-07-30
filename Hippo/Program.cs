@@ -18,13 +18,15 @@ namespace Hippo
 {
     public static class Program
     {
+        // TODO get value from configuration.
+        public static string JobScheduler => Environment.GetEnvironmentVariable("HIPPO_JOB_SCHEDULER")?.ToUpperInvariant() ?? default;
+
         public static void Main(string[] args)
         {
             var tasks = new List<Task>();
             IHostBuilder hippoHostBuilder;
-            // TODO: Make this part of configuration
-            var schedulerVar = Environment.GetEnvironmentVariable("HIPPO_JOB_SCHEDULER");
-            if (!string.IsNullOrEmpty(schedulerVar) && schedulerVar.ToUpperInvariant() == "WAGI-DOTNET")
+
+            if (JobScheduler == "WAGI-DOTNET")
             {
                 var channelConfigProvider = new ChannelConfigurationProvider();
                 var wagiDotnetBuilder = CreateWagiDotnetHostBuilder(channelConfigProvider);
@@ -48,7 +50,7 @@ namespace Hippo
 
         // This has to be called CreateHostBuilder because the ef migrations tool looks specifically
         // for that method name.
-        // NOTE do not run the ef migrations tool with env var HIPPO_JOB_SCHEDULER set as it will fail.
+        // NOTE do not run the ef migrations tool with env var HIPPO_JOB_SCHEDULER set to WAGI-DOTNET as it will fail.
 
         static IHostBuilder CreateHostBuilder(string[] args)
         {

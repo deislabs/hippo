@@ -17,6 +17,7 @@ namespace Hippo.Schedulers
         // This assumes a singleton scheduler instance!
         private readonly Dictionary<Guid, (int, Task)> _wagiProcessIds = new();
         private const string ENV_WAGI = "HIPPO_WAGI_PATH";
+
         public WagiLocalJobScheduler(IHostApplicationLifetime lifetime, ILogger<WagiLocalJobScheduler> logger, IReverseProxy reverseProxy)
             : base(logger, reverseProxy)
         {

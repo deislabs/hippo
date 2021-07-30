@@ -16,15 +16,15 @@ namespace Hippo.Config
         public ChannelConfigurationProvider()
         {
             // Kestrel needs at least one endpoint to listen on this is removed as soon as the first channel is added.
-            Data.Add(DefaultEndpointKey, DefaultEndpointValue);
+            Data[DefaultEndpointKey] = DefaultEndpointValue;
         }
 
         public void SetBindleServer(string bindleServer)
-            => Data.AddOrUpdate("Wagi:BindleServer", bindleServer);
+            => Data["Wagi:BindleServer"] = bindleServer;
 
-        public void AddChannel(Channel channel, string listenAddress, ICollection<EnvironmentVariable> env)
+        public void AddChannel(Channel channel, string listenAddress)
         {
-            _channelDetailsDictionary.AddOrUpdate(channel.Id, new ChannelDetails(channel, listenAddress, env));
+            _channelDetailsDictionary[channel.Id] = new ChannelDetails(channel, listenAddress);
 
             if (!Uri.TryCreate(listenAddress, UriKind.Absolute, out var uri))
             {
@@ -32,24 +32,24 @@ namespace Hippo.Config
             }
 
             var listenAddressKey = $"Kestrel:Endpoints:{channel.Id}:Url";
-            Data.AddOrUpdate(listenAddressKey, listenAddress);
+            Data[listenAddressKey] = listenAddress;
             var bindleConfigPrefix = $"{ConfigPrefix}:{channel.Id}";
             var bindleKey = $"{bindleConfigPrefix}:Name";
             var bindleValue = $"{channel.Application.StorageId}/{channel.ActiveRevision.RevisionNumber}";
-            Data.AddOrUpdate(bindleKey, bindleValue);
+            Data[bindleKey] = bindleValue;
             var hostNamesKey = $"{bindleConfigPrefix}:Hostnames:";
             var host = $"{uri.Host}:{uri.Port}";
-            Data.AddOrUpdate(hostNamesKey, host);
+            Data[hostNamesKey] = host;
             var routeKey = $"{bindleConfigPrefix}:Route";
-            Data.AddOrUpdate(routeKey, "/");
+            Data[routeKey] = "/";
 
-            foreach (var envVar in env)
+            foreach (var envVar in channel.GetEnvironmentVariables())
             {
                 var envKey = $"{bindleConfigPrefix}:Environment:{envVar.Key}";
-                Data.AddOrUpdate(envKey, envVar.Value);
+                Data[envKey] = envVar.Value;
             }
 
-            Data.TryDelete(DefaultEndpointKey);
+            Data.Remove(DefaultEndpointKey);
             OnReload();
         }
 
@@ -62,17 +62,16 @@ namespace Hippo.Config
         {
             var channelDetails = _channelDetailsDictionary[channel.Id];
             var listenAddress = channelDetails.listenAddress;
-            var env = channelDetails.env;
             var listenAddressKey = $"Kestrel:Endpoints:{channel.Id}:Url";
-            Data.TryDelete(listenAddressKey);
+            Data.Remove(listenAddressKey);
             var listenPrefix = $"{ConfigPrefix}:{listenAddress}";
             var bindleKey = $"{listenPrefix}:Name";
-            Data.TryDelete(bindleKey);
+            Data.Remove(bindleKey);
 
-            foreach (var envVar in env)
+            foreach (var envVar in channel.GetEnvironmentVariables())
             {
                 var envKey = $"{listenPrefix}:Environment:{envVar.Key}";
-                Data.TryDelete(envKey);
+                Data.Remove(envKey);
             }
 
             _channelDetailsDictionary.Remove(channel.Id);
@@ -80,26 +79,5 @@ namespace Hippo.Config
         }
 
     }
-
-    public static class IDictionaryExtension
-    {
-        public static void AddOrUpdate<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key, TValue value)
-        {
-            if (!dictionary.TryAdd(key, value))
-            {
-                dictionary[key] = value;
-            }
-        }
-
-        public static bool TryDelete<TKey, TValue>(this IDictionary<TKey, TValue> dictionary, TKey key)
-        {
-            if (dictionary.ContainsKey(key))
-            {
-                return dictionary.Remove(key);
-            }
-            return false;
-        }
-    }
-
-    record ChannelDetails(Channel channel, string listenAddress, ICollection<EnvironmentVariable> env);
+    record ChannelDetails(Channel channel, string listenAddress);
 }
