@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -7,5 +8,8 @@ namespace Hippo.Models
     {
         [Required]
         public string Name { get; set; }
+
+        public Guid ChannelId { get; set; }
+        public Channel Channel { get; set; }
     }
 }

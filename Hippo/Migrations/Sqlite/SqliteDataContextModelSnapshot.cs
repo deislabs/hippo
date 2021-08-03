@@ -142,9 +142,6 @@ namespace Hippo.Migrations.Sqlite
                         .HasColumnType("TEXT")
                         .HasDefaultValueSql("datetime('now')");
 
-                    b.Property<Guid?>("DomainId")
-                        .HasColumnType("TEXT");
-
                     b.Property<DateTime>("Modified")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("TEXT")
@@ -172,8 +169,6 @@ namespace Hippo.Migrations.Sqlite
                     b.HasIndex("ApplicationId");
 
                     b.HasIndex("ConfigurationId");
-
-                    b.HasIndex("DomainId");
 
                     b.HasIndex("SpecifiedRevisionId");
 
@@ -238,6 +233,9 @@ namespace Hippo.Migrations.Sqlite
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid>("ChannelId")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT")
@@ -253,6 +251,9 @@ namespace Hippo.Migrations.Sqlite
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ChannelId")
+                        .IsUnique();
 
                     b.HasIndex("Name")
                         .IsUnique();
@@ -557,10 +558,6 @@ namespace Hippo.Migrations.Sqlite
                         .WithMany()
                         .HasForeignKey("ConfigurationId");
 
-                    b.HasOne("Hippo.Models.Domain", "Domain")
-                        .WithMany()
-                        .HasForeignKey("DomainId");
-
                     b.HasOne("Hippo.Models.Revision", "SpecifiedRevision")
                         .WithMany()
                         .HasForeignKey("SpecifiedRevisionId");
@@ -570,8 +567,6 @@ namespace Hippo.Migrations.Sqlite
                     b.Navigation("Application");
 
                     b.Navigation("Configuration");
-
-                    b.Navigation("Domain");
 
                     b.Navigation("SpecifiedRevision");
                 });
@@ -591,6 +586,17 @@ namespace Hippo.Migrations.Sqlite
                     b.Navigation("Application");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Hippo.Models.Domain", b =>
+                {
+                    b.HasOne("Hippo.Models.Channel", "Channel")
+                        .WithOne("Domain")
+                        .HasForeignKey("Hippo.Models.Domain", "ChannelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Channel");
                 });
 
             modelBuilder.Entity("Hippo.Models.EnvironmentVariable", b =>
@@ -671,6 +677,11 @@ namespace Hippo.Migrations.Sqlite
                     b.Navigation("Collaborations");
 
                     b.Navigation("Revisions");
+                });
+
+            modelBuilder.Entity("Hippo.Models.Channel", b =>
+                {
+                    b.Navigation("Domain");
                 });
 
             modelBuilder.Entity("Hippo.Models.Configuration", b =>

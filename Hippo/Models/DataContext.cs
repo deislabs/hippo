@@ -87,6 +87,12 @@ namespace Hippo.Models
                 .Property(c => c.RevisionSelectionStrategy)
                 .HasConversion<int>();
 
+            builder.Entity<Channel>()
+                .HasOne(c => c.Domain)
+                .WithOne(d => d.Channel)
+                .HasForeignKey<Domain>(d => d.ChannelId)
+                .OnDelete(DeleteBehavior.Cascade);
+
             builder.Entity<EventLogEntry>()
                 .Property(c => c.EventKind)
                 .HasConversion<int>();
