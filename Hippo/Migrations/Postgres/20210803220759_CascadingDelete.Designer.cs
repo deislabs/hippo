@@ -3,15 +3,17 @@ using System;
 using Hippo.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Hippo.Migrations.Postgres
 {
     [DbContext(typeof(PostgresDataContext))]
-    partial class PostgresDataContextModelSnapshot : ModelSnapshot
+    [Migration("20210803220759_CascadingDelete")]
+    partial class CascadingDelete
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -65,15 +65,19 @@ namespace Hippo.Models
 
             builder.Entity<Application>()
                 .HasMany(a => a.Channels)
-                .WithOne(c => c.Application);
+                .WithOne(c => c.Application)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<Application>()
                 .HasMany(a => a.Revisions)
-                .WithOne(r => r.Application);
+                .WithOne(r => r.Application)
+                .OnDelete(DeleteBehavior.Cascade);
+
 
             builder.Entity<Configuration>()
                 .HasMany(c => c.EnvironmentVariables)
-                .WithOne(e => e.Configuration);
+                .WithOne(e => e.Configuration)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.Entity<Domain>()
                 .HasIndex(d => d.Name)

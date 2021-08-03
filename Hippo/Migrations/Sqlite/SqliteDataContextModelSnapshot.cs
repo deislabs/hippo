@@ -550,7 +550,8 @@ namespace Hippo.Migrations.Sqlite
 
                     b.HasOne("Hippo.Models.Application", "Application")
                         .WithMany("Channels")
-                        .HasForeignKey("ApplicationId");
+                        .HasForeignKey("ApplicationId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("Hippo.Models.Configuration", "Configuration")
                         .WithMany()
@@ -596,7 +597,8 @@ namespace Hippo.Migrations.Sqlite
                 {
                     b.HasOne("Hippo.Models.Configuration", "Configuration")
                         .WithMany("EnvironmentVariables")
-                        .HasForeignKey("ConfigurationId");
+                        .HasForeignKey("ConfigurationId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Configuration");
                 });
@@ -605,7 +607,8 @@ namespace Hippo.Migrations.Sqlite
                 {
                     b.HasOne("Hippo.Models.Application", "Application")
                         .WithMany("Revisions")
-                        .HasForeignKey("ApplicationId");
+                        .HasForeignKey("ApplicationId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
                     b.Navigation("Application");
                 });
