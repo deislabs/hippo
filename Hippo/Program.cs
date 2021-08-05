@@ -2,13 +2,13 @@
 using System.IO;
 using System.Net;
 using System.Threading.Tasks;
+using Hippo.Proxies;
+using Hippo.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Hippo.Proxies;
-using Hippo.Tasks;
 
 [assembly: System.CLSCompliant(false)]
 
