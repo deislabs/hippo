@@ -1,6 +1,9 @@
+using System;
+using System.Linq;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading;
+using System.Threading.Tasks;
 using Hippo.Controllers;
 using Hippo.Models;
 using Hippo.Repositories;
@@ -15,9 +18,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using Xunit;
-using System.Linq;
-using System.Threading.Tasks;
-using System;
 
 namespace Hippo.Tests.Controllers
 {
