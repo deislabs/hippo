@@ -3,15 +3,17 @@ using System;
 using Hippo.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace Hippo.Migrations.Postgres
 {
     [DbContext(typeof(PostgresDataContext))]
-    partial class PostgresDataContextModelSnapshot : ModelSnapshot
+    [Migration("20210803220759_CascadingDelete")]
+    partial class CascadingDelete
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -145,6 +147,9 @@ namespace Hippo.Migrations.Postgres
                         .HasColumnType("timestamp without time zone")
                         .HasDefaultValueSql("now()");
 
+                    b.Property<Guid?>("DomainId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("Modified")
                         .ValueGeneratedOnAddOrUpdate()
                         .HasColumnType("timestamp without time zone")
@@ -172,6 +177,8 @@ namespace Hippo.Migrations.Postgres
                     b.HasIndex("ApplicationId");
 
                     b.HasIndex("ConfigurationId");
+
+                    b.HasIndex("DomainId");
 
                     b.HasIndex("SpecifiedRevisionId");
 
@@ -236,9 +243,6 @@ namespace Hippo.Migrations.Postgres
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("ChannelId")
-                        .HasColumnType("uuid");
-
                     b.Property<DateTime>("Created")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp without time zone")
@@ -254,9 +258,6 @@ namespace Hippo.Migrations.Postgres
                         .HasColumnType("text");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ChannelId")
-                        .IsUnique();
 
                     b.HasIndex("Name")
                         .IsUnique();
@@ -563,6 +564,10 @@ namespace Hippo.Migrations.Postgres
                         .WithMany()
                         .HasForeignKey("ConfigurationId");
 
+                    b.HasOne("Hippo.Models.Domain", "Domain")
+                        .WithMany()
+                        .HasForeignKey("DomainId");
+
                     b.HasOne("Hippo.Models.Revision", "SpecifiedRevision")
                         .WithMany()
                         .HasForeignKey("SpecifiedRevisionId");
@@ -572,6 +577,8 @@ namespace Hippo.Migrations.Postgres
                     b.Navigation("Application");
 
                     b.Navigation("Configuration");
+
+                    b.Navigation("Domain");
 
                     b.Navigation("SpecifiedRevision");
                 });
@@ -591,17 +598,6 @@ namespace Hippo.Migrations.Postgres
                     b.Navigation("Application");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("Hippo.Models.Domain", b =>
-                {
-                    b.HasOne("Hippo.Models.Channel", "Channel")
-                        .WithOne("Domain")
-                        .HasForeignKey("Hippo.Models.Domain", "ChannelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Channel");
                 });
 
             modelBuilder.Entity("Hippo.Models.EnvironmentVariable", b =>
@@ -682,11 +678,6 @@ namespace Hippo.Migrations.Postgres
                     b.Navigation("Collaborations");
 
                     b.Navigation("Revisions");
-                });
-
-            modelBuilder.Entity("Hippo.Models.Channel", b =>
-                {
-                    b.Navigation("Domain");
                 });
 
             modelBuilder.Entity("Hippo.Models.Configuration", b =>
