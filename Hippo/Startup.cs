@@ -83,8 +83,6 @@ namespace Hippo
             services.AddScoped<ICurrentUser, ActionContextCurrentUser>();
             services.AddScoped<IUnitOfWork, DbUnitOfWork>();
 
-            services.AddTransient<DataSeeder>();
-
             services.AddSingleton<IJobScheduler, WagiLocalJobScheduler>();
 
             services.AddSingleton<ITaskQueue<ChannelReference>, TaskQueue<ChannelReference>>();
@@ -157,13 +155,6 @@ namespace Hippo
             }
 
             CreateRoles(serviceProvider);
-
-            if (HostingEnvironment.IsDevelopment())
-            {
-                using var scope = app.ApplicationServices.CreateScope();
-                var seeder = scope.ServiceProvider.GetService<DataSeeder>();
-                seeder.Seed().Wait();
-            }
 
             {
                 using var scope = app.ApplicationServices.CreateScope();
