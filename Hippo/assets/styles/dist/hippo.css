@@ -494,6 +494,10 @@ p.card-header-title {
   padding: 0.5rem 1.25rem;
   text-align: right;
 }
+.env-list .tabs li.tab .env-dropdown .dropdown-menu a.is-active {
+  background: transparent;
+  color: #3E3A55;
+}
 .env-list .tabs li.tab a.env-block.is-active {
   background: white;
   box-shadow: 0 0 3px 1px #BAB5DA;

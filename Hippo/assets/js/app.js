@@ -1,7 +1,7 @@
 jQuery(function () {
   // custom js for interactive elements in hippo
 
-  // application view environment show/hide tabs
+  // application view: environment show/hide tabs
   $('.tabs li:first-child a').addClass('is-active');
   $('.tab-pane').removeClass("is-active");
   $('.tab-pane:first').addClass('is-active');
@@ -16,51 +16,60 @@ jQuery(function () {
     return false;
   });
 
+  // app view: expand and collapse revision metadata
   $('.rev-item .fa').click(function(){
     $(this).toggleClass('fa-chevron-down');
     $(this).toggleClass('fa-chevron-up');
     $(this).next().toggle();
   });
 
-  // show/hide env vars form
-  $("#envVarToggle").bind("click", function() {
-    $("#envVars").toggleClass("hide");
-  });
 
-  // environment create/edit form
-  $.fn.deployReveal = function() {
-    if ($("input.env-radio").is(':checked')) {
-      // style the radio buttons accordingly
-      $(".env-deploy-label").removeClass("is-active");
-      $("input.env-radio:checked").parent("label").toggleClass("is-active");
-    }
-  };
-
-  // update radio button text labels
-  $.fn.radioLabels = function() {
+  // environment form: update labels
+  $.fn.rewordLabels = function() {
     $('input[value="UseRangeRule"]').next("p").html("<strong>Auto-deploy</strong> <small>Deploy versions as they are created.</small>");
     $('input[value="UseSpecifiedRevision"]').next("p").html("<strong>Selective deploy</strong> <small>Lock deployment to a specific version.</small>");
   }
 
-  // show form fields based on selection
-  $.fn.radioSelection = function() {
+  // environment form: enable fancy radio buttons
+  $.fn.deployLabels = function() {
+    if ($('input.env-radio').is(':checked')) {
+      // style the radio buttons accordingly
+      $('.env-deploy-label').removeClass('is-active');
+      $('input.env-radio:checked').parent('label').toggleClass('is-active');
+    } else {
+      // if nothing is selected, choose auto
+      $('input[name=SelectedRevisionSelectionStrategy][value="UseRangeRule"]').prop('checked',true);
+
+      $.fn.deployLabels();
+    }
+  };
+
+  // environment form: show deploy config based on radio buttons
+  $.fn.deploySelection = function() {
     if ($('input[value="UseRangeRule"]').is(':checked')) {
       $("#envManualField").addClass("hide");
-      $("#envAutoField").toggleClass("hide");
+      $("#envAutoField").removeClass("hide");
     };
     if ($('input[value="UseSpecifiedRevision"]').is(':checked')) {
       $("#envAutoField").addClass("hide");
-      $("#envManualField").toggleClass("hide");
+      $("#envManualField").removeClass("hide");
     };
   }
 
-  $.fn.radioLabels();
-  $.fn.deployReveal();
-  $.fn.radioSelection();
-
-  $('input.env-radio').change(function() {
-    $.fn.deployReveal();
-    $.fn.radioSelection();
-    return false;
+  // environment form: show/hide env vars
+  $("#envVarToggle").bind("click", function() {
+    $("#envVars").toggleClass("hide");
   });
+
+  if ($("input.env-radio").length > 0){
+    $.fn.rewordLabels();
+    $.fn.deployLabels();
+    $.fn.deploySelection();
+
+    $('input.env-radio').change(function() {
+      $.fn.deployLabels();
+      $.fn.deploySelection();
+      // return false;
+    })
+  };
 })
