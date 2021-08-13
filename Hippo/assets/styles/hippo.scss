@@ -626,6 +626,11 @@ p.card-header-title {
           a {
             padding: 0.5rem 1.25rem;
             text-align: right;
+
+            &.is-active {
+              background: transparent;
+              color: $dark2;
+            }
           }
         }
       }
