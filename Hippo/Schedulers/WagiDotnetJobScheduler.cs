@@ -1,14 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using Hippo.Config;
 using Hippo.Models;
 using Hippo.Proxies;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace Hippo.Schedulers
@@ -16,8 +9,8 @@ namespace Hippo.Schedulers
     public class WagiDotnetJobScheduler : InternalScheduler
     {
         private readonly IChannelConfigurationProvider _channelConfigurationProvider;
-        public WagiDotnetJobScheduler(ILogger<WagiDotnetJobScheduler> logger, IReverseProxy reverseProxy, IChannelConfigurationProvider channelConfigurationProvider)
-            : base(logger, reverseProxy)
+        public WagiDotnetJobScheduler(ILogger<WagiDotnetJobScheduler> logger, IReverseProxy reverseProxy, IChannelConfigurationProvider channelConfigurationProvider, IHostEnvironment env)
+            : base(logger, reverseProxy, env)
         {
             _channelConfigurationProvider = channelConfigurationProvider;
             _channelConfigurationProvider.SetBindleServer(_bindleUrl);

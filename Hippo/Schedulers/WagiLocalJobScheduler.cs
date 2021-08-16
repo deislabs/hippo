@@ -18,8 +18,8 @@ namespace Hippo.Schedulers
         private readonly Dictionary<Guid, (int, Task)> _wagiProcessIds = new();
         private const string ENV_WAGI = "HIPPO_WAGI_PATH";
 
-        public WagiLocalJobScheduler(IHostApplicationLifetime lifetime, ILogger<WagiLocalJobScheduler> logger, IReverseProxy reverseProxy)
-            : base(logger, reverseProxy)
+        public WagiLocalJobScheduler(IHostApplicationLifetime lifetime, ILogger<WagiLocalJobScheduler> logger, IReverseProxy reverseProxy, IHostEnvironment env)
+            : base(logger, reverseProxy, env)
         {
             lifetime.ApplicationStopping.Register(() =>
             {
