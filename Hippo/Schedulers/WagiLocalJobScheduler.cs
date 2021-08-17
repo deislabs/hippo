@@ -16,20 +16,11 @@ namespace Hippo.Schedulers
     {
         // This assumes a singleton scheduler instance!
         private readonly Dictionary<Guid, (int, Task)> _wagiProcessIds = new();
-        private const string ENV_BINDLE = "BINDLE_URL";
         private const string ENV_WAGI = "HIPPO_WAGI_PATH";
 
-        public WagiLocalJobScheduler(IHostApplicationLifetime lifetime, ILogger<WagiLocalJobScheduler> logger, IReverseProxy reverseProxy)
-            : base(logger, reverseProxy)
+        public WagiLocalJobScheduler(IHostApplicationLifetime lifetime, ILogger<WagiLocalJobScheduler> logger, IReverseProxy reverseProxy, IHostEnvironment env)
+            : base(logger, reverseProxy, env)
         {
-            var bindleUrl = Environment.GetEnvironmentVariable(ENV_BINDLE);
-
-            if (string.IsNullOrWhiteSpace(bindleUrl))
-            {
-                _logger.LogError($"Bindle server URL not specified: set {ENV_BINDLE}");
-                _logger.LogCritical($"No channels will be able to run - this scheduler requires {ENV_BINDLE}");
-            }
-
             lifetime.ApplicationStopping.Register(() =>
             {
                 foreach (var processId in _wagiProcessIds)
@@ -45,14 +36,7 @@ namespace Hippo.Schedulers
         {
             var port = c.PortID + Channel.EphemeralPortRange;
             var wagiProgram = WagiBinaryPath();
-            var bindleUrl = Environment.GetEnvironmentVariable(ENV_BINDLE);
             var listenAddress = $"127.0.0.1:{port}";
-
-            if (string.IsNullOrWhiteSpace(bindleUrl))
-            {
-                _logger.LogError($"Bindle server URL not specified: set {ENV_BINDLE}");
-                return;
-            }
 
             if (c.ActiveRevision == null || string.IsNullOrWhiteSpace(c.ActiveRevision.RevisionNumber))
             {
@@ -65,12 +49,12 @@ namespace Hippo.Schedulers
             var psi = new ProcessStartInfo
             {
                 FileName = wagiProgram,
-                Arguments = $"-b {c.Application.StorageId}/{c.ActiveRevision.RevisionNumber} --bindle-url {bindleUrl} -l 127.0.0.1:{port} {env}",
+                Arguments = $"-b {c.Application.StorageId}/{c.ActiveRevision.RevisionNumber} --bindle-url {_bindleUrl} -l 127.0.0.1:{port} {env}",
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
                 UseShellExecute = false,
             };
-            psi.Environment["BINDLE_URL"] = bindleUrl;
+            psi.Environment["BINDLE_URL"] = _bindleUrl;
             // TODO: drive this from outside
             psi.Environment["RUST_LOG"] = "warn,wagi=trace";
 

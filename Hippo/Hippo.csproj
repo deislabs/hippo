@@ -21,6 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Deislabs.WAGI" Version="0.7.0-preview" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.7" />
     <PackageReference Include="Microsoft.Data.SQLite" Version="5.0.7" />
