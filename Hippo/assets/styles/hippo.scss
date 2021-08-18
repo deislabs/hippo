@@ -446,6 +446,16 @@ input[type="submit"].is-rounded {
     display: inline-block;
     float: left;
     margin-right: 1.25rem;
+    max-width: 75%;
+    @include ellipsis;
+
+    .icon {
+      position: absolute;
+
+      & + span {
+        padding-left: 2rem;
+      }
+    }
   }
 
   .app-add {
@@ -591,6 +601,16 @@ p.card-header-title {
         display: inline-block;
         position: absolute;
         top: 4.875rem;
+        max-width: 85%;
+        @include ellipsis;
+
+        .icon {
+          position: absolute;
+
+          & + span {
+            padding-left: 2rem;
+          }
+        }
       }
 
       p.env-name {
@@ -611,7 +631,9 @@ p.card-header-title {
         border-radius: 0.75rem;
         color: $blue;
         background-color: white;
+        max-width: 75%;
         @include transition;
+        @include ellipsis;
 
         .fa {
           opacity: 0;
