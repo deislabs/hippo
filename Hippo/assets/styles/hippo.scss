@@ -188,7 +188,9 @@ body {
       font-size: 1.67rem;
       left: 7.35vw;
       top: 1.2rem;
-      min-width: 50vw;
+      min-width: 250;
+      max-width: 50vw;
+      @include ellipsis;
     }
 
     h2 {
@@ -409,6 +411,8 @@ input[type="submit"].is-rounded {
         overflow-x: hidden;
         display: block;
         width: 100%;
+        max-width: 82.5%;
+        @include ellipsis;
 
         .fa {
           color: $blue;
