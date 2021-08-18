@@ -62,7 +62,7 @@ namespace Hippo.Tests.Controllers
             var registerResult = await _controller.Register(new AccountRegisterForm
             {
                 UserName = "test",
-                Email = "test@hippos.rocks",
+                Email = "test@hippofactory.io",
                 Password = "foobar",
                 PasswordConfirm = "foobar",
             });
