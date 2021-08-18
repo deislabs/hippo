@@ -42,4 +42,17 @@
     <PackageReference Include="Yarp.ReverseProxy" Version="1.0.0-preview.12.21328.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="MinVer" Version="2.5.0">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+  </ItemGroup>
+  
+  <PropertyGroup>
+    <MinVerDefaultPreReleasePhase>preview</MinVerDefaultPreReleasePhase>
+    <MinVerMinimumMajorMinor>0.1</MinVerMinimumMajorMinor>
+    <MinVerTagPrefix>v</MinVerTagPrefix>
+  </PropertyGroup>
+
 </Project>

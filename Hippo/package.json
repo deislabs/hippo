@@ -15,6 +15,6 @@
     "xterm": "^4.13.0"
   },
   "scripts": {
-    "build": "npm install && gulp clean && gulp"
+    "build": "npm ci && gulp clean && gulp"
   }
 }
