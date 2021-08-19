@@ -5,9 +5,9 @@
   Layout = "_Layout";
 }
 
-<div class="columns is-multiline is-mobile app-listing">
+<div class="columns is-multiline app-listing">
   @foreach (var item in Model) {
-    <div class="column is-half-desktop is-third-widescnreen">
+    <div class="column is-full-tablet is-half-desktop is-third-widescreen">
       <div class="box app-box">
         <a asp-action="Details" asp-route-id="@item.Id" class="app-link">
           <h3>@Html.DisplayFor(modelItem => item.Name) <span class="fa fa-chevron-right"></span></h3>
