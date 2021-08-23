@@ -26,7 +26,7 @@ namespace Hippo.Messages
         /// <summary>
         /// The name of the Domain being served by the Channel.
         /// </summary>
-        /// <example>myapp.hippos.rocks</example>
+        /// <example>myapp.hippofactory.io</example>
         [Required]
         public string Domain { get; set; }
 

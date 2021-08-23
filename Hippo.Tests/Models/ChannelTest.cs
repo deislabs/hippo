@@ -39,7 +39,7 @@ namespace Hippo.Tests.Models
                 Application = new Application
                 {
                     Name = "testapp",
-                    StorageId = "hippos.rocks/unittestapp",
+                    StorageId = "hippofactory.io/unittestapp",
                     Revisions = revisions,
                 },
             };

@@ -26,12 +26,12 @@ All of Hippo's functionality is exposed through a web application and a
 ## Documentation
 
 If you're new to the project, get started with [the
-introduction](https://hippo-docs.netlify.app/intro/). For more in-depth
+introduction](https://docs.hippofactory.dev/intro/). For more in-depth
 information about Hippo, plunge right into the [topic
-guides](https://hippo-docs.netlify.app/topics/).
+guides](https://docs.hippofactory.dev/topics/).
 
 Looking for the developer guide? [Start
-here](https://hippo-docs.netlify.app/developers).
+here](https://docs.hippofactory.dev/developers).
 
 ## Community, discussion, contribution, and support
 

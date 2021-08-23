@@ -36,7 +36,7 @@ namespace Hippo.Tests.Models
             return new Application
             {
                 Name = "testapp",
-                StorageId = "hippos.rocks/unittestapp",
+                StorageId = "hippofactory.io/unittestapp",
                 Revisions = revisions,
                 Channels = new List<Channel>(),
             };
@@ -77,7 +77,7 @@ namespace Hippo.Tests.Models
             //             new Release
             //             {
             //                 Revision = "2.0.0",
-            //                 UploadUrl = "bindle:hippos.rocks/one/2.0.0"
+            //                 UploadUrl = "bindle:hippofactory.io/one/2.0.0"
             //             }
             //         },
             //         Channels = new List<Channel>
@@ -88,7 +88,7 @@ namespace Hippo.Tests.Models
             //                 Release = new Release
             //                 {
             //                     Revision = "1.0.0",
-            //                     UploadUrl = "bindle:hippos.rocks/one/1.0.0"
+            //                     UploadUrl = "bindle:hippofactory.io/one/1.0.0"
             //                 },
             //                 Configuration = new Configuration
             //                 {
