@@ -16,6 +16,7 @@ indent_style = space
 
 # JSON files
 [*.json]
+end_of_line = lf
 indent_size = 4
 indent_style = space
 
@@ -32,7 +33,7 @@ indent_style = space
 
 # Dotnet code style settings:
 [*.cs]
-
+end_of_line = lf
 indent_style = space
 indent_size = 4
 insert_final_newline = true
