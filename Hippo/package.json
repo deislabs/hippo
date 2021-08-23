@@ -6,7 +6,7 @@
     "jquery": "^3.6.0",
     "jquery-validation": "^1.19.3",
     "jquery-validation-unobtrusive": "^3.2.12",
-    "sass": "^1.37.0"
+    "sass": "^1.38.0"
   },
   "devDependencies": {
     "del": "^6.0.0",
