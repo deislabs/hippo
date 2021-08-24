@@ -88,6 +88,9 @@ namespace Hippo
                 case "WAGI-DOTNET":
                     services.AddSingleton<IJobScheduler, WagiDotnetJobScheduler>();
                     break;
+                case "NOMAD":
+                    services.AddSingleton<IJobScheduler, WagiNomadJobScheduler>();
+                    break;
                 default:
                     services.AddSingleton<IJobScheduler, WagiLocalJobScheduler>();
                     break;
