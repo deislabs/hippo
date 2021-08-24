@@ -163,6 +163,7 @@ dotnet_diagnostic.IDE0043.severity = warning
 dotnet_diagnostic.IDE0044.severity = warning
 
 dotnet_code_quality.CA1002.api_surface = none
+dotnet_code_quality.CA1054.api_surface = none
 
 # Newline settings
 csharp_new_line_before_open_brace = all
