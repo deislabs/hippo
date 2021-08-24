@@ -8,4 +8,8 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningLevel>5</WarningLevel>
   </PropertyGroup>
+
+   <PropertyGroup Condition=" '$(Configuration)' != 'Release'">
+     <WarningsNotAsErrors>IDE0055</WarningsNotAsErrors>
+  </PropertyGroup>
 </Project>
