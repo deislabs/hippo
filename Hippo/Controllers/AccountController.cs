@@ -6,9 +6,11 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using Hippo.ControllerCore;
+using Hippo.Extensions;
 using Hippo.Models;
 using Hippo.Repositories;
 using Hippo.ViewModels;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
@@ -32,7 +34,7 @@ namespace Hippo.Controllers
             this._configuration = configuration;
         }
 
-        public IActionResult Register()
+        public async Task<IActionResult> Register()
         {
             TraceMethodEntry();
 
@@ -40,7 +42,11 @@ namespace Hippo.Controllers
             {
                 return RedirectToAction("Index", "App");
             }
-            return View();
+            var form = new AccountRegisterForm
+            {
+                AuthenticationSchemes = await HttpContext.GetExternalProvidersAsync(),
+            };
+            return View(form);
         }
 
         [HttpPost]
@@ -77,7 +83,7 @@ namespace Hippo.Controllers
                             _logger.LogInformation($"Register: {form.UserName} has been granted the 'Administrator' role");
                         }
                     }
-                    return RedirectToAction("Login", "Account");
+                    return RedirectToAction(nameof(Login));
                 }
                 else
                 {
@@ -96,7 +102,97 @@ namespace Hippo.Controllers
             return View();
         }
 
-        public IActionResult Login()
+        /// <summary>
+        /// Register an account using the given external login provider.
+        /// </summary>
+        [HttpPost]
+        public async Task<IActionResult> ExternalRegister([FromForm] string provider)
+        {
+            TraceMethodEntry();
+
+            // Note: the "provider" parameter corresponds to the external
+            // authentication provider chosen by the user agent.
+            if (string.IsNullOrWhiteSpace(provider))
+            {
+                return BadRequest();
+            }
+
+            if (!await HttpContext.IsProviderSupportedAsync(provider))
+            {
+                return BadRequest();
+            }
+
+            // Instruct the middleware corresponding to the requested external identity
+            // provider to redirect the user agent to its own authorization endpoint.
+            var redirectUrl = Url.Action(nameof(ExternalRegisterCallback));
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            return Challenge(properties, provider);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ExternalRegisterCallback()
+        {
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+            {
+                ModelState.AddModelError("", "please sign in");
+                return RedirectToAction(nameof(Register));
+            }
+
+            #pragma warning disable CA5394 // Using a weak psuedo-random number generator is fine in this case.
+            Random random = new Random();
+            const string chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+
+            var account = new Account
+            {
+                UserName = new string(Enumerable.Repeat(chars, 20).Select(s => s[random.Next(s.Length)]).ToArray()),
+                Email = info.Principal.FindFirstValue(ClaimTypes.Email),
+            };
+
+            var createResult = await _signInManager.UserManager.CreateAsync(account);
+            if (!createResult.Succeeded)
+            {
+                ModelState.AddModelError("", "could not create account");
+                foreach (IdentityError error in createResult.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                    // TODO: implement view
+                    return View();
+                }
+            }
+
+            var bindResult = await _signInManager.UserManager.AddLoginAsync(account, info);
+            if (!bindResult.Succeeded)
+            {
+                ModelState.AddModelError("", "could not bind account to external login info");
+                foreach (IdentityError error in bindResult.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                    // TODO: implement view
+                    return View();
+                }
+            }
+
+            var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+            if (signInResult.Succeeded)
+            {
+                return RedirectToAction("Index", "App");
+            }
+            else if (signInResult.IsLockedOut)
+            {
+                ModelState.AddModelError("", "account locked; please contact the administrator");
+                // TODO: implement an actual view so we can see the account error
+                return View();
+            }
+            else
+            {
+                ModelState.AddModelError("", "could not sign you in.");
+                return RedirectToAction(nameof(Login));
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Login()
         {
             TraceMethodEntry();
 
@@ -104,11 +200,18 @@ namespace Hippo.Controllers
             {
                 return RedirectToAction("Index", "App");
             }
-            return View();
+            var form = new LoginForm
+            {
+                AuthenticationSchemes = await HttpContext.GetExternalProvidersAsync(),
+            };
+            return View(form);
         }
 
+        /// <summary>
+        /// Log in with the provided username/password.
+        /// </summary>
         [HttpPost]
-        public async Task<IActionResult> Login(LoginForm form)
+        public async Task<IActionResult> Login([FromForm] LoginForm form)
         {
             TraceMethodEntry(WithArgs(form));
 
@@ -150,6 +253,66 @@ namespace Hippo.Controllers
                 ModelState.AddModelError("", "failed to login");
             }
             return View();
+        }
+
+        /// <summary>
+        /// Log in using the external login provider.
+        /// </summary>
+        [HttpPost]
+        public async Task<IActionResult> ExternalLogin([FromForm] string provider, string returnUrl = "/")
+        {
+            TraceMethodEntry();
+
+            // Note: the "provider" parameter corresponds to the external
+            // authentication provider chosen by the user agent.
+            if (string.IsNullOrWhiteSpace(provider))
+            {
+                return BadRequest();
+            }
+
+            if (!await HttpContext.IsProviderSupportedAsync(provider))
+            {
+                return BadRequest();
+            }
+
+            // Instruct the middleware corresponding to the requested external identity
+            // provider to redirect the user agent to its own authorization endpoint.
+            var redirectUrl = Url.Action(nameof(ExternalLoginCallback), new { returnUrl });
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            return Challenge(properties, provider);
+        }
+
+        /// <summary>
+        /// Login callback URL used after an external login provider has been challenged.
+        /// </summary>
+        [HttpGet]
+        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = "/")
+        {
+            TraceMethodEntry();
+
+            var info = await _signInManager.GetExternalLoginInfoAsync();
+            if (info == null)
+            {
+                return RedirectToAction(nameof(Login));
+            }
+
+            var signInResult = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+            if (signInResult.Succeeded)
+            {
+                return Redirect(returnUrl);
+            }
+
+            if (signInResult.IsLockedOut)
+            {
+                ModelState.AddModelError("", "account locked; please contact the administrator");
+                // TODO: implement an actual view so we can see the account error
+                return View();
+            }
+
+            ViewData["ReturnUrl"] = returnUrl;
+            ViewData["Provider"] = info.LoginProvider;
+            var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+            return RedirectToAction("Index", "App");
         }
 
         public async Task<IActionResult> Logout()

@@ -2,8 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <WarningLevel>5</WarningLevel>
     <AssemblyName>hippo-server</AssemblyName>
   </PropertyGroup>
 
@@ -21,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="AspNet.Security.OAuth.GitHub" Version="5.0.10" />
     <PackageReference Include="Deislabs.WAGI" Version="0.7.0-preview" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.7" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.7" />

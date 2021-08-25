@@ -47,6 +47,15 @@
                         </div>
                     </div>
                 </form>
+            <p class="lead text-left">Sign in using one of these external providers:</p>
+            @foreach (var scheme in Model.AuthenticationSchemes.OrderBy(p => p.DisplayName))
+            {
+                <form asp-action="ExternalLogin" method="post">
+                    <input type="hidden" name="Provider" value="@scheme.Name" />
+                    <input type="hidden" name="ReturnUrl" value="@ViewBag.ReturnUrl" />
+                    <button class="btn btn-lg btn-success m-1" type="submit">Connect using @scheme.DisplayName</button>
+                </form>
+            }
             </div>
         </div>
 

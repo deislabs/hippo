@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Hippo.Logging;
+using Microsoft.AspNetCore.Authentication;
 
 namespace Hippo.ViewModels
 {
@@ -18,5 +20,8 @@ namespace Hippo.ViewModels
 
         public string FormatTrace() =>
             $"{nameof(LoginForm)}[username={UserName}]";
+
+#pragma warning disable CA1819
+        public AuthenticationScheme[] AuthenticationSchemes { get; set; }
     }
 }

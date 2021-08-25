@@ -42,19 +42,12 @@ namespace Hippo
             }).AddEntityFrameworkStores<DataContext>();
 
             // cookie auth for web forms, and token auth for the API.
-            services.AddAuthentication().AddCookie().AddJwtBearer(
-              cfg =>
-              cfg.TokenValidationParameters = new TokenValidationParameters
-              {
-                  ValidateIssuer = true,
-                  ValidateAudience = true,
-                  ValidateLifetime = true,
-                  ValidateIssuerSigningKey = true,
-                  ValidIssuer = Configuration["Jwt:Issuer"],
-                  ValidAudience = Configuration["Jwt:Audience"],
-                  IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
-              }
-            );
+            services.AddAuthentication().AddCookie().AddGitHub(options =>
+            {
+                options.ClientId = Configuration["GitHub:ClientId"];
+                options.ClientSecret = Configuration["GitHub:ClientSecret"];
+                options.Scope.Add("user:email");
+            });
 
             services.AddAuthorization(options =>
             {

@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using Hippo.Logging;
+using Microsoft.AspNetCore.Authentication;
 
 namespace Hippo.ViewModels
 {
@@ -22,6 +23,9 @@ namespace Hippo.ViewModels
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "Password and confirmation password do not match")]
         public string PasswordConfirm { get; set; }
+
+#pragma warning disable CA1819
+        public AuthenticationScheme[] AuthenticationSchemes { get; set; }
 
         public string FormatTrace() =>
             $"{nameof(AccountRegisterForm)}[username={UserName}]";

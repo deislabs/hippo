@@ -7,7 +7,7 @@
 <div class="columns is-centered">
     <div class="column is-two-thirds-tablet is-two-thirds-desktop is-two-thirds-widescreen is-half-fullhd">
         <h2 class="has-text-centered">Register a <span class="has-text-primary">Hippo</span> Account</h2>
-        
+
         <div class="box box-register">
             <div class="card-content">
                 <form asp-action="Register">
@@ -62,6 +62,15 @@
                         </div>
                     </div>
                 </form>
+		
+		<p class="lead text-left">Sign in using one of these external providers:</p>
+		@foreach (var scheme in Model.AuthenticationSchemes.OrderBy(p => p.DisplayName))
+		{
+			<form asp-action="ExternalRegister" method="post">
+				<input type="hidden" name="Provider" value="@scheme.Name" />
+				<button class="btn btn-lg btn-success m-1" type="submit">Sign in using @scheme.DisplayName</button>
+			</form>
+		}
             </div>
         </div>
 
