@@ -27,17 +27,20 @@
 
     "containerEnv" : {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "BINDLE_URL" : "http://localhost:8080/v1"
+        "BINDLE_URL" : "http://localhost:8080/v1",
+        "HIPPO_URL" :"https://localhost:5001",
+        "GLOBAL_AGENT_FORCE_GLOBAL_AGENT" : "false"
+
     },
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	"forwardPorts": [ 5001, 5003, 32768, 32769, 32770],
+	"forwardPorts": [ 5001, 5003],
 
 	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
 
-	// "remoteUser": "vscode",
-    // Start bindle server, start hippo server and watch for any changes. 
-	"postCreateCommand": "bindle-server & cd Hippo && dotnet restore && npm run build && dotnet build && dotnet dev-certs https; nohup dotnet watch run > /dev/null 2>&1 &",
+	"remoteUser": "vscode",
+    // restore and build the application, add the dev cert. 
+	"postCreateCommand": "cd Hippo && dotnet restore && npm run build && dotnet build && dotnet dev-certs https",
 	"portsAttributes": {
 		"5001": {
 			"label": "Hippo HTTPS Port",
@@ -46,15 +49,6 @@
 		"5003": {
 			"label": "YARP HTTPS",
             "protocol": "https"
-		},
-        "32768": {
-			"label": "Channel HTTP Port"
-		},
-		"32769": {
-			"label": "Channel HTTP Port"
-		},
-        "32770": {
-			"label": "Channel HTTP Port"
 		}
 	}
 }

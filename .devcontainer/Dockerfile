@@ -24,4 +24,4 @@ RUN curl -fsSLo wagi.tar.gz https://github.com/deislabs/wagi/releases/download/$
 RUN su vscode -c "umask 0002 && . /usr/local/share/nvm/nvm.sh && npm install -g yo && npm install -g generator-wasm"
 
 # Install Rust 
-RUN curl -fsSLo install_rust.sh https://sh.rustup.rs && chmod +x ./install_rust.sh  && ./install_rust.sh -y -t wasm32-wasi
+RUN su vscode -c "umask 0002 && curl -fsSLo install_rust.sh https://sh.rustup.rs && chmod +x ./install_rust.sh  && ./install_rust.sh -y -t wasm32-wasi"
