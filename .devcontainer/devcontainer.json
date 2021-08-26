@@ -27,8 +27,7 @@
 
     "containerEnv" : {
         "ASPNETCORE_ENVIRONMENT": "Development",
-        "BINDLE_URL" : "https://bindle.deislabs.io/v1",
-        "HIPPO_JOB_SCHEDULER" : "wagi-dotnet"
+        "BINDLE_URL" : "http://localhost:8080/v1"
     },
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
@@ -37,7 +36,7 @@
 	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
 
 	// "remoteUser": "vscode",
-	"postCreateCommand": "dotnet restore && cd Hippo && npm run build && dotnet build ",
+	"postCreateCommand": "dotnet restore && cd Hippo && npm run build && dotnet build && dotnet dev-certs https",
 	"portsAttributes": {
 		"5001": {
 			"label": "Hippo HTTPS Port",
