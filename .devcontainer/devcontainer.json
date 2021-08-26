@@ -26,15 +26,13 @@
 	],
 
     "containerEnv" : {
-        "ASPNETCORE_ENVIRONMENT": "Development",
         "BINDLE_URL" : "http://localhost:8080/v1",
         "HIPPO_URL" :"https://localhost:5001",
         "GLOBAL_AGENT_FORCE_GLOBAL_AGENT" : "false"
-
     },
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	"forwardPorts": [ 5001, 5003],
+	"forwardPorts": [ 5001, 80, 443],
 
 	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
 
@@ -46,7 +44,11 @@
 			"label": "Hippo HTTPS Port",
             "protocol": "https"
 		},
-		"5003": {
+		"80": {
+			"label": "YARP HTTP",
+            "protocol": "http"
+		},
+		"443": {
 			"label": "YARP HTTPS",
             "protocol": "https"
 		}
