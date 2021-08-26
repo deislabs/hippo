@@ -1,0 +1,18 @@
+[entryPoints]
+    [entryPoints.http]
+    address = ":8088"
+    [entryPoints.traefik]
+    address = ":8081"
+
+[api]
+    dashboard = true
+    insecure  = true
+
+# Enable Consul Catalog configuration backend.
+[providers.consulCatalog]
+    prefix           = "traefik"
+    exposedByDefault = false
+
+    [providers.consulCatalog.endpoint]
+      address = "127.0.0.1:8500"
+      scheme  = "http"

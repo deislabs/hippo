@@ -28,7 +28,7 @@ indent_style = space
 # Shell script files
 [*.sh]
 end_of_line = lf
-indent_size = 4
+indent_size = 2
 indent_style = space
 
 # Dotnet code style settings:
