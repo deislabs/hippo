@@ -21,7 +21,7 @@ ARG WAGI_VERSION="v0.2.0"
 RUN curl -fsSLo wagi.tar.gz https://github.com/deislabs/wagi/releases/download/${WAGI_VERSION}/wagi-${WAGI_VERSION}-linux-amd64.tar.gz  && tar -xvf wagi.tar.gz && mv wagi /usr/local/bin/ 
 
 # Install yo-wasm
-RUN . /usr/local/share/nvm/nvm.sh && npm install -g yo && npm install generator-wasm
+RUN su vscode -c "umask 0002 && . /usr/local/share/nvm/nvm.sh && npm install -g yo && npm install -g generator-wasm"
 
 # Install Rust 
 RUN curl -fsSLo install_rust.sh https://sh.rustup.rs && chmod +x ./install_rust.sh  && ./install_rust.sh -y -t wasm32-wasi
