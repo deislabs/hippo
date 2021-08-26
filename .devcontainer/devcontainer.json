@@ -36,7 +36,8 @@
 	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
 
 	// "remoteUser": "vscode",
-	"postCreateCommand": "bindle-server & dotnet restore && cd Hippo && npm run build && dotnet build && dotnet dev-certs https && nohup dotnet watch run > /dev/null 2>&1 &",
+    // Start bindle server, start hippo server and watch for any changes. 
+	"postCreateCommand": "bindle-server & cd Hippo && dotnet restore && npm run build && dotnet build && dotnet dev-certs https; nohup dotnet watch run > /dev/null 2>&1 &",
 	"portsAttributes": {
 		"5001": {
 			"label": "Hippo HTTPS Port",
