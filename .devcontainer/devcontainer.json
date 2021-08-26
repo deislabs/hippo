@@ -32,7 +32,7 @@
     },
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	"forwardPorts": [ 5001, 80, 443],
+	"forwardPorts": [ 5001, 5003, 32768, 32769, 32770],
 
 	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
 
@@ -44,13 +44,18 @@
 			"label": "Hippo HTTPS Port",
             "protocol": "https"
 		},
-		"80": {
-			"label": "YARP HTTP",
-            "protocol": "http"
-		},
-		"443": {
+		"5003": {
 			"label": "YARP HTTPS",
             "protocol": "https"
+		},
+        "32768": {
+			"label": "Application Channel HTTP Port"
+		},
+		"32769": {
+			"label": "Application Channel HTTP Port"
+		},
+        "32770": {
+			"label": "Application Channel HTTP Port"
 		}
 	}
 }

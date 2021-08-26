@@ -24,10 +24,10 @@ RUN curl -fsSLo wagi.tar.gz https://github.com/deislabs/wagi/releases/download/$
 RUN su vscode -c "umask 0002 && . /usr/local/share/nvm/nvm.sh && npm install -g yo && npm install -g generator-wasm"
 
 # Install Rust 
-RUN su vscode -c "umask 0002 && curl -fsSLo install_rust.sh https://sh.rustup.rs && chmod +x ./install_rust.sh  && ./install_rust.sh -y -t wasm32-wasi"
+RUN su vscode -c "umask 0002 && cd /tmp && mkdir rust && cd rust && curl -fsSLo install_rust.sh https://sh.rustup.rs && chmod +x ./install_rust.sh  && ./install_rust.sh -y -t wasm32-wasi"
 
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive && apt-get -y install --no-install-recommends gcc gcc-multilib
 
 # this is temporary as the hippo enabled o wasm package is not published yet
 
-RUN su vscode -c "umask 0002 && cd /tmp && mkdir yowasm && cd yowasm && curl -fsSLo /tmp/yowasm.tar.gz https://github.com/deislabs/yo-wasm/releases/download/v0.0.4%2Bpreview1/generator-wasm-0.0.3.tgz && npm install -g /tmp/yowasm.tar.gz"
+RUN su vscode -c "umask 0002 && cd /tmp && mkdir yowasm && cd yowasm && curl -fsSLo ./yowasm.tar.gz https://github.com/deislabs/yo-wasm/releases/download/v0.0.4%2Bpreview1/generator-wasm-0.0.3.tgz && . /usr/local/share/nvm/nvm.sh && npm install -g ./yowasm.tar.gz"
