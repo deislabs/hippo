@@ -32,12 +32,15 @@
     },
     // Use 'forwardPorts' to make a list of ports inside the container available locally.
     // 5001 is the Hippo HTTPS Port
-    // 5002 is the YARP HTTP Port, this is forwarded as the certificate for the YARP server is not trusted and therefore HTTPS cannot be proxied, applications are exposed here when using the default and Wagi schedulers.
-    // 32768 is the first port that is used by applications launched from Hippo enbled schedulers, normally this would not be accessed directly but through the proxy endpoint on port 5002 or 8088.
+    // 5002 is the YARP HTTP Port.
+    // 32768-32770 are the first three ports that are used by applications launched from Hippo enbled schedulers, normally this would not be accessed directly but through the proxy endpoint on port 5002, however in GitHub codespaces 
+    // this will not work as Headers dont seem to be forwarded by the Codespaces proxy.
     "forwardPorts": [
         5001,
         5002,
-        32768
+        32768,
+        32769,
+        32770
     ],
     // Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
     "remoteUser": "vscode",
@@ -54,6 +57,14 @@
             "protocol": "http"
         },
         "32768": {
+            "label": "Application Channel HTTP Port ",
+            "protocol": "http"
+        },
+        "32769": {
+            "label": "Application Channel HTTP Port",
+            "protocol": "http"
+        },
+        "327770": {
             "label": "Application Channel HTTP Port",
             "protocol": "http"
         }
