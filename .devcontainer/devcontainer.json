@@ -25,16 +25,19 @@
     "containerEnv": {
         "BINDLE_URL": "http://localhost:8080/v1",
         "HIPPO_URL": "https://localhost:5001",
-        "GLOBAL_AGENT_FORCE_GLOBAL_AGENT": "false"
+        "GLOBAL_AGENT_FORCE_GLOBAL_AGENT": "false",
+        // This places bindle server data in the workspace so that state is retained across multiple invocations of the bindle server 
+        // Delete this folder and Hippo/hippo.db.* files to reset Hippo
+        "BINDLE_DIRECTORY" : "${containerWorkspaceFolder}/bindleserver/data"
     },
     // Use 'forwardPorts' to make a list of ports inside the container available locally.
-    // 5002 is the default YARP HTTP port, this is forwarded as the certificate for the YARP server is not trusted and therefore HTTPS cannot be proxied.
+    // 5001 is the Hippo HTTPS Port
+    // 5002 is the YARP HTTP Port, this is forwarded as the certificate for the YARP server is not trusted and therefore HTTPS cannot be proxied, applications are exposed here when using the default and Wagi schedulers.
+    // 32768 is the first port that is used by applications launched from Hippo enbled schedulers, normally this would not be accessed directly but through the proxy endpoint on port 5002 or 8088.
     "forwardPorts": [
         5001,
         5002,
-        32768,
-        32769,
-        32770
+        32768
     ],
     // Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
     "remoteUser": "vscode",
@@ -47,17 +50,12 @@
             "protocol": "https"
         },
         "5002": {
-            "label": "YARP HTTP",
-            "protocol": "https"
+            "label": "YARP HTTP Endpoint",
+            "protocol": "http"
         },
         "32768": {
-            "label": "Application Channel HTTP Port"
-        },
-        "32769": {
-            "label": "Application Channel HTTP Port"
-        },
-        "32770": {
-            "label": "Application Channel HTTP Port"
+            "label": "Application Channel HTTP Port",
+            "protocol": "http"
         }
     }
 }
