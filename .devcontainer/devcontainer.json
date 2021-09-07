@@ -32,12 +32,12 @@
     },
     // Use 'forwardPorts' to make a list of ports inside the container available locally.
     // 5001 is the Hippo HTTPS Port
-    // 5002 is the YARP HTTP Port.
+    // 5003 is the YARP HTTPS Port.
     // 32768-32770 are the first three ports that are used by applications launched from Hippo enbled schedulers, normally this would not be accessed directly but through the proxy endpoint on port 5002, however in GitHub codespaces 
     // this will not work as Headers dont seem to be forwarded by the Codespaces proxy.
     "forwardPorts": [
         5001,
-        5002,
+        5003,
         32768,
         32769,
         32770
@@ -52,9 +52,9 @@
             "label": "Hippo HTTPS Port",
             "protocol": "https"
         },
-        "5002": {
+        "5003": {
             "label": "YARP HTTP Endpoint",
-            "protocol": "http"
+            "protocol": "https"
         },
         "32768": {
             "label": "Application Channel HTTP Port ",
@@ -64,7 +64,7 @@
             "label": "Application Channel HTTP Port",
             "protocol": "http"
         },
-        "327770": {
+        "32770": {
             "label": "Application Channel HTTP Port",
             "protocol": "http"
         }
