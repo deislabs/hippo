@@ -30,5 +30,5 @@ RUN su vscode -c "umask 0002 && . /usr/local/share/nvm/nvm.sh && npm install -g 
 
 WORKDIR /
 
-# TODO remove this as it is temporary. The hippo enabled yo wasm package is not published yet so we need to use the one from the repo.
-RUN su vscode -c "umask 0002 && cd /tmp && mkdir yowasm && cd yowasm && curl -fsSLo ./yowasm.tar.gz https://github.com/deislabs/yo-wasm/releases/download/v0.0.4%2Bpreview1/generator-wasm-0.0.3.tgz && . /usr/local/share/nvm/nvm.sh && npm install -g ./yowasm.tar.gz"
+# TODO remove this before release as it is temporary. The hippo enabled yo wasm package is not published yet so we need to use the one from the repo.
+RUN su vscode -c ". /home/${USER}/.nvm/nvm.sh && npm uninstall -g generator-wasm && mkdir yowasm && cd yowasm && curl -fsSLo ./yowasm.tar.gz https://github.com/deislabs/yo-wasm/releases/download/v0.0.4%2Bpreview2/generator-wasm-0.0.3.tgz && npm install -g ./yowasm.tar.gz && cd - && rm -r yowasm"
