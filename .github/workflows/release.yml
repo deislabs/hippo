@@ -1,0 +1,159 @@
+name: Create a Release
+
+on:
+  push:
+    tags: 
+    - 'v[0-9]+.[0-9]+.[0-9]+'
+    - 'v[0-9]+.[0-9]+.[0-9]+-preview'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+
+    - name: Set MINVERBUILDMETADATA
+      run: echo MINVERBUILDMETADATA=$(git rev-parse --short ${GITHUB_SHA})  >> $GITHUB_ENV
+      shell: bash
+
+    - name: Test
+      run: dotnet test --verbosity normal
+
+    - name: "Build Changelog"
+      id: github_release
+      uses: mikepenz/release-changelog-builder-action@main
+      with:
+        configuration: ".github/workflows/configuration.json"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Create Release
+      uses: actions/create-release@v1
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: ${{ github.ref }}
+        body: ${{ steps.github_release.outputs.changelog }}
+        prerelease: ${{ contains(github.ref, '-preview') }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  package_release:
+    needs: release
+    name: Release and Package
+    strategy:
+      matrix:
+        target: ['linux-x64', 'win-x64', 'osx-x64']
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+        with:
+          fetch-depth: 0
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.x
+      
+      - name: Set MINVERBUILDMETADATA
+        run: echo MINVERBUILDMETADATA=$(git rev-parse --short ${GITHUB_SHA})  >> $GITHUB_ENV
+        shell: bash
+
+      - name: Npm build
+        shell: bash
+        run: |
+          cd Hippo
+          npm run cibuild
+          cd ..
+
+      - name: dotnet publish
+        run: dotnet publish Hippo/Hippo.csproj --runtime "${{ matrix.target }}" -c Release -o ${{ matrix.target }}
+
+      - name: Package
+        shell: bash
+        run: |
+          tag=$(git describe --tags --abbrev=0)
+          if [ "${{ matrix.target }}" == "win-x64" ]; then
+            zip -r "hippo-server-${{ matrix.target }}.zip" "${{ matrix.target }}"
+          else
+            tar czvf "hippo-server-${{ matrix.target }}.tar.gz" "${{ matrix.target }}"
+          fi
+
+      - name: Upload Packages to Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: "hippo-server-*"
+      
+  push_to_registry:
+    needs: release
+    name: Push Docker image to GitHub Package Registry
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+        with:
+          dotnet-version: 5.0.x
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.x
+
+      - name: Set MINVERBUILDMETADATA
+        run: echo MINVERBUILDMETADATA=$(git rev-parse --short ${GITHUB_SHA})  >> $GITHUB_ENV
+        shell: bash
+
+      - name: Npm build
+        shell: bash
+        run: |
+          cd Hippo
+          npm run cibuild
+          cd ..
+
+      - name: dotnet publish
+        run: dotnet publish Hippo/Hippo.csproj -c Release --self-contained -r linux-x64
+
+      - name: Copy openssl conf
+        shell: bash
+        run: |
+          mkdir -p ./Hippo/bin/Release/net5.0/linux-x64/publish/certs
+          cp .github/release-image/localhost.conf ./Hippo/bin/Release/net5.0/linux-x64/publish/certs
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata for Docker
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=semver,pattern={{raw}},priority=1
+            type=semver,pattern={{version}},priority=2
+            type=semver,pattern={{major}}.{{minor}},priority=3
+            type=sha,priority=4
+          flavor: |
+            latest=true
+      
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          file: .github/release-image/Dockerfile
+          context: ./Hippo/bin/Release/net5.0/linux-x64/publish
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
