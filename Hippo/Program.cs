@@ -1,6 +1,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Threading.Tasks;
 using Hippo.Config;
@@ -20,6 +21,8 @@ namespace Hippo
     {
         // TODO get value from configuration.
         public static string JobScheduler => Environment.GetEnvironmentVariable("HIPPO_JOB_SCHEDULER")?.ToUpperInvariant() ?? default;
+        private static string proxyPort = string.Empty;
+        public static string ProxyPort => Program.proxyPort;
 
         public static void Main(string[] args)
         {
@@ -43,9 +46,27 @@ namespace Hippo
             var proxyUpdateTaskQueue = hippoHost.Services.GetRequiredService<ITaskQueue<ReverseProxyUpdateRequest>>();
             var proxyHostBuilder = CreateProxyHostBuilder(proxyUpdateTaskQueue);
             var proxyHost = proxyHostBuilder.Build();
+            proxyPort = GetProxyHTTPSPort(proxyHost.Services.GetRequiredService<IConfiguration>());
             tasks.Add(hippoHost.RunAsync());
             tasks.Add(proxyHost.RunAsync());
             Task.WaitAny(tasks.ToArray());
+        }
+
+        /// <summary>
+        /// Gets the HTTPS Proxy port so that links can be created correctly in the Hippo UI. this will need to be updated for external schedulers.
+        /// </summary>
+        /// <param name="config">The Proxy Configuration</param>
+        /// <returns>The proy HTTPS Port as a string</returns>
+
+        static string GetProxyHTTPSPort(IConfiguration config)
+        {
+            var port = string.Empty;
+            var proxyUrl = config?.GetValue<string>("Kestrel:Endpoints:Https:Url");
+            if (!string.IsNullOrEmpty(proxyUrl) && Uri.TryCreate(proxyUrl, UriKind.Absolute, out Uri result))
+            {
+                port = result.Port == 0 || result.Port == 443 ? "443" : result.Port.ToString(CultureInfo.InvariantCulture);
+            }
+            return port;
         }
 
         // This has to be called CreateHostBuilder because the ef migrations tool looks specifically
