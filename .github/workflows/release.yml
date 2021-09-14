@@ -70,7 +70,7 @@ jobs:
         shell: bash
         run: |
           cd Hippo
-          npm run build
+          npm run cibuild
           cd ..
 
       - name: dotnet publish
@@ -117,7 +117,7 @@ jobs:
         shell: bash
         run: |
           cd Hippo
-          npm run build
+          npm run cibuild
           cd ..
 
       - name: dotnet publish
