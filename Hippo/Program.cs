@@ -64,7 +64,7 @@ namespace Hippo
             var proxyUrl = config?.GetValue<string>("Kestrel:Endpoints:Https:Url");
             if (!string.IsNullOrEmpty(proxyUrl) && Uri.TryCreate(proxyUrl, UriKind.Absolute, out Uri result))
             {
-                port = result.Port == 0 || result.Port == 443 ? "443" : result.Port.ToString(CultureInfo.InvariantCulture);
+                port = result.Port == 0 || result.Port == 443 ? string.Empty : $":{result.Port.ToString(CultureInfo.InvariantCulture)}";
             }
             return port;
         }
