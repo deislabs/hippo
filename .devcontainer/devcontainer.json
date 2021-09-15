@@ -1,0 +1,64 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.187.0/containers/dotnet
+
+// If the devcontiner image is updated to a new version, the version number must be updated in the image tag below
+// It should match the value of the ENV VAR DEVCONTAINER_VERSION in build-devcontainer.yml
+{
+    "name": "Hippo",
+    "image": "ghcr.io/deislabs/hippo-dev:v1.0.0",
+    // Set *default* container specific settings.json values on container create.
+    "settings": {
+        "remote.autoForwardPorts": false
+    },
+    // Add the IDs of extensions you want installed when the container is created.
+    "extensions": [
+        "ms-dotnettools.csharp"
+    ],
+    "containerEnv": {
+        "BINDLE_URL": "http://localhost:8080/v1",
+        "HIPPO_URL": "https://localhost:5001",
+        "GLOBAL_AGENT_FORCE_GLOBAL_AGENT": "false",
+        // This places bindle server data in the workspace so that state is retained across multiple invocations of the bindle server 
+        // Delete this folder and Hippo/hippo.db.* files to reset Hippo
+        "BINDLE_DIRECTORY" : "${containerWorkspaceFolder}/bindleserver/data"
+    },
+    // Use 'forwardPorts' to make a list of ports inside the container available locally.
+    // 5001 is the Hippo HTTPS Port
+    // 5003 is the YARP HTTPS Port.
+    // 32768-32770 are the first three ports that are used by applications launched from Hippo enbled schedulers, normally this would not be accessed directly but through the proxy endpoint on port 5002, however in GitHub codespaces 
+    // this will not work as Headers dont seem to be forwarded by the Codespaces proxy.
+    "forwardPorts": [
+        5001,
+        5003,
+        32768,
+        32769,
+        32770
+    ],
+    // Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
+    "remoteUser": "vscode",
+    "updateRemoteUserUID": false,
+    // restore and build the application, add the dev cert. 
+    "postCreateCommand": "cd Hippo && dotnet restore && npm run build && dotnet build && dotnet dev-certs https",
+    "portsAttributes": {
+        "5001": {
+            "label": "Hippo HTTPS Port",
+            "protocol": "https"
+        },
+        "5003": {
+            "label": "YARP HTTP Endpoint",
+            "protocol": "https"
+        },
+        "32768": {
+            "label": "Application Channel HTTP Port ",
+            "protocol": "http"
+        },
+        "32769": {
+            "label": "Application Channel HTTP Port",
+            "protocol": "http"
+        },
+        "32770": {
+            "label": "Application Channel HTTP Port",
+            "protocol": "http"
+        }
+    }
+}
