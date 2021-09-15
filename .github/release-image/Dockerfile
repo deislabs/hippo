@@ -106,4 +106,4 @@ WORKDIR /hippo
 
 USER 1000
 
-ENTRYPOINT if [ -z ${BINDLE_PASSWORD} ]; then export BINDLE_PASSWORD=$(openssl rand -base64 12);echo BINDLE_PASSWORD=${BINDLE_PASSWORD} >> ~/.bashrc;  fi && echo ${BINDLE_PASSWORD}|htpasswd -Bic /data/bindleserver/bindle-htpasswd ${BINDLE_USERNAME} && RUST_LOG=info bindle-server -i ${BINDLE_LISTEN_ADDRESS} --htpasswd-file /data/bindleserver/bindle-htpasswd -d /data/bindleserver >> /data/logs/bindle-server.log 2>&1 & ./hippo-server >> /data/logs/hippo-server.log 2>&1 
+ENTRYPOINT if [ -z ${BINDLE_PASSWORD} ]; then export BINDLE_PASSWORD=$(openssl rand -base64 12);echo export BINDLE_PASSWORD=${BINDLE_PASSWORD} >> ~/.bashrc;  fi && echo ${BINDLE_PASSWORD}|htpasswd -Bic /data/bindleserver/bindle-htpasswd ${BINDLE_USERNAME} && RUST_LOG=info bindle-server -i ${BINDLE_LISTEN_ADDRESS} --htpasswd-file /data/bindleserver/bindle-htpasswd -d /data/bindleserver >> /data/logs/bindle-server.log 2>&1 & ./hippo-server >> /data/logs/hippo-server.log 2>&1 
