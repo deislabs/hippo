@@ -21,14 +21,14 @@ RUN curl -fsSLo bindle.tar.gz https://bindle.blob.core.windows.net/releases/bind
 ARG WAGI_VERSION="v0.3.0"
 RUN curl -fsSLo wagi.tar.gz https://github.com/deislabs/wagi/releases/download/${WAGI_VERSION}/wagi-${WAGI_VERSION}-linux-amd64.tar.gz  && tar -xvf wagi.tar.gz && mv wagi /usr/local/bin/ 
 
+# Install yo-wasm
+RUN su vscode -c "umask 0002 && . /usr/local/share/nvm/nvm.sh && npm install -g yo && npm install -g generator-wasm"
+
 # Install Rust 
 RUN su vscode -c "umask 0002 && cd /tmp && mkdir rust && cd rust && curl -fsSLo install_rust.sh https://sh.rustup.rs && chmod +x ./install_rust.sh  && ./install_rust.sh -y -t wasm32-wasi"
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive && apt-get -y install --no-install-recommends gcc gcc-multilib
 
-# Install yo-wasm
-RUN su vscode -c "umask 0002 && . /usr/local/share/nvm/nvm.sh && npm install -g yo && npm install -g generator-wasm"
+# TODO remove this before release as it is temporary. The hippo enabled yo wasm package is not published yet so we need to use the one from the repo.
+RUN su vscode -c ". /usr/local/share/nvm/nvm.sh && npm uninstall -g generator-wasm && mkdir yowasm && cd yowasm && curl -fsSLo ./yowasm.tar.gz https://github.com/deislabs/yo-wasm/releases/download/v0.0.4%2Bpreview2/generator-wasm-0.0.3.tgz && npm install -g ./yowasm.tar.gz && cd - && rm -r yowasm"
 
 WORKDIR /
-
-# TODO remove this before release as it is temporary. The hippo enabled yo wasm package is not published yet so we need to use the one from the repo.
-RUN su vscode -c ". /home/${USER}/.nvm/nvm.sh && npm uninstall -g generator-wasm && mkdir yowasm && cd yowasm && curl -fsSLo ./yowasm.tar.gz https://github.com/deislabs/yo-wasm/releases/download/v0.0.4%2Bpreview2/generator-wasm-0.0.3.tgz && npm install -g ./yowasm.tar.gz && cd - && rm -r yowasm"
