@@ -1,6 +1,7 @@
-# Project Hippo
+# Hippo, the WebAssembly PaaS
 
-Hippo is the easiest way to deploy and serve applications compiled to WASI.
+Hippo is the easiest way to deploy and serve applications compiled to
+[WebAssembly](https://webassembly.org/).
 
 **WARNING:** This is experimental code. It is not considered production-grade
 by its developers, nor is it "supported" software.
@@ -10,18 +11,24 @@ by its developers, nor is it "supported" software.
 > [Krustlet](https://github.com/deislabs/krustlet)) designed to test the limits
 > of WebAssembly as a cloud-based runtime.
 
-Hippo provides an easy-to-use management portal for your application, allowing
-users to deploy and roll back their application releases, edit configuration,
-manage domain routing and TLS certificates, and view agrregated logs. Hippo
-provides a simple permissions model to manage your users and groups.
+Hippo takes a fresh spin on the PaaS ecosystem, taking advantage of the
+technology WebAssembly brings to the space.
 
-Hippo comes integrated with a powerful Layer 7 Load Balancer so you and your
-developers can spend more time writing applications, and less time managing
-your load balancer. After initial setup, create an application, attach a domain
-and a TLS certificate, and let Hippo handle the backend routing.
+Hippo works like this: A WebAssembly package is bundled up as a
+[bindle](https://github.com/deislabs/bindle). Bindles are collected together in
+a bindle server that you can search. Hippo uses bindle under the hood for
+storing and organizing applications.
 
-All of Hippo's functionality is exposed through a web application and a
-[command line interface](https://github.com/deislabs/hippo-cli).
+Using the [hippo command line
+interface](https://github.com/deislabs/hippo-cli), you can upload new releases
+or prepare a bindle for local development. In the future, you can use this CLI
+to create applications, configure channels, gather logs, attach TLS
+certificates, and other commands you’d expect to use with a PaaS.
+
+Hippo provides a web interface for users to register new accounts, access their
+applications, and create new environments for testing.
+
+Hippo makes it easy to run WebAssembly applications and services at scale.
 
 ## Documentation
 
