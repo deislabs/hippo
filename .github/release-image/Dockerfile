@@ -39,11 +39,11 @@ ARG HIPPO_CLI_VERSION="v0.9.0"
 RUN mkdir hippocli && cd hippocli && curl -fsSLo hippocli.tar.gz https://github.com/deislabs/hippo-cli/releases/download/${HIPPO_CLI_VERSION}/hippo-${HIPPO_CLI_VERSION}-linux-amd64.tar.gz && tar -xvf hippocli.tar.gz && mv hippo README.md LICENSE /usr/local/bin/ && cd - && rm -r hippocli 
 
 # Install bindle
-ARG BINDLE_VERSION="v0.5.0"
+ARG BINDLE_VERSION="v0.6.0"
 RUN mkdir bindle && cd bindle && curl -fsSLo bindle.tar.gz https://bindle.blob.core.windows.net/releases/bindle-${BINDLE_VERSION}-linux-amd64.tar.gz && tar -xvf bindle.tar.gz && mv bindle bindle-server README.md LICENSE.txt /usr/local/bin/ && cd - && rm -r bindle
 
 # Install WAGI
-ARG WAGI_VERSION="v0.3.0"
+ARG WAGI_VERSION="v0.4.0"
 RUN mkdir wagi && cd wagi && curl -fsSLo wagi.tar.gz https://github.com/deislabs/wagi/releases/download/${WAGI_VERSION}/wagi-${WAGI_VERSION}-linux-amd64.tar.gz  && tar -xvf wagi.tar.gz && mv wagi README.md LICENSE.txt /usr/local/bin/ && cd - && rm -r wagi
 
 # Install Rust 
@@ -51,9 +51,6 @@ RUN su ${USER} -c "mkdir rust && cd rust && curl -fsSLo install_rust.sh https://
 
 # Install yo-wasm
 RUN su ${USER} -c ". /home/${USER}/.nvm/nvm.sh && npm install -g yo && npm install -g generator-wasm"
-
-# TODO remove this before release as it is temporary. The hippo enabled yo wasm package is not published yet so we need to use the one from the repo.
-RUN su ${USER} -c ". /home/${USER}/.nvm/nvm.sh && npm uninstall -g generator-wasm && mkdir yowasm && cd yowasm && curl -fsSLo ./yowasm.tar.gz https://github.com/deislabs/yo-wasm/releases/download/v0.0.4%2Bpreview2/generator-wasm-0.0.3.tgz && npm install -g ./yowasm.tar.gz && cd - && rm -r yowasm"
 
 COPY --chown=1000:1000 . /hippo
 
