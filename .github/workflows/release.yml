@@ -102,7 +102,7 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v2
         with:
-          dotnet-version: 5.0.x
+          fetch-depth: 0
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v1

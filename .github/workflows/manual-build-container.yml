@@ -1,0 +1,73 @@
+name: Manually build and push runtime container
+on:
+  workflow_dispatch:
+
+jobs:  
+  push_to_registry:
+    name: Push image to GitHub Package Registry
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.x
+
+      - name: Set MINVERBUILDMETADATA and Image Version Tag
+        run: |
+          echo MINVERBUILDMETADATA=$(git rev-parse --short ${GITHUB_SHA})  >> $GITHUB_ENV
+          TAG_COMMIT=$(git rev-list --tags --max-count=1)
+          echo IMAGE_VERSION_TAG=$(git describe --tags --abbrev=0 ${TAG_COMMIT})  >> $GITHUB_ENV
+        shell: bash
+
+      - name: Npm build
+        shell: bash
+        run: |
+          cd Hippo
+          npm run cibuild
+          cd ..
+
+      - name: dotnet publish
+        run: dotnet publish Hippo/Hippo.csproj -c Release --self-contained -r linux-x64
+
+      - name: Copy openssl conf
+        shell: bash
+        run: |
+          mkdir -p ./Hippo/bin/Release/net5.0/linux-x64/publish/certs
+          cp .github/release-image/localhost.conf ./Hippo/bin/Release/net5.0/linux-x64/publish/certs
+
+      - name: Log in to the Container registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata for Docker
+        id: meta
+        uses: docker/metadata-action@v3
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=semver,pattern={{raw}},priority=1,value=${{ env.IMAGE_VERSION_TAG }}
+            type=semver,pattern={{version}},priority=2,value=${{ env.IMAGE_VERSION_TAG }}
+            type=semver,pattern={{major}}.{{minor}},priority=3,value=${{ env.IMAGE_VERSION_TAG }}
+            type=sha,priority=4
+          flavor: |
+            latest=true
+      
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v2
+        with:
+          file: .github/release-image/Dockerfile
+          context: ./Hippo/bin/Release/net5.0/linux-x64/publish
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}

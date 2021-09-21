@@ -11,7 +11,7 @@ jobs:
     name: Push devcontainer/codespaces image to GitHub Package Registry
     runs-on: ubuntu-latest
     env:
-      DEVCONTAINER_VERSION: v1.0.0
+      DEVCONTAINER_VERSION: v1.0.1
     permissions:
       contents: read
       packages: write
@@ -44,8 +44,8 @@ jobs:
             VARIANT : 5.0
             NODE_VERSION: lts/*
             HIPPO_VERSION: v0.9.0
-            BINDLE_VERSION: v0.5.0
-            WAGI_VERSION: v0.3.0
+            BINDLE_VERSION: v0.6.0
+            WAGI_VERSION: v0.4.0
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
