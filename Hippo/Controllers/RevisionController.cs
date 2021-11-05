@@ -17,6 +17,8 @@ using Microsoft.Extensions.Logging;
 
 namespace Hippo.Controllers
 {
+    // TODO: This seems to be an API controller so needs swagger attributes and moving under APIControllers Directory
+
     [Route("api/[Controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class RevisionController : HippoController
@@ -32,6 +34,7 @@ namespace Hippo.Controllers
         }
 
         [HttpPost]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Security", "CA5391: Method New handles a HttpPost request without performing antiforgery token validation.You also need to ensure that your HTML form sends an antiforgery token.", Justification = "This is used as an API.")]
         public async Task<IActionResult> New([FromBody] RegisterRevisionRequest request)
         {
             TraceMethodEntry(WithArgs(request));
