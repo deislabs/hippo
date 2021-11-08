@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>hippo-server</name>
+    </assembly>
+    <members>
+        <member name="T:Hippo.Web.Api.ApplicationController">
+            <summary>
+            ApplicationController providers an API to create Hippo Applications 
+            </summary>
+        </member>
+        <member name="M:Hippo.Web.Api.ApplicationController.#ctor(Hippo.Infrastructure.Data.IUnitOfWork,Microsoft.AspNetCore.Identity.UserManager{Hippo.Core.Models.Account},Hippo.Core.Interfaces.ITaskQueue{Hippo.Infrastructure.Services.ChannelReference},Microsoft.Extensions.Logging.ILogger{Hippo.Web.Api.ApplicationController})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Hippo.Web.Api.ApplicationController"/> class.
+            </summary>
+            <param name="unitOfWork">Iunitofwork instance</param>
+            <param name="userManager">UserManager  instance</param>
+            <param name="channelsToReschedule" />
+            <param name="logger">ILogger Instance</param>
+        </member>
+        <member name="M:Hippo.Web.Api.ApplicationController.New(Hippo.Core.Messages.CreateApplicationRequest)">
+             <summary>
+             Creates a new Hippo Application
+             </summary>
+             <remarks>
+             Sample request:
+            
+                 POST /api/application
+                 {
+                    "applicationName": "My excellent new application",
+                    "storageId": "contoso/weather"
+                 }
+            
+             </remarks>
+             <param name="request">The application details.</param>
+             <returns>Details of the newly created Hippo Application.</returns>
+             <response code="201">Returns the newly created Application details</response>
+             <response code="400">The request is invalid</response> 
+             <response code="500">An error occured in the server when processing the request</response> 
+        </member>
+        <member name="T:Hippo.Web.Api.ChannelController">
+            <summary>
+            ChannelController providers an API to create Hippo Channels 
+            </summary>
+        </member>
+        <member name="M:Hippo.Web.Api.ChannelController.#ctor(Hippo.Infrastructure.Data.IUnitOfWork,Microsoft.AspNetCore.Identity.UserManager{Hippo.Core.Models.Account},Hippo.Core.Interfaces.ITaskQueue{Hippo.Infrastructure.Services.ChannelReference},Microsoft.Extensions.Logging.ILogger{Hippo.Web.Api.ChannelController})">
+            <summary>
+            Initializes a new instance of the <see cref="T:Hippo.Web.Api.ChannelController"/> class.
+            </summary>
+            <param name="unitOfWork">Iunitofwork instance</param>
+            <param name="userManager" />
+            <param name="taskQueue"> ITaskQueue instance</param>
+            <param name="logger">ILogger Instance</param>
+        </member>
+        <member name="M:Hippo.Web.Api.ChannelController.New(Hippo.Core.Messages.CreateChannelRequest)">
+             <summary>
+             Creates a new Hippo ChannelMessage
+             </summary>
+             <remarks>
+             Sample requests:
+            
+                 POST /api/channel
+                 {
+                    "appId": "4208d635-7618-4150-b8a8-bc3205e70e32",
+                    "name": "My new ChannelMessage",
+                    "revisionSelectionStrategy": "UseRangeRule",
+                    "revisionNumber": "1.2.3"
+                 }
+                 
+                 POST /api/channel
+                 {
+                    "appId": "4208d635-7618-4150-b8a8-bc3205e70e32",
+                    "revisionSelectionStrategy": "UseSpecifiedRevision",
+                    "fixedToRevision": false,
+                    "revisionRange": "~1.2.3"
+                 }
+            
+             </remarks>
+             <param name="request">The channel details.</param>
+             <returns>Details of the newly created ChannelMessage.</returns>
+             <response code="201">Returns the newly created ApplicationMessage details</response>
+             <response code="400">The request is invalid</response> 
+             <response code="404">App was not found with the appId </response> 
+             <response code="500">An error occured in the server when processing the request</response> 
+        </member>
+        <member name="M:Hippo.Web.Api.ChannelController.GetById(System.String)">
+             <summary>
+             Gets a Hippo ChannelMessage by ChannelMessage Id
+             </summary>
+             <remarks>
+             Sample requests:
+            
+                 Get /api/channel/4208d635-7618-4150-b8a8-bc3205e70e32
+               
+            
+             </remarks>
+             <param name="id">The channel id.</param>
+             <returns>Details of the ChannelMessage.</returns>
+             <response code="200">Returns the newly created ApplicationMessage details</response>
+             <response code="400">The request is invalid</response> 
+             <response code="404">App was not found with the appId </response> 
+             <response code="500">An error occured in the server when processing the request</response> 
+        </member>
+        <member name="M:Hippo.Program.GetProxyHTTPSPort(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Gets the HTTPS Proxy port so that links can be created correctly in the Hippo UI. this will need to be updated for external schedulers.
+            </summary>
+            <param name="config">The Proxy Configuration</param>
+            <returns>The proy HTTPS Port as a string</returns>
+        </member>
+    </members>
+</doc>
