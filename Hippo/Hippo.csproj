@@ -7,10 +7,6 @@
     <AssemblyName>hippo-server</AssemblyName>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>$(MSBuildProjectDirectory)\Hippo.xml</DocumentationFile>
-  </PropertyGroup>
-
   <ItemGroup>
      <!-- exclude all Content items from being watched -->
     <Content Update="@(Content)" Watch="false" />

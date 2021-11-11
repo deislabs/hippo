@@ -58,7 +58,6 @@ namespace Hippo.Schedulers
 
         public abstract void Start(Channel c);
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "Don't care about VB")]
         public abstract void Stop(Channel c);
 
         private protected virtual void StartProxy(Channel channel, string address)

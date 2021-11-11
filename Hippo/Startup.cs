@@ -99,11 +99,6 @@ namespace Hippo
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "hippo API", Version = "v1" });
-                var filePath = Path.Combine(AppContext.BaseDirectory, "Hippo.xml");
-                if (File.Exists(filePath))
-                {
-                    c.IncludeXmlComments(filePath);
-                }
                 c.AddSecurityDefinition("http", new OpenApiSecurityScheme
                 {
                     Type = SecuritySchemeType.Http,

@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 
 namespace Hippo.Tasks
 {
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix", Justification = "Not applicable for this type")]
     public interface ITaskQueue<T>
     {
         Task Enqueue(T value, CancellationToken cancellationToken);
@@ -13,7 +12,6 @@ namespace Hippo.Tasks
         (bool, T) TryRead();
     }
 
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix", Justification = "Not applicable for this type")]
     public class TaskQueue<T> : ITaskQueue<T>
     {
         const int DEFAULT_BUFFER_CAPACITY = 1024;
