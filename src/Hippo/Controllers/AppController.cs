@@ -1,29 +1,22 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Hippo.ControllerCore;
 using Hippo.Models;
 using Hippo.Repositories;
-using Hippo.Schedulers;
 using Hippo.Tasks;
 using Hippo.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Tomlyn;
 
 namespace Hippo.Controllers
 {
     [Authorize]
-    public class AppController : ApplicationControllerCore
+    public class AppController : ApplicationBaseController
     {
         public AppController(IUnitOfWork unitOfWork, UserManager<Account> userManager, ITaskQueue<ChannelReference> channelsToReschedule, ILogger<AppController> logger)
             : base(unitOfWork, userManager, channelsToReschedule, logger, EventOrigin.UI)

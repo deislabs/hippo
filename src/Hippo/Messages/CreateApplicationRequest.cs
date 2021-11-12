@@ -1,4 +1,4 @@
-using Hippo.ControllerCore;
+using Hippo.OperationData;
 using Hippo.Logging;
 
 namespace Hippo.Messages

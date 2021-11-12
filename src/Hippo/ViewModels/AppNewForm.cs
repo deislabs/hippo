@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using Hippo.ControllerCore;
+using Hippo.OperationData;
 using Hippo.Logging;
 
 namespace Hippo.ViewModels

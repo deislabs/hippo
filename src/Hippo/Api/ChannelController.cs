@@ -1,7 +1,5 @@
 using System;
-using System.Threading;
 using System.Threading.Tasks;
-using Hippo.ControllerCore;
 using Hippo.Controllers;
 using Hippo.Messages;
 using Hippo.Models;
@@ -14,7 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace Hippo.ApiControllers
+namespace Hippo.Api
 {
     /// <summary>
     /// ChannelController providers an API to create Hippo Channels 
@@ -22,7 +20,7 @@ namespace Hippo.ApiControllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class ChannelController : ApplicationControllerCore
+    public class ChannelController : ApplicationBaseController
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ChannelController"/> class.

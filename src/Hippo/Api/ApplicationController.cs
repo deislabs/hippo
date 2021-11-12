@@ -1,6 +1,5 @@
 using System;
 using System.Threading.Tasks;
-using Hippo.ControllerCore;
 using Hippo.Controllers;
 using Hippo.Messages;
 using Hippo.Models;
@@ -14,7 +13,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 
-namespace Hippo.ApiControllers
+namespace Hippo.Api
 {
     /// <summary>
     /// ApplicationController providers an API to create Hippo Applications 
@@ -22,7 +21,7 @@ namespace Hippo.ApiControllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class ApplicationController : ApplicationControllerCore
+    public class ApplicationController : ApplicationBaseController
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationController"/> class.
