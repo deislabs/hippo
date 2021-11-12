@@ -10,7 +10,7 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/Hippo/bin/Debug/net5.0/hippo-server.dll",
+            "program": "${workspaceFolder}/Hippo/bin/Debug/net6.0/hippo-server.dll",
             "args": [],
             "cwd": "${workspaceFolder}/Hippo",
             "stopAtEntry": false,

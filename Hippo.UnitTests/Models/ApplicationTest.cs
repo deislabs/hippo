@@ -61,49 +61,5 @@ namespace Hippo.Tests.Models
             Assert.Equal("0.6.1", app.Channels.ElementAt(0).ActiveRevision.RevisionNumber);
             Assert.Equal("1.1.6", app.Channels.ElementAt(1).ActiveRevision.RevisionNumber);
         }
-
-        public ApplicationTest()
-        {
-            //     One = new Application
-            //     {
-            //         Name = "one",
-            //         Owner = new Account
-            //         {
-            //             UserName = "user",
-            //         },
-            //         Collaborators = new List<Account>(),
-            //         Releases = new List<Release>
-            //         {
-            //             new Release
-            //             {
-            //                 Revision = "2.0.0",
-            //                 UploadUrl = "bindle:hippofactory.io/one/2.0.0"
-            //             }
-            //         },
-            //         Channels = new List<Channel>
-            //         {
-            //             new Channel
-            //             {
-            //                 Name = "development",
-            //                 Release = new Release
-            //                 {
-            //                     Revision = "1.0.0",
-            //                     UploadUrl = "bindle:hippofactory.io/one/1.0.0"
-            //                 },
-            //                 Configuration = new Configuration
-            //                 {
-            //                     EnvironmentVariables = new List<EnvironmentVariable>
-            //                     {
-            //                         new EnvironmentVariable
-            //                         {
-            //                             Key = "HELLO",
-            //                             Value = "world"
-            //                         }
-            //                     }
-            //                 },
-            //             }
-            //         }
-            //     };
-        }
     }
 }

@@ -41,7 +41,7 @@ jobs:
           file: .devcontainer/Dockerfile
           context: .devcontainer
           build-args: |
-            VARIANT : 5.0
+            VARIANT : 6.0
             NODE_VERSION: lts/*
             HIPPO_VERSION: v0.9.0
             BINDLE_VERSION: v0.6.0
