@@ -1,3 +1,0 @@
-# Require XML comments (Documentation option is enabled to allow for swagger generation) 
-[*.cs]
-dotnet_diagnostic.CS1591.severity = warning

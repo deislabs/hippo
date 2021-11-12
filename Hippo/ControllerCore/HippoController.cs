@@ -54,7 +54,6 @@ namespace Hippo.ControllerCore
             return new MethodArgs(args);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1815:Override equals and operator equals on value types", Justification = "Not needed, not used externally or for equality")]
         protected struct MethodArgs
         {
             private readonly object[] _args;

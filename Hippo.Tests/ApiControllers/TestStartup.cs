@@ -72,7 +72,6 @@ namespace Hippo.Tests.ApiControllers
             services.AddMvc();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1822:Mark members as static", Justification = "Configure defined by Framework")]
         public void Configure(IApplicationBuilder app)
         {
             app.UseRouting();
