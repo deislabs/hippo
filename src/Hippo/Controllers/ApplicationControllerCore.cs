@@ -10,16 +10,16 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace Hippo.ControllerCore
+namespace Hippo.Controllers
 {
-    public abstract class ApplicationControllerCore : HippoController
+    public abstract class ApplicationBaseController : BaseController
     {
         private protected readonly IUnitOfWork _unitOfWork;
         private protected readonly UserManager<Account> _userManager;
         private protected readonly ITaskQueue<ChannelReference> _channelsToReschedule;
         private protected readonly EventOrigin _eventSource;
 
-        protected ApplicationControllerCore(IUnitOfWork unitOfWork, UserManager<Account> userManager, ITaskQueue<ChannelReference> channelsToReschedule, ILogger logger, EventOrigin eventSource)
+        protected ApplicationBaseController(IUnitOfWork unitOfWork, UserManager<Account> userManager, ITaskQueue<ChannelReference> channelsToReschedule, ILogger logger, EventOrigin eventSource)
             : base(logger)
         {
             _unitOfWork = unitOfWork;

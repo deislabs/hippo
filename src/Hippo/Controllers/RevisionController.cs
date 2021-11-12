@@ -3,15 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Hippo.ControllerCore;
 using Hippo.Messages;
 using Hippo.Models;
 using Hippo.Repositories;
-using Hippo.Schedulers;
 using Hippo.Tasks;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -21,7 +18,7 @@ namespace Hippo.Controllers
 
     [Route("api/[Controller]")]
     [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-    public class RevisionController : HippoController
+    public class RevisionController : BaseController
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ITaskQueue<ChannelReference> _channelsToReschedule;

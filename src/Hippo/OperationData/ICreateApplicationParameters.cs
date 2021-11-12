@@ -1,4 +1,4 @@
-namespace Hippo.ControllerCore
+namespace Hippo.OperationData
 {
     public interface ICreateApplicationParameters
     {

@@ -5,13 +5,13 @@ using Hippo.Logging;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace Hippo.ControllerCore
+namespace Hippo.Controllers
 {
-    public abstract class HippoController : Controller
+    public abstract class BaseController : Controller
     {
         private protected readonly ILogger _logger;
 
-        protected HippoController(ILogger logger)
+        protected BaseController(ILogger logger)
         {
             _logger = logger;
         }

@@ -5,7 +5,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using Hippo.ControllerCore;
 using Hippo.Models;
 using Hippo.Repositories;
 using Hippo.ViewModels;
@@ -17,7 +16,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Hippo.Controllers
 {
-    public class AccountController : HippoController
+    public class AccountController : BaseController
     {
         private readonly SignInManager<Account> _signInManager;
         private readonly IUnitOfWork _unitOfWork;
