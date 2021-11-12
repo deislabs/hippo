@@ -4,7 +4,7 @@
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
 # Artifacts
-Hippo/hippo.db
+Hippo/hippo.db*
 
 # User-specific files
 *.rsuser
