@@ -27,7 +27,6 @@ namespace Hippo.Tests.Rules
         //   feature for 1.4.0, we should be able to set up a channel for the 1.4.0-spongiforms
         //   latest prerelease.  (Alice and Bob may still want individual channels though.)
         //   - This is also relevant for "canary deployment of a feature branch."
-
         private static readonly List<Revision> _revisions = new string[] {
             "1.1.0",
             "1.1.1",
@@ -78,14 +77,6 @@ namespace Hippo.Tests.Rules
             AssertMatchResult("1.1.3-alice-2021.04.04.04.04.04.444", RevisionRangeRule.Parse("P:1.1.3-alice-*"));
             AssertMatchResult("1.1.4-alice-2021.01.02.03.04.05.678", RevisionRangeRule.Parse("P:1.1.4-alice-*"));
         }
-
-        // [Fact]
-        // public void SupportsMostRecentReleaseByUserWithinVersionRange()
-        // {
-        //     // TODO: may not need this
-        //     // TODO: define behaviour - should higher version or more recent timestamp take precedence?
-        //     AssertMatchResult("1.1.4-alice-2021.01.02.03.04.05.678", RevisionRangeRule.Parse("P:~1.1-alice-*"));
-        // }
 
         [Fact]
         public void SupportsLongRunningFeatureBranches()
