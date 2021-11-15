@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 
 namespace Hippo.FunctionalTests.Fakes;
+
 internal class NullLogger<T> : ILogger<T>
 {
     private readonly bool _log;
