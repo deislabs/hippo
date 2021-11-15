@@ -1,9 +1,8 @@
 using Hippo.Models;
 
-namespace Hippo.Repositories
+namespace Hippo.Repositories;
+
+public interface IRevisionRepository
 {
-    public interface IRevisionRepository
-    {
-        Revision GetRevisionByNumber(Application owner, string revisionNumber);
-    }
+    Revision GetRevisionByNumber(Application owner, string revisionNumber);
 }

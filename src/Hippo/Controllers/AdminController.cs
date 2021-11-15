@@ -1,15 +1,14 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Hippo.Controllers
+namespace Hippo.Controllers;
+
+[Authorize(Roles = "Administrator")]
+public class AdminController : Controller
 {
-    [Authorize(Roles = "Administrator")]
-    public class AdminController : Controller
+    [HttpGet]
+    public IActionResult Terminal()
     {
-        [HttpGet]
-        public IActionResult Terminal()
-        {
-            return View();
-        }
+        return View();
     }
 }

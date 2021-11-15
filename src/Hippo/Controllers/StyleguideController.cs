@@ -1,13 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 
-namespace Hippo.Controllers
+namespace Hippo.Controllers;
+
+public class StyleguideController : Controller
 {
-    public class StyleguideController : Controller
+    [HttpGet]
+    public IActionResult Index()
     {
-        [HttpGet]
-        public IActionResult Index()
-        {
-            return View();
-        }
+        return View();
     }
 }

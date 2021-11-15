@@ -5,37 +5,35 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
+namespace Hippo.WagiDotnet;
 
-namespace Hippo.WagiDotnet
+public class WagiDotnetStartup
 {
-    public class WagiDotnetStartup
+    public WagiDotnetStartup(IConfiguration configuration)
     {
-        public WagiDotnetStartup(IConfiguration configuration)
+        Configuration = configuration;
+    }
+
+    public IConfiguration Configuration { get; }
+
+    public void ConfigureServices(IServiceCollection services)
+    {
+        // WASI Experimental HTTP requires HttpClient.
+        services.AddHttpClient();
+        services.AddWagi(Configuration);
+    }
+
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        if (env.IsDevelopment())
         {
-            Configuration = configuration;
+            app.UseDeveloperExceptionPage();
         }
 
-        public IConfiguration Configuration { get; }
-
-        public void ConfigureServices(IServiceCollection services)
-        {
-            // WASI Experimental HTTP requires HttpClient.
-            services.AddHttpClient();
-            services.AddWagi(Configuration);
-        }
-
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
-            app.UseRouting();
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapWagiModules();
-            });
-        }
+        app.UseRouting();
+        app.UseEndpoints(endpoints =>
+                {
+                    endpoints.MapWagiModules();
+                });
     }
 }

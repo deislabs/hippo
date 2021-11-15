@@ -4,111 +4,110 @@ using System.Linq;
 using System.Threading.Tasks;
 using Hippo.Models;
 
-namespace Hippo.Repositories
+namespace Hippo.Repositories;
+
+public class DbEventLogRepository : IEventLogRepository
 {
-    public class DbEventLogRepository : IEventLogRepository
+    private readonly DataContext _context;
+    private readonly ICurrentUser _user;
+
+    public DbEventLogRepository(DataContext context, ICurrentUser user)
     {
-        private readonly DataContext _context;
-        private readonly ICurrentUser _user;
+        _context = context;
+        _user = user;
+    }
 
-        public DbEventLogRepository(DataContext context, ICurrentUser user)
+    public async Task LoginSucceeded(EventOrigin source, string userName)
+    {
+        var entry = new EventLogEntry
         {
-            _context = context;
-            _user = user;
-        }
+            EventKind = EventKind.AccountLogin,
+            EventSource = source,
+            Timestamp = DateTime.UtcNow,
+            UserName = userName,
+            Description = "login succeeded",
+        };
+        await _context.EventLogEntries.AddAsync(entry);
+    }
 
-        public async Task LoginSucceeded(EventOrigin source, string userName)
+    public async Task LoginFailed(EventOrigin source, string userName, string reason)
+    {
+        var entry = new EventLogEntry
         {
-            var entry = new EventLogEntry
-            {
-                EventKind = EventKind.AccountLogin,
-                EventSource = source,
-                Timestamp = DateTime.UtcNow,
-                UserName = userName,
-                Description = "login succeeded",
-            };
-            await _context.EventLogEntries.AddAsync(entry);
-        }
+            EventKind = EventKind.AccountLoginFailed,
+            EventSource = source,
+            Timestamp = DateTime.UtcNow,
+            UserName = userName,
+            Description = reason,
+        };
+        await _context.EventLogEntries.AddAsync(entry);
+    }
 
-        public async Task LoginFailed(EventOrigin source, string userName, string reason)
+    public async Task ChannelCreated(EventOrigin source, Channel channel)
+    {
+        var entry = new EventLogEntry
         {
-            var entry = new EventLogEntry
-            {
-                EventKind = EventKind.AccountLoginFailed,
-                EventSource = source,
-                Timestamp = DateTime.UtcNow,
-                UserName = userName,
-                Description = reason,
-            };
-            await _context.EventLogEntries.AddAsync(entry);
-        }
+            EventKind = EventKind.ChannelCreated,
+            EventSource = source,
+            Timestamp = DateTime.UtcNow,
+            ApplicationId = channel.Application.Id,
+            ChannelId = channel.Id,
+            UserName = _user.Name(),
+            Description = channel.ConfigurationSummary(),
+        };
+        await _context.EventLogEntries.AddAsync(entry);
+    }
 
-        public async Task ChannelCreated(EventOrigin source, Channel channel)
+    public async Task ChannelEdited(EventOrigin source, Channel channel)
+    {
+        var entry = new EventLogEntry
         {
-            var entry = new EventLogEntry
-            {
-                EventKind = EventKind.ChannelCreated,
-                EventSource = source,
-                Timestamp = DateTime.UtcNow,
-                ApplicationId = channel.Application.Id,
-                ChannelId = channel.Id,
-                UserName = _user.Name(),
-                Description = channel.ConfigurationSummary(),
-            };
-            await _context.EventLogEntries.AddAsync(entry);
-        }
+            EventKind = EventKind.ChannelEdited,
+            EventSource = source,
+            Timestamp = DateTime.UtcNow,
+            ApplicationId = channel.Application.Id,
+            ChannelId = channel.Id,
+            UserName = _user.Name(),
+            Description = channel.ConfigurationSummary(),
+        };
+        await _context.EventLogEntries.AddAsync(entry);
+    }
 
-        public async Task ChannelEdited(EventOrigin source, Channel channel)
+    public async Task ChannelRevisionChanged(EventOrigin source, Channel channel, string oldRevision, string reason)
+    {
+        var entry = new EventLogEntry
         {
-            var entry = new EventLogEntry
-            {
-                EventKind = EventKind.ChannelEdited,
-                EventSource = source,
-                Timestamp = DateTime.UtcNow,
-                ApplicationId = channel.Application.Id,
-                ChannelId = channel.Id,
-                UserName = _user.Name(),
-                Description = channel.ConfigurationSummary(),
-            };
-            await _context.EventLogEntries.AddAsync(entry);
-        }
+            EventKind = EventKind.ChannelRevisionChanged,
+            EventSource = source,
+            Timestamp = DateTime.UtcNow,
+            ApplicationId = channel.Application.Id,
+            ChannelId = channel.Id,
+            UserName = _user.Name(),
+            Description = $"changed from {oldRevision} to {channel.ActiveRevision?.RevisionNumber ?? "(none)"} because {reason}",
+        };
+        await _context.EventLogEntries.AddAsync(entry);
+    }
 
-        public async Task ChannelRevisionChanged(EventOrigin source, Channel channel, string oldRevision, string reason)
+    public async Task ChannelDeleted(EventOrigin source, Guid channelId, Application application, string channelName)
+    {
+        var entry = new EventLogEntry
         {
-            var entry = new EventLogEntry
-            {
-                EventKind = EventKind.ChannelRevisionChanged,
-                EventSource = source,
-                Timestamp = DateTime.UtcNow,
-                ApplicationId = channel.Application.Id,
-                ChannelId = channel.Id,
-                UserName = _user.Name(),
-                Description = $"changed from {oldRevision} to {channel.ActiveRevision?.RevisionNumber ?? "(none)"} because {reason}",
-            };
-            await _context.EventLogEntries.AddAsync(entry);
-        }
+            EventKind = EventKind.ChannelDeleted,
+            EventSource = source,
+            Timestamp = DateTime.UtcNow,
+            ApplicationId = application.Id,
+            ChannelId = channelId,
+            UserName = _user.Name(),
+            Description = $"deleted environment formerly known as {channelName}",
+        };
+        await _context.EventLogEntries.AddAsync(entry);
+    }
 
-        public async Task ChannelDeleted(EventOrigin source, Guid channelId, Application application, string channelName)
-        {
-            var entry = new EventLogEntry
-            {
-                EventKind = EventKind.ChannelDeleted,
-                EventSource = source,
-                Timestamp = DateTime.UtcNow,
-                ApplicationId = application.Id,
-                ChannelId = channelId,
-                UserName = _user.Name(),
-                Description = $"deleted environment formerly known as {channelName}",
-            };
-            await _context.EventLogEntries.AddAsync(entry);
-        }
-
-        public IEnumerable<EventLogEntry> GetRecentByApplication(Application application, int maxCount)
-        {
-            return _context.EventLogEntries
-                .Where(e => e.ApplicationId == application.Id)
-                .OrderByDescending(e => e.Timestamp)
-                .Take(maxCount);
-        }
+    public IEnumerable<EventLogEntry> GetRecentByApplication(Application application, int maxCount)
+    {
+        return _context.EventLogEntries
+            .Where(e => e.ApplicationId == application.Id)
+            .OrderByDescending(e => e.Timestamp)
+            .Take(maxCount);
     }
 }

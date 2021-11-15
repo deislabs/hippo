@@ -2,17 +2,16 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using Hippo.Logging;
 
-namespace Hippo.ViewModels
+namespace Hippo.ViewModels;
+
+public class RevisionRegistrationForm : ITraceable
 {
-    public class RevisionRegistrationForm : ITraceable
-    {
-        [Required]
-        public Guid AppId { get; set; }
+    [Required]
+    public Guid AppId { get; set; }
 
-        [Required]
-        public string RevisionNumber { get; set; }
+    [Required]
+    public string RevisionNumber { get; set; }
 
-        public string FormatTrace()
-            => $"{nameof(RevisionRegistrationForm)}[appid={AppId}, rev={RevisionNumber}]";
-    }
+    public string FormatTrace()
+        => $"{nameof(RevisionRegistrationForm)}[appid={AppId}, rev={RevisionNumber}]";
 }

@@ -1,9 +1,6 @@
-using System.Threading.Tasks;
+namespace Hippo.Repositories;
 
-namespace Hippo.Repositories
+public interface IAccountRepository
 {
-    public interface IAccountRepository
-    {
-        bool IsEmpty();
-    }
+    bool IsEmpty();
 }

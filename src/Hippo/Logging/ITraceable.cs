@@ -1,7 +1,6 @@
-namespace Hippo.Logging
+namespace Hippo.Logging;
+
+public interface ITraceable
 {
-    public interface ITraceable
-    {
-        string FormatTrace();
-    }
+    string FormatTrace();
 }

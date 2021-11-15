@@ -1,8 +1,7 @@
-namespace Hippo.OperationData
+namespace Hippo.OperationData;
+
+public interface ICreateApplicationParameters
 {
-    public interface ICreateApplicationParameters
-    {
-        string ApplicationName { get; }
-        string StorageId { get; }
-    }
+    string ApplicationName { get; }
+    string StorageId { get; }
 }

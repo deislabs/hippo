@@ -3,15 +3,15 @@ using System.Linq;
 using Hippo.Models;
 using Xunit;
 
-namespace Hippo.Tests.Models
+namespace Hippo.Tests.Models;
+
+public class ApplicationTest
 {
-    public class ApplicationTest
+    private static Application TestApplication()
     {
-        private static Application TestApplication()
+        var revisions = new List<Revision>
         {
-            var revisions = new List<Revision>
-            {
-                new Revision { RevisionNumber = "0.5.0"},
+            new Revision { RevisionNumber = "0.5.0"},
                 new Revision { RevisionNumber = "0.6.0"},
                 new Revision { RevisionNumber = "0.6.1"},
                 new Revision { RevisionNumber = "1.0.0"},
@@ -32,34 +32,33 @@ namespace Hippo.Tests.Models
                 new Revision { RevisionNumber = "2.0.1"},
                 new Revision { RevisionNumber = "2.1.0"},
                 new Revision { RevisionNumber = "2.2.0"},
-            };
-            return new Application
-            {
-                Name = "testapp",
-                StorageId = "hippofactory.io/unittestapp",
-                Revisions = revisions,
-                Channels = new List<Channel>(),
-            };
-        }
-
-        [Fact]
-        public void ReevaluationUpdatesAllChannels()
+        };
+        return new Application
         {
-            var app = TestApplication();
-            app.Channels.Add(new Channel { Application = app, RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseSpecifiedRevision, SpecifiedRevision = app.Revisions.ElementAt(2) });
-            app.Channels.Add(new Channel { Application = app, RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseRangeRule, RangeRule = "~1.1" });
+            Name = "testapp",
+            StorageId = "hippofactory.io/unittestapp",
+            Revisions = revisions,
+            Channels = new List<Channel>(),
+        };
+    }
 
-            app.ReevaluateActiveRevisions();
+    [Fact]
+    public void ReevaluationUpdatesAllChannels()
+    {
+        var app = TestApplication();
+        app.Channels.Add(new Channel { Application = app, RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseSpecifiedRevision, SpecifiedRevision = app.Revisions.ElementAt(2) });
+        app.Channels.Add(new Channel { Application = app, RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseRangeRule, RangeRule = "~1.1" });
 
-            Assert.Equal("0.6.1", app.Channels.ElementAt(0).ActiveRevision.RevisionNumber);
-            Assert.Equal("1.1.1", app.Channels.ElementAt(1).ActiveRevision.RevisionNumber);
+        app.ReevaluateActiveRevisions();
 
-            app.Revisions.Add(new Revision { RevisionNumber = "1.1.6" });
+        Assert.Equal("0.6.1", app.Channels.ElementAt(0).ActiveRevision.RevisionNumber);
+        Assert.Equal("1.1.1", app.Channels.ElementAt(1).ActiveRevision.RevisionNumber);
 
-            app.ReevaluateActiveRevisions();
+        app.Revisions.Add(new Revision { RevisionNumber = "1.1.6" });
 
-            Assert.Equal("0.6.1", app.Channels.ElementAt(0).ActiveRevision.RevisionNumber);
-            Assert.Equal("1.1.6", app.Channels.ElementAt(1).ActiveRevision.RevisionNumber);
-        }
+        app.ReevaluateActiveRevisions();
+
+        Assert.Equal("0.6.1", app.Channels.ElementAt(0).ActiveRevision.RevisionNumber);
+        Assert.Equal("1.1.6", app.Channels.ElementAt(1).ActiveRevision.RevisionNumber);
     }
 }
