@@ -12,14 +12,14 @@ public class YarpReverseProxy : IReverseProxy
     public YarpReverseProxy(ITaskQueue<ReverseProxyUpdateRequest> reverseProxyConfigQueue, IJobScheduler scheduler)
     {
         _reverseProxyConfigQueue = reverseProxyConfigQueue;
-        InternalScheduler s = scheduler as InternalScheduler;
+        JobScheduler s = scheduler as JobScheduler;
         if (s != null)
         {
-            SubscribeToInternalScheduler(s);
+            SubscribeToJobScheduler(s);
         }
     }
 
-    private void SubscribeToInternalScheduler(InternalScheduler scheduler)
+    private void SubscribeToJobScheduler(JobScheduler scheduler)
     {
         scheduler.ChannelStarted += new EventHandler<ChannelStartedEventArgs>((o, e) => StartProxy(e.Channel, e.ListenAddress));
         scheduler.ChannelStopped += new EventHandler<Channel>((o, e) => StopProxy(e));

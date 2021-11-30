@@ -12,7 +12,7 @@ public class ChannelStartedEventArgs : EventArgs
     public string ListenAddress { get; set; }
 }
 
-public abstract class InternalScheduler : IJobScheduler
+public abstract class JobScheduler : IJobScheduler
 {
     private protected readonly ILogger _logger;
     private protected readonly string _bindleUrl;
@@ -21,7 +21,7 @@ public abstract class InternalScheduler : IJobScheduler
     public event EventHandler<ChannelStartedEventArgs> ChannelStarted;
     public event EventHandler<Channel> ChannelStopped;
 
-    private protected InternalScheduler(ILogger logger, IHostEnvironment env)
+    private protected JobScheduler(ILogger logger, IHostEnvironment env)
     {
         _logger = logger;
 

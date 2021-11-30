@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Hippo.Schedulers;
 
-public class WagiDotnetJobScheduler : InternalScheduler
+public class WagiDotnetJobScheduler : JobScheduler
 {
     private readonly IChannelConfigurationProvider _channelConfigurationProvider;
     public WagiDotnetJobScheduler(ILogger<WagiDotnetJobScheduler> logger, IChannelConfigurationProvider channelConfigurationProvider, IHostEnvironment env)
