@@ -12,15 +12,6 @@ public class YarpReverseProxy : IReverseProxy
     public YarpReverseProxy(ITaskQueue<ReverseProxyUpdateRequest> reverseProxyConfigQueue, JobScheduler scheduler)
     {
         _reverseProxyConfigQueue = reverseProxyConfigQueue;
-        JobScheduler s = scheduler as JobScheduler;
-        if (s != null)
-        {
-            SubscribeToJobScheduler(s);
-        }
-    }
-
-    private void SubscribeToJobScheduler(JobScheduler scheduler)
-    {
         scheduler.ChannelStarted += new EventHandler<ChannelStartedEventArgs>((o, e) => StartProxy(e.Channel, e.ListenAddress));
         scheduler.ChannelStopped += new EventHandler<Channel>((o, e) => StopProxy(e));
     }
