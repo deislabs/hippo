@@ -12,7 +12,7 @@ public class ChannelStartedEventArgs : EventArgs
     public string ListenAddress { get; set; }
 }
 
-public abstract class JobScheduler : IJobScheduler
+public abstract class JobScheduler
 {
     private protected readonly ILogger _logger;
     private protected readonly string _bindleUrl;

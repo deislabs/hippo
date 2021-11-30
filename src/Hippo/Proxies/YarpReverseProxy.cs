@@ -9,7 +9,7 @@ namespace Hippo.Proxies;
 public class YarpReverseProxy : IReverseProxy
 {
     private readonly ITaskQueue<ReverseProxyUpdateRequest> _reverseProxyConfigQueue;
-    public YarpReverseProxy(ITaskQueue<ReverseProxyUpdateRequest> reverseProxyConfigQueue, IJobScheduler scheduler)
+    public YarpReverseProxy(ITaskQueue<ReverseProxyUpdateRequest> reverseProxyConfigQueue, JobScheduler scheduler)
     {
         _reverseProxyConfigQueue = reverseProxyConfigQueue;
         JobScheduler s = scheduler as JobScheduler;
