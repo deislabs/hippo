@@ -1,6 +1,5 @@
 using Hippo.Config;
 using Hippo.Models;
-using Hippo.Proxies;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -9,8 +8,8 @@ namespace Hippo.Schedulers;
 public class WagiDotnetJobScheduler : InternalScheduler
 {
     private readonly IChannelConfigurationProvider _channelConfigurationProvider;
-    public WagiDotnetJobScheduler(ILogger<WagiDotnetJobScheduler> logger, IReverseProxy reverseProxy, IChannelConfigurationProvider channelConfigurationProvider, IHostEnvironment env)
-        : base(logger, reverseProxy, env)
+    public WagiDotnetJobScheduler(ILogger<WagiDotnetJobScheduler> logger, IChannelConfigurationProvider channelConfigurationProvider, IHostEnvironment env)
+        : base(logger, env)
     {
         _channelConfigurationProvider = channelConfigurationProvider;
         _channelConfigurationProvider.SetBindleServer(_bindleUrl);
@@ -21,12 +20,15 @@ public class WagiDotnetJobScheduler : InternalScheduler
         var port = c.PortID + Channel.EphemeralPortRange;
         var listenAddress = $"http://127.0.0.1:{port}";
         _channelConfigurationProvider.AddChannel(c, listenAddress);
-        StartProxy(c, listenAddress);
+        var data = new ChannelStartedEventArgs();
+        data.Channel = c;
+        data.ListenAddress = listenAddress;
+        OnChannelStarted(data);
     }
 
     public override void Stop(Channel c)
     {
-        StopProxy(c);
+        OnChannelStopped(c);
         _channelConfigurationProvider.RemoveChannel(c);
 
     }
