@@ -36,7 +36,7 @@ public class ChannelUpdateBackgroundService : BackgroundService
                     {
                         var channel = unitOfWork.Channels.GetChannelById(channelReference.ChannelId);
                         // TODO: should we make this responsible for updating the active revision
-                        var scheduler = scope.ServiceProvider.GetRequiredService<IJobScheduler>();
+                        var scheduler = scope.ServiceProvider.GetRequiredService<JobScheduler>();
                         // TODO: do any schedulers need the channel info *before* ActiveRevision
                         // got updated in order to stop?
                         try

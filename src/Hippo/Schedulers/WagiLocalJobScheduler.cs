@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Hippo.Schedulers;
 
-public class WagiLocalJobScheduler : InternalScheduler
+public class WagiLocalJobScheduler : JobScheduler
 {
     // This assumes a singleton scheduler instance!
     private readonly Dictionary<Guid, (int, Task)> _wagiProcessIds = new();

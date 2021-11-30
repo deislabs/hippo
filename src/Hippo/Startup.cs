@@ -85,10 +85,10 @@ public class Startup
         switch (Program.JobScheduler)
         {
             case "WAGI-DOTNET":
-                services.AddSingleton<IJobScheduler, WagiDotnetJobScheduler>();
+                services.AddSingleton<JobScheduler, WagiDotnetJobScheduler>();
                 break;
             default:
-                services.AddSingleton<IJobScheduler, WagiLocalJobScheduler>();
+                services.AddSingleton<JobScheduler, WagiLocalJobScheduler>();
                 break;
         }
 
@@ -160,7 +160,7 @@ public class Startup
 
         {
             using var scope = app.ApplicationServices.CreateScope();
-            var scheduler = scope.ServiceProvider.GetService<IJobScheduler>();
+            var scheduler = scope.ServiceProvider.GetService<JobScheduler>();
             var unitOfWork = scope.ServiceProvider.GetService<IUnitOfWork>();
             var allApplications = unitOfWork.Applications.ListApplicationsForAllUsers();
             scheduler.OnSchedulerStart(allApplications);
