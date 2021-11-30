@@ -1,5 +1,7 @@
+using System;
 using System.Threading;
 using Hippo.Models;
+using Hippo.Schedulers;
 using Hippo.Tasks;
 
 namespace Hippo.Proxies;
@@ -7,9 +9,20 @@ namespace Hippo.Proxies;
 public class YarpReverseProxy : IReverseProxy
 {
     private readonly ITaskQueue<ReverseProxyUpdateRequest> _reverseProxyConfigQueue;
-    public YarpReverseProxy(ITaskQueue<ReverseProxyUpdateRequest> reverseProxyConfigQueue)
+    public YarpReverseProxy(ITaskQueue<ReverseProxyUpdateRequest> reverseProxyConfigQueue, IJobScheduler scheduler)
     {
         _reverseProxyConfigQueue = reverseProxyConfigQueue;
+        InternalScheduler s = scheduler as InternalScheduler;
+        if (s != null)
+        {
+            SubscribeToInternalScheduler(s);
+        }
+    }
+
+    private void SubscribeToInternalScheduler(InternalScheduler scheduler)
+    {
+        scheduler.ChannelStarted += new EventHandler<ChannelStartedEventArgs>((o, e) => StartProxy(e.Channel, e.ListenAddress));
+        scheduler.ChannelStopped += new EventHandler<Channel>((o, e) => StopProxy(e));
     }
 
     public void StopProxy(Channel channel)

@@ -1,23 +1,29 @@
 using System;
 using System.Collections.Generic;
 using Hippo.Models;
-using Hippo.Proxies;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
 namespace Hippo.Schedulers;
 
+public class ChannelStartedEventArgs : EventArgs
+{
+    public Channel Channel { get; set; }
+    public string ListenAddress { get; set; }
+}
+
 public abstract class InternalScheduler : IJobScheduler
 {
     private protected readonly ILogger _logger;
-    private protected readonly IReverseProxy _reverseProxy;
     private protected readonly string _bindleUrl;
     private const string ENV_BINDLE = "BINDLE_URL";
 
-    private protected InternalScheduler(ILogger logger, IReverseProxy reverseProxy, IHostEnvironment env)
+    public event EventHandler<ChannelStartedEventArgs> ChannelStarted;
+    public event EventHandler<Channel> ChannelStopped;
+
+    private protected InternalScheduler(ILogger logger, IHostEnvironment env)
     {
         _logger = logger;
-        _reverseProxy = reverseProxy;
 
         _bindleUrl = Environment.GetEnvironmentVariable(ENV_BINDLE);
         if (string.IsNullOrWhiteSpace(_bindleUrl))
@@ -60,14 +66,14 @@ public abstract class InternalScheduler : IJobScheduler
 
     public abstract void Stop(Channel c);
 
-    private protected virtual void StartProxy(Channel channel, string address)
+    private protected virtual void OnChannelStarted(ChannelStartedEventArgs e)
     {
-        _reverseProxy.StartProxy(channel, address);
+        ChannelStarted?.Invoke(this, e);
     }
 
-    private protected virtual void StopProxy(Channel channel)
+    private protected virtual void OnChannelStopped(Channel c)
     {
-        _reverseProxy.StopProxy(channel);
+        ChannelStopped?.Invoke(this, c);
     }
 
 }

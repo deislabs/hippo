@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Hippo.Models;
-using Hippo.Proxies;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -18,8 +17,8 @@ public class WagiLocalJobScheduler : InternalScheduler
     private readonly Dictionary<Guid, (int, Task)> _wagiProcessIds = new();
     private const string ENV_WAGI = "HIPPO_WAGI_PATH";
 
-    public WagiLocalJobScheduler(IHostApplicationLifetime lifetime, ILogger<WagiLocalJobScheduler> logger, IReverseProxy reverseProxy, IHostEnvironment env)
-        : base(logger, reverseProxy, env)
+    public WagiLocalJobScheduler(IHostApplicationLifetime lifetime, ILogger<WagiLocalJobScheduler> logger, IHostEnvironment env)
+        : base(logger, env)
     {
         lifetime.ApplicationStopping.Register(() =>
                 {
@@ -69,7 +68,7 @@ public class WagiLocalJobScheduler : InternalScheduler
                 process.Exited += (s, e) =>
                 {
                     _wagiProcessIds.Remove(c.Id);
-                    StopProxy(c);
+                    OnChannelStopped(c);
                 };
                 process.Start();
                 var log = Task.WhenAll(
@@ -82,7 +81,10 @@ public class WagiLocalJobScheduler : InternalScheduler
                 }
                 else
                 {
-                    StartProxy(c, $"http://{listenAddress}");
+                    var data = new ChannelStartedEventArgs();
+                    data.Channel = c;
+                    data.ListenAddress = $"http://{listenAddress}";
+                    OnChannelStarted(data);
                     _wagiProcessIds[c.Id] = (process.Id, log);
                 }
 
@@ -108,7 +110,7 @@ public class WagiLocalJobScheduler : InternalScheduler
             var (wagiProcessId, log) = wagiProcess;
             KillProcessById(wagiProcessId);
             log.GetAwaiter().GetResult();
-            StopProxy(c);
+            OnChannelStopped(c);
         }
     }
 
