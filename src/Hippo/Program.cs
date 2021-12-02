@@ -49,7 +49,8 @@ static WebApplicationBuilder CreateHippoWebApplicationBuilder(string[] args, Cha
             });
 
     // data context
-    switch (builder.Configuration.GetValue<string>("Database:Driver", "inmemory").ToLower())
+    var driver = builder.Configuration.GetValue<string>("Database:Driver", "inmemory").ToLower();
+    switch (driver)
     {
         case "inmemory":
             builder.Services.AddDbContext<DataContext, InMemoryDataContext>();
@@ -60,6 +61,8 @@ static WebApplicationBuilder CreateHippoWebApplicationBuilder(string[] args, Cha
         case "sqlite":
             builder.Services.AddDbContext<DataContext, SqliteDataContext>();
             break;
+        default:
+            throw new ArgumentException(String.Format("{0} is not a valid database driver", driver));
     }
 
     builder.Services.AddScoped<ICurrentUser, ActionContextCurrentUser>();
@@ -70,7 +73,8 @@ static WebApplicationBuilder CreateHippoWebApplicationBuilder(string[] args, Cha
 
     // job scheduler
     builder.Services.AddHostedService<ChannelUpdateBackgroundService>();
-    switch (builder.Configuration.GetValue<string>("Scheduler:Driver", "wagi").ToLower())
+    var schedulerDriver = builder.Configuration.GetValue<string>("Scheduler:Driver", "wagi").ToLower();
+    switch (schedulerDriver)
     {
         case "wagi-dotnet":
             builder.Services.AddSingleton<JobScheduler, WagiDotnetJobScheduler>();
@@ -78,6 +82,8 @@ static WebApplicationBuilder CreateHippoWebApplicationBuilder(string[] args, Cha
         case "wagi":
             builder.Services.AddSingleton<JobScheduler, WagiLocalJobScheduler>();
             break;
+        default:
+            throw new ArgumentException(String.Format("{0} is not a valid scheduler driver", schedulerDriver));
     }
 
     builder.WebHost.UseKestrel(options =>
