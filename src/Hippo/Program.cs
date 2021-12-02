@@ -88,9 +88,9 @@ static WebApplicationBuilder CreateHippoWebApplicationBuilder(string[] args, Cha
 
     builder.WebHost.UseKestrel(options =>
         {
-            options.ListenAnyIP(builder.Configuration.GetValue<int>("Kestrel:Endpoints:Http:Port", 5000));
+            options.ListenAnyIP(builder.Configuration.GetValue<int>("Kestrel:Endpoints:Http:Port", 5308));
             options.ListenAnyIP(
-                builder.Configuration.GetValue<int>("Kestrel:Endpoints:Https:Port", 5001),
+                builder.Configuration.GetValue<int>("Kestrel:Endpoints:Https:Port", 5309),
                     listenOptions =>
                     {
                         listenOptions.UseHttps();
