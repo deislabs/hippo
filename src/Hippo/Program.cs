@@ -1,144 +1,222 @@
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Threading.Tasks;
+using System.Text;
+using System.Text.Json.Serialization;
 using Hippo.Config;
+using Hippo.Models;
 using Hippo.Proxies;
+using Hippo.Repositories;
+using Hippo.Schedulers;
 using Hippo.Tasks;
 using Hippo.WagiDotnet;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
-namespace Hippo;
-
-public static class Program
+static WebApplicationBuilder CreateHippoWebApplicationBuilder(string[] args, ChannelConfigurationProvider channelConfigurationProvider)
 {
-    // TODO get value from configuration.
-    public static string JobScheduler => Environment.GetEnvironmentVariable("HIPPO_JOB_SCHEDULER")?.ToUpperInvariant() ?? default;
-    private static string proxyPort = string.Empty;
-    public static string ProxyPort => Program.proxyPort;
+    var builder = WebApplication.CreateBuilder(args);
 
-    public static void Main(string[] args)
+    builder.Services.AddRouting(options => options.LowercaseUrls = true);
+
+    builder.Services.AddMvc().AddJsonOptions(options =>
+            options.JsonSerializerOptions.Converters.Add(new
+                JsonStringEnumConverter()));
+
+    // authentication/authorization
+    builder.Services.AddIdentity<Account, IdentityRole>(cfg =>
+            {
+                cfg.User.RequireUniqueEmail = true;
+            }).AddEntityFrameworkStores<DataContext>();
+
+    builder.Services.AddAuthentication().AddCookie().AddJwtBearer(cfg =>
+            cfg.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                ValidIssuer = builder.Configuration["Jwt:Issuer"],
+                ValidAudience = builder.Configuration["Jwt:Audience"],
+                IssuerSigningKey = new
+            SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+            });
+
+    builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("RequireAdministratorRole",
+                        policy => policy.RequireRole("Administrator"));
+            });
+
+    // data context
+    var driver = builder.Configuration.GetValue<string>("Database:Driver", "inmemory").ToLower();
+    switch (driver)
     {
-        var tasks = new List<Task>();
-        IHostBuilder hippoHostBuilder;
-
-        if (JobScheduler == "WAGI-DOTNET")
-        {
-            var channelConfigProvider = new ChannelConfigurationProvider();
-            var wagiDotnetBuilder = CreateWagiDotnetHostBuilder(channelConfigProvider);
-            var wagiDotnetHost = wagiDotnetBuilder.Build();
-            tasks.Add(wagiDotnetHost.RunAsync());
-            hippoHostBuilder = CreateHippoHostBuilder(args, channelConfigProvider);
-        }
-        else
-        {
-            hippoHostBuilder = CreateHostBuilder(args);
-        }
-
-        var hippoHost = hippoHostBuilder.Build();
-        var proxyUpdateTaskQueue = hippoHost.Services.GetRequiredService<ITaskQueue<ReverseProxyUpdateRequest>>();
-        var proxyHostBuilder = CreateProxyHostBuilder(proxyUpdateTaskQueue);
-        var proxyHost = proxyHostBuilder.Build();
-        proxyPort = GetProxyHTTPSPort(proxyHost.Services.GetRequiredService<IConfiguration>());
-        tasks.Add(hippoHost.RunAsync());
-        tasks.Add(proxyHost.RunAsync());
-        Task.WaitAny(tasks.ToArray());
+        case "inmemory":
+            builder.Services.AddDbContext<DataContext, InMemoryDataContext>();
+            break;
+        case "postgresql":
+            builder.Services.AddDbContext<DataContext, PostgresDataContext>();
+            break;
+        case "sqlite":
+            builder.Services.AddDbContext<DataContext, SqliteDataContext>();
+            break;
+        default:
+            throw new ArgumentException(String.Format("{0} is not a valid database driver", driver));
     }
 
-    /// <summary>
-    /// Gets the HTTPS Proxy port so that links can be created correctly in the Hippo UI. this will need to be updated for external schedulers.
-    /// </summary>
-    /// <param name="config">The Proxy Configuration</param>
-    /// <returns>The proy HTTPS Port as a string</returns>
+    builder.Services.AddScoped<ICurrentUser, ActionContextCurrentUser>();
+    builder.Services.AddScoped<IUnitOfWork, DbUnitOfWork>();
+    builder.Services.AddSingleton<ITaskQueue<ChannelReference>, TaskQueue<ChannelReference>>();
+    builder.Services.AddSingleton<ITaskQueue<ReverseProxyUpdateRequest>, TaskQueue<ReverseProxyUpdateRequest>>();
+    builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
-    static string GetProxyHTTPSPort(IConfiguration config)
+    // job scheduler
+    builder.Services.AddHostedService<ChannelUpdateBackgroundService>();
+    var schedulerDriver = builder.Configuration.GetValue<string>("Scheduler:Driver", "wagi").ToLower();
+    switch (schedulerDriver)
     {
-        var port = string.Empty;
-        var proxyUrl = config?.GetValue<string>("Kestrel:Endpoints:Https:Url");
-        if (!string.IsNullOrEmpty(proxyUrl) && Uri.TryCreate(proxyUrl, UriKind.Absolute, out Uri result))
+        case "wagi-dotnet":
+            builder.Services.AddSingleton<JobScheduler, WagiDotnetJobScheduler>();
+            break;
+        case "wagi":
+            builder.Services.AddSingleton<JobScheduler, WagiLocalJobScheduler>();
+            break;
+        default:
+            throw new ArgumentException(String.Format("{0} is not a valid scheduler driver", schedulerDriver));
+    }
+
+    builder.WebHost.UseKestrel(options =>
         {
-            port = result.Port == 0 || result.Port == 443 ? string.Empty : $":{result.Port.ToString(CultureInfo.InvariantCulture)}";
-        }
-        return port;
-    }
-
-    // This has to be called CreateHostBuilder because the ef migrations tool looks specifically
-    // for that method name.
-    // NOTE do not run the ef migrations tool with env var HIPPO_JOB_SCHEDULER set to WAGI-DOTNET as it will fail.
-
-    static IHostBuilder CreateHostBuilder(string[] args)
-    {
-        return CreateHippoHostBuilder(args, null);
-    }
-
-    static IHostBuilder CreateHippoHostBuilder(string[] args, ChannelConfigurationProvider channelConfigurationProvider)
-    {
-        var hostBuilder = Host.CreateDefaultBuilder(args)
-            .UseConsoleLifetime()
-            .ConfigureWebHostDefaults(webBuilder =>
+            options.ListenAnyIP(builder.Configuration.GetValue<int>("Kestrel:Endpoints:Http:Port", 5000));
+            options.ListenAnyIP(
+                builder.Configuration.GetValue<int>("Kestrel:Endpoints:Https:Port", 5001),
+                    listenOptions =>
                     {
-                        webBuilder.UseStartup<Startup>();
-                    })
-        .ConfigureServices(services =>
-                {
-                    services.AddHostedService<ChannelUpdateBackgroundService>();
-                });
-
-        if (channelConfigurationProvider is not null)
-        {
-            hostBuilder.ConfigureServices(services =>
-                    {
-                        services.AddSingleton<IChannelConfigurationProvider>(channelConfigurationProvider);
+                        listenOptions.UseHttps();
                     });
         }
+    );
 
-        return hostBuilder;
-    }
+    builder.Services.AddSwaggerGen(c =>
+    {
+        c.SwaggerDoc("v1", new OpenApiInfo
+        {
+            Title = "hippo API",
+            Version = "v1"
+        });
+        c.AddSecurityDefinition("http", new OpenApiSecurityScheme
+        {
+            Type = SecuritySchemeType.Http,
+            BearerFormat = "JWT",
+            Scheme = "Bearer"
+        });
+        c.AddSecurityRequirement(new OpenApiSecurityRequirement { {
+            new OpenApiSecurityScheme {
+                Reference = new OpenApiReference {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "http"
+                }
+            },
+            Array.Empty<string>() } });
+    });
 
-    static IHostBuilder CreateProxyHostBuilder(ITaskQueue<ReverseProxyUpdateRequest> proxyUpdateTaskQueue) =>
-        Host.CreateDefaultBuilder()
+    return builder;
+}
+
+static IHostBuilder CreateProxyHostBuilder(ITaskQueue<ReverseProxyUpdateRequest> proxyUpdateTaskQueue)
+{
+    var builder = Host.CreateDefaultBuilder()
         .UseConsoleLifetime()
         .UseContentRoot(Path.Combine(Directory.GetCurrentDirectory(), "Proxies"))
         .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<ProxyStartup>();
                 })
-    .ConfigureAppConfiguration((hostingContext, config) =>
+        .ConfigureAppConfiguration((hostingContext, config) =>
             {
                 config.Sources.Clear();
                 config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", optional: true, reloadOnChange: true)
-                .AddEnvironmentVariables("HIPPO_REVERSE_PROXY_");
+                    .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+                    .AddEnvironmentVariables("HIPPO_REVERSE_PROXY_");
             })
-    .ConfigureServices(services =>
+        .ConfigureServices(services =>
             {
                 services.AddSingleton(proxyUpdateTaskQueue);
                 services.AddHostedService<ReverseProxyUpdateBackgroundService>();
             });
+    return builder;
+}
 
-    static IHostBuilder CreateWagiDotnetHostBuilder(ChannelConfigurationProvider channelConfigurationProvider) =>
-        Host.CreateDefaultBuilder()
+static IHostBuilder CreateWagiDotnetHostBuilder(ChannelConfigurationProvider channelConfigurationProvider)
+{
+    var builder = Host.CreateDefaultBuilder()
         .UseConsoleLifetime()
         .UseContentRoot(Path.Combine(Directory.GetCurrentDirectory(), "WagiDotnet"))
         .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseStartup<WagiDotnetStartup>();
-                })
-    .ConfigureAppConfiguration((hostingContext, config) =>
+            {
+                webBuilder.UseStartup<WagiDotnetStartup>();
+            })
+        .ConfigureAppConfiguration((hostingContext, config) =>
             {
                 config.Sources.Clear();
                 config.AddChannelConfiguration(channelConfigurationProvider)
-                .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", optional: true, reloadOnChange: true)
-                .AddEnvironmentVariables("WAGI_DOTNET_");
+                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                    .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", optional: true, reloadOnChange: true)
+                    .AddEnvironmentVariables("WAGI_DOTNET_");
 
             })
-    .ConfigureServices(services =>
+        .ConfigureServices(services =>
             {
                 services.AddSingleton<IChannelConfigurationProvider>(channelConfigurationProvider);
             });
+    return builder;
 }
+
+var tasks = new List<Task>();
+var builder = CreateHippoWebApplicationBuilder(args, null);
+
+// The WAGI.NET and Hippo hosts share some services
+if (builder.Configuration.GetValue<string>("Scheduler:Driver", "wagi").ToLower() == "wagi-dotnet")
+{
+    var channelConfigProvider = new ChannelConfigurationProvider();
+    var wagiDotnetHost = CreateWagiDotnetHostBuilder(channelConfigProvider).Build();
+    tasks.Add(wagiDotnetHost.RunAsync());
+    builder.Services.AddSingleton<IChannelConfigurationProvider>(channelConfigProvider);
+}
+
+var hippoHost = builder.Build();
+
+if (builder.Configuration.GetValue<bool>("ProxyEnabled", false))
+{
+    var proxyUpdateTaskQueue = hippoHost.Services.GetRequiredService<ITaskQueue<ReverseProxyUpdateRequest>>();
+    var proxyHostBuilder = CreateProxyHostBuilder(proxyUpdateTaskQueue);
+    var proxyHost = proxyHostBuilder.Build();
+    tasks.Add(proxyHost.RunAsync());
+}
+
+// Configure the HTTP request pipeline.
+if (hippoHost.Environment.IsDevelopment())
+{
+    hippoHost.UseDeveloperExceptionPage();
+    // run database migrations
+    using var scope = hippoHost.Services.CreateScope();
+    var dataContext = scope.ServiceProvider.GetService<DataContext>();
+    dataContext.Database.Migrate();
+}
+
+hippoHost.UseSwagger();
+hippoHost.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "hippo v1"));
+hippoHost.UseHttpsRedirection();
+hippoHost.UseStaticFiles();
+hippoHost.UseRouting();
+hippoHost.UseAuthentication();
+hippoHost.UseAuthorization();
+hippoHost.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=App}/{action=Index}/{id?}"
+);
+
+tasks.Add(hippoHost.RunAsync());
+
+Task.WaitAny(tasks.ToArray());

@@ -111,7 +111,7 @@ public class PostgresDataContext : DataContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseNpgsql(_configuration.GetConnectionString("Hippo"));
+        optionsBuilder.UseNpgsql(_configuration.GetConnectionString("Database"));
     }
 
     private protected override string SqlNow => "now()";
@@ -125,7 +125,7 @@ public class SqliteDataContext : DataContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        optionsBuilder.UseSqlite(_configuration.GetConnectionString("Hippo"));
+        optionsBuilder.UseSqlite(_configuration.GetConnectionString("Database"));
     }
 
     private protected override string SqlNow => "datetime('now')";
