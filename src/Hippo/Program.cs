@@ -6,7 +6,6 @@ using Hippo.Proxies;
 using Hippo.Repositories;
 using Hippo.Schedulers;
 using Hippo.Tasks;
-using Hippo.WagiDotnet;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
@@ -76,9 +75,6 @@ static WebApplicationBuilder CreateHippoWebApplicationBuilder(string[] args, Cha
     var schedulerDriver = builder.Configuration.GetValue<string>("Scheduler:Driver", "wagi").ToLower();
     switch (schedulerDriver)
     {
-        case "wagi-dotnet":
-            builder.Services.AddSingleton<JobScheduler, WagiDotnetJobScheduler>();
-            break;
         case "wagi":
             builder.Services.AddSingleton<JobScheduler, WagiLocalJobScheduler>();
             break;
@@ -148,42 +144,8 @@ static IHostBuilder CreateProxyHostBuilder(ITaskQueue<ReverseProxyUpdateRequest>
     return builder;
 }
 
-static IHostBuilder CreateWagiDotnetHostBuilder(ChannelConfigurationProvider channelConfigurationProvider)
-{
-    var builder = Host.CreateDefaultBuilder()
-        .UseConsoleLifetime()
-        .UseContentRoot(Path.Combine(Directory.GetCurrentDirectory(), "WagiDotnet"))
-        .ConfigureWebHostDefaults(webBuilder =>
-            {
-                webBuilder.UseStartup<WagiDotnetStartup>();
-            })
-        .ConfigureAppConfiguration((hostingContext, config) =>
-            {
-                config.Sources.Clear();
-                config.AddChannelConfiguration(channelConfigurationProvider)
-                    .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
-                    .AddJsonFile($"appsettings.{hostingContext.HostingEnvironment.EnvironmentName}.json", optional: true, reloadOnChange: true)
-                    .AddEnvironmentVariables("WAGI_DOTNET_");
-
-            })
-        .ConfigureServices(services =>
-            {
-                services.AddSingleton<IChannelConfigurationProvider>(channelConfigurationProvider);
-            });
-    return builder;
-}
-
 var tasks = new List<Task>();
 var builder = CreateHippoWebApplicationBuilder(args, null);
-
-// The WAGI.NET and Hippo hosts share some services
-if (builder.Configuration.GetValue<string>("Scheduler:Driver", "wagi").ToLower() == "wagi-dotnet")
-{
-    var channelConfigProvider = new ChannelConfigurationProvider();
-    var wagiDotnetHost = CreateWagiDotnetHostBuilder(channelConfigProvider).Build();
-    tasks.Add(wagiDotnetHost.RunAsync());
-    builder.Services.AddSingleton<IChannelConfigurationProvider>(channelConfigProvider);
-}
 
 var hippoHost = builder.Build();
 
