@@ -1,0 +1,42 @@
+﻿@model Hippo.Application.Channels.Queries.ChannelDto;
+
+@{
+    ViewData["Title"] = "Delete Channel";
+    Layout = "_Layout";
+}
+
+<div class="columns is-centered">
+    <div class="column is-two-thirds-tablet is-two-thirds-desktop is-two-thirds-widescreen is-half-fullhd">
+        <div class="card is-danger">
+            <header class="card-header has-background-danger">
+                <p class="card-header-title has-text-white">Are you sure?</p>
+            </header>
+
+            <div class="card-content">
+                <div class="content">
+                    <p>Channel <code>@Html.DisplayFor(model => model.Name)</code> will be deleted.</p>
+                </div>
+            </div>
+
+            <footer class="card-content">
+                <form asp-action="Delete">
+                    <input type="hidden" asp-for="Id" />
+                    <button type="submit" value="Delete" class="button button is-danger is-outline is-rounded">Delete Channel</button>
+                    <a asp-action="Index" class="button is-link is-outlined is-rounded">Cancel</a>
+                </form>
+            </footer>
+
+            @* <div class="panel-block">
+                <form asp-action="Delete">
+                    <div class="field is-grouped">
+                        <div class="control">
+                            <input type="hidden" asp-for="Id" />
+                            <button type="submit" value="Delete" class="button button is-danger is-outline is-rounded">Delete Application</button>
+                            <a asp-action="Index" class="button is-link is-outlined is-rounded">Cancel</a>
+                        </div>
+                    </div>
+                </form>
+            </div> *@
+        </div>
+    </div>
+</div>

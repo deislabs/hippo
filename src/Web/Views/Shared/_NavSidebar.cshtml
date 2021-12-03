@@ -1,0 +1,82 @@
+@model Hippo.Application.Apps.Queries.AppDto;
+
+<input type="checkbox" id="sidebar-trigger" role="button">
+<label for="sidebar-trigger" id="sidebar-toggler">
+    <span class="icon">
+        <i class="fa fa-angle-double-left"></i>
+    </span>
+</label>
+
+<aside id="main-sidebar" class="aside env-list">
+  
+    <h4>Channels</h4>
+
+    <div class="tabs">
+        <ul>
+            @foreach (var item in Model!.Channels) {
+                <li class="tab">
+                    <a class="env-block" asp-id="@item.Id">
+                        @* TODO: restore health check *@
+                        @* @if (item.Status().Health == Hippo.Models.HealthLevel.Healthy) { *@
+                            <section class="app-state is-success has-background-success">
+                                <span class="icon-text has-text-white">
+                                    <span class="icon">
+                                        <i class="fa fa-check"></i>
+                                    </span>
+                                    <span>
+                                         @* @Html.DisplayFor(modelItem => item.Status().Health) *@
+                                         Healthy
+                                    </span>
+                                </span>
+                            </section>
+                        @* } else {
+                            <section class="app-state is-danger has-background-danger">
+                                <span class="icon-text has-text-white">
+                                    <span class="icon">
+                                        <i class="fa fa-times-circle"></i>
+                                    </span>
+                                    <span>
+                                        @Html.DisplayFor(modelItem => item.Status().Messages)
+                                    </span>
+                                </span>
+                            </section>
+                        } *@
+                        <p class="env-name">
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </p>
+                    </a>
+                    @if (item.Domain != null) {
+                        <a class="env-url" target="_blank" href="https://@item.Domain.Name">
+                            @Html.DisplayFor(modelItem => item.Domain.Name) <i class="fa fa-external-link"></i>
+                        </a>
+                    }
+                    <div class="dropdown env-dropdown is-hoverable is-right">
+                        <div class="dropdown-trigger">
+                            <button class="button is-rounded is-outlined is-link" aria-haspopup="true" aria-controls="dropdown-menu">
+                                <span class="fa fa-ellipsis-h fa-lg"></span>
+                            </button>
+                        </div>
+                        <div class="dropdown-menu" id="dropdown-menu" role="menu">
+                            <div class="dropdown-content">
+                                <a asp-action="EditChannel" asp-route-id="@item.Id" class="dropdown-item">
+                                    Edit
+                                </a>
+                                <hr class="dropdown-divider">
+                                <a asp-action="DeleteChannel" asp-route-id="@item.Id" class="dropdown-item has-text-danger is-disabled">
+                                    Delete
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            }
+            <li class="env-add">
+                <a asp-action="NewChannel" asp-route-id="@Model.Id" class="button is-rounded is-outlined is-link"><i class="fa fa-add"></i> Add an Environment</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="env-back">
+        <a asp-controller="App" asp-action="Index" title="Dashboard" class="button button-back is-fullwidth">Back to Dashboard</a>
+    </div>
+</aside>

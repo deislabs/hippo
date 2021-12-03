@@ -16,7 +16,7 @@
     ],
     "containerEnv": {
         "BINDLE_URL": "http://localhost:8080/v1",
-        "HIPPO_URL": "https://localhost:5001",
+        "HIPPO_URL": "https://localhost:5309",
         "GLOBAL_AGENT_FORCE_GLOBAL_AGENT": "false",
         // This places bindle server data in the workspace so that state is retained across multiple invocations of the bindle server 
         // Delete this folder and Hippo/hippo.db.* files to reset Hippo
@@ -40,7 +40,7 @@
     // restore and build the application, add the dev cert. 
     "postCreateCommand": "cd Hippo && dotnet restore && npm run build && dotnet build && dotnet dev-certs https",
     "portsAttributes": {
-        "5001": {
+        "5309": {
             "label": "Hippo HTTPS Port",
             "protocol": "https"
         },

@@ -1,0 +1,56 @@
+﻿@model Hippo.Application.Apps.Commands.CreateAppCommand;
+
+@{
+    ViewData["Title"] = "New Application";
+    Layout = "_Layout";
+}
+
+<div class="columns is-centered">
+    <div class="column is-two-thirds-desktop is-half-widescreen">
+        
+        <div class="box">
+            <h2>Create a New Application</h2>
+                
+            <div asp-validation-summary="ModelOnly" class="is-danger"></div>
+            <form asp-action="New">
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label asp-for="Name" class="label">Name</label>
+                    </div>
+                    <div class="field-body is-normal">
+                        <div class="control">
+                            <input asp-for="Name" type="text" class="input" placeholder="e.g. helloworld" />
+                            <p asp-validation-for="UserName" class="help is-warning"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label asp-for="StorageId" class="control-label">Storage ID</label>
+                    </div>
+                    <div class="field-body is-normal">
+                        <div class="control">
+                            <input asp-for="StorageId" type="text" class="input" />
+                            <p asp-validation-for="StorageId" class="help is-warning"></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="field is-grouped">
+                    <div class="control">
+                        <button type="submit" value="Create" class="button is-success is-rounded">Create Application</button>
+                        <a asp-action="Index" class="button is-danger is-outlined is-rounded">Cancel</a>
+                    </div>
+                </div>
+                <div class="field">
+                    <div class="control">
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
