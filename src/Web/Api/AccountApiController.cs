@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Hippo.Web.Api;
 
-[Route("api/[controller]", Name = "Api[controller]")]
+[Route("api/account/[action]")]
 [ApiController]
-public class AccountController : ApiControllerBase
+public class AccountApiController : ApiControllerBase
 {
     [HttpPost]
     public async Task<ActionResult<string>> Register(CreateAccountCommand command)

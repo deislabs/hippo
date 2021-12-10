@@ -32,8 +32,8 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
 
 builder.WebHost.UseKestrel(options =>
 {
-    options.ListenAnyIP(builder.Configuration.GetValue<int>("Kestrel:Endpoints:Http:Port", 5308));
-    options.ListenAnyIP(
+    options.ListenLocalhost(builder.Configuration.GetValue<int>("Kestrel:Endpoints:Http:Port", 5308));
+    options.ListenLocalhost(
         builder.Configuration.GetValue<int>("Kestrel:Endpoints:Https:Port", 5309),
         listenOptions => listenOptions.UseHttps());
 });

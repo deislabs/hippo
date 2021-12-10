@@ -5,10 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Hippo.Web.Api;
 
-[Route("api/[controller]", Name = "Api[controller]")]
+[Route("api/environmentvariable/[action]")]
 [ApiController]
 [Authorize]
-public class EnvironmentVariableController : ApiControllerBase
+public class EnvironmentVariableApiController : ApiControllerBase
 {
     [HttpGet]
     public async Task<ActionResult<EnvironmentVariablesVm>> Index()
