@@ -8,13 +8,15 @@ namespace Hippo.Web.Api;
 public class AccountController : ApiControllerBase
 {
     [HttpPost]
-    public async Task<ActionResult<string>> Register(CreateAccountCommand command)
+    [Route("")]
+    public async Task<ActionResult<string>> Register([FromBody] CreateAccountCommand command)
     {
         return await Mediator.Send(command);
     }
 
     [HttpPost]
-    public async Task<ActionResult<TokenInfo>> CreateToken(CreateTokenCommand command)
+    [Route("createtoken")]
+    public async Task<ActionResult<TokenInfo>> CreateToken([FromBody] CreateTokenCommand command)
     {
         return await Mediator.Send(command);
     }

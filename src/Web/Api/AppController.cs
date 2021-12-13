@@ -1,18 +1,23 @@
 using Hippo.Application.Apps.Commands;
 using Hippo.Application.Apps.Queries;
-using Hippo.Application.Common.Security;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hippo.Web.Api;
 
-[Authorize]
+// [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class AppController : ApiControllerBase
 {
+    [HttpGet]
+    [Route("")]
     public async Task<ActionResult<AppsVm>> Index()
     {
         return await Mediator.Send(new GetAppsQuery());
     }
 
+    [HttpGet]
+    [Route("export")]
     public async Task<FileResult> Export()
     {
         var vm = await Mediator.Send(new ExportAppsQuery());
@@ -21,15 +26,17 @@ public class AppController : ApiControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Guid>> Create(CreateAppCommand command)
+    [Route("")]
+    public async Task<ActionResult<Guid>> Create([FromBody] CreateAppCommand command)
     {
         return await Mediator.Send(command);
     }
 
     [HttpDelete]
-    public async Task<ActionResult> Delete(DeleteAppCommand command)
+    [Route("{id:int}")]
+    public async Task<ActionResult> Delete(Guid id)
     {
-        await Mediator.Send(command);
+        await Mediator.Send(new DeleteAppCommand{ Id = id });
 
         return NoContent();
     }

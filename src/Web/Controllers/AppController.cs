@@ -119,18 +119,4 @@ public class AppController : WebUIControllerBase
         await Mediator.Send(command);
         return RedirectToAction(nameof(Details), new { id = command.AppId });
     }
-
-    [HttpGet]
-    public IActionResult RegisterRevision(Guid id)
-    {
-        return View(new CreateRevisionCommand { AppId = id });
-    }
-
-    [HttpPost]
-    public async Task<ActionResult<int>> RegisterRevision(CreateRevisionCommand command)
-    {
-        // TODO: handle validation errors
-        await Mediator.Send(command);
-        return RedirectToAction(nameof(Details), new { id = command.AppId });
-    }
 }

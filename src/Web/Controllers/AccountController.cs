@@ -55,10 +55,4 @@ public class AccountController : WebUIControllerBase
         await Mediator.Send(command);
         return RedirectToAction(nameof(Login));
     }
-
-    [HttpPost]
-    public async Task<ActionResult<TokenInfo>> CreateToken([FromBody] CreateTokenCommand command)
-    {
-        return await Mediator.Send(command);
-    }
 }

@@ -1,20 +1,23 @@
-using Hippo.Application.Common.Security;
 using Hippo.Application.Revisions.Commands;
 using Hippo.Application.Revisions.Queries;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hippo.Web.Api;
 
-[Authorize]
+// [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class RevisionController : ApiControllerBase
 {
     [HttpGet]
+    [Route("")]
     public async Task<ActionResult<RevisionsVm>> Index()
     {
         return await Mediator.Send(new GetRevisionsQuery());
     }
 
     [HttpGet]
+    [Route("{id:int}")]
     public async Task<FileResult> Index(Guid id)
     {
         var vm = await Mediator.Send(new ExportRevisionsQuery());
@@ -23,13 +26,17 @@ public class RevisionController : ApiControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Guid>> Create(CreateRevisionCommand command)
+    [Route("")]
+    public async Task<IActionResult> Create([FromBody] RegisterRevisionCommand command)
     {
-        return await Mediator.Send(command);
+        var vm = await Mediator.Send(command);
+
+        return vm.Revisions.Any() ? Created("", null) : NotFound();
     }
 
     [HttpDelete]
-    public async Task<ActionResult> Delete(Guid id)
+    [Route("{id:int}")]
+    public async Task<IActionResult> Delete(Guid id)
     {
         await Mediator.Send(new DeleteRevisionCommand { Id = id });
 
