@@ -11,18 +11,22 @@ public class TokenService : ITokenService
 {
     private readonly IConfiguration _configuration;
 
-    public TokenService(IConfiguration configuration)
+    private readonly IIdentityService _identityService;
+
+    public TokenService(IConfiguration configuration, IIdentityService identityService)
     {
         _configuration = configuration;
+        _identityService = identityService;
     }
 
     public TokenInfo CreateSecurityToken(string id)
     {
         var claims = new[]
         {
-            new Claim(ClaimTypes.NameIdentifier, id),
-            // jti - unique string that is representative of each token so using a guid
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            new Claim(JwtRegisteredClaimNames.Sub, id),
+            new Claim(JwtRegisteredClaimNames.UniqueName, id),
+            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new Claim(ClaimTypes.NameIdentifier, id)
         };
 
         var authSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
@@ -30,7 +34,7 @@ public class TokenService : ITokenService
         var token = new JwtSecurityToken(
             issuer: _configuration["Jwt:Issuer"],
             audience: _configuration["Jwt:Audience"],
-            expires: DateTime.Now.AddDays(90),
+            expires: DateTime.Now.AddMinutes(30),
             claims: claims,
             signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
         );

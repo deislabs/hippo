@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Hippo.Web.Api;
 
-// [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class AppController : ApiControllerBase
 {
     [HttpGet]
@@ -36,7 +36,7 @@ public class AppController : ApiControllerBase
     [Route("{id:int}")]
     public async Task<ActionResult> Delete(Guid id)
     {
-        await Mediator.Send(new DeleteAppCommand{ Id = id });
+        await Mediator.Send(new DeleteAppCommand { Id = id });
 
         return NoContent();
     }

@@ -2,7 +2,7 @@ namespace Hippo.Application.Common.Interfaces;
 
 public interface ITokenService
 {
-    TokenInfo CreateSecurityToken(string userId);
+    TokenInfo CreateSecurityToken(string id);
 }
 
 public class TokenInfo

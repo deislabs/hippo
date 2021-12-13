@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Hippo.Web.Api;
 
-
 public class AccountController : ApiControllerBase
 {
     [HttpPost]

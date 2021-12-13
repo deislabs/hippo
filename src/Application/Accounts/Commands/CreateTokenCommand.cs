@@ -1,7 +1,5 @@
 using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
-using Hippo.Core.Entities;
-using Hippo.Core.Events;
 using MediatR;
 
 namespace Hippo.Application.Accounts.Commands;
@@ -34,7 +32,7 @@ public class CreateTokenCommandHandler : IRequestHandler<CreateTokenCommand, Tok
     {
         if (await _identityService.CheckPasswordAsync(request.UserName, request.Password))
         {
-            return _tokenService.CreateSecurityToken(request.UserName);
+            return _tokenService.CreateSecurityToken(await _identityService.GetUserIdAsync(request.UserName));
         }
 
         throw new LoginFailedException();

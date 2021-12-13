@@ -1,5 +1,4 @@
 using Hippo.Application.Accounts.Commands;
-using Hippo.Application.Common.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hippo.Web.Controllers;

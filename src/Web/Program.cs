@@ -1,3 +1,4 @@
+using System.Text;
 using FluentValidation.AspNetCore;
 using Hippo.Application;
 using Hippo.Application.Common.Interfaces;
@@ -8,6 +9,7 @@ using Hippo.Web.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +31,22 @@ builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
             options.SuppressModelStateInvalidFilter = true);
+
+builder.Services.AddAuthentication().AddCookie().AddJwtBearer(cfg =>
+    {
+        cfg.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        };
+        cfg.SaveToken = true;
+    }
+);
 
 builder.WebHost.UseKestrel(options =>
 {

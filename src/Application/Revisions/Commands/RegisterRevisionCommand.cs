@@ -30,7 +30,7 @@ public class RegisterRevisionCommandHandler : IRequestHandler<RegisterRevisionCo
     {
         RevisionsVm viewModel = new RevisionsVm();
 
-        foreach(App app in _context.Apps.Where(a => a.StorageId == request.AppStorageId))
+        foreach (App app in _context.Apps.Where(a => a.StorageId == request.AppStorageId))
         {
             var entity = new Revision
             {
