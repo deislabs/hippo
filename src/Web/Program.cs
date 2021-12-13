@@ -58,10 +58,15 @@ app.UseAuthorization();
 
 app.UseEndpoints(endpoints =>
 {
-    endpoints.MapControllers();
+    endpoints.MapAreaControllerRoute(
+        "api_route",
+        "API",
+        "api/{controller}/{action}/{id?}"
+    );
     endpoints.MapControllerRoute(
-        name: "default",
-        pattern: "{controller=App}/{action=Index}/{id?}");
+        "default",
+        "{controller=App}/{action=Index}/{id?}"
+    );
     if (builder.Configuration.GetValue<bool>("ReverseProxy:Enabled"))
     {
         endpoints.MapReverseProxy();

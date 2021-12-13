@@ -5,10 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Hippo.Web.Api;
 
-[Route("api/domain/[action]")]
-[ApiController]
 [Authorize]
-public class DomainApiController : ApiControllerBase
+public class DomainController : ApiControllerBase
 {
     [HttpGet]
     public async Task<ActionResult<DomainsVm>> Index()

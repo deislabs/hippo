@@ -5,10 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Hippo.Web.Api;
 
-[Route("api/revision/[action]")]
-[ApiController]
 [Authorize]
-public class RevisionApiController : ApiControllerBase
+public class RevisionController : ApiControllerBase
 {
     [HttpGet]
     public async Task<ActionResult<RevisionsVm>> Index()
