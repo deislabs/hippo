@@ -2,7 +2,6 @@ using Hippo.Application.Apps.Commands;
 using Hippo.Application.Apps.Queries;
 using Hippo.Application.Channels.Commands;
 using Hippo.Application.Common.Exceptions;
-using Hippo.Application.Revisions.Commands;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

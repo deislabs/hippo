@@ -105,7 +105,6 @@ public class LocalJobScheduler : IJobScheduler, IHasDomainEvent
                 {
                     _wagiProcessIds[c.Id] = (process.Id, log);
                 }
-
             }
         }
         catch (Win32Exception e)  // yes, even on Linux
