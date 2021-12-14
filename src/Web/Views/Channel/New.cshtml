@@ -1,0 +1,115 @@
+@using Hippo.Core.Enums
+@model Hippo.Application.Channels.Commands.CreateChannelCommand;
+
+@{
+  ViewData["Title"] = "Add an Environment";
+}
+
+<div class="columns is-centered">
+    <div class="column is-two-thirds">
+
+        <form asp-action="New" class="form env-new-form">
+            <input type="hidden" asp-for="AppId" />
+            <div class="field">
+                <label class="label is-large">Create an Environment</label>
+            </div>
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label asp-for="Name" class="label">Name</label>
+                </div>
+                <div class="field-body is-normal">
+                    <div class="field">
+                        <input asp-for="Name" class="input is-normal is-medium is-primary" placeholder="a simple identifier like 'latest' or 'staging'" />
+                        <p asp-validation-for="Name" class="help is-warning"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label asp-for="Domain" class="label">Domain</label>
+                </div>
+                <div class="field-body is-normal">
+                    <div class="field">
+                        <input asp-for="Domain" class="input is-normal is-medium is-primary" placeholder="myapp.example.com" />
+                        <p asp-validation-for="Domain" class="help is-warning"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label is-large">Deployment</label>
+            </div>
+            <div class="field has-background-white radio-wrapper">
+                @foreach (var strategy in Enum.GetValues(typeof(ChannelRevisionSelectionStrategy))) {
+                    <label class="radio radio-label env-deploy-label has-text-left">
+                        <input type="radio" value="@strategy" asp-for="RevisionSelectionStrategy" class="is-large env-radio env-radio-auto">
+                        <p>@Enum.GetName(typeof(ChannelRevisionSelectionStrategy), strategy)</p>
+                    </label>
+                }
+                <p asp-validation-for="RevisionSelectionStrategy" class="help is-danger"></p>
+                <!-- if manual (UseSpecifiedRevision) -->
+                <div class="field field-padded is-horizontal" id="envManualField">
+                    @* TODO: find out a way to select all app revisions *@
+                    This blank screen has been brought to your attention by Matt Fisher. He broke this. PLEASE FIX ME
+                    @* <div class="field-label is-normal">
+                        <label asp-for="ActiveRevision" class="label">Choose a version</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field is-narrow">
+                            <div class="control">
+                                <div class="select is-fullwidth">
+                                    <select asp-for="ActiveRevision" asp-items="Model.Revisions"></select>
+                                </div>
+                            </div>
+                            <p asp-validation-for="ActiveRevision" class="help is-warning"></p>
+                        </div>
+                    </div> *@
+                </div>
+                <!-- if auto (UseRangeRule) -->
+                <div class="field field-padded is-horizontal hide" id="envAutoField">
+                    <div class="field-label is-normal">
+                        <label asp-for="RangeRule" class="label">Version range</label>
+                    </div>
+                    <div class="field-body is-normal">
+                        <div class="field">
+                            <input asp-for="RangeRule" asp-items="Model.Revisions" class="input is-normal is-medium is-primary" placeholder="*" />
+                            <p><small class="is-info">You can choose to deply all versions of your app (enter an <code>*</code>) or limit deploys to a specific range.</small></p>
+
+                            <p><small class="is-info">Examples:<br>
+                            To deploy minor releases that follow v1.0, set the range to <code>1<</code>. To follow v1.0 but exclude releases beyond v2.0, set the range to <code>1-2</code>.</small></p>
+                            <p asp-validation-for="RangeRule" class="help is-warning"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr>
+            <div class="field is-grouped is-horizontal">
+                <div class="field-body is-normal">
+                    <div class="field">
+                        <div class="control is-centered has-text-centered">
+                            <button type="submit" value="Add Environment" class="button is-rounded is-success">Add Environment</button>
+                            <a asp-action="Index" class="button is-danger is-outlined is-rounded">Cancel</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <div class="field-label">
+                    <!-- Left empty for spacing -->
+                </div>
+                <div class="field-body is-normal">
+                    <div class="field">
+                        <div class="control">
+                            <p asp-validation-summary="New" class="help is-alert"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

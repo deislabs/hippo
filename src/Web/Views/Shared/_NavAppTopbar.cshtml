@@ -1,0 +1,43 @@
+<header class="hero">
+    <div class="hero-head">
+        <nav class="navbar" role="navigation" aria-label="main navigation">
+            <div class="navbar-brand">
+                <a asp-controller="App" asp-action="Index" class="hippo-logo">&nbsp;</a>
+                <button class="button navbar-burger" data-target="navMenu">
+                    <span></span> <span></span> <span></span>
+                </button>
+            
+                <h1 class="hippo-app-name">
+                    @ViewBag.Title
+                </h1>
+            </div>
+            
+            <div class="navbar-menu navbar-end" id="navMenu">
+                <div class="navbar-item">
+					<a class="button is-outlined is-secondary env-block app-history" asp-id="app-history">
+						<i class="fa fa-history"></i>&nbsp;History
+					</a>
+
+				</div>
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link">
+                        <span class="icon is-small"><i class="fa fa-user-o"></i></span>
+                        @* TODO: check if signed in *@
+                        <em>@Html.DisplayFor(modelItem => User.Identity!.Name)</em>
+                    </a>
+                    <div class="navbar-dropdown is-right">
+                        <a class="navbar-item" href="/account">
+                            <span class="icon is-small"><i class="fa fa-user-o"></i> </span>&nbsp;
+                            Account
+                        </a>
+                        <hr class="navbar-divider">
+                        <a class="navbar-item" asp-controller="Account" asp-action="Logout">
+                            <span class="icon is-small"><i class="fa fa-power-off"></i> </span>&nbsp;
+                            Logout
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+</header>

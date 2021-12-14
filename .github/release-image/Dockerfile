@@ -71,22 +71,15 @@ ENV GLOBAL_AGENT_FORCE_GLOBAL_AGENT ${FORCE_GLOBAL_AGENT}
 
 # Docker/WSL2 has an issue exposing ports from localhost. the following tries to work around this issue.
 # See https://github.com/microsoft/WSL/issues/4983
-
-ARG HIPPO_HTTP_PORT="5000"
-ARG HIPPO_HTTPS_PORT="5001"
+ARG HIPPO_HTTP_PORT="5308"
+ARG HIPPO_HTTPS_PORT="5309"
 
 ARG HIPPOURL=https://localhost:${HIPPO_HTTPS_PORT}
 ENV HIPPO_URL ${HIPPOURL}
 
-ARG YARP_HTTP_PORT="5002"
-ARG YARP_HTTPS_PORT="5003"
-
 ENV ASPNETCORE_URLS http://0.0.0.0:${HIPPO_HTTP_PORT};https://0.0.0.0:${HIPPO_HTTPS_PORT}
-ENV HIPPO_REVERSE_PROXY_KESTREL__ENDPOINTS__HTTP__URL http://0.0.0.0:${YARP_HTTP_PORT}
-ENV HIPPO_REVERSE_PROXY_KESTREL__ENDPOINTS__HTTPS__URL https://0.0.0.0:${YARP_HTTPS_PORT}
 
 # Generate certs for hippo-server and proxy
-
 WORKDIR /data/certs
 RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout localhost.key -out localhost.crt -config /hippo/certs/localhost.conf && openssl pkcs12 -export -out localhost.pfx -inkey localhost.key -in localhost.crt -password pass: &&  sudo chgrp ${USER} localhost.pfx && chmod g+r localhost.pfx 
 RUN cp /data/certs/localhost.crt /usr/local/share/ca-certificates && update-ca-certificates
@@ -94,7 +87,6 @@ ENV KESTREL__CERTIFICATES__DEFAULT__PATH /data/certs/localhost.pfx
 ENV HIPPO_REVERSE_PROXY_KESTREL__CERTIFICATES__DEFAULT__PATH /data/certs/localhost.pfx
 
 # Set the data source to a local folder that can be mounted from the host.
-
 ENV CONNECTIONSTRINGS__HIPPO Data Source=/data/hippo/hippo.db;Cache=Shared
 
 WORKDIR /hippo
