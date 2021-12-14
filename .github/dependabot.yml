@@ -1,7 +1,52 @@
 version: 2
 updates: 
   - package-ecosystem: "nuget"
+    directory: "/src/Application"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "08:00"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]
+  - package-ecosystem: "nuget"
+    directory: "/src/Infrastructure"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "08:00"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]
+  - package-ecosystem: "nuget"
     directory: "/src/Web"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "08:00"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]
+  - package-ecosystem: "nuget"
+    directory: "/tests/Application.UnitTests"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "08:00"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]
+  - package-ecosystem: "nuget"
+    directory: "/tests/Core.UnitTests"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "08:00"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-patch"]
+  - package-ecosystem: "nuget"
+    directory: "/tests/Hippo.FunctionalTests"
     schedule:
       interval: "weekly"
       day: "monday"
