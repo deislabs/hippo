@@ -10,7 +10,7 @@ ROOT_DIR=$PWD
 
 cd $ROOT_DIR
 
-dotnet publish Hippo/Hippo.csproj -c Release --self-contained -r linux-x64
+dotnet publish src/Web/Web.csproj -c Release --self-contained -r linux-x64
 
 cd $ROOT_DIR/.github/release-image
 

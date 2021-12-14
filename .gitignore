@@ -450,6 +450,5 @@ $RECYCLE.BIN/
 !.vscode/launch.json
 !.vscode/extensions.json
 
-Hippo/Hippo.xml
 bindlecache
 bindleserver/data

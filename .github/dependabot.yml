@@ -1,7 +1,7 @@
 version: 2
 updates: 
   - package-ecosystem: "nuget"
-    directory: "/Hippo"
+    directory: "/src/Web"
     schedule:
       interval: "weekly"
       day: "monday"
@@ -10,7 +10,7 @@ updates:
       - dependency-name: "*"
         update-types: ["version-update:semver-patch"]
   - package-ecosystem: "npm"
-    directory: "/Hippo"
+    directory: "/src/Web"
     schedule:
       interval: "weekly"
       day: "monday"
