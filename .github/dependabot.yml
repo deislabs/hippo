@@ -8,7 +8,7 @@ updates:
       time: "08:00"
     ignore:
       - dependency-name: "*"
-        update-types: ["version-update:semver-patch"]
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: "nuget"
     directory: "/src/Infrastructure"
     schedule:
@@ -17,7 +17,7 @@ updates:
       time: "08:00"
     ignore:
       - dependency-name: "*"
-        update-types: ["version-update:semver-patch"]
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: "nuget"
     directory: "/src/Web"
     schedule:
@@ -26,7 +26,7 @@ updates:
       time: "08:00"
     ignore:
       - dependency-name: "*"
-        update-types: ["version-update:semver-patch"]
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: "nuget"
     directory: "/tests/Application.UnitTests"
     schedule:
@@ -35,7 +35,7 @@ updates:
       time: "08:00"
     ignore:
       - dependency-name: "*"
-        update-types: ["version-update:semver-patch"]
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: "nuget"
     directory: "/tests/Core.UnitTests"
     schedule:
@@ -44,7 +44,7 @@ updates:
       time: "08:00"
     ignore:
       - dependency-name: "*"
-        update-types: ["version-update:semver-patch"]
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: "nuget"
     directory: "/tests/Hippo.FunctionalTests"
     schedule:
@@ -53,7 +53,7 @@ updates:
       time: "08:00"
     ignore:
       - dependency-name: "*"
-        update-types: ["version-update:semver-patch"]
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: "npm"
     directory: "/src/Web"
     schedule:
@@ -62,7 +62,7 @@ updates:
       time: "08:00"
     ignore:
       - dependency-name: "*"
-        update-types: ["version-update:semver-patch"]
+        update-types: ["version-update:semver-major"]
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
@@ -71,4 +71,4 @@ updates:
       time: "08:00"
     ignore:
       - dependency-name: "*"
-        update-types: ["version-update:semver-patch"]
+        update-types: ["version-update:semver-major"]
