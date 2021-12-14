@@ -13,6 +13,8 @@ public class UpdateChannelCommand : IRequest
 
     public string? Name { get; set; }
 
+    public string? Domain { get; set; }
+
     public ChannelRevisionSelectionStrategy RevisionSelectionStrategy { get; set; }
 
     public string? RangeRule { get; set; }
@@ -45,6 +47,7 @@ public class UpdateChannelCommandHandler : IRequestHandler<UpdateChannelCommand>
         }
 
         entity.Name = request.Name;
+        entity.Domain = request.Domain;
         entity.RevisionSelectionStrategy = request.RevisionSelectionStrategy;
         entity.RangeRule = request.RangeRule;
         entity.ActiveRevision = request.ActiveRevision;

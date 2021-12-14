@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hippo.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211210182727_Initial")]
+    [Migration("20211214002400_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -68,6 +68,9 @@ namespace Hippo.Infrastructure.Data.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Domain")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("LastModified")
                         .HasColumnType("TEXT");
 
@@ -93,38 +96,6 @@ namespace Hippo.Infrastructure.Data.Migrations
                     b.HasIndex("AppId");
 
                     b.ToTable("Channels");
-                });
-
-            modelBuilder.Entity("Hippo.Core.Entities.Domain", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("ChannelId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("LastModified")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ChannelId")
-                        .IsUnique();
-
-                    b.ToTable("Domains");
                 });
 
             modelBuilder.Entity("Hippo.Core.Entities.EnvironmentVariable", b =>
@@ -401,17 +372,6 @@ namespace Hippo.Infrastructure.Data.Migrations
                     b.Navigation("App");
                 });
 
-            modelBuilder.Entity("Hippo.Core.Entities.Domain", b =>
-                {
-                    b.HasOne("Hippo.Core.Entities.Channel", "Channel")
-                        .WithOne("Domain")
-                        .HasForeignKey("Hippo.Core.Entities.Domain", "ChannelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Channel");
-                });
-
             modelBuilder.Entity("Hippo.Core.Entities.EnvironmentVariable", b =>
                 {
                     b.HasOne("Hippo.Core.Entities.Channel", "Channel")
@@ -494,8 +454,6 @@ namespace Hippo.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Hippo.Core.Entities.Channel", b =>
                 {
-                    b.Navigation("Domain");
-
                     b.Navigation("EnvironmentVariables");
                 });
 #pragma warning restore 612, 618

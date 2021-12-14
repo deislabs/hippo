@@ -4,7 +4,6 @@ using AutoMapper;
 using Hippo.Application.Apps.Queries;
 using Hippo.Application.Channels.Queries;
 using Hippo.Application.Common.Mappings;
-using Hippo.Application.Domains.Queries;
 using Hippo.Application.EnvironmentVariables.Queries;
 using Hippo.Application.Revisions.Queries;
 using Hippo.Core.Entities;
@@ -37,8 +36,6 @@ public class MappingTests
     [InlineData(typeof(App), typeof(AppRecord))]
     [InlineData(typeof(Channel), typeof(ChannelDto))]
     [InlineData(typeof(Channel), typeof(ChannelRecord))]
-    [InlineData(typeof(Domain), typeof(DomainDto))]
-    [InlineData(typeof(Domain), typeof(DomainRecord))]
     [InlineData(typeof(EnvironmentVariable), typeof(EnvironmentVariableDto))]
     [InlineData(typeof(EnvironmentVariable), typeof(EnvironmentVariableRecord))]
     [InlineData(typeof(Revision), typeof(RevisionDto))]

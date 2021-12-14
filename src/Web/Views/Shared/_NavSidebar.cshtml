@@ -46,8 +46,8 @@
                         </p>
                     </a>
                     @if (item.Domain != null) {
-                        <a class="env-url" target="_blank" href="https://@item.Domain.Name">
-                            @Html.DisplayFor(modelItem => item.Domain.Name) <i class="fa fa-external-link"></i>
+                        <a class="env-url" target="_blank" href="https://@item.Domain">
+                            @Html.DisplayFor(modelItem => item.Domain) <i class="fa fa-external-link"></i>
                         </a>
                     }
                     <div class="dropdown env-dropdown is-hoverable is-right">
@@ -58,11 +58,15 @@
                         </div>
                         <div class="dropdown-menu" id="dropdown-menu" role="menu">
                             <div class="dropdown-content">
-                                <a asp-action="EditChannel" asp-route-id="@item.Id" class="dropdown-item">
+                                <a asp-controller="Channel" asp-action="Edit" asp-route-id="@item.Id" class="dropdown-item">
                                     Edit
                                 </a>
                                 <hr class="dropdown-divider">
-                                <a asp-action="DeleteChannel" asp-route-id="@item.Id" class="dropdown-item has-text-danger is-disabled">
+                                <a asp-controller="EnvironmentVariable" asp-action="New" asp-route-channelId="@item.Id" class="dropdown-item">
+                                    Add Environment Variable
+                                </a>
+                                <hr class="dropdown-divider">
+                                <a asp-controller="Channel" asp-action="Delete" asp-route-id="@item.Id" class="dropdown-item has-text-danger is-disabled">
                                     Delete
                                 </a>
                             </div>
@@ -71,7 +75,7 @@
                 </li>
             }
             <li class="env-add">
-                <a asp-action="NewChannel" asp-route-id="@Model.Id" class="button is-rounded is-outlined is-link"><i class="fa fa-add"></i> Add an Environment</a>
+                <a asp-controller="Channel" asp-action="New" asp-route-appId="@Model.Id" class="button is-rounded is-outlined is-link"><i class="fa fa-add"></i> Add an Environment</a>
             </li>
         </ul>
     </div>

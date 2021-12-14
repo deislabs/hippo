@@ -31,8 +31,6 @@ public class ApplicationDbContext : IdentityDbContext<Account>, IApplicationDbCo
 
     public DbSet<Channel> Channels => Set<Channel>();
 
-    public DbSet<Domain> Domains => Set<Domain>();
-
     public DbSet<EnvironmentVariable> EnvironmentVariables => Set<EnvironmentVariable>();
 
     public DbSet<Revision> Revisions => Set<Revision>();

@@ -8,7 +8,7 @@
 <div class="columns is-centered">
     <div class="column is-two-thirds">
 
-        <form asp-action="NewChannel" class="form env-new-form">
+        <form asp-action="New" class="form env-new-form">
             <input type="hidden" asp-for="AppId" />
             <div class="field">
                 <label class="label is-large">Create an Environment</label>
@@ -21,6 +21,18 @@
                     <div class="field">
                         <input asp-for="Name" class="input is-normal is-medium is-primary" placeholder="a simple identifier like 'latest' or 'staging'" />
                         <p asp-validation-for="Name" class="help is-warning"></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label asp-for="Domain" class="label">Domain</label>
+                </div>
+                <div class="field-body is-normal">
+                    <div class="field">
+                        <input asp-for="Domain" class="input is-normal is-medium is-primary" placeholder="myapp.example.com" />
+                        <p asp-validation-for="Domain" class="help is-warning"></p>
                     </div>
                 </div>
             </div>
@@ -89,7 +101,7 @@
                 <div class="field-body is-normal">
                     <div class="field">
                         <div class="control">
-                            <p asp-validation-summary="NewChannel" class="help is-alert"></p>
+                            <p asp-validation-summary="New" class="help is-alert"></p>
                         </div>
                     </div>
                 </div>

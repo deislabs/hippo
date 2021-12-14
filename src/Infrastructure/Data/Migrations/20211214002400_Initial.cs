@@ -200,6 +200,7 @@ namespace Hippo.Infrastructure.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: true),
+                    Domain = table.Column<string>(type: "TEXT", nullable: true),
                     RevisionSelectionStrategy = table.Column<int>(type: "INTEGER", nullable: false),
                     RangeRule = table.Column<string>(type: "TEXT", nullable: true),
                     ActiveRevisionId = table.Column<Guid>(type: "TEXT", nullable: true),
@@ -224,29 +225,6 @@ namespace Hippo.Infrastructure.Data.Migrations
                         column: x => x.ActiveRevisionId,
                         principalTable: "Revisions",
                         principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Domains",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: true),
-                    ChannelId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Created = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    CreatedBy = table.Column<string>(type: "TEXT", nullable: true),
-                    LastModified = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    LastModifiedBy = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Domains", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Domains_Channels_ChannelId",
-                        column: x => x.ChannelId,
-                        principalTable: "Channels",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -321,12 +299,6 @@ namespace Hippo.Infrastructure.Data.Migrations
                 column: "AppId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Domains_ChannelId",
-                table: "Domains",
-                column: "ChannelId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_EnvironmentVariables_ChannelId",
                 table: "EnvironmentVariables",
                 column: "ChannelId");
@@ -353,9 +325,6 @@ namespace Hippo.Infrastructure.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
-
-            migrationBuilder.DropTable(
-                name: "Domains");
 
             migrationBuilder.DropTable(
                 name: "EnvironmentVariables");

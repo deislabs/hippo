@@ -9,8 +9,6 @@ public interface IApplicationDbContext
 
     DbSet<Channel> Channels { get; }
 
-    DbSet<Domain> Domains { get; }
-
     DbSet<EnvironmentVariable> EnvironmentVariables { get; }
 
     DbSet<Revision> Revisions { get; }

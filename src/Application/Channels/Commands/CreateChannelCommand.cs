@@ -12,6 +12,8 @@ public class CreateChannelCommand : IRequest<Guid>
 
     public string? Name { get; set; }
 
+    public string? Domain { get; set; }
+
     public ChannelRevisionSelectionStrategy RevisionSelectionStrategy { get; set; }
 
     public string? RangeRule { get; set; }
@@ -34,6 +36,7 @@ public class CreateChannelCommandHandler : IRequestHandler<CreateChannelCommand,
         {
             AppId = request.AppId,
             Name = request.Name,
+            Domain = request.Domain,
             RevisionSelectionStrategy = request.RevisionSelectionStrategy,
             RangeRule = request.RangeRule,
             ActiveRevision = request.ActiveRevision,

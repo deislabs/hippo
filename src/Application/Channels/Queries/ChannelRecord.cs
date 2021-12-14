@@ -1,5 +1,4 @@
 using Hippo.Application.Common.Mappings;
-using Hippo.Application.Domains.Queries;
 using Hippo.Application.EnvironmentVariables.Queries;
 using Hippo.Application.Revisions.Queries;
 using Hippo.Core.Entities;
@@ -16,13 +15,13 @@ public class ChannelRecord : IMapFrom<Channel>
 
     public string? Name { get; set; }
 
+    public string? Domain { get; set; }
+
     public ChannelRevisionSelectionStrategy RevisionSelectionStrategy { get; set; }
 
     public RevisionRecord? ActiveRevision { get; set; }
 
     public string? RangeRule { get; set; }
-
-    public DomainRecord? Domain { get; set; }
 
     public IList<EnvironmentVariableRecord> EnvironmentVariables { get; set; }
 }

@@ -8,6 +8,8 @@ public class Channel : AuditableEntity, IHasDomainEvent
 
     public string? Name { get; set; }
 
+    public string? Domain { get; set; }
+
     public ChannelRevisionSelectionStrategy RevisionSelectionStrategy { get; set; }
 
     public string? RangeRule { get; set; }
@@ -19,8 +21,6 @@ public class Channel : AuditableEntity, IHasDomainEvent
     public Guid AppId { get; set; }
 
     public App App { get; set; } = null!;
-
-    public Domain? Domain { get; private set; }
 
     public IList<EnvironmentVariable> EnvironmentVariables { get; private set; } = new List<EnvironmentVariable>();
 

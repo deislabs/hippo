@@ -16,7 +16,7 @@ public class YarpReverseProxy : IReverseProxy
 
     public void Start(Channel c, string address)
     {
-        if (c.Domain != null && c.Domain.Name != null)
+        if (c.Domain != null)
         {
             var key = GetKey(c.AppId, c.Id);
 
@@ -28,7 +28,7 @@ public class YarpReverseProxy : IReverseProxy
                 {
                     Hosts = new List<string>()
                         {
-                            c.Domain.Name
+                            c.Domain
                         }
                 }
             };

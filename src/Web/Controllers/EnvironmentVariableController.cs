@@ -1,19 +1,24 @@
-using Hippo.Application.Apps.Commands;
-using Hippo.Application.Apps.Queries;
-using Hippo.Application.Channels.Commands;
+using Hippo.Application.EnvironmentVariables.Commands;
+using Hippo.Application.EnvironmentVariables.Queries;
 using Hippo.Application.Common.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hippo.Web.Controllers;
 
-public class AppController : WebUIControllerBase
+public class EnvironmentVariableController : WebUIControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<AppsVm>> Index()
+    public IActionResult New([FromQuery] Guid channelId)
     {
-        AppsVm vm = await Mediator.Send(new GetAppsQuery());
+        return View(new CreateEnvironmentVariableCommand { ChannelId = channelId });
+    }
 
-        return View(vm);
+    [HttpPost]
+    public async Task<IActionResult> New(CreateEnvironmentVariableCommand command)
+    {
+        // TODO: handle validation errors
+        var id = await Mediator.Send(command);
+        return RedirectToAction(nameof(Details), new { id = id });
     }
 
     [HttpGet]
@@ -21,7 +26,7 @@ public class AppController : WebUIControllerBase
     {
         try
         {
-            AppDto dto = await Mediator.Send(new GetAppQuery { Id = id });
+            EnvironmentVariableDto dto = await Mediator.Send(new GetEnvironmentVariableQuery { Id = id });
 
             return View(dto);
         }
@@ -36,7 +41,7 @@ public class AppController : WebUIControllerBase
     {
         try
         {
-            return View(new GetAppQuery { Id = id });
+            return View(new GetEnvironmentVariableQuery { Id = id });
         }
         catch (NotFoundException)
         {
@@ -45,32 +50,18 @@ public class AppController : WebUIControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Edit(UpdateAppCommand command)
+    public async Task<IActionResult> Edit(UpdateEnvironmentVariableCommand command)
     {
         try
         {
             await Mediator.Send(command);
 
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Details), new { id = command.Id });
         }
         catch (NotFoundException)
         {
             return NotFound();
         }
-    }
-
-    [HttpGet]
-    public IActionResult New()
-    {
-        return View(new CreateAppCommand());
-    }
-
-    [HttpPost]
-    public async Task<ActionResult<int>> New(CreateAppCommand command)
-    {
-        // TODO: handle validation errors
-        var id = await Mediator.Send(command);
-        return RedirectToAction(nameof(Details), new { id = id });
     }
 
     [HttpGet]
@@ -78,7 +69,7 @@ public class AppController : WebUIControllerBase
     {
         try
         {
-            AppDto dto = await Mediator.Send(new GetAppQuery { Id = id });
+            EnvironmentVariableDto dto = await Mediator.Send(new GetEnvironmentVariableQuery { Id = id });
 
             return View(dto);
         }
@@ -89,7 +80,7 @@ public class AppController : WebUIControllerBase
     }
 
     [HttpDelete]
-    public async Task<IActionResult> Delete(DeleteAppCommand command)
+    public async Task<IActionResult> Delete(DeleteEnvironmentVariableCommand command)
     {
         try
         {

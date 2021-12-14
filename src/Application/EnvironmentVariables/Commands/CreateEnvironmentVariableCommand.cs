@@ -10,6 +10,8 @@ public class CreateEnvironmentVariableCommand : IRequest<Guid>
     public string? Key { get; set; }
 
     public string? Value { get; set; }
+
+    public Guid ChannelId { get; set; }
 }
 
 public class CreateEnvironmentVariableCommandHandler : IRequestHandler<CreateEnvironmentVariableCommand, Guid>
@@ -26,7 +28,8 @@ public class CreateEnvironmentVariableCommandHandler : IRequestHandler<CreateEnv
         var entity = new EnvironmentVariable
         {
             Key = request.Key,
-            Value = request.Value
+            Value = request.Value,
+            ChannelId = request.ChannelId
         };
 
         entity.DomainEvents.Add(new EnvironmentVariableCreatedEvent(entity));

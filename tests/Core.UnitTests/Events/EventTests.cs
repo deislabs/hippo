@@ -36,20 +36,6 @@ public class EventTests
     }
 
     [Fact]
-    public void DomainCreatedEventTest()
-    {
-        var x = new Domain();
-        Assert.Equal(x, new DomainCreatedEvent(x).Domain);
-    }
-
-    [Fact]
-    public void DomainDeletedEventTest()
-    {
-        var x = new Domain();
-        Assert.Equal(x, new DomainDeletedEvent(x).Domain);
-    }
-
-    [Fact]
     public void EnvironmentVariableCreatedEventTest()
     {
         var x = new EnvironmentVariable();

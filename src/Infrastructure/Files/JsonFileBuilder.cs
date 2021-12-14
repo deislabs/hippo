@@ -2,7 +2,6 @@ using System.Text.Json;
 using Hippo.Application.Apps.Queries;
 using Hippo.Application.Channels.Queries;
 using Hippo.Application.Common.Interfaces;
-using Hippo.Application.Domains.Queries;
 using Hippo.Application.EnvironmentVariables.Queries;
 using Hippo.Application.Revisions.Queries;
 
@@ -24,19 +23,6 @@ public class JsonFileBuilder : IJsonFileBuilder
     }
 
     public byte[] BuildChannelsFile(IEnumerable<ChannelRecord> records)
-    {
-        using var memoryStream = new MemoryStream();
-
-        using (var streamWriter = new StreamWriter(memoryStream))
-        {
-            string jsonString = JsonSerializer.Serialize(records);
-            streamWriter.WriteLine(jsonString);
-        }
-
-        return memoryStream.ToArray();
-    }
-
-    public byte[] BuildDomainsFile(IEnumerable<DomainRecord> records)
     {
         using var memoryStream = new MemoryStream();
 

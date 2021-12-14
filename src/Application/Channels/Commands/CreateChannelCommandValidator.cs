@@ -9,5 +9,9 @@ public class CreateChannelCommandValidator : AbstractValidator<CreateChannelComm
         RuleFor(v => v.Name)
             .MaximumLength(32)
             .NotEmpty();
+
+        RuleFor(v => v.Domain)
+            .MaximumLength(200)
+            .NotEmpty();
     }
 }

@@ -8,7 +8,7 @@
 <div class="columns is-centered">
     <div class="column is-two-thirds">
 
-        <form asp-action="EditChannel" class="form env-new-form">
+        <form asp-action="Edit" class="form env-new-form">
             <input type="hidden" asp-for="Id" />
 
             <div class="field">
@@ -24,6 +24,19 @@
                     </div>
                 </div>
             </div>
+
+            <div class="field is-horizontal">
+                <div class="field-label is-normal">
+                    <label asp-for="Domain" class="label">Domain</label>
+                </div>
+                <div class="field-body is-normal">
+                    <div class="field">
+                        <input asp-for="Domain" class="input is-normal is-medium is-primary" placeholder="myapp.example.com" />
+                        <p asp-validation-for="Domain" class="help is-warning"></p>
+                    </div>
+                </div>
+            </div>
+
             <div class="field">
                 <label class="label is-large">Deployment</label>
             </div>
@@ -87,7 +100,7 @@
                 <div class="field-body is-normal">
                     <div class="field">
                         <div class="control">
-                            <p asp-validation-summary="EditChannel" class="help is-alert"></p>
+                            <p asp-validation-summary="Edit" class="help is-alert"></p>
                         </div>
                     </div>
                 </div>
