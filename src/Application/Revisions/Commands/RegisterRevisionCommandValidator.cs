@@ -7,7 +7,7 @@ public class RegisterRevisionCommandValidator : AbstractValidator<RegisterRevisi
     public RegisterRevisionCommandValidator()
     {
         RuleFor(v => v.RevisionNumber)
-            .MaximumLength(32)
-            .NotEmpty();
+            .NotEmpty()
+            .MaximumLength(128);
     }
 }

@@ -3,10 +3,10 @@ using FluentValidation;
 
 namespace Hippo.Application.EnvironmentVariables.Commands;
 
-public class CreateEnvironmentVariableCommandValidator : AbstractValidator<CreateEnvironmentVariableCommand>
+public class UpdateEnvironmentVariableCommandValidator : AbstractValidator<UpdateEnvironmentVariableCommand>
 {
     private readonly Regex validKey = new Regex("^[a-zA-Z0-9-_]*$");
-    public CreateEnvironmentVariableCommandValidator()
+    public UpdateEnvironmentVariableCommandValidator()
     {
         RuleFor(v => v.Key)
             .NotEmpty().WithMessage("Key is required.")

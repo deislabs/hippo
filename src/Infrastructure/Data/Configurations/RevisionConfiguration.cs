@@ -9,5 +9,9 @@ public class RevisionConfiguration : IEntityTypeConfiguration<Revision>
     public void Configure(EntityTypeBuilder<Revision> builder)
     {
         builder.Ignore(e => e.DomainEvents);
+
+        builder.Property(r => r.RevisionNumber)
+            .IsRequired()
+            .HasMaxLength(256);
     }
 }

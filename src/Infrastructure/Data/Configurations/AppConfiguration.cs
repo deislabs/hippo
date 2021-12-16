@@ -11,7 +11,11 @@ public class AppConfiguration : IEntityTypeConfiguration<App>
         builder.Ignore(e => e.DomainEvents);
 
         builder.Property(a => a.Name)
-            .HasMaxLength(32)
-            .IsRequired();
+            .IsRequired()
+            .HasMaxLength(128);
+
+        builder.Property(a => a.StorageId)
+            .IsRequired()
+            .HasMaxLength(200);
     }
 }

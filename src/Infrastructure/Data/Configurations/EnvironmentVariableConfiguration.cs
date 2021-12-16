@@ -9,5 +9,12 @@ public class EnvironmentVariableConfiguration : IEntityTypeConfiguration<Environ
     public void Configure(EntityTypeBuilder<EnvironmentVariable> builder)
     {
         builder.Ignore(e => e.DomainEvents);
+
+        builder.Property(e => e.Key)
+            .IsRequired()
+            .HasMaxLength(32);
+
+        builder.Property(e => e.Value)
+            .IsRequired();
     }
 }

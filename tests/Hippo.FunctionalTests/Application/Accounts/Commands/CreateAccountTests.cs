@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using FluentAssertions;
 using Hippo.Application.Accounts.Commands;
 using Hippo.Application.Common.Exceptions;
-using Hippo.Infrastructure.Identity;
 using Xunit;
 
 namespace Hippo.FunctionalTests.Application.Accounts.Commands;
@@ -43,18 +39,37 @@ public class CreateAccountTests : TestBase
         await Assert.ThrowsAsync<ValidationException>(async () => await SendAsync(command));
     }
 
-    [Fact]
-    public async Task ShouldCreateAccount()
+    [Theory]
+    [InlineData("bacongobbler", "Passw0rd!", "Passw0rd!")]
+    public void ShouldCreateAccount(string userName, string password, string passwordConfirm)
     {
         var command = new CreateAccountCommand
         {
-            UserName = "bacongobbler",
-            Password = "Passw0rd!",
-            PasswordConfirm = "Passw0rd!"
+            UserName = userName,
+            Password = password,
+            PasswordConfirm = passwordConfirm
         };
 
-        var userId = await SendAsync(command);
-        Guid x;
-        Assert.True(Guid.TryParse(userId, out x));
+        Assert.True(SendAsync(command).IsCompletedSuccessfully);
+    }
+
+    [Theory]
+    [InlineData("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "Passw0rd!", "Passw0rd!")]
+    [InlineData("!@#$%^&*(){}[]<>\\|'\";:,./?=+", "Passw0rd!", "Passw0rd!")]
+    [InlineData("Bobby Tables", "Passw0rd!", "Passw0rd!")]
+    [InlineData("", "Passw0rd!", "Passw0rd!")]
+    [InlineData("bacongobbler", "", "")]
+    [InlineData("bacongobbler", "", "Passw0rd!")]
+    [InlineData("bacongobbler", "Passw0rd!", "")]
+    public async Task ShouldNotCreateAccount(string userName, string password, string passwordConfirm)
+    {
+        var command = new CreateAccountCommand
+        {
+            UserName = userName,
+            Password = password,
+            PasswordConfirm = passwordConfirm
+        };
+
+        await Assert.ThrowsAsync<ValidationException>(async () => await SendAsync(command));
     }
 }
