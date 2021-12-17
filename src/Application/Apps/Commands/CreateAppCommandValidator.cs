@@ -21,7 +21,7 @@ public class CreateAppCommandValidator : AbstractValidator<CreateAppCommand>
             .NotEmpty().WithMessage("Name is required.")
             .MaximumLength(128)
             .Matches(validName)
-            .MustAsync(BeUniqueName).WithMessage("The specified name already exists.");
+            .Must(BeUniqueName).WithMessage("The specified name already exists.");
 
         RuleFor(a => a.StorageId)
             .NotEmpty().WithMessage("Storage ID is required.")
@@ -30,8 +30,8 @@ public class CreateAppCommandValidator : AbstractValidator<CreateAppCommand>
 
     }
 
-    public async Task<bool> BeUniqueName(CreateAppCommand model, string name, CancellationToken cancellationToken)
+    public bool BeUniqueName(CreateAppCommand model, string name)
     {
-        return await _context.Apps.AllAsync(a => a.Name != name, cancellationToken);
+        return _context.Apps.All(a => a.Name != name);
     }
 }

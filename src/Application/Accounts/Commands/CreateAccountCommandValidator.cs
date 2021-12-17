@@ -18,7 +18,7 @@ public class CreateAccountCommandValidator : AbstractValidator<CreateAccountComm
             .NotEmpty()
             .MaximumLength(64)
             .Matches(validUserName)
-            .MustAsync(BeUniqueUserName).WithMessage("The specified username already exists.");
+            .Must(BeUniqueUserName).WithMessage("The specified username already exists.");
 
         RuleFor(a => a.Password)
             .NotEmpty()
@@ -28,11 +28,11 @@ public class CreateAccountCommandValidator : AbstractValidator<CreateAccountComm
             .Equal(a => a.Password).WithMessage("Passwords do not match");
     }
 
-    public async Task<bool> BeUniqueUserName(string userName, CancellationToken cancellationToken)
+    public bool BeUniqueUserName(string userName)
     {
         try
         {
-            await _identityService.GetUserIdAsync(userName);
+            _identityService.GetUserIdAsync(userName).RunSynchronously();
             return false;
         }
         catch (Exception)

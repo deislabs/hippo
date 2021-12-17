@@ -25,13 +25,13 @@ public class CreateChannelCommandValidator : AbstractValidator<CreateChannelComm
         RuleFor(v => v.Domain)
             .NotEmpty().WithMessage("Domain is required.")
             .Matches(validDomainName)
-            .MustAsync(BeUniqueDomainName).WithMessage("The specified domain already exists.");
+            .Must(BeUniqueDomainName).WithMessage("The specified domain already exists.");
 
         // TODO: validate RangeRule
     }
 
-    public async Task<bool> BeUniqueDomainName(string domain, CancellationToken cancellationToken)
+    public bool BeUniqueDomainName(string domain)
     {
-        return await _context.Channels.AllAsync(a => a.Domain != domain, cancellationToken);
+        return _context.Channels.All(a => a.Domain != domain);
     }
 }
