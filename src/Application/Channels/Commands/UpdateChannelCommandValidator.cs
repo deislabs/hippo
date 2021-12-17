@@ -3,13 +3,13 @@ using FluentValidation;
 
 namespace Hippo.Application.Channels.Commands;
 
-public class CreateChannelCommandValidator : AbstractValidator<CreateChannelCommand>
+public class UpdateChannelCommandValidator : AbstractValidator<UpdateChannelCommand>
 {
     private readonly Regex validName = new Regex("^[a-zA-Z0-9-_]*$");
 
-    private readonly Regex validDomainName = new Regex(@"^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$");
+    private readonly Regex validDomainName = new Regex("^((?!-)[A-Za-z0-9-]{1, 63}(?<!-)\\.)+[A-Za-z]{2, 6}$");
 
-    public CreateChannelCommandValidator()
+    public UpdateChannelCommandValidator()
     {
         RuleFor(v => v.Name)
             .NotEmpty().WithMessage("Name is required.")

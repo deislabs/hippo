@@ -9,5 +9,12 @@ public class ChannelConfiguration : IEntityTypeConfiguration<Channel>
     public void Configure(EntityTypeBuilder<Channel> builder)
     {
         builder.Ignore(e => e.DomainEvents);
+
+        builder.Property(c => c.Name)
+            .IsRequired()
+            .HasMaxLength(64);
+
+        builder.Property(c => c.Domain)
+            .IsRequired();
     }
 }

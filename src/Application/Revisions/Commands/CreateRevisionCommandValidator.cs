@@ -6,8 +6,10 @@ public class CreateRevisionCommandValidator : AbstractValidator<CreateRevisionCo
 {
     public CreateRevisionCommandValidator()
     {
+        // NOTE: no semver compliance is required; users can opt out of automatic revision
+        // selection strategy (or we could allow alternative version sorting strategies?)
         RuleFor(v => v.RevisionNumber)
-            .MaximumLength(32)
-            .NotEmpty();
+            .NotEmpty()
+            .MaximumLength(256);
     }
 }
