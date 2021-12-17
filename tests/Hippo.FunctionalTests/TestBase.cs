@@ -57,7 +57,7 @@ public class TestBase : IDisposable
         services.AddHealthChecks()
                     .AddDbContextCheck<ApplicationDbContext>();
 
-        services.AddControllersWithViews().AddFluentValidation();
+        services.AddControllersWithViews().AddFluentValidation(options => options.AutomaticValidationEnabled = false);
 
         services.AddRouting(options => options.LowercaseUrls = true);
 

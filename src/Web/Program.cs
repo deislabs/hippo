@@ -25,7 +25,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddHealthChecks()
             .AddDbContextCheck<ApplicationDbContext>();
 
-builder.Services.AddControllersWithViews().AddFluentValidation();
+builder.Services.AddControllersWithViews().AddFluentValidation(options => options.AutomaticValidationEnabled = false);
 
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
