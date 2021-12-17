@@ -32,6 +32,6 @@ public class CreateChannelCommandValidator : AbstractValidator<CreateChannelComm
 
     public async Task<bool> BeUniqueDomainName(string domain, CancellationToken cancellationToken)
     {
-        return await _context.Channels.AllAsync(a => a.Domain != domain, cancellationToken);
+        return (await _context.Channels.FirstOrDefaultAsync(c => c.Domain == domain, cancellationToken)) == null;
     }
 }

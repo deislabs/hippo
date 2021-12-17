@@ -30,8 +30,8 @@ public class CreateAppCommandValidator : AbstractValidator<CreateAppCommand>
 
     }
 
-    public async Task<bool> BeUniqueName(CreateAppCommand model, string name, CancellationToken cancellationToken)
+    public async Task<bool> BeUniqueName(string name, CancellationToken cancellationToken)
     {
-        return await _context.Apps.AllAsync(a => a.Name != name, cancellationToken);
+        return (await _context.Apps.FirstOrDefaultAsync(a => a.Name == name, cancellationToken)) == null;
     }
 }

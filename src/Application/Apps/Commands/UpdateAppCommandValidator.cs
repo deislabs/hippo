@@ -31,6 +31,6 @@ public class UpdateAppCommandValidator : AbstractValidator<UpdateAppCommand>
 
     public async Task<bool> BeUniqueName(UpdateAppCommand model, string name, CancellationToken cancellationToken)
     {
-        return await _context.Apps.AllAsync(a => a.Name != name, cancellationToken);
+        return (await _context.Apps.FirstOrDefaultAsync(a => a.Name == name, cancellationToken)) == null;
     }
 }
