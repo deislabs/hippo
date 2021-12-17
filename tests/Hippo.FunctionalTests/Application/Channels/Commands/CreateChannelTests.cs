@@ -15,6 +15,30 @@ public class CreateChannelTests : TestBase
         await Assert.ThrowsAsync<ValidationException>(async () => await SendAsync(new CreateChannelCommand()));
     }
 
+    [Fact]
+    public async Task ShouldRequireUniqueDomain()
+    {
+        await SendAsync(new CreateChannelCommand
+        {
+            Name = "development",
+            Domain = "myapp.example.com",
+            RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseRangeRule,
+            RangeRule = "*",
+            ActiveRevision = null
+        });
+
+        var command = new CreateChannelCommand
+        {
+            Name = "production",
+            Domain = "myapp.example.com",
+            RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseRangeRule,
+            RangeRule = "*",
+            ActiveRevision = null
+        };
+
+        await Assert.ThrowsAsync<ValidationException>(async () => await SendAsync(command));
+    }
+
     [Theory]
     [InlineData("development", "example.com", ChannelRevisionSelectionStrategy.UseRangeRule, "*", null)]
     [InlineData("development", "myapp.example.com", ChannelRevisionSelectionStrategy.UseRangeRule, "*", null)]
