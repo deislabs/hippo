@@ -24,14 +24,14 @@ public class CreateAccountTests : TestBase
     {
         await SendAsync(new CreateAccountCommand
         {
-            UserName = "bacongobbler",
+            UserName = "bob",
             Password = "Passw0rd!",
             PasswordConfirm = "Passw0rd!"
         });
 
         var command = new CreateAccountCommand
         {
-            UserName = "bacongobbler",
+            UserName = "bob",
             Password = "Passw0rd!",
             PasswordConfirm = "Passw0rd!"
         };

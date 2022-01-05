@@ -2,6 +2,9 @@ using System.Threading.Tasks;
 using Hippo.Application.Revisions.Commands;
 using Hippo.Application.Common.Exceptions;
 using Xunit;
+using Hippo.Application.Apps.Commands;
+using Hippo.Core.Entities;
+using System;
 
 namespace Hippo.FunctionalTests.Application.Revisions.Commands;
 
@@ -17,9 +20,16 @@ public class CreateRevisionTests : TestBase
     [InlineData("1.0.0")]
     public async Task ShouldCreate(string revisionNumber)
     {
+        var appId = await SendAsync(new CreateAppCommand
+        {
+            Name = "foobar",
+            StorageId = "bacongobbler/foo",
+        });
+
         var command = new CreateRevisionCommand
         {
-            RevisionNumber = revisionNumber
+            RevisionNumber = revisionNumber,
+            AppId = appId
         };
 
         await SendAsync(command);
@@ -29,9 +39,16 @@ public class CreateRevisionTests : TestBase
     [InlineData("")]
     public async Task ShouldNotCreate(string revisionNumber)
     {
+        var appId = await SendAsync(new CreateAppCommand
+        {
+            Name = "foo",
+            StorageId = "bacongobbler/foo",
+        });
+
         var command = new CreateRevisionCommand
         {
-            RevisionNumber = revisionNumber
+            RevisionNumber = revisionNumber,
+            AppId = appId
         };
 
         await Assert.ThrowsAsync<ValidationException>(async () => await SendAsync(command));

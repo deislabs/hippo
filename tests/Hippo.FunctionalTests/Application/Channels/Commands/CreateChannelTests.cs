@@ -21,7 +21,7 @@ public class CreateChannelTests : TestBase
         await SendAsync(new CreateChannelCommand
         {
             Name = "development",
-            Domain = "myapp.example.com",
+            Domain = "foo.example.com",
             RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseRangeRule,
             RangeRule = "*",
             ActiveRevision = null
@@ -30,7 +30,7 @@ public class CreateChannelTests : TestBase
         var command = new CreateChannelCommand
         {
             Name = "production",
-            Domain = "myapp.example.com",
+            Domain = "foo.example.com",
             RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseRangeRule,
             RangeRule = "*",
             ActiveRevision = null
