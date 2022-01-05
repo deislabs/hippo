@@ -184,13 +184,9 @@ public class TestBase : IDisposable
         return await context.Set<TEntity>().CountAsync();
     }
 
-    public void Dispose()
+    public async void Dispose()
     {
-        using var scope = _scopeFactory.CreateScope();
-
-        var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
-        context.Database.EnsureDeleted();
+        await _checkpoint.Reset("Database");
 
         _currentUserId = null;
     }
