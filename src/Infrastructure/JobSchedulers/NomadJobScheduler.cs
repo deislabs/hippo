@@ -122,7 +122,7 @@ public class NomadJobScheduler : IJobScheduler
 
     private static string? ExtractRustTraceLevel(string rustTraceLine) =>
         rustTraceLine.Split(' ').Select(AsRustTraceLevel).FirstOrDefault(s => s != null);
-    
+
     private static string? AsRustTraceLevel(string fragment) =>
         RUST_TRACE_LEVELS.Where(level => fragment.Contains(level, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
 
@@ -132,7 +132,7 @@ public class NomadJobScheduler : IJobScheduler
         var name = $"{c.App.Name}-{c.Name}";
         var bindle = $"{c.App.StorageId}/{c.ActiveRevision!.RevisionNumber}";
         var env = String.Join(' ', c.EnvironmentVariables.Select(ev => $"\"--env\", \"{ev.Key}='{ev.Value}'\","));
-    
+
         var hcl = @"
 variable ""bindle"" {
   type = string
