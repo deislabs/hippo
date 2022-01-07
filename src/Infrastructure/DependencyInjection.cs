@@ -64,7 +64,16 @@ public static class DependencyInjection
 
         services.AddTransient<ITokenService, TokenService>();
 
-        services.AddSingleton<IJobScheduler, LocalJobScheduler>();
+        var schedulerDriver = configuration.GetValue<string>("Scheduler:Driver", "local").ToLower();
+        switch (schedulerDriver)
+        {
+            case "local":
+                services.AddSingleton<IJobScheduler, LocalJobScheduler>();
+                break;
+            case "nomad":
+                services.AddSingleton<IJobScheduler, NomadJobScheduler>();
+                break;
+        }
 
         services.AddTransient<IJsonFileBuilder, JsonFileBuilder>();
 
