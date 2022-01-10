@@ -1,10 +1,13 @@
 using Hippo.Application.EnvironmentVariables.Commands;
 using Hippo.Application.EnvironmentVariables.Queries;
 using Hippo.Application.Common.Exceptions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
 
 namespace Hippo.Web.Controllers;
 
+[Authorize]
 public class EnvironmentVariableController : WebUIControllerBase
 {
     [HttpGet]
