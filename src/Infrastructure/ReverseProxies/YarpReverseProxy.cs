@@ -1,12 +1,16 @@
 using Hippo.Application.Common.Interfaces;
 using Hippo.Core.Entities;
 using Hippo.Infrastructure.ReverseProxies.Configuration;
+using Microsoft.Extensions.Logging;
 using Yarp.ReverseProxy.Configuration;
 
 namespace Hippo.Infrastructure.ReverseProxies;
 
 public class YarpReverseProxy : IReverseProxy
 {
+    // TODO: when the host restarts, we should re-hydrate the reverse proxy route config
+    //
+    // We could fix this by implementing a file-backed config provider.
     private readonly InMemoryConfigProvider _configProvider;
 
     public YarpReverseProxy(InMemoryConfigProvider configProvider)
@@ -26,10 +30,8 @@ public class YarpReverseProxy : IReverseProxy
                 ClusterId = key,
                 Match = new RouteMatch
                 {
-                    Hosts = new List<string>()
-                        {
-                            c.Domain
-                        }
+                    Hosts = new List<string>(){c.Domain},
+                    Path = "{**catch-all}"
                 }
             };
 
@@ -41,7 +43,7 @@ public class YarpReverseProxy : IReverseProxy
                         {
                             key, new DestinationConfig()
                             {
-                                Address = address
+                                Address = "http://" + address
                             }
                         }
                     }

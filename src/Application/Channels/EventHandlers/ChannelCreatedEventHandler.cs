@@ -20,6 +20,8 @@ public class ChannelCreatedEventHandler : INotificationHandler<DomainEventNotifi
 
         _logger.LogInformation("Hippo Domain Event: {DomainEvent}", domainEvent.GetType().Name);
 
+        // TODO: schedule a "parking lot" app instance to start serving requests
+
         return Task.CompletedTask;
     }
 }
