@@ -7,7 +7,7 @@ public interface IJobScheduler
     /// <summary>
     /// Schedule the current release.
     /// </summary>
-    void Start(Channel c);
+    ChannelStatus Start(Channel c);
 
     /// <summary>
     /// Gracefully shut down the current release.

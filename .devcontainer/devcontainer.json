@@ -28,9 +28,7 @@
     // this will not work as Headers don't seem to be forwarded by the Codespaces proxy.
     "forwardPorts": [
         5309,
-        32768,
-        32769,
-        32770
+        8080
     ],
     "remoteUser": "vscode",
     "updateRemoteUserUID": false,
@@ -41,16 +39,8 @@
             "label": "Hippo HTTPS Port",
             "protocol": "https"
         },
-        "32768": {
-            "label": "Application Channel HTTP Port ",
-            "protocol": "http"
-        },
-        "32769": {
-            "label": "Application Channel HTTP Port",
-            "protocol": "http"
-        },
-        "32770": {
-            "label": "Application Channel HTTP Port",
+        "8080": {
+            "label": "Bindle HTTP Port",
             "protocol": "http"
         }
     }

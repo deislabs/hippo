@@ -47,7 +47,7 @@ public class LocalJobScheduler : IJobScheduler, IHasDomainEvent
                 });
     }
 
-    public void Start(Channel c)
+    public ChannelStatus Start(Channel c)
     {
         var port = c.PortId + EphemeralPortStartRange;
         var wagiProgram = WagiBinaryPath();
@@ -56,7 +56,7 @@ public class LocalJobScheduler : IJobScheduler, IHasDomainEvent
         if (c.ActiveRevision == null || string.IsNullOrWhiteSpace(c.ActiveRevision.RevisionNumber))
         {
             _logger.LogWarning($"Can't start {c.App.Name}:{c.Name}: no active revision");
-            return;
+            return new ChannelStatus(false, "");
         }
 
         var env = String.Join(' ', c.EnvironmentVariables.Select(ev => $"--env {ev.Key}=\"{ev.Value}\""));
@@ -81,7 +81,7 @@ public class LocalJobScheduler : IJobScheduler, IHasDomainEvent
                 {
                     // TODO: probably want to throw an Exception here instead
                     _logger.LogError($"Process {psi.FileName} with arguments {psi.Arguments} never started");
-                    return;
+                    return new ChannelStatus(false, "");
                 }
 
                 process.EnableRaisingEvents = true;
@@ -100,11 +100,10 @@ public class LocalJobScheduler : IJobScheduler, IHasDomainEvent
                 if (process.HasExited)
                 {
                     _logger.LogError($"Process {psi.FileName} with arguments {psi.Arguments} terminated unexpectedly");
+                    return new ChannelStatus(false, "");
                 }
-                else
-                {
-                    _wagiProcessIds[c.Id] = (process.Id, log);
-                }
+                _wagiProcessIds[c.Id] = (process.Id, log);
+                return new ChannelStatus(true, listenAddress);
             }
         }
         catch (Win32Exception e)  // yes, even on Linux
