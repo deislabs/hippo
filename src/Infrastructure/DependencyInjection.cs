@@ -1,3 +1,4 @@
+using Hippo.Application.Common.Config;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Infrastructure.Data;
 using Hippo.Infrastructure.Exceptions;
@@ -42,6 +43,10 @@ public static class DependencyInjection
             default:
                 throw new InvalidDatabaseDriverException(driver);
         }
+
+        HippoConfig hippoConfig = new HippoConfig();
+        configuration.GetSection("Hippo").Bind(hippoConfig);
+        services.AddSingleton<HippoConfig>(hippoConfig);
 
         services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 

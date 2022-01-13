@@ -27,6 +27,7 @@ public class TestBase : IDisposable
     private static IServiceScopeFactory _scopeFactory = null!;
     private static Checkpoint _checkpoint = null!;
     private static string? _currentUserId;
+    private static Random random = new Random();
 
     public TestBase()
     {
@@ -189,5 +190,12 @@ public class TestBase : IDisposable
         await _checkpoint.Reset("Database");
 
         _currentUserId = null;
+    }
+
+    public static string RandomString(int length)
+    {
+        const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        return new string(Enumerable.Repeat(chars, length)
+            .Select(s => s[random.Next(s.Length)]).ToArray());
     }
 }

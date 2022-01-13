@@ -1,8 +1,11 @@
+using Hippo.Application.Common.Config;
+using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Core.Entities;
 using Hippo.Core.Enums;
 using Hippo.Core.Events;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Hippo.Application.Channels.Commands;
 
@@ -25,18 +28,33 @@ public class CreateChannelCommandHandler : IRequestHandler<CreateChannelCommand,
 {
     private readonly IApplicationDbContext _context;
 
-    public CreateChannelCommandHandler(IApplicationDbContext context)
+    private readonly HippoConfig _config;
+
+    public CreateChannelCommandHandler(IApplicationDbContext context, HippoConfig config)
     {
         _context = context;
+        _config = config;
     }
 
     public async Task<Guid> Handle(CreateChannelCommand request, CancellationToken cancellationToken)
     {
+
+        var app = await _context.Apps
+            .Where(a => a.Id == request.AppId)
+            .SingleOrDefaultAsync(cancellationToken);
+
+        if (app == null)
+        {
+            throw new NotFoundException(nameof(App), request.AppId);
+        }
+        
+        var platformDomain = (_config.PlatformDomain != null) ? _config.PlatformDomain : "hippofactory.io";
+
         var entity = new Channel
         {
             AppId = request.AppId,
             Name = request.Name,
-            Domain = request.Domain,
+            Domain = (request.Domain != null) ? request.Domain : $"{request.Name}.{app.Name}.{platformDomain}",
             RevisionSelectionStrategy = request.RevisionSelectionStrategy,
             RangeRule = request.RangeRule,
             ActiveRevision = request.ActiveRevision,

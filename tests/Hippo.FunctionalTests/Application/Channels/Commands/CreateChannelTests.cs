@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using Hippo.Application.Channels.Commands;
 using Hippo.Application.Common.Exceptions;
@@ -16,12 +17,29 @@ public class CreateChannelTests : TestBase
     }
 
     [Fact]
-    public async Task ShouldRequireUniqueDomain()
+    public async Task ShouldRequireUniqueChannelNameForApp()
     {
+        var appId1 = Guid.NewGuid();
+        var appId2 = Guid.NewGuid();
+
+        await AddAsync(new App
+        {
+            Id = appId1,
+            Name = RandomString(10),
+            StorageId = RandomString(10),
+        });
+
+        await AddAsync(new App
+        {
+            Id = appId2,
+            Name = RandomString(10),
+            StorageId = RandomString(10),
+        });
+
         await SendAsync(new CreateChannelCommand
         {
             Name = "development",
-            Domain = "foo.example.com",
+            AppId = appId1,
             RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseRangeRule,
             RangeRule = "*",
             ActiveRevision = null
@@ -29,25 +47,38 @@ public class CreateChannelTests : TestBase
 
         var command = new CreateChannelCommand
         {
-            Name = "production",
-            Domain = "foo.example.com",
+            Name = "development",
+            AppId = appId1,
             RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseRangeRule,
             RangeRule = "*",
             ActiveRevision = null
         };
 
         await Assert.ThrowsAsync<ValidationException>(async () => await SendAsync(command));
+
+        command.AppId = appId2;
+
+        await SendAsync(command);
     }
 
     [Theory]
-    [InlineData("development", "example.com", ChannelRevisionSelectionStrategy.UseRangeRule, "*", null)]
-    [InlineData("development", "myapp.example.com", ChannelRevisionSelectionStrategy.UseRangeRule, "*", null)]
-    public async Task ShouldCreate(string name, string domain, ChannelRevisionSelectionStrategy revisionSelectionStrategy, string rangeRule, Revision? activeRevision)
+    [InlineData("production", ChannelRevisionSelectionStrategy.UseRangeRule, "*", null)]
+    [InlineData("staging", ChannelRevisionSelectionStrategy.UseRangeRule, "*", null)]
+    public async Task ShouldCreate(string name, ChannelRevisionSelectionStrategy revisionSelectionStrategy, string rangeRule, Revision? activeRevision)
     {
+        var appId = Guid.NewGuid();
+
+        await AddAsync(new App
+        {
+            Id = appId,
+            Name = RandomString(10),
+            StorageId = RandomString(10)
+        });
+
         var command = new CreateChannelCommand
         {
             Name = name,
-            Domain = domain,
+            AppId = appId,
             RevisionSelectionStrategy = revisionSelectionStrategy,
             RangeRule = rangeRule,
             ActiveRevision = activeRevision
@@ -60,26 +91,19 @@ public class CreateChannelTests : TestBase
     [InlineData("!@#$%^&*(){}[]<>\\|'\";:,./?=+")]
     public async Task ShouldValidateName(string name)
     {
+        var appId = Guid.NewGuid();
+
+        await AddAsync(new App
+        {
+            Id = appId,
+            Name = RandomString(10),
+            StorageId = RandomString(10)
+        });
+
         var command = new CreateChannelCommand
         {
             Name = name,
-            Domain = "myapp.example.com",
-            RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseRangeRule,
-            RangeRule = "*",
-            ActiveRevision = null
-        };
-
-        await Assert.ThrowsAsync<ValidationException>(async () => await SendAsync(command));
-    }
-
-    [Theory]
-    [InlineData("myapp!example!com")]
-    public async Task ShouldValidateDomain(string domain)
-    {
-        var command = new CreateChannelCommand
-        {
-            Name = "development",
-            Domain = domain,
+            AppId = appId,
             RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseRangeRule,
             RangeRule = "*",
             ActiveRevision = null
