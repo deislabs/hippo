@@ -64,7 +64,7 @@ public class LocalJobScheduler : IJobScheduler, IHasDomainEvent
         var psi = new ProcessStartInfo
         {
             FileName = wagiProgram,
-            Arguments = $"-b {c.App.StorageId}/{c.ActiveRevision.RevisionNumber} --bindle-url {_bindleUrl} -l 127.0.0.1:{port} {env}",
+            Arguments = $"-b {c.App.Name}/{c.ActiveRevision.RevisionNumber} --bindle-url {_bindleUrl} -l 127.0.0.1:{port} {env}",
             RedirectStandardError = true,
             RedirectStandardOutput = true,
             UseShellExecute = false,

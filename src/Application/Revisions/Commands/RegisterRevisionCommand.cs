@@ -9,6 +9,8 @@ namespace Hippo.Application.Revisions.Commands;
 
 public class RegisterRevisionCommand : IRequest<RevisionsVm>
 {
+    // NOTE: We should rename this to AppName, but that will require an update to
+    // the Hippo API client libraries (and I'm lazy so...)
     public string? AppStorageId { get; set; }
 
     public string? RevisionNumber { get; set; }
@@ -30,7 +32,7 @@ public class RegisterRevisionCommandHandler : IRequestHandler<RegisterRevisionCo
     {
         RevisionsVm viewModel = new RevisionsVm();
 
-        foreach (App app in _context.Apps.Where(a => a.StorageId == request.AppStorageId))
+        foreach (App app in _context.Apps.Where(a => a.Name == request.AppStorageId))
         {
             var entity = new Revision
             {

@@ -15,8 +15,6 @@ public class AppRecord : IMapFrom<App>
 
     public string? Name { get; set; }
 
-    public string? StorageId { get; set; }
-
     public IList<ChannelRecord> Channels { get; set; }
 
     public IList<RevisionRecord> Revisions { get; set; }

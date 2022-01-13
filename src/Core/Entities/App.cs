@@ -4,15 +4,15 @@ public class App : AuditableEntity, IHasDomainEvent
 {
     public Guid Id { get; set; }
 
-    public string? Name { get; set; }
-
-    // This is the ID in Bindle or whatever storage backend is used.  It gets composed
-    // with a revision ID to get a Bindle ID.
+    // The name of the application.
     //
-    // For example, the Weather application might have the StorageId contoso/weather.
-    // Revision 1.4.0 of the Weather application would then have the bindle id
+    // This doubles as the Bindle storage identifier. It is composed
+    // with a revision number to resolve the full Bindle id.
+    //
+    // For example, an application might have the Name contoso/weather.
+    // Revision 1.4.0 of the contoso/weather application would then have the Bindle id
     // contoso/weather/1.4.0
-    public string? StorageId { get; set; }
+    public string? Name { get; set; }
 
     public IList<Channel> Channels { get; private set; } = new List<Channel>();
 

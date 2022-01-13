@@ -8,8 +8,6 @@ namespace Hippo.Application.Apps.Commands;
 public class CreateAppCommand : IRequest<Guid>
 {
     public string? Name { get; set; }
-
-    public string? StorageId { get; set; }
 }
 
 public class CreateAppCommandHandler : IRequestHandler<CreateAppCommand, Guid>
@@ -25,8 +23,7 @@ public class CreateAppCommandHandler : IRequestHandler<CreateAppCommand, Guid>
     {
         var entity = new App
         {
-            Name = request.Name,
-            StorageId = request.StorageId
+            Name = request.Name
         };
 
         entity.DomainEvents.Add(new AppCreatedEvent(entity));

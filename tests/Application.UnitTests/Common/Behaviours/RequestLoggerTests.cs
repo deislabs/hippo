@@ -30,7 +30,7 @@ public class RequestLoggerTests
 
         var requestLogger = new LoggingBehaviour<CreateAppCommand>(_logger.Object, _currentUserService.Object, _identityService.Object);
 
-        await requestLogger.Process(new CreateAppCommand { Name = "helloworld", StorageId = "bacongobbler/helloworld" }, new CancellationToken());
+        await requestLogger.Process(new CreateAppCommand { Name = "bacongobbler/helloworld", }, new CancellationToken());
 
         _identityService.Verify(i => i.GetUserNameAsync(It.IsAny<string>()), Times.Once);
     }
@@ -40,7 +40,7 @@ public class RequestLoggerTests
     {
         var requestLogger = new LoggingBehaviour<CreateAppCommand>(_logger.Object, _currentUserService.Object, _identityService.Object);
 
-        await requestLogger.Process(new CreateAppCommand { Name = "helloworld", StorageId = "bacongobbler/helloworld" }, new CancellationToken());
+        await requestLogger.Process(new CreateAppCommand { Name = "bacongobbler/helloworld" }, new CancellationToken());
 
         _identityService.Verify(i => i.GetUserNameAsync(It.IsAny<string>()), Times.Never);
     }

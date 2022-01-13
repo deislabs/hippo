@@ -22,8 +22,7 @@ public class CreateRevisionTests : TestBase
     {
         var appId = await SendAsync(new CreateAppCommand
         {
-            Name = "foobar",
-            StorageId = "bacongobbler/foo",
+            Name = "bacongobbler/foo"
         });
 
         var command = new CreateRevisionCommand
@@ -41,8 +40,7 @@ public class CreateRevisionTests : TestBase
     {
         var appId = await SendAsync(new CreateAppCommand
         {
-            Name = "foo",
-            StorageId = "bacongobbler/foo",
+            Name = "bacongobbler/foobar"
         });
 
         var command = new CreateRevisionCommand
