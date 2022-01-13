@@ -23,7 +23,7 @@ public class NomadJobScheduler : IJobScheduler
         this.configuration = configuration;
     }
 
-    public void Start(Channel c)
+    public ChannelStatus Start(Channel c)
     {
         var nomadProgram = NomadBinaryPath();
         var bindleUrl = configuration.GetValue<string>("Bindle:Url", "http://127.0.0.1:8080/v1");
@@ -35,7 +35,7 @@ public class NomadJobScheduler : IJobScheduler
         if (c.ActiveRevision == null || string.IsNullOrWhiteSpace(c.ActiveRevision.RevisionNumber))
         {
             logger.LogWarning($"Can't start {c.App.Name}:{c.Name}: no active revision");
-            return;
+            return new ChannelStatus(false, "");
         }
 
         var bindle = $"{c.App.StorageId}/{c.ActiveRevision.RevisionNumber}";
@@ -60,7 +60,7 @@ public class NomadJobScheduler : IJobScheduler
                 {
                     // TODO: probably want to throw an Exception here instead
                     logger.LogError($"Process {psi.FileName} with arguments {psi.Arguments} never started");
-                    return;
+                    return new ChannelStatus(false, "");
                 }
 
                 process.EnableRaisingEvents = true;
@@ -83,6 +83,7 @@ public class NomadJobScheduler : IJobScheduler
             throw;
         }
 
+        // TODO: fetch job status and the job's listen address
         throw new NotImplementedException();
     }
 
