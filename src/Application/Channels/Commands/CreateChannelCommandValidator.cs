@@ -20,14 +20,20 @@ public class CreateChannelCommandValidator : AbstractValidator<CreateChannelComm
         RuleFor(v => v.Name)
             .NotEmpty().WithMessage("Name is required.")
             .MaximumLength(64)
-            .Matches(validName);
-
+            .Matches(validName)
+            .MustAsync(BeUniqueNameForApp).WithMessage("A channel with the same name already exists for this app.");
+        
         RuleFor(v => v.Domain)
-            .NotEmpty().WithMessage("Domain is required.")
+            .NotEqual("").WithMessage("Domain cannot be an empty string.")
             .Matches(validDomainName)
             .MustAsync(BeUniqueDomainName).WithMessage("The specified domain already exists.");
 
         // TODO: validate RangeRule
+    }
+
+    public async Task<bool> BeUniqueNameForApp(CreateChannelCommand command, string name, CancellationToken cancellationToken)
+    {
+        return await _context.Channels.Where(c => c.AppId == command.AppId).AllAsync(a => a.Name != name, cancellationToken);
     }
 
     public async Task<bool> BeUniqueDomainName(string domain, CancellationToken cancellationToken)

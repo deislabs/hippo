@@ -57,8 +57,8 @@ jQuery(function () {
   }; // environment form: show/hide env vars
 
 
-  $("#envVarToggle").bind("click", function () {
-    $("#envVars").toggleClass("hide");
+  $("#domainToggle").bind("click", function () {
+    $("#domains").toggleClass("hide");
   });
 
   if ($("input.env-radio").length > 0) {
