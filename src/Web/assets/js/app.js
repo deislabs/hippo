@@ -44,7 +44,7 @@ jQuery(function () {
     }
   };
 
-  // environment form: show deploy config based on radio buttons
+  // channel form: show deploy config based on radio buttons
   $.fn.deploySelection = function() {
     if ($('input[value="UseRangeRule"]').is(':checked')) {
       $("#envManualField").addClass("hide");
@@ -56,9 +56,9 @@ jQuery(function () {
     };
   }
 
-  // environment form: show/hide env vars
-  $("#envVarToggle").bind("click", function() {
-    $("#envVars").toggleClass("hide");
+  // channel form: show/hide env vars
+  $("#domainToggle").bind("click", function() {
+    $("#domain").toggleClass("hide");
   });
 
   if ($("input.env-radio").length > 0){

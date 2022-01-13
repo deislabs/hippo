@@ -25,14 +25,22 @@
                 </div>
             </div>
 
-            <div class="field is-horizontal">
-                <div class="field-label is-normal">
-                    <label asp-for="Domain" class="label">Domain</label>
-                </div>
+            <div class="field is-normal">
                 <div class="field-body is-normal">
-                    <div class="field">
-                        <input asp-for="Domain" class="input is-normal is-medium is-primary" placeholder="myapp.example.com" />
-                        <p asp-validation-for="Domain" class="help is-warning"></p>
+                    <a title="Add Domain" class="domain-toggle is-link" id="domainToggle"><small><i class="fa fa-plus"></i>&nbsp;<strong>Add Domain</strong></small></a>
+                </div>
+                <div class="field is-horizontal hide" id="domain">
+                    <div class="field-label is-normal">
+                        <label asp-for="Domain" class="label">
+                            Domain
+                            <small>(optional)</small>
+                        </label>
+                    </div>
+                    <div class="field-body is-normal">
+                        <div class="field">
+                            <input asp-for="Domain" class="input is-normal is-medium is-primary" placeholder="myapp.example.com" />
+                            <p asp-validation-for="Domain" class="help is-warning"></p>
+                        </div>
                     </div>
                 </div>
             </div>
