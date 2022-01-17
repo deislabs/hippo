@@ -19,9 +19,16 @@ public class EnvironmentVariableController : WebUIControllerBase
     [HttpPost]
     public async Task<IActionResult> New(CreateEnvironmentVariableCommand command)
     {
-        // TODO: handle validation errors
-        var id = await Mediator.Send(command);
-        return RedirectToAction(nameof(Details), new { id = id });
+        try
+        {
+            var id = await Mediator.Send(command);
+            return RedirectToAction(nameof(Details), new { id = id });
+        }
+        catch (ValidationException e)
+        {
+            ModelState.AddModelError("", e.Message);
+            return View(command);
+        }
     }
 
     [HttpGet]
