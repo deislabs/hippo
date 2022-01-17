@@ -69,9 +69,16 @@ public class AppController : WebUIControllerBase
     [HttpPost]
     public async Task<ActionResult<int>> New(CreateAppCommand command)
     {
-        // TODO: handle validation errors
-        var id = await Mediator.Send(command);
-        return RedirectToAction(nameof(Details), new { id = id });
+        try
+        {
+            var id = await Mediator.Send(command);
+            return RedirectToAction(nameof(Details), new { id = id });
+        }
+        catch (ValidationException e)
+        {
+            ModelState.AddModelError("", e.Message);
+            return View(command);
+        }
     }
 
     [HttpGet]
