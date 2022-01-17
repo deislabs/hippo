@@ -39,11 +39,21 @@ public class ChannelController : WebUIControllerBase
     }
 
     [HttpGet]
-    public IActionResult Edit(Guid id)
+    public async Task<IActionResult> Edit(Guid id)
     {
         try
         {
-            return View(new GetChannelQuery { Id = id });
+            ChannelDto dto = await Mediator.Send(new GetChannelQuery { Id = id });
+            
+            return View(new UpdateChannelCommand
+            {
+                Id = dto.Id,
+                Name = dto.Name,
+                Domain = dto.Domain,
+                RevisionSelectionStrategy = dto.RevisionSelectionStrategy,
+                RangeRule = dto.RangeRule,
+                ActiveRevision = dto.ActiveRevision
+            });
         }
         catch (NotFoundException)
         {
