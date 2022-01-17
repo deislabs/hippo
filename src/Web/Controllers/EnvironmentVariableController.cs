@@ -47,11 +47,18 @@ public class EnvironmentVariableController : WebUIControllerBase
     }
 
     [HttpGet]
-    public IActionResult Edit(Guid id)
+    public async Task<IActionResult> Edit(Guid id)
     {
         try
         {
-            return View(new GetEnvironmentVariableQuery { Id = id });
+            EnvironmentVariableDto dto = await Mediator.Send(new GetEnvironmentVariableQuery { Id = id });
+
+            return View(new UpdateEnvironmentVariableCommand
+            {
+                Id = dto.Id,
+                Key = dto.Key,
+                Value = dto.Value
+            });
         }
         catch (NotFoundException)
         {

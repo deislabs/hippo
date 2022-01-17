@@ -33,11 +33,18 @@ public class AppController : WebUIControllerBase
     }
 
     [HttpGet]
-    public IActionResult Edit(Guid id)
+    public async Task<IActionResult> Edit(Guid id)
     {
         try
         {
-            return View(new GetAppQuery { Id = id });
+            AppDto dto = await Mediator.Send(new GetAppQuery { Id = id });
+
+            return View(new UpdateAppCommand
+            {
+                Id = dto.Id,
+                Name = dto.Name,
+                StorageId = dto.StorageId
+            });
         }
         catch (NotFoundException)
         {
