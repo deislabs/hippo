@@ -1,5 +1,3 @@
-using Hippo.Core.Enums;
-
 namespace Hippo.Core.Entities;
 
 public class Channel : AuditableEntity, IHasDomainEvent
@@ -15,6 +13,8 @@ public class Channel : AuditableEntity, IHasDomainEvent
     public string? RangeRule { get; set; }
 
     public Revision? ActiveRevision { get; set; }
+
+    public Certificate? Certificate { get; set; }
 
     public int PortId { get; set; }
 

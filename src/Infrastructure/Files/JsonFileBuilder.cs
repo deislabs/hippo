@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Hippo.Application.Apps.Queries;
+using Hippo.Application.Certificates.Queries;
 using Hippo.Application.Channels.Queries;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Application.EnvironmentVariables.Queries;
@@ -10,6 +11,19 @@ namespace Hippo.Infrastructure.Files;
 public class JsonFileBuilder : IJsonFileBuilder
 {
     public byte[] BuildAppsFile(IEnumerable<AppRecord> records)
+    {
+        using var memoryStream = new MemoryStream();
+
+        using (var streamWriter = new StreamWriter(memoryStream))
+        {
+            string jsonString = JsonSerializer.Serialize(records);
+            streamWriter.WriteLine(jsonString);
+        }
+
+        return memoryStream.ToArray();
+    }
+
+    public byte[] BuildCertificatesFile(IEnumerable<CertificateRecord> records)
     {
         using var memoryStream = new MemoryStream();
 
