@@ -7,7 +7,7 @@ namespace Hippo.Infrastructure.ReverseProxies.Configuration;
 /// <summary
 /// This IProxyConfigProvider loads routes and clusters from memory.
 /// </summary>
-public class InMemoryConfigProvider : IProxyConfigProvider
+public class InMemoryConfigProvider : IConfigProvider, IProxyConfigProvider
 {
     private List<RouteConfig> _routes = new List<RouteConfig>();
 
