@@ -11,9 +11,9 @@ public class YarpReverseProxy : IReverseProxy
     // TODO: when the host restarts, we should re-hydrate the reverse proxy route config
     //
     // We could fix this by implementing a file-backed config provider.
-    private readonly InMemoryConfigProvider _configProvider;
+    private readonly IConfigProvider _configProvider;
 
-    public YarpReverseProxy(InMemoryConfigProvider configProvider)
+    public YarpReverseProxy(IConfigProvider configProvider)
     {
         _configProvider = configProvider;
     }
