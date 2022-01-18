@@ -16,13 +16,13 @@ public class UpdateChannelTests : TestBase
     {
         var appId = await SendAsync(new CreateAppCommand
         {
-            Name = "updatechanneltests",
-            StorageId = "updatechanneltests"
+            Name = "ShouldValidateDomain",
+            StorageId = "ShouldValidateDomain"
         });
 
         var createChannelCommand = new CreateChannelCommand
         {
-            Name = "testing",
+            Name = "ShouldValidateDomain",
             AppId = appId,
             RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseRangeRule,
             RangeRule = "*",
@@ -35,6 +35,44 @@ public class UpdateChannelTests : TestBase
         {
             Id = channelId,
             Domain = domain,
+        };
+
+        await Assert.ThrowsAsync<ValidationException>(async () => await SendAsync(command));
+    }
+
+    [Fact]
+    public async Task ShouldValidateUniqueName()
+    {
+        var appId = await SendAsync(new CreateAppCommand
+        {
+            Name = "ShouldValidateUniqueName",
+            StorageId = "ShouldValidateUniqueName"
+        });
+
+        var createChannelCommand = new CreateChannelCommand
+        {
+            Name = "ShouldValidateUniqueName",
+            AppId = appId,
+            RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseRangeRule,
+            RangeRule = "*",
+            ActiveRevision = null
+        };
+
+        var channelId = await SendAsync(createChannelCommand);
+
+        await SendAsync(new CreateChannelCommand
+        {
+            Name = "ShouldValidateUniqueName2",
+            AppId = appId,
+            RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseRangeRule,
+            RangeRule = "*",
+            ActiveRevision = null
+        });
+
+        var command = new UpdateChannelCommand
+        {
+            Id = channelId,
+            Name = "ShouldValidateUniqueName2"
         };
 
         await Assert.ThrowsAsync<ValidationException>(async () => await SendAsync(command));
