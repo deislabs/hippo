@@ -1,6 +1,8 @@
 using System.Text.RegularExpressions;
 using FluentValidation;
+using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
+using Hippo.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hippo.Application.Channels.Commands;
@@ -19,7 +21,8 @@ public class UpdateChannelCommandValidator : AbstractValidator<UpdateChannelComm
         RuleFor(v => v.Name)
             .NotEmpty().WithMessage("Name is required.")
             .MaximumLength(64)
-            .Matches(validName);
+            .Matches(validName)
+            .MustAsync(BeUniqueNameForApp).WithMessage("A channel with the same name already exists for this app.");
 
         RuleFor(v => v.Domain)
             .NotEmpty().WithMessage("Domain is required.")
@@ -29,6 +32,18 @@ public class UpdateChannelCommandValidator : AbstractValidator<UpdateChannelComm
         // TODO: validate RangeRule
     }
 
+    public async Task<bool> BeUniqueNameForApp(UpdateChannelCommand command, string name, CancellationToken cancellationToken)
+    {
+        var channel = await _context.Channels.Where(c => c.Id == command.Id).SingleOrDefaultAsync(cancellationToken);
+        
+        if (channel == null)
+        {
+            throw new NotFoundException(nameof(Channel), command.Id);
+        }
+
+        return await _context.Channels.Where(c => c.AppId == channel.AppId).AllAsync(a => a.Name != name, cancellationToken);
+    }
+    
     public async Task<bool> BeUniqueDomainName(string domain, CancellationToken cancellationToken)
     {
         return await _context.Channels.AllAsync(a => a.Domain != domain, cancellationToken);
