@@ -23,7 +23,7 @@ public class UpdateCertificateCommandValidator : AbstractValidator<UpdateCertifi
 
         RuleFor(v => v.PublicKey)
             .NotEmpty().WithMessage("Public key is required.");
-        
+
         RuleFor(v => v.PrivateKey)
             .NotEmpty().WithMessage("Private key is required.");
 

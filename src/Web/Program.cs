@@ -48,14 +48,6 @@ builder.Services.AddAuthentication().AddCookie().AddJwtBearer(cfg =>
     }
 );
 
-builder.WebHost.UseKestrel(options =>
-{
-    options.ListenLocalhost(builder.Configuration.GetValue<int>("Kestrel:Endpoints:Http:Port", 5308));
-    options.ListenLocalhost(
-        builder.Configuration.GetValue<int>("Kestrel:Endpoints:Https:Port", 5309),
-        listenOptions => listenOptions.UseHttps());
-});
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

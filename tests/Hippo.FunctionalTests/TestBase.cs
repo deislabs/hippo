@@ -51,6 +51,8 @@ public class TestBase : IDisposable
 
         services.AddDatabaseDeveloperPageExceptionFilter();
 
+        services.AddSingleton<IConfiguration>(_configuration);
+
         services.AddSingleton<ICurrentUserService, CurrentUserService>();
 
         services.AddHttpContextAccessor();

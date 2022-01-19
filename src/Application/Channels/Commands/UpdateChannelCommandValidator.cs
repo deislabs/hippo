@@ -35,7 +35,7 @@ public class UpdateChannelCommandValidator : AbstractValidator<UpdateChannelComm
     public async Task<bool> BeUniqueNameForApp(UpdateChannelCommand command, string name, CancellationToken cancellationToken)
     {
         var channel = await _context.Channels.Where(c => c.Id == command.Id).SingleOrDefaultAsync(cancellationToken);
-        
+
         if (channel == null)
         {
             throw new NotFoundException(nameof(Channel), command.Id);
@@ -43,7 +43,7 @@ public class UpdateChannelCommandValidator : AbstractValidator<UpdateChannelComm
 
         return await _context.Channels.Where(c => c.AppId == channel.AppId).AllAsync(a => a.Name != name, cancellationToken);
     }
-    
+
     public async Task<bool> BeUniqueDomainName(string domain, CancellationToken cancellationToken)
     {
         return await _context.Channels.AllAsync(a => a.Domain != domain, cancellationToken);
