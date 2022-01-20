@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -48,15 +49,31 @@ builder.Services.AddAuthentication().AddCookie().AddJwtBearer(cfg =>
     }
 );
 
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+builder.Services.AddSwaggerGen(c =>
 {
-    app.UseExceptionHandler("/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    app.UseHsts();
-}
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+        Type = SecuritySchemeType.ApiKey,
+        In = ParameterLocation.Header,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
+            },
+            new List<string>()
+        }
+    });
+});
+
+var app = builder.Build();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -65,6 +82,20 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Configure the HTTP request pipeline.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Error");
+    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+    app.UseHsts();
+}
+else
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
 
 app.UseEndpoints(endpoints =>
 {
@@ -81,6 +112,7 @@ app.UseEndpoints(endpoints =>
     {
         endpoints.MapReverseProxy();
     }
+    endpoints.MapSwagger();
 });
 
 using (var scope = app.Services.CreateScope())
