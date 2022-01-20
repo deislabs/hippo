@@ -7,6 +7,8 @@ public interface IApplicationDbContext
 {
     DbSet<App> Apps { get; }
 
+    DbSet<Certificate> Certificates { get; }
+
     DbSet<Channel> Channels { get; }
 
     DbSet<EnvironmentVariable> EnvironmentVariables { get; }

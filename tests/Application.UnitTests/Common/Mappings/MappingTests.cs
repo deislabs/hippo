@@ -2,6 +2,7 @@ using System;
 using System.Runtime.Serialization;
 using AutoMapper;
 using Hippo.Application.Apps.Queries;
+using Hippo.Application.Certificates.Queries;
 using Hippo.Application.Channels.Queries;
 using Hippo.Application.Common.Mappings;
 using Hippo.Application.EnvironmentVariables.Queries;
@@ -34,6 +35,8 @@ public class MappingTests
     [Theory]
     [InlineData(typeof(App), typeof(AppDto))]
     [InlineData(typeof(App), typeof(AppRecord))]
+    [InlineData(typeof(Certificate), typeof(CertificateDto))]
+    [InlineData(typeof(Certificate), typeof(CertificateRecord))]
     [InlineData(typeof(Channel), typeof(ChannelDto))]
     [InlineData(typeof(Channel), typeof(ChannelRecord))]
     [InlineData(typeof(EnvironmentVariable), typeof(EnvironmentVariableDto))]

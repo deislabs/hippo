@@ -20,6 +20,8 @@ public class UpdateChannelCommand : IRequest
     public string? RangeRule { get; set; }
 
     public Revision? ActiveRevision { get; set; }
+
+    public Certificate? Certificate { get; set; }
 }
 
 public class UpdateChannelCommandHandler : IRequestHandler<UpdateChannelCommand>
@@ -46,11 +48,21 @@ public class UpdateChannelCommandHandler : IRequestHandler<UpdateChannelCommand>
             entity.DomainEvents.Add(new ActiveRevisionChangedEvent(entity, request.ActiveRevision));
         }
 
+        if (request.Certificate == null && entity.Certificate != null)
+        {
+            entity.DomainEvents.Add(new CertificateUnbindEvent(entity.Certificate, entity));
+        }
+        else if (request.Certificate != null && entity.Certificate != request.Certificate)
+        {
+            entity.DomainEvents.Add(new CertificateBindEvent(request.Certificate, entity));
+        }
+
         entity.Name = request.Name;
         entity.Domain = request.Domain;
         entity.RevisionSelectionStrategy = request.RevisionSelectionStrategy;
         entity.RangeRule = request.RangeRule;
         entity.ActiveRevision = request.ActiveRevision;
+        entity.Certificate = request.Certificate;
 
         await _context.SaveChangesAsync(cancellationToken);
 

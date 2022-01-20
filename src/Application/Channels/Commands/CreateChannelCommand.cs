@@ -22,6 +22,8 @@ public class CreateChannelCommand : IRequest<Guid>
     public string? RangeRule { get; set; }
 
     public Revision? ActiveRevision { get; set; }
+
+    public Certificate? Certificate { get; set; }
 }
 
 public class CreateChannelCommandHandler : IRequestHandler<CreateChannelCommand, Guid>
@@ -47,7 +49,7 @@ public class CreateChannelCommandHandler : IRequestHandler<CreateChannelCommand,
         {
             throw new NotFoundException(nameof(App), request.AppId);
         }
-        
+
         var platformDomain = (_config.PlatformDomain != null) ? _config.PlatformDomain : "hippofactory.io";
 
         var entity = new Channel
@@ -58,10 +60,16 @@ public class CreateChannelCommandHandler : IRequestHandler<CreateChannelCommand,
             RevisionSelectionStrategy = request.RevisionSelectionStrategy,
             RangeRule = request.RangeRule,
             ActiveRevision = request.ActiveRevision,
-            PortId = _context.Channels.Count()
+            PortId = _context.Channels.Count(),
+            Certificate = request.Certificate
         };
 
         entity.DomainEvents.Add(new ChannelCreatedEvent(entity));
+
+        if (request.Certificate != null)
+        {
+            entity.DomainEvents.Add(new CertificateBindEvent(request.Certificate, entity));
+        }
 
         _context.Channels.Add(entity);
 

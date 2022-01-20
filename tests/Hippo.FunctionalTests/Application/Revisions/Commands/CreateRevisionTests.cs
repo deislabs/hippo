@@ -3,8 +3,6 @@ using Hippo.Application.Revisions.Commands;
 using Hippo.Application.Common.Exceptions;
 using Xunit;
 using Hippo.Application.Apps.Commands;
-using Hippo.Core.Entities;
-using System;
 
 namespace Hippo.FunctionalTests.Application.Revisions.Commands;
 

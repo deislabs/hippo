@@ -29,6 +29,8 @@ public class ApplicationDbContext : IdentityDbContext<Account>, IApplicationDbCo
 
     public DbSet<App> Apps => Set<App>();
 
+    public DbSet<Certificate> Certificates => Set<Certificate>();
+
     public DbSet<Channel> Channels => Set<Channel>();
 
     public DbSet<EnvironmentVariable> EnvironmentVariables => Set<EnvironmentVariable>();

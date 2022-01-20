@@ -22,7 +22,7 @@ public class CreateChannelCommandValidator : AbstractValidator<CreateChannelComm
             .MaximumLength(64)
             .Matches(validName)
             .MustAsync(BeUniqueNameForApp).WithMessage("A channel with the same name already exists for this app.");
-        
+
         RuleFor(v => v.Domain)
             .NotEqual("").WithMessage("Domain cannot be an empty string.")
             .Matches(validDomainName)

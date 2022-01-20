@@ -30,7 +30,7 @@ public class YarpReverseProxy : IReverseProxy
                 ClusterId = key,
                 Match = new RouteMatch
                 {
-                    Hosts = new List<string>(){c.Domain},
+                    Hosts = new List<string>() { c.Domain },
                     Path = "{**catch-all}"
                 }
             };
