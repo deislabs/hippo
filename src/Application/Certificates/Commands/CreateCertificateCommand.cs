@@ -16,8 +16,6 @@ public class CreateCertificateCommand : IRequest<Guid>
     public string? PublicKey { get; set; }
 
     public string? PrivateKey { get; set; }
-
-    public List<Channel>? ChannelsToBind { get; set; }
 }
 
 public class CreateCertificateCommandHandler : IRequestHandler<CreateCertificateCommand, Guid>
