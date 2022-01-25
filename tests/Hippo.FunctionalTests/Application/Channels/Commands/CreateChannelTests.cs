@@ -103,8 +103,7 @@ public class CreateChannelTests : TestBase
             Name = name,
             AppId = appId,
             RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseRangeRule,
-            RangeRule = "*",
-            ActiveRevisionId = null
+            RangeRule = "*"
         };
 
         await Assert.ThrowsAsync<ValidationException>(async () => await SendAsync(command));
