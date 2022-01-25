@@ -1,11 +1,7 @@
-using Hippo.Application.Common.Config;
-using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Core.Entities;
-using Hippo.Core.Enums;
 using Hippo.Core.Events;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Hippo.Application.Certificates.Commands;
 

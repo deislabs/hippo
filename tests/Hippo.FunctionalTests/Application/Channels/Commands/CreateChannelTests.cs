@@ -41,8 +41,7 @@ public class CreateChannelTests : TestBase
             Name = "development",
             AppId = appId1,
             RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseRangeRule,
-            RangeRule = "*",
-            ActiveRevision = null
+            RangeRule = "*"
         });
 
         var command = new CreateChannelCommand
@@ -50,8 +49,7 @@ public class CreateChannelTests : TestBase
             Name = "development",
             AppId = appId1,
             RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseRangeRule,
-            RangeRule = "*",
-            ActiveRevision = null
+            RangeRule = "*"
         };
 
         await Assert.ThrowsAsync<ValidationException>(async () => await SendAsync(command));
@@ -81,7 +79,7 @@ public class CreateChannelTests : TestBase
             AppId = appId,
             RevisionSelectionStrategy = revisionSelectionStrategy,
             RangeRule = rangeRule,
-            ActiveRevision = activeRevision
+            ActiveRevisionId = activeRevision?.Id
         };
 
         await SendAsync(command);
@@ -106,7 +104,7 @@ public class CreateChannelTests : TestBase
             AppId = appId,
             RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseRangeRule,
             RangeRule = "*",
-            ActiveRevision = null
+            ActiveRevisionId = null
         };
 
         await Assert.ThrowsAsync<ValidationException>(async () => await SendAsync(command));

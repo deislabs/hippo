@@ -37,12 +37,7 @@ public class RevisionCreatedEventHandler : INotificationHandler<DomainEventNotif
         {
             if (channel.RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseRangeRule)
             {
-                var newActiveRevision = RevisionRangeRule.Parse(channel.RangeRule).Match(channel.App.Revisions);
-                if (newActiveRevision != null && newActiveRevision != channel.ActiveRevision)
-                {
-                    channel.DomainEvents.Add(new ActiveRevisionChangedEvent(channel, newActiveRevision));
-                }
-                channel.ActiveRevision = newActiveRevision;
+                channel.ActiveRevision = RevisionRangeRule.Parse(channel.RangeRule).Match(channel.App.Revisions);
             }
         }
 

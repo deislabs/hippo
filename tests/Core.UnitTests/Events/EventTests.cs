@@ -66,13 +66,11 @@ public class EventTests
     [Fact]
     public void ActiveRevisionChangedEventTest()
     {
+        var oldRevision = new Revision { RevisionNumber = "1.0.0" };
+        var newRevision = new Revision { RevisionNumber = "2.0.0" };
         var channel = new Channel();
-        var oldVersion = "1.0.0";
-        var newVersion = "2.0.0";
-        channel.ActiveRevision = new Revision { RevisionNumber = oldVersion };
-        var @event = new ActiveRevisionChangedEvent(channel, new Revision { RevisionNumber = newVersion });
-        Assert.Equal(channel, @event.Channel);
-        Assert.Equal(oldVersion, @event.ChangedFrom!.RevisionNumber);
-        Assert.Equal(newVersion, @event.ChangedTo.RevisionNumber);
+        channel.ActiveRevisionId = oldRevision.Id;
+        channel.ActiveRevisionId = newRevision.Id;
+        Assert.Single(channel.DomainEvents);
     }
 }

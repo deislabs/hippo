@@ -31,7 +31,7 @@ public class CertificateBindEventHandler : INotificationHandler<DomainEventNotif
         //
         // TODO: Do we need to handle cases when the domain name changes? Perhaps we should handle that with a new event.
         //       That being said, it is likely the certificate will need to be replaced... So this may not be an issue.
-        var certificate = notification.DomainEvent.Certificate;
+        var certificate = notification.DomainEvent.Channel.Certificate!;
         var domain = notification.DomainEvent.Channel.Domain!;
         var sniOptions = new SniOptions(new SniOptions.CertificateOptions(certificate.PublicKey!, certificate.PrivateKey!, Path.Combine(System.IO.Directory.GetCurrentDirectory(), domain)));
 

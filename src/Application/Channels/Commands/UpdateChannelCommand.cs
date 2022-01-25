@@ -2,7 +2,6 @@ using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Core.Entities;
 using Hippo.Core.Enums;
-using Hippo.Core.Events;
 using MediatR;
 
 namespace Hippo.Application.Channels.Commands;
@@ -19,9 +18,9 @@ public class UpdateChannelCommand : IRequest
 
     public string? RangeRule { get; set; }
 
-    public Revision? ActiveRevision { get; set; }
+    public Guid? ActiveRevisionId { get; set; }
 
-    public Certificate? Certificate { get; set; }
+    public Guid? CertificateId { get; set; }
 }
 
 public class UpdateChannelCommandHandler : IRequestHandler<UpdateChannelCommand>
@@ -43,26 +42,12 @@ public class UpdateChannelCommandHandler : IRequestHandler<UpdateChannelCommand>
             throw new NotFoundException(nameof(Channel), request.Id);
         }
 
-        if (request.ActiveRevision != null && request.ActiveRevision != entity.ActiveRevision)
-        {
-            entity.DomainEvents.Add(new ActiveRevisionChangedEvent(entity, request.ActiveRevision));
-        }
-
-        if (request.Certificate == null && entity.Certificate != null)
-        {
-            entity.DomainEvents.Add(new CertificateUnbindEvent(entity.Certificate, entity));
-        }
-        else if (request.Certificate != null && entity.Certificate != request.Certificate)
-        {
-            entity.DomainEvents.Add(new CertificateBindEvent(request.Certificate, entity));
-        }
-
         entity.Name = request.Name;
         entity.Domain = request.Domain;
         entity.RevisionSelectionStrategy = request.RevisionSelectionStrategy;
         entity.RangeRule = request.RangeRule;
-        entity.ActiveRevision = request.ActiveRevision;
-        entity.Certificate = request.Certificate;
+        entity.ActiveRevisionId = request.ActiveRevisionId;
+        entity.CertificateId = request.CertificateId;
 
         await _context.SaveChangesAsync(cancellationToken);
 

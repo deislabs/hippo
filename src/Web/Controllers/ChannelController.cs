@@ -51,7 +51,7 @@ public class ChannelController : WebUIControllerBase
         try
         {
             ChannelDto dto = await Mediator.Send(new GetChannelQuery { Id = id });
-            
+
             return View(new UpdateChannelCommand
             {
                 Id = dto.Id,
@@ -59,7 +59,7 @@ public class ChannelController : WebUIControllerBase
                 Domain = dto.Domain,
                 RevisionSelectionStrategy = dto.RevisionSelectionStrategy,
                 RangeRule = dto.RangeRule,
-                ActiveRevision = dto.ActiveRevision
+                ActiveRevisionId = dto.ActiveRevision?.Id
             });
         }
         catch (NotFoundException)
