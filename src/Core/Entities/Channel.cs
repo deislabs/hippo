@@ -35,13 +35,14 @@ public class Channel : AuditableEntity, IHasDomainEvent
         get => _certificateId;
         set
         {
-            if (value != null && _certificateId == null)
-            {
-                DomainEvents.Add(new CertificateBindEvent(this));
-            }
-            else if (value == null && _certificateId != null)
+            if (_certificateId != null && value != _certificateId)
             {
                 DomainEvents.Add(new CertificateUnbindEvent(this));
+            }
+
+            if (value != null)
+            {
+                DomainEvents.Add(new CertificateBindEvent(this));
             }
 
             _certificateId = value;
