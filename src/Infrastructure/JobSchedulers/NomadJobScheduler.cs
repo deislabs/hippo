@@ -11,7 +11,7 @@ public class NomadJobScheduler : IJobScheduler
 {
     private static readonly IReadOnlyList<string> RUST_TRACE_LEVELS = new List<string> {
         "TRACE", "DEBUG", "INFO", "WARN", "ERROR" // TODO: check
-	}.AsReadOnly();
+	  }.AsReadOnly();
 
     private readonly ILogger<NomadJobScheduler> logger;
 
@@ -25,6 +25,7 @@ public class NomadJobScheduler : IJobScheduler
 
     public ChannelStatus Start(Channel c)
     {
+        var jobName = $"{c.App.Name}-{c.Name}";
         var nomadProgram = NomadBinaryPath();
         var bindleUrl = configuration.GetValue<string>("Bindle:Url", "http://127.0.0.1:8080/v1");
         if (bindleUrl == null)
@@ -71,7 +72,7 @@ public class NomadJobScheduler : IJobScheduler
                 Task.WhenAll(ForwardLogs(process.StandardError, $"{c.App.Name}:{c.Name}:nomad:stderr"));
 
                 process.WaitForExit();
-                logger.LogTrace($"nomad job {c.App.Name}-{c.Name} is ready");
+                logger.LogTrace($"nomad job {jobName} is ready");
             }
         }
         catch (Win32Exception e)  // yes, even on Linux
@@ -84,12 +85,50 @@ public class NomadJobScheduler : IJobScheduler
         }
 
         // TODO: fetch job status and the job's listen address
-        throw new NotImplementedException();
+        // for now we'll go ahead and inject dummy data...
+        return new ChannelStatus(true, "127.0.0.1");
     }
 
     public void Stop(Channel c)
     {
-        throw new NotImplementedException();
+        var jobName = $"{c.App.Name}-{c.Name}";
+        var psi = new ProcessStartInfo
+        {
+            FileName = "nomad",
+            Arguments = $"job stop {jobName}",
+            UseShellExecute = false,
+            RedirectStandardInput = true,
+            RedirectStandardError = true,
+            RedirectStandardOutput = true,
+        };
+        try
+        {
+            using (var process = Process.Start(psi))
+            {
+                if (process == null)
+                {
+                    // TODO: probably want to throw an Exception here instead
+                    logger.LogError($"Process {psi.FileName} with arguments {psi.Arguments} never started");
+                    return;
+                }
+
+                process.EnableRaisingEvents = true;
+                process.Start();
+
+                Task.WhenAll(ForwardLogs(process.StandardError, $"{c.App.Name}:{c.Name}:nomad:stderr"));
+
+                process.WaitForExit();
+                logger.LogTrace($"nomad job {jobName} has stopped");
+            }
+        }
+        catch (Win32Exception e)  // yes, even on Linux
+        {
+            if (e.Message.Contains("No such file or directory", StringComparison.InvariantCultureIgnoreCase) || e.Message.Contains("The system cannot find the file specified", StringComparison.InvariantCultureIgnoreCase))
+            {
+                throw new ArgumentException($"The system cannot find 'nomad'; add 'nomad' to your $PATH or set 'Nomad:BinaryPath' in your appsettings to the correct location.");
+            }
+            throw;
+        }
     }
 
     private string NomadBinaryPath()
@@ -127,7 +166,7 @@ public class NomadJobScheduler : IJobScheduler
     private static string? AsRustTraceLevel(string fragment) =>
         RUST_TRACE_LEVELS.Where(level => fragment.Contains(level, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
 
-    // ActiveRevision can safely ignore nullability thanks to the null check on line 35    
+    // ActiveRevision can safely ignore nullability thanks to the null check on line 35
     private static string JobDefinition(Channel c)
     {
         var name = $"{c.App.Name}-{c.Name}";
