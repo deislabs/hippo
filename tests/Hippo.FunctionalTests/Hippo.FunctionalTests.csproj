@@ -5,7 +5,6 @@
     <RootNamespace>Hippo.FunctionalTests</RootNamespace>
     <AssemblyName>Hippo.FunctionalTests</AssemblyName>
     <Nullable>enable</Nullable>
-
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
