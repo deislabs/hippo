@@ -1,6 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
+		<PackageId>Hippo.Infrastructure</PackageId>
+		<Version>0.2.0</Version>
+		<Authors>Matt Fisher</Authors>
+		<Company>Microsoft</Company>
+		<RepositoryUrl>https://github.com/deislabs/hippo</RepositoryUrl>
 		<TargetFramework>net6.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>

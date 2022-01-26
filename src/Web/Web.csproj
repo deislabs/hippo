@@ -1,6 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
+		<PackageId>Hippo.Web</PackageId>
+		<Version>0.2.0</Version>
+		<Authors>Matt Fisher</Authors>
+		<Company>Microsoft</Company>
+		<RepositoryUrl>https://github.com/deislabs/hippo</RepositoryUrl>
 		<TargetFramework>net6.0</TargetFramework>
 		<RootNamespace>Hippo.Web</RootNamespace>
 		<AssemblyName>Hippo.Web</AssemblyName>
