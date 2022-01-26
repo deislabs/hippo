@@ -25,8 +25,7 @@ public class UpdateChannelTests : TestBase
             Name = "ShouldValidateDomain",
             AppId = appId,
             RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseRangeRule,
-            RangeRule = "*",
-            ActiveRevision = null
+            RangeRule = "*"
         };
 
         var channelId = await SendAsync(createChannelCommand);
@@ -54,8 +53,7 @@ public class UpdateChannelTests : TestBase
             Name = "ShouldValidateUniqueName",
             AppId = appId,
             RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseRangeRule,
-            RangeRule = "*",
-            ActiveRevision = null
+            RangeRule = "*"
         };
 
         var channelId = await SendAsync(createChannelCommand);
@@ -65,8 +63,7 @@ public class UpdateChannelTests : TestBase
             Name = "ShouldValidateUniqueName2",
             AppId = appId,
             RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseRangeRule,
-            RangeRule = "*",
-            ActiveRevision = null
+            RangeRule = "*"
         });
 
         var command = new UpdateChannelCommand

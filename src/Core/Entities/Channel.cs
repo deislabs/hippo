@@ -12,7 +12,42 @@ public class Channel : AuditableEntity, IHasDomainEvent
 
     public string? RangeRule { get; set; }
 
+    private Guid? _activeRevisionId;
+    public Guid? ActiveRevisionId
+    {
+        get => _activeRevisionId;
+        set
+        {
+            if (value != _activeRevisionId)
+            {
+                DomainEvents.Add(new ActiveRevisionChangedEvent(this));
+            }
+
+            _activeRevisionId = value;
+        }
+    }
+
     public Revision? ActiveRevision { get; set; }
+
+    private Guid? _certificateId;
+    public Guid? CertificateId
+    {
+        get => _certificateId;
+        set
+        {
+            if (_certificateId != null && value != _certificateId)
+            {
+                DomainEvents.Add(new CertificateUnbindEvent(this));
+            }
+
+            if (value != null)
+            {
+                DomainEvents.Add(new CertificateBindEvent(this));
+            }
+
+            _certificateId = value;
+        }
+    }
 
     public Certificate? Certificate { get; set; }
 

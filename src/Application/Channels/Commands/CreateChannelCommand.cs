@@ -21,9 +21,9 @@ public class CreateChannelCommand : IRequest<Guid>
 
     public string? RangeRule { get; set; }
 
-    public Revision? ActiveRevision { get; set; }
+    public Guid? ActiveRevisionId { get; set; }
 
-    public Certificate? Certificate { get; set; }
+    public Guid? CertificateId { get; set; }
 }
 
 public class CreateChannelCommandHandler : IRequestHandler<CreateChannelCommand, Guid>
@@ -59,17 +59,12 @@ public class CreateChannelCommandHandler : IRequestHandler<CreateChannelCommand,
             Domain = (request.Domain != null) ? request.Domain : $"{request.Name}.{app.Name}.{platformDomain}",
             RevisionSelectionStrategy = request.RevisionSelectionStrategy,
             RangeRule = request.RangeRule,
-            ActiveRevision = request.ActiveRevision,
+            ActiveRevisionId = request.ActiveRevisionId,
             PortId = _context.Channels.Count(),
-            Certificate = request.Certificate
+            CertificateId = request.CertificateId
         };
 
         entity.DomainEvents.Add(new ChannelCreatedEvent(entity));
-
-        if (request.Certificate != null)
-        {
-            entity.DomainEvents.Add(new CertificateBindEvent(request.Certificate, entity));
-        }
 
         _context.Channels.Add(entity);
 
