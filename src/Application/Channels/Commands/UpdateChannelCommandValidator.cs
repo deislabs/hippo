@@ -29,7 +29,10 @@ public class UpdateChannelCommandValidator : AbstractValidator<UpdateChannelComm
             .Matches(validDomainName)
             .MustAsync(BeUniqueDomainName).WithMessage("The specified domain already exists.");
 
-        // TODO: validate RangeRule
+        RuleFor(v => v.RangeRule)
+            .NotEqual("").WithMessage("Range rule cannot be an empty string.");
+
+        // TODO: validate RangeRule syntax
     }
 
     public async Task<bool> BeUniqueNameForApp(UpdateChannelCommand command, string name, CancellationToken cancellationToken)

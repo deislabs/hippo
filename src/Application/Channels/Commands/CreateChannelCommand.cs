@@ -64,6 +64,11 @@ public class CreateChannelCommandHandler : IRequestHandler<CreateChannelCommand,
             CertificateId = request.CertificateId
         };
 
+        if (entity.RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseRangeRule && entity.RangeRule == null)
+        {
+            entity.RangeRule = "*";
+        }
+
         entity.DomainEvents.Add(new ChannelCreatedEvent(entity));
 
         _context.Channels.Add(entity);
