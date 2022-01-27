@@ -27,8 +27,20 @@ public class Channel : AuditableEntity, IHasDomainEvent
         }
     }
 
-    public Revision? ActiveRevision { get; set; }
+    public Revision? _activeRevision;
+    public Revision? ActiveRevision
+    {
+        get => _activeRevision;
+        set
+        {
+            if (value != _activeRevision)
+            {
+                DomainEvents.Add(new ActiveRevisionChangedEvent(this));
+            }
 
+            _activeRevision = value;
+        }
+    }
     private Guid? _certificateId;
     public Guid? CertificateId
     {
