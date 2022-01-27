@@ -49,6 +49,11 @@ public class UpdateChannelCommandHandler : IRequestHandler<UpdateChannelCommand>
         entity.ActiveRevisionId = request.ActiveRevisionId;
         entity.CertificateId = request.CertificateId;
 
+        if (entity.RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseRangeRule && entity.RangeRule == null)
+        {
+            entity.RangeRule = "*";
+        }
+
         await _context.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;

@@ -62,7 +62,8 @@ public class CreateChannelTests : TestBase
     [Theory]
     [InlineData("production", ChannelRevisionSelectionStrategy.UseRangeRule, "*", null)]
     [InlineData("staging", ChannelRevisionSelectionStrategy.UseRangeRule, "*", null)]
-    public async Task ShouldCreate(string name, ChannelRevisionSelectionStrategy revisionSelectionStrategy, string rangeRule, Revision? activeRevision)
+    [InlineData("latest", ChannelRevisionSelectionStrategy.UseRangeRule, null, null)]
+    public async Task ShouldCreate(string name, ChannelRevisionSelectionStrategy revisionSelectionStrategy, string? rangeRule, Revision? activeRevision)
     {
         var appId = Guid.NewGuid();
 
@@ -86,8 +87,9 @@ public class CreateChannelTests : TestBase
     }
 
     [Theory]
-    [InlineData("!@#$%^&*(){}[]<>\\|'\";:,./?=+")]
-    public async Task ShouldValidateName(string name)
+    [InlineData("!@#$%^&*(){}[]<>\\|'\";:,./?=+", ChannelRevisionSelectionStrategy.UseRangeRule, "*")]
+    [InlineData("latest", ChannelRevisionSelectionStrategy.UseRangeRule, "")]
+    public async Task ShouldRaiseValidationException(string name, ChannelRevisionSelectionStrategy revisionSelectionStrategy, string? rangeRule)
     {
         var appId = Guid.NewGuid();
 
@@ -102,8 +104,8 @@ public class CreateChannelTests : TestBase
         {
             Name = name,
             AppId = appId,
-            RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseRangeRule,
-            RangeRule = "*"
+            RevisionSelectionStrategy = revisionSelectionStrategy,
+            RangeRule = rangeRule
         };
 
         await Assert.ThrowsAsync<ValidationException>(async () => await SendAsync(command));
