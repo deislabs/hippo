@@ -10,15 +10,13 @@ namespace Hippo.Web.Api;
 public class CertificateController : ApiControllerBase
 {
     [HttpGet]
-    [Route("")]
     public async Task<ActionResult<CertificatesVm>> Index()
     {
         return await Mediator.Send(new GetCertificatesQuery());
     }
 
-    [HttpGet]
-    [Route("{id:int}")]
-    public async Task<FileResult> Index(Guid id)
+    [HttpGet("export")]
+    public async Task<FileResult> Export()
     {
         var vm = await Mediator.Send(new ExportCertificatesQuery());
 
@@ -26,14 +24,12 @@ public class CertificateController : ApiControllerBase
     }
 
     [HttpPost]
-    [Route("")]
     public async Task<ActionResult<Guid>> Create([FromBody] CreateCertificateCommand command)
     {
         return await Mediator.Send(command);
     }
 
-    [HttpDelete]
-    [Route("{id:int}")]
+    [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(Guid id)
     {
         await Mediator.Send(new DeleteCertificateCommand { Id = id });

@@ -10,14 +10,12 @@ namespace Hippo.Web.Api;
 public class AppController : ApiControllerBase
 {
     [HttpGet]
-    [Route("")]
     public async Task<ActionResult<AppsVm>> Index()
     {
         return await Mediator.Send(new GetAppsQuery());
     }
 
-    [HttpGet]
-    [Route("export")]
+    [HttpGet("export")]
     public async Task<FileResult> Export()
     {
         var vm = await Mediator.Send(new ExportAppsQuery());
@@ -26,14 +24,12 @@ public class AppController : ApiControllerBase
     }
 
     [HttpPost]
-    [Route("")]
     public async Task<ActionResult<Guid>> Create([FromBody] CreateAppCommand command)
     {
         return await Mediator.Send(command);
     }
 
-    [HttpDelete]
-    [Route("{id:int}")]
+    [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(Guid id)
     {
         await Mediator.Send(new DeleteAppCommand { Id = id });

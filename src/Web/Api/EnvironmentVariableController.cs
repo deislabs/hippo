@@ -10,15 +10,13 @@ namespace Hippo.Web.Api;
 public class EnvironmentVariableController : ApiControllerBase
 {
     [HttpGet]
-    [Route("")]
     public async Task<ActionResult<EnvironmentVariablesVm>> Index()
     {
         return await Mediator.Send(new GetEnvironmentVariablesQuery());
     }
 
-    [HttpGet]
-    [Route("{id:int}")]
-    public async Task<FileResult> Index(Guid id)
+    [HttpGet("export")]
+    public async Task<FileResult> Export()
     {
         var vm = await Mediator.Send(new ExportEnvironmentVariablesQuery());
 
@@ -26,14 +24,12 @@ public class EnvironmentVariableController : ApiControllerBase
     }
 
     [HttpPost]
-    [Route("")]
     public async Task<ActionResult<Guid>> Create([FromBody] CreateEnvironmentVariableCommand command)
     {
         return await Mediator.Send(command);
     }
 
-    [HttpDelete]
-    [Route("{id:int}")]
+    [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(Guid id)
     {
         await Mediator.Send(new DeleteEnvironmentVariableCommand { Id = id });
