@@ -103,7 +103,7 @@ public class AppController : WebUIControllerBase
         }
     }
 
-    [HttpDelete]
+    [HttpPost]
     public async Task<IActionResult> Delete(DeleteAppCommand command)
     {
         try
