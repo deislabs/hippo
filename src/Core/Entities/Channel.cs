@@ -47,12 +47,11 @@ public class Channel : AuditableEntity, IHasDomainEvent
         get => _certificateId;
         set
         {
-            if (_certificateId != null && value != _certificateId)
+            if (value == null)
             {
                 DomainEvents.Add(new CertificateUnbindEvent(this));
             }
-
-            if (value != null)
+            else
             {
                 DomainEvents.Add(new CertificateBindEvent(this));
             }
@@ -61,7 +60,24 @@ public class Channel : AuditableEntity, IHasDomainEvent
         }
     }
 
-    public Certificate? Certificate { get; set; }
+    public Certificate? _certificate;
+    public Certificate? Certificate
+    {
+        get => _certificate;
+        set
+        {
+            if (value == null)
+            {
+                DomainEvents.Add(new CertificateUnbindEvent(this));
+            }
+            else
+            {
+                DomainEvents.Add(new CertificateBindEvent(this));
+            }
+
+            _certificate = value;
+        }
+    }
 
     public int PortId { get; set; }
 
