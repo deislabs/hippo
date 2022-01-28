@@ -98,7 +98,7 @@ public class ChannelController : WebUIControllerBase
         }
     }
 
-    [HttpDelete]
+    [HttpPost]
     public async Task<IActionResult> Delete(DeleteChannelCommand command)
     {
         try

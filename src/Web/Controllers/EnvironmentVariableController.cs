@@ -96,7 +96,7 @@ public class EnvironmentVariableController : WebUIControllerBase
         }
     }
 
-    [HttpDelete]
+    [HttpPost]
     public async Task<IActionResult> Delete(DeleteEnvironmentVariableCommand command)
     {
         try
