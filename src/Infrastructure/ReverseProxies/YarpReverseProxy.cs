@@ -1,3 +1,4 @@
+using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Core.Entities;
 using Hippo.Infrastructure.ReverseProxies.Configuration;
@@ -57,8 +58,13 @@ public class YarpReverseProxy : IReverseProxy
     public void Stop(Channel c)
     {
         var key = GetKey(c.AppId, c.Id);
-        _configProvider.RemoveRoute(key);
-        _configProvider.RemoveCluster(key);
+        try
+        {
+            _configProvider.RemoveRoute(key);
+            _configProvider.RemoveCluster(key);
+        }
+        // do nothing; the route/cluster has already been removed
+        catch (NotFoundException) { }
     }
 
     private static string GetKey(Guid appId, Guid channelId) => $"App:{appId}-Channel:{channelId}";
