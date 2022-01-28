@@ -10,15 +10,13 @@ namespace Hippo.Web.Api;
 public class RevisionController : ApiControllerBase
 {
     [HttpGet]
-    [Route("")]
     public async Task<ActionResult<RevisionsVm>> Index()
     {
         return await Mediator.Send(new GetRevisionsQuery());
     }
 
-    [HttpGet]
-    [Route("{id:int}")]
-    public async Task<FileResult> Index(Guid id)
+    [HttpGet("export")]
+    public async Task<FileResult> Export()
     {
         var vm = await Mediator.Send(new ExportRevisionsQuery());
 
@@ -26,7 +24,6 @@ public class RevisionController : ApiControllerBase
     }
 
     [HttpPost]
-    [Route("")]
     public async Task<IActionResult> Create([FromBody] RegisterRevisionCommand command)
     {
         var vm = await Mediator.Send(command);
@@ -34,8 +31,7 @@ public class RevisionController : ApiControllerBase
         return vm.Revisions.Any() ? Created("", null) : NotFound();
     }
 
-    [HttpDelete]
-    [Route("{id:int}")]
+    [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(Guid id)
     {
         await Mediator.Send(new DeleteRevisionCommand { Id = id });
