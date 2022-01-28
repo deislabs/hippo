@@ -80,13 +80,10 @@ public static class DependencyInjection
         services.AddAuthorization(options =>
                 options.AddPolicy("CanPurge", policy => policy.RequireRole("Administrator")));
 
-        if (configuration.GetValue<bool>("ReverseProxy:Enabled"))
-        {
-            // YarpReverseProxy and YARP itself need to share a config provider
-            InMemoryConfigProvider configProvider = new InMemoryConfigProvider();
-            services.AddSingleton<IReverseProxy>(new YarpReverseProxy(configProvider));
-            services.AddReverseProxy().Services.AddSingleton<IProxyConfigProvider>(configProvider);
-        }
+        // YarpReverseProxy and YARP itself need to share a config provider
+        InMemoryConfigProvider configProvider = new InMemoryConfigProvider();
+        services.AddSingleton<IReverseProxy>(new YarpReverseProxy(configProvider));
+        services.AddReverseProxy().Services.AddSingleton<IProxyConfigProvider>(configProvider);
 
         return services;
     }
