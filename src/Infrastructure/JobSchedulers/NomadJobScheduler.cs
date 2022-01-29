@@ -47,7 +47,7 @@ public class NomadJobScheduler : IJobScheduler
         var psi = new ProcessStartInfo
         {
             FileName = "nomad",
-            Arguments = $"job run -var=\"bindle={bindle}\" -var=\"host={c.Domain}\" -var=\"bindle_url={bindleUrl}\" -",
+            Arguments = $"job run -var=\"bindle_id={bindle}\" -var=\"host={c.Domain}\" -var=\"bindle_url={bindleUrl}\" -",
             UseShellExecute = false,
             RedirectStandardInput = true,
             RedirectStandardError = true,
@@ -174,10 +174,12 @@ public class NomadJobScheduler : IJobScheduler
         var env = String.Join(' ', c.EnvironmentVariables.Select(ev => $"\"--env\", \"{ev.Key}='{ev.Value}'\","));
 
         var hcl = @"
-variable ""bindle"" {
+variable ""bindle_id"" {
+  description = ""A bindle id, such as foo/bar/1.2.3""
   type = string
 }
 variable ""bindle_url"" {
+  description = ""The Bindle server URL""
   type = string
 }
 variable ""host"" {
@@ -193,13 +195,15 @@ job """ + name + @""" {
     }
     service {
       port = ""http""
+      name = """ + name + @"""
+
       tags = [
         ""traefik.enable=true"",
-        ""traefik.http.routers.http.rule=Host(`${var.host}`)"",
+        ""traefik.http.routers." + name + @".rule=Host(`${var.host}`)"",
       ]
       check {
-        type = ""http""
-        path = ""/healthz""
+        name = ""alive""
+        type = ""tcp""
         interval = ""10s""
         timeout = ""2s""
       }
@@ -216,9 +220,28 @@ job """ + name + @""" {
         args = [
           ""--listen"", ""${NOMAD_IP_http}:${NOMAD_PORT_http}"",
           ""--log-dir"", ""local/log"",
-          ""--bindle"", var.bindle,
+          ""--bindle"", var.bindle_id,
+          ""--cache"", ""local/cache.toml"",
+          # Use https://github.com/deislabs/wagi-fileserver/pull/10 as a workaround
+          # for https://github.com/deislabs/hippo-cli/issues/39
+          ""-e"", ""PATH_PREFIX=static/"",
+          ""-e"", ""BASE_URL=${var.host}"",
           " + env + @"
         ]
+      }
+
+      template {
+        data = <<-EOF
+        [cache]
+        enabled = true
+        directory = ""{{ env ""NOMAD_TASK_DIR"" }}""
+        # optional
+        # see more details at https://docs.wasmtime.dev/cli-cache.html
+        cleanup-interval = ""1d""
+        files-total-size-soft-limit = ""10Gi""
+        EOF
+
+        destination = ""local/cache.toml""
       }
     }
   }
