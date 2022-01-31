@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using FluentValidation.AspNetCore;
 using Hippo.Application;
 using Hippo.Application.Common.Interfaces;
+using Hippo.Core.Entities;
 using Hippo.Infrastructure;
 using Hippo.Infrastructure.Data;
 using Hippo.Infrastructure.Identity;
@@ -53,8 +54,6 @@ public class TestBase : IDisposable
 
         services.AddSingleton<IConfiguration>(_configuration);
 
-        services.AddSingleton<ICurrentUserService, CurrentUserService>();
-
         services.AddHttpContextAccessor();
 
         services.AddHealthChecks()
@@ -67,19 +66,11 @@ public class TestBase : IDisposable
         services.Configure<ApiBehaviorOptions>(options =>
                     options.SuppressModelStateInvalidFilter = true);
 
-        // Replace service registration for ICurrentUserService
-        // Remove existing registration
-        var currentUserServiceDescriptor = services.FirstOrDefault(d =>
-            d.ServiceType == typeof(ICurrentUserService));
-
-        if (currentUserServiceDescriptor != null)
-        {
-            services.Remove(currentUserServiceDescriptor);
-        }
-
-        // Register testing version
+        // Register testing services
         services.AddTransient(provider =>
             Mock.Of<ICurrentUserService>(s => s.UserId == _currentUserId));
+
+        services.AddSingleton<IJobScheduler, NullJobScheduler>();
 
         _scopeFactory = services.BuildServiceProvider().GetRequiredService<IServiceScopeFactory>();
 
@@ -200,4 +191,11 @@ public class TestBase : IDisposable
         return new string(Enumerable.Repeat(chars, length)
             .Select(s => s[random.Next(s.Length)]).ToArray());
     }
+}
+
+public class NullJobScheduler : IJobScheduler
+{
+    public ChannelStatus Start(Channel c) => new ChannelStatus(true, "");
+
+    public void Stop(Channel c) { }
 }
