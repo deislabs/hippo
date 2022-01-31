@@ -1,5 +1,7 @@
 using Hippo.Application.Common.Interfaces;
 using Hippo.Application.Common.Security;
+using Hippo.Core.Entities;
+using Hippo.Core.Events;
 using MediatR;
 
 namespace Hippo.Application.Channels.Commands;
@@ -21,6 +23,10 @@ public class PurgeChannelsCommandHandler : IRequestHandler<PurgeChannelsCommand>
 
     public async Task<Unit> Handle(PurgeChannelsCommand request, CancellationToken cancellationToken)
     {
+        foreach (Channel channel in _context.Channels)
+        {
+            channel.DomainEvents.Add(new ChannelDeletedEvent(channel));
+        }
         _context.Channels.RemoveRange(_context.Channels);
 
         await _context.SaveChangesAsync(cancellationToken);

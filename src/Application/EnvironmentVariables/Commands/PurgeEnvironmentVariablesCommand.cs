@@ -1,5 +1,7 @@
 using Hippo.Application.Common.Interfaces;
 using Hippo.Application.Common.Security;
+using Hippo.Core.Entities;
+using Hippo.Core.Events;
 using MediatR;
 
 namespace Hippo.Application.EnvironmentVariables.Commands;
@@ -21,6 +23,10 @@ public class PurgeEnvironmentVariablesCommandHandler : IRequestHandler<PurgeEnvi
 
     public async Task<Unit> Handle(PurgeEnvironmentVariablesCommand request, CancellationToken cancellationToken)
     {
+        foreach (EnvironmentVariable environmentVariable in _context.EnvironmentVariables)
+        {
+            environmentVariable.DomainEvents.Add(new EnvironmentVariableDeletedEvent(environmentVariable));
+        }
         _context.EnvironmentVariables.RemoveRange(_context.EnvironmentVariables);
 
         await _context.SaveChangesAsync(cancellationToken);

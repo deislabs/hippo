@@ -82,8 +82,8 @@ public class EventTests
     [Fact]
     public void CertificateBindEventTest()
     {
-        var oldCertificate = new Certificate {};
-        var newCertificate = new Certificate {};
+        var oldCertificate = new Certificate { };
+        var newCertificate = new Certificate { };
         var channel = new Channel();
         channel.CertificateId = oldCertificate.Id;
         Assert.Single(channel.DomainEvents);

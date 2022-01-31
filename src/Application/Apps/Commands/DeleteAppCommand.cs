@@ -1,6 +1,7 @@
 using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Core.Entities;
+using Hippo.Core.Events;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,6 +31,8 @@ public class DeleteAppCommandHandler : IRequestHandler<DeleteAppCommand>
         {
             throw new NotFoundException(nameof(App), request.Id);
         }
+
+        entity.DomainEvents.Add(new AppDeletedEvent(entity));
 
         _context.Apps.Remove(entity);
 
