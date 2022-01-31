@@ -1,5 +1,7 @@
 using Hippo.Application.Common.Interfaces;
 using Hippo.Application.Common.Security;
+using Hippo.Core.Entities;
+using Hippo.Core.Events;
 using MediatR;
 
 namespace Hippo.Application.Certificates.Commands;
@@ -21,6 +23,10 @@ public class PurgeCertificatesCommandHandler : IRequestHandler<PurgeCertificates
 
     public async Task<Unit> Handle(PurgeCertificatesCommand request, CancellationToken cancellationToken)
     {
+        foreach (Certificate cert in _context.Certificates)
+        {
+            cert.DomainEvents.Add(new CertificateDeletedEvent(cert));
+        }
         _context.Certificates.RemoveRange(_context.Certificates);
 
         await _context.SaveChangesAsync(cancellationToken);

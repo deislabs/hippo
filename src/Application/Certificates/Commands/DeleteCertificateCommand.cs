@@ -1,6 +1,7 @@
 using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Core.Entities;
+using Hippo.Core.Events;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -30,6 +31,8 @@ public class DeleteCertificateCommandHandler : IRequestHandler<DeleteCertificate
         {
             throw new NotFoundException(nameof(Certificate), request.Id);
         }
+
+        entity.DomainEvents.Add(new CertificateDeletedEvent(entity));
 
         _context.Certificates.Remove(entity);
 

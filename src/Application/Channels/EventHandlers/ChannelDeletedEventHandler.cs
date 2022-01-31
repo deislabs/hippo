@@ -1,3 +1,4 @@
+using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Application.Common.Models;
 using Hippo.Core.Events;
@@ -27,8 +28,13 @@ public class ChannelDeletedEventHandler : INotificationHandler<DomainEventNotifi
 
         _logger.LogInformation("Hippo Domain Event: {DomainEvent}", domainEvent.GetType().Name);
 
-        _reverseProxy.Stop(domainEvent.Channel);
-        _jobScheduler.Stop(domainEvent.Channel);
+        try
+        {
+            _reverseProxy.Stop(domainEvent.Channel);
+            _jobScheduler.Stop(domainEvent.Channel);
+        }
+        // do nothing if the job can't be found
+        catch (NotFoundException) { }
 
         return Task.CompletedTask;
     }
