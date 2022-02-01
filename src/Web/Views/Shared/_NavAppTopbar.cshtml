@@ -6,12 +6,12 @@
                 <button class="button navbar-burger" data-target="navMenu">
                     <span></span> <span></span> <span></span>
                 </button>
-            
+
                 <h1 class="hippo-app-name">
                     @ViewBag.Title
                 </h1>
             </div>
-            
+
             <div class="navbar-menu navbar-end" id="navMenu">
                 <div class="navbar-item">
 					<a class="button is-outlined is-secondary env-block app-history" asp-id="app-history">
@@ -21,13 +21,13 @@
 				</div>
                 <div class="navbar-item has-dropdown is-hoverable">
                     <a class="navbar-link">
-                        <span class="icon is-small"><i class="fa fa-user-o"></i></span>
+                        <span class="icon is-small"><i class="fa fa-user"></i></span>
                         @* TODO: check if signed in *@
                         <em>@Html.DisplayFor(modelItem => User.Identity!.Name)</em>
                     </a>
                     <div class="navbar-dropdown is-right">
                         <a class="navbar-item" href="/account">
-                            <span class="icon is-small"><i class="fa fa-user-o"></i> </span>&nbsp;
+                            <span class="icon is-small"><i class="fa fa-user"></i> </span>&nbsp;
                             Account
                         </a>
                         <hr class="navbar-divider">

@@ -8,7 +8,7 @@
 </label>
 
 <aside id="main-sidebar" class="aside env-list">
-  
+
     <h4>Channels</h4>
 
     <div class="tabs">
@@ -47,7 +47,7 @@
                     </a>
                     @if (item.Domain != null) {
                         <a class="env-url" target="_blank" href="https://@item.Domain">
-                            @Html.DisplayFor(modelItem => item.Domain) <i class="fa fa-external-link"></i>
+                            @Html.DisplayFor(modelItem => item.Domain) <i class="fa fa-external-link-alt"></i>
                         </a>
                     }
                     <div class="dropdown env-dropdown is-hoverable is-right">
@@ -75,7 +75,7 @@
                 </li>
             }
             <li class="env-add">
-                <a asp-controller="Channel" asp-action="New" asp-route-appId="@Model.Id" class="button is-rounded is-outlined is-link"><i class="fa fa-add"></i> Add an Environment</a>
+                <a asp-controller="Channel" asp-action="New" asp-route-appId="@Model.Id" class="button is-rounded is-outlined is-link"><i class="fa fa-plus"></i> Add an Environment</a>
             </li>
         </ul>
     </div>
