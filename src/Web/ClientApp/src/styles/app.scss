@@ -19,10 +19,10 @@
 /* 1. Imports
 -------------
 */
-@import "../lib/bulma/css/bulma.min.css";
-// @import "../lib/bulma/bulma.sass";
-// @import "../lib/font-awesome/scss/font-awesome.scss";
-@import "../lib/font-awesome/css/font-awesome.min.css";
+@import "~bulma";
+
+$fa-font-path: "~font-awesome/fonts/";
+@import "~font-awesome/scss/font-awesome.scss";
 
 
 /* 2. Variables
@@ -181,7 +181,7 @@ body {
       top: 0.925rem;
       position: absolute;
     }
-    
+
     h1 {
       position: absolute;
       font-weight: 600;
@@ -222,7 +222,7 @@ body {
       border-left: 1px solid $light2;
       padding-left: 1.35rem;
     }
-    
+
     em {
       font-style: normal;
       font-weight: bold;
@@ -285,7 +285,7 @@ body {
     color: $dark1;
     margin-bottom: 0.67em;
   }
-  
+
   .has-text-primary {
     color: $primary !important;
   }
@@ -314,7 +314,7 @@ body {
     font-size: 1.25rem;
     color: $dark2;
   }
-  
+
   h4 {
     text-transform: uppercase;
     letter-spacing: 0.0875em;
@@ -364,7 +364,7 @@ body {
   label.checkbox {
     margin: 1rem 0 0 2vw;
   }
-  
+
   .validation-summary-errors {
     li {
       color: $red;
@@ -558,7 +558,7 @@ p.card-header-title {
       padding: 0 1.5rem;
       border: none;
     }
-    
+
     li.tab {
       width: 100%;
       margin: 0.925rem 0;
@@ -571,7 +571,7 @@ p.card-header-title {
         display: block;
         justify-content: normal;
       }
-      
+
       a.env-block {
         background: $light4;
         border-radius: 0.5rem;
@@ -669,7 +669,7 @@ p.card-header-title {
           text-align: center;
           padding: 0.825rem 1.25rem;
           border-color: $dark4;
-          
+
           .fa {
             margin-right: 0;
           }
@@ -693,7 +693,7 @@ p.card-header-title {
       a.env-block.is-active {
         background: white;
         box-shadow: 0 0 3px 1px $dark4;
-        
+
         &:after {
           background: $brand;
           opacity: 1;
@@ -826,7 +826,7 @@ p.card-header-title {
 
     ul.rev-list {
       margin: 0 2.5vw;
-      
+
       li.rev-item {
         line-height: 2.5;
         margin: 0.67rem auto 0.725rem;
@@ -914,7 +914,7 @@ table.table {
       display: none;
     }
   }
-  
+
   .label {
     min-width: 15vw;
 
@@ -951,7 +951,7 @@ table.table {
     border-radius: 0.67rem;
     margin: 1rem 1rem;
     border: 1px solid $light1;
-    
+
     strong,
     small {
       display: block;
@@ -978,7 +978,7 @@ table.table {
 
 .radio-wrapper {
   margin: 0;
-  
+
   input[type="radio"] {
     position: absolute;
     opacity: 0;

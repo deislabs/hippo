@@ -5,10 +5,12 @@
     <title>Hippo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="The Hippo Platform.">
-    
+
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Jost:wght@400;600&display=swap" rel="stylesheet">
-    <link href="~/styles/hippo.css" rel="stylesheet" />
+    <script type="module" src="~/js/app.js" defer></script>
+    @await RenderSectionAsync("Scripts", false)
+    <link rel="stylesheet" href="~/styles/app.css">
 </head>
 <body>
 
@@ -25,11 +27,5 @@
         </main>
         <partial name="_Footer" />
     </div>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="~/js/app.js"></script>
-        @* If one of the pages creates a section called scripts, load it here
-        *@
-        @RenderSection("scripts", false)
 </body>
 </html>
