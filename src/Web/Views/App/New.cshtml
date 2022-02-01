@@ -7,10 +7,10 @@
 
 <div class="columns is-centered">
     <div class="column is-two-thirds-desktop is-half-widescreen">
-        
+
         <div class="box">
             <h2>Create a New Application</h2>
-                
+
             <div asp-validation-summary="ModelOnly" class="is-danger"></div>
             <form asp-action="New">
                 <div class="field is-horizontal">
@@ -51,6 +51,7 @@
     </div>
 </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+@section Scripts
+{
+    <script type="module" src="~/js/validation.js" defer></script>
 }

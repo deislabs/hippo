@@ -2,7 +2,7 @@ name: Create a Release
 
 on:
   push:
-    tags: 
+    tags:
     - 'v[0-9]+.[0-9]+.[0-9]+'
     - 'v[0-9]+.[0-9]+.[0-9]+-preview'
 
@@ -61,17 +61,10 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: 6.0.x
-      
+
       - name: Set MINVERBUILDMETADATA
         run: echo MINVERBUILDMETADATA=$(git rev-parse --short ${GITHUB_SHA})  >> $GITHUB_ENV
         shell: bash
-
-      - name: Npm build
-        shell: bash
-        run: |
-          cd src/Web
-          npm run cibuild
-          cd ..
 
       - name: dotnet publish
         run: dotnet publish src/Web/Web.csproj --runtime "${{ matrix.target }}" -c Release -o ${{ matrix.target }}
@@ -90,7 +83,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: "hippo-server-*"
-      
+
   push_to_registry:
     needs: release
     name: Push Docker image to GitHub Package Registry
@@ -112,13 +105,6 @@ jobs:
       - name: Set MINVERBUILDMETADATA
         run: echo MINVERBUILDMETADATA=$(git rev-parse --short ${GITHUB_SHA})  >> $GITHUB_ENV
         shell: bash
-
-      - name: Npm build
-        shell: bash
-        run: |
-          cd src/Web
-          npm run cibuild
-          cd ..
 
       - name: dotnet publish
         run: dotnet publish src/Web/Web.csproj -c Release --self-contained -r linux-x64
@@ -148,7 +134,7 @@ jobs:
             type=sha,priority=4
           flavor: |
             latest=true
-      
+
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:

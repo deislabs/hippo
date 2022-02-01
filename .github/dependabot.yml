@@ -1,5 +1,5 @@
 version: 2
-updates: 
+updates:
   - package-ecosystem: "nuget"
     directory: "/src/Application"
     schedule:
@@ -55,7 +55,7 @@ updates:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
   - package-ecosystem: "npm"
-    directory: "/src/Web"
+    directory: "/src/Web/ClientApp"
     schedule:
       interval: "weekly"
       day: "monday"

@@ -7,7 +7,7 @@
 <div class="columns is-centered">
     <div class="column is-two-thirds-tablet is-two-thirds-desktop is-two-thirds-widescreen is-half-fullhd">
         <h2 class="has-text-centered">Register a <span class="has-text-primary">Hippo</span> Account</h2>
-        
+
         <div class="box box-register">
             <div class="card-content">
                 <form asp-action="Register">
@@ -61,6 +61,7 @@
     </div>
 </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+@section Scripts
+{
+    <script type="module" src="~/js/validation.js" defer></script>
 }
