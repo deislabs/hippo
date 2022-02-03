@@ -27,6 +27,16 @@ public class ApplicationDbContext : IdentityDbContext<Account>, IApplicationDbCo
         _domainEventService = domainEventService;
     }
 
+    public ApplicationDbContext(
+            ICurrentUserService currentUserService,
+            IDateTime dateTime,
+            IDomainEventService domainEventService)
+    {
+        _currentUserService = currentUserService;
+        _dateTime = dateTime;
+        _domainEventService = domainEventService;
+    }
+
     public DbSet<App> Apps => Set<App>();
 
     public DbSet<Certificate> Certificates => Set<Certificate>();

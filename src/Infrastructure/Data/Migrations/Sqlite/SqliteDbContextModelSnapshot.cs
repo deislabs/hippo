@@ -3,21 +3,19 @@ using System;
 using Hippo.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Hippo.Infrastructure.Data.Migrations
+namespace Hippo.Infrastructure.Data.Migrations.Sqlite
 {
-    [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211214002400_Initial")]
-    partial class Initial
+    [DbContext(typeof(SqliteDbContext))]
+    partial class SqliteDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
+            modelBuilder.HasAnnotation("ProductVersion", "6.0.1");
 
             modelBuilder.Entity("Hippo.Core.Entities.App", b =>
                 {
@@ -39,15 +37,53 @@ namespace Hippo.Infrastructure.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(32)
+                        .HasMaxLength(128)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("StorageId")
+                        .IsRequired()
+                        .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
                     b.ToTable("Apps");
+                });
+
+            modelBuilder.Entity("Hippo.Core.Entities.Certificate", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("LastModified")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PrivateKey")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PublicKey")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Certificates");
                 });
 
             modelBuilder.Entity("Hippo.Core.Entities.Channel", b =>
@@ -62,6 +98,9 @@ namespace Hippo.Infrastructure.Data.Migrations
                     b.Property<Guid>("AppId")
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid?>("CertificateId")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("Created")
                         .HasColumnType("TEXT");
 
@@ -69,6 +108,7 @@ namespace Hippo.Infrastructure.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Domain")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("LastModified")
@@ -78,6 +118,8 @@ namespace Hippo.Infrastructure.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(64)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("PortId")
@@ -94,6 +136,8 @@ namespace Hippo.Infrastructure.Data.Migrations
                     b.HasIndex("ActiveRevisionId");
 
                     b.HasIndex("AppId");
+
+                    b.HasIndex("CertificateId");
 
                     b.ToTable("Channels");
                 });
@@ -114,6 +158,8 @@ namespace Hippo.Infrastructure.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Key")
+                        .IsRequired()
+                        .HasMaxLength(32)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("LastModified")
@@ -123,6 +169,7 @@ namespace Hippo.Infrastructure.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Value")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -154,6 +201,8 @@ namespace Hippo.Infrastructure.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("RevisionNumber")
+                        .IsRequired()
+                        .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -367,9 +416,15 @@ namespace Hippo.Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Hippo.Core.Entities.Certificate", "Certificate")
+                        .WithMany()
+                        .HasForeignKey("CertificateId");
+
                     b.Navigation("ActiveRevision");
 
                     b.Navigation("App");
+
+                    b.Navigation("Certificate");
                 });
 
             modelBuilder.Entity("Hippo.Core.Entities.EnvironmentVariable", b =>

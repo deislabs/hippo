@@ -29,16 +29,10 @@ public static class DependencyInjection
                         options.UseInMemoryDatabase("Hippo"));
                 break;
             case "postgresql":
-                services.AddDbContext<ApplicationDbContext>(options =>
-                        options.UseNpgsql(
-                            configuration.GetConnectionString("Database"),
-                            b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
+                services.AddDbContext<ApplicationDbContext, PostgresqlDbContext>();
                 break;
             case "sqlite":
-                services.AddDbContext<ApplicationDbContext>(options =>
-                        options.UseSqlite(
-                            configuration.GetConnectionString("Database"),
-                            b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
+                services.AddDbContext<ApplicationDbContext, SqliteDbContext>();
                 break;
             default:
                 throw new InvalidDatabaseDriverException(driver);
