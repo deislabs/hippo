@@ -1,7 +1,6 @@
+import jQuery from 'jquery';
+
 import 'bootstrap';
-
-import {$, jQuery} from 'jquery';
-
 import 'bootstrap/scss/bootstrap.scss';
 
 import '@fortawesome/fontawesome-free/js/fontawesome';
@@ -11,7 +10,7 @@ import '@fortawesome/fontawesome-free/js/brands';
 
 import "../styles/app.scss";
 
-jQuery(function () {
+(function ($) {
   // custom js for interactive elements in hippo
 
   // application view: environment show/hide tabs
@@ -85,4 +84,4 @@ jQuery(function () {
       // return false;
     })
   };
-})
+})(jQuery);
