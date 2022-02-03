@@ -8,16 +8,16 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Hippo.Infrastructure.Data.Migrations
+namespace Hippo.Infrastructure.Data.Migrations.Sqlite
 {
-    [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20211216231709_AddFieldConstraints")]
-    partial class AddFieldConstraints
+    [DbContext(typeof(SqliteDbContext))]
+    [Migration("20211214002400_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "6.0.1");
+            modelBuilder.HasAnnotation("ProductVersion", "6.0.0");
 
             modelBuilder.Entity("Hippo.Core.Entities.App", b =>
                 {
@@ -39,12 +39,10 @@ namespace Hippo.Infrastructure.Data.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(128)
+                        .HasMaxLength(32)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("StorageId")
-                        .IsRequired()
-                        .HasMaxLength(200)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -71,7 +69,6 @@ namespace Hippo.Infrastructure.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Domain")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("LastModified")
@@ -81,8 +78,6 @@ namespace Hippo.Infrastructure.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(64)
                         .HasColumnType("TEXT");
 
                     b.Property<int>("PortId")
@@ -119,8 +114,6 @@ namespace Hippo.Infrastructure.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Key")
-                        .IsRequired()
-                        .HasMaxLength(32)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("LastModified")
@@ -130,7 +123,6 @@ namespace Hippo.Infrastructure.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Value")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -162,8 +154,6 @@ namespace Hippo.Infrastructure.Data.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("RevisionNumber")
-                        .IsRequired()
-                        .HasMaxLength(256)
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Hippo.Infrastructure.Data.Migrations
+namespace Hippo.Infrastructure.Data.Migrations.Sqlite
 {
     public partial class AddCertificates : Migration
     {
