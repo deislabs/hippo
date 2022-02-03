@@ -32,6 +32,8 @@ public class ChannelDto : IMapFrom<Channel>
 
     public string? RangeRule { get; set; }
 
+    public Certificate? Certificate { get; set; }
+
     [Required]
     public IList<EnvironmentVariableDto> EnvironmentVariables { get; set; }
 }
