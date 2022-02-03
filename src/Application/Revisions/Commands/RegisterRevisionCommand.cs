@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Application.Revisions.Queries;
@@ -9,8 +10,10 @@ namespace Hippo.Application.Revisions.Commands;
 
 public class RegisterRevisionCommand : IRequest<RevisionsVm>
 {
+    [Required]
     public string AppStorageId { get; set; } = "";
 
+    [Required]
     public string RevisionNumber { get; set; } = "";
 }
 

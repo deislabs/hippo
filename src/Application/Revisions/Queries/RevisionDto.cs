@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Hippo.Application.Common.Mappings;
 using Hippo.Core.Entities;
 
@@ -5,10 +6,13 @@ namespace Hippo.Application.Revisions.Queries;
 
 public class RevisionDto : IMapFrom<Revision>
 {
+    [Required]
     public Guid Id { get; set; }
 
+    [Required]
     public Guid AppId { get; set; }
 
+    [Required]
     public string RevisionNumber { get; set; } = "";
 
     public string OrderKey()

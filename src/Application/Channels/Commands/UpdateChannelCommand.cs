@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Core.Entities;
@@ -8,12 +9,16 @@ namespace Hippo.Application.Channels.Commands;
 
 public class UpdateChannelCommand : IRequest
 {
+    [Required]
     public Guid Id { get; set; }
 
+    [Required]
     public string Name { get; set; } = "";
 
+    [Required]
     public string Domain { get; set; } = "";
 
+    [Required]
     public ChannelRevisionSelectionStrategy RevisionSelectionStrategy { get; set; }
 
     public string? RangeRule { get; set; }

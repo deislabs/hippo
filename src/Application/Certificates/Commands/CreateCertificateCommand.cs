@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Core.Entities;
 using Hippo.Core.Events;
@@ -7,10 +8,13 @@ namespace Hippo.Application.Certificates.Commands;
 
 public class CreateCertificateCommand : IRequest<Guid>
 {
+    [Required]
     public string Name { get; set; } = "";
 
+    [Required]
     public string PublicKey { get; set; } = "";
 
+    [Required]
     public string PrivateKey { get; set; } = "";
 }
 

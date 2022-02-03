@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Core.Entities;
 using Hippo.Core.Events;
@@ -7,8 +8,10 @@ namespace Hippo.Application.Revisions.Commands;
 
 public class CreateRevisionCommand : IRequest<Guid>
 {
+    [Required]
     public Guid AppId { get; set; }
 
+    [Required]
     public string RevisionNumber { get; set; } = "";
 }
 

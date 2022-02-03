@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Hippo.Application.EnvironmentVariables.Queries;
 
 public class ExportEnvironmentVariablesVm
@@ -9,9 +11,12 @@ public class ExportEnvironmentVariablesVm
         Content = content;
     }
 
+    [Required]
     public string FileName { get; set; }
 
+    [Required]
     public string ContentType { get; set; }
 
+    [Required]
     public byte[] Content { get; set; }
 }

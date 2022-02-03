@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Core.Entities;
 using Hippo.Core.Events;
@@ -7,8 +8,10 @@ namespace Hippo.Application.Apps.Commands;
 
 public class CreateAppCommand : IRequest<Guid>
 {
+    [Required]
     public string Name { get; set; } = "";
 
+    [Required]
     public string StorageId { get; set; } = "";
 }
 
