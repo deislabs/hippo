@@ -7,11 +7,11 @@ namespace Hippo.Application.Certificates.Commands;
 
 public class CreateCertificateCommand : IRequest<Guid>
 {
-    public string? Name { get; set; }
+    public string Name { get; set; } = "";
 
-    public string? PublicKey { get; set; }
+    public string PublicKey { get; set; } = "";
 
-    public string? PrivateKey { get; set; }
+    public string PrivateKey { get; set; } = "";
 }
 
 public class CreateCertificateCommandHandler : IRequestHandler<CreateCertificateCommand, Guid>

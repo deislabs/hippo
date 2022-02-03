@@ -10,9 +10,9 @@ public class UpdateChannelCommand : IRequest
 {
     public Guid Id { get; set; }
 
-    public string? Name { get; set; }
+    public string Name { get; set; } = "";
 
-    public string? Domain { get; set; }
+    public string Domain { get; set; } = "";
 
     public ChannelRevisionSelectionStrategy RevisionSelectionStrategy { get; set; }
 

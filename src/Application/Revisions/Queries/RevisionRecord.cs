@@ -5,5 +5,5 @@ namespace Hippo.Application.Revisions.Queries;
 
 public class RevisionRecord : IMapFrom<Revision>
 {
-    public string? RevisionNumber { get; set; }
+    public string RevisionNumber { get; set; } = "";
 }

@@ -13,9 +13,9 @@ public class ChannelRecord : IMapFrom<Channel>
         EnvironmentVariables = new List<EnvironmentVariableRecord>();
     }
 
-    public string? Name { get; set; }
+    public string Name { get; set; } = "";
 
-    public string? Domain { get; set; }
+    public string Domain { get; set; } = "";
 
     public ChannelRevisionSelectionStrategy RevisionSelectionStrategy { get; set; }
 

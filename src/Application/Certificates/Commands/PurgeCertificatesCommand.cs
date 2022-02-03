@@ -8,9 +8,7 @@ namespace Hippo.Application.Certificates.Commands;
 
 [Authorize(Roles = "Administrator")]
 [Authorize(Policy = "CanPurge")]
-public class PurgeCertificatesCommand : IRequest
-{
-}
+public class PurgeCertificatesCommand : IRequest { }
 
 public class PurgeCertificatesCommandHandler : IRequestHandler<PurgeCertificatesCommand>
 {

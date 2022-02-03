@@ -10,9 +10,9 @@ public class UpdateEnvironmentVariableCommand : IRequest
 {
     public Guid Id { get; set; }
 
-    public string? Key { get; set; }
+    public string Key { get; set; } = "";
 
-    public string? Value { get; set; }
+    public string Value { get; set; } = "";
 }
 
 public class UpdateEnvironmentVariableCommandHandler : IRequestHandler<UpdateEnvironmentVariableCommand>

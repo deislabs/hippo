@@ -9,9 +9,9 @@ namespace Hippo.Application.Revisions.Commands;
 
 public class RegisterRevisionCommand : IRequest<RevisionsVm>
 {
-    public string? AppStorageId { get; set; }
+    public string AppStorageId { get; set; } = "";
 
-    public string? RevisionNumber { get; set; }
+    public string RevisionNumber { get; set; } = "";
 }
 
 public class RegisterRevisionCommandHandler : IRequestHandler<RegisterRevisionCommand, RevisionsVm>

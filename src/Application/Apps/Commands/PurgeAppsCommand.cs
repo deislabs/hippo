@@ -8,9 +8,7 @@ namespace Hippo.Application.Apps.Commands;
 
 [Authorize(Roles = "Administrator")]
 [Authorize(Policy = "CanPurge")]
-public class PurgeAppsCommand : IRequest
-{
-}
+public class PurgeAppsCommand : IRequest { }
 
 public class PurgeAppsCommandHandler : IRequestHandler<PurgeAppsCommand>
 {

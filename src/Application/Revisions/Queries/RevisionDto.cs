@@ -9,7 +9,7 @@ public class RevisionDto : IMapFrom<Revision>
 
     public Guid AppId { get; set; }
 
-    public string? RevisionNumber { get; set; }
+    public string RevisionNumber { get; set; } = "";
 
     public string OrderKey()
     {

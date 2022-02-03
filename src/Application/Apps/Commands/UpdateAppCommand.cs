@@ -9,9 +9,9 @@ public class UpdateAppCommand : IRequest
 {
     public Guid Id { get; set; }
 
-    public string? Name { get; set; }
+    public string Name { get; set; } = "";
 
-    public string? StorageId { get; set; }
+    public string StorageId { get; set; } = "";
 }
 
 public class UpdateAppCommandHandler : IRequestHandler<UpdateAppCommand>

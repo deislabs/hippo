@@ -15,9 +15,9 @@ public class AppDto : IMapFrom<App>
 
     public Guid Id { get; set; }
 
-    public string? Name { get; set; }
+    public string Name { get; set; } = "";
 
-    public string? StorageId { get; set; }
+    public string StorageId { get; set; } = "";
 
     public IList<ChannelDto> Channels { get; set; }
 

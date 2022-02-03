@@ -13,7 +13,7 @@ public class CreateChannelCommand : IRequest<Guid>
 {
     public Guid AppId { get; set; }
 
-    public string? Name { get; set; }
+    public string Name { get; set; } = "";
 
     public string? Domain { get; set; }
 
