@@ -7,9 +7,9 @@ namespace Hippo.Application.EnvironmentVariables.Commands;
 
 public class CreateEnvironmentVariableCommand : IRequest<Guid>
 {
-    public string? Key { get; set; }
+    public string Key { get; set; } = "";
 
-    public string? Value { get; set; }
+    public string Value { get; set; } = "";
 
     public Guid ChannelId { get; set; }
 }

@@ -15,11 +15,11 @@ public class CertificateDto : IMapFrom<Certificate>
 
     public Guid Id { get; set; }
 
-    public string? Name { get; set; }
+    public string Name { get; set; } = "";
 
-    public string? PublicKey { get; set; }
+    public string PublicKey { get; set; } = "";
 
-    public string? PrivateKey { get; set; }
+    public string PrivateKey { get; set; } = "";
 
     public IList<ChannelDto> Channels { get; set; }
 }

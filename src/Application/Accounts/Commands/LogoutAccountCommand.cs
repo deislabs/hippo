@@ -3,9 +3,7 @@ using MediatR;
 
 namespace Hippo.Application.Accounts.Commands;
 
-public class LogoutAccountCommand : IRequest
-{
-}
+public class LogoutAccountCommand : IRequest { }
 
 public class LogoutAccountCommandHandler : IRequestHandler<LogoutAccountCommand>
 {

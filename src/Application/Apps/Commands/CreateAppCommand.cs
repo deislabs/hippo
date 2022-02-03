@@ -7,9 +7,9 @@ namespace Hippo.Application.Apps.Commands;
 
 public class CreateAppCommand : IRequest<Guid>
 {
-    public string? Name { get; set; }
+    public string Name { get; set; } = "";
 
-    public string? StorageId { get; set; }
+    public string StorageId { get; set; } = "";
 }
 
 public class CreateAppCommandHandler : IRequestHandler<CreateAppCommand, Guid>

@@ -8,9 +8,7 @@ namespace Hippo.Application.EnvironmentVariables.Commands;
 
 [Authorize(Roles = "Administrator")]
 [Authorize(Policy = "CanPurge")]
-public class PurgeEnvironmentVariablesCommand : IRequest
-{
-}
+public class PurgeEnvironmentVariablesCommand : IRequest { }
 
 public class PurgeEnvironmentVariablesCommandHandler : IRequestHandler<PurgeEnvironmentVariablesCommand>
 {

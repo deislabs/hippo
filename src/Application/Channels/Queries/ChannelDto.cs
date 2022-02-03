@@ -16,9 +16,9 @@ public class ChannelDto : IMapFrom<Channel>
 
     public Guid AppId { get; set; }
 
-    public string? Name { get; set; }
+    public string Name { get; set; } = "";
 
-    public string? Domain { get; set; }
+    public string Domain { get; set; } = "";
 
     public ChannelRevisionSelectionStrategy RevisionSelectionStrategy { get; set; }
 

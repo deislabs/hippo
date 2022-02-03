@@ -9,7 +9,7 @@ public class CreateRevisionCommand : IRequest<Guid>
 {
     public Guid AppId { get; set; }
 
-    public string? RevisionNumber { get; set; }
+    public string RevisionNumber { get; set; } = "";
 }
 
 public class CreateRevisionCommandHandler : IRequestHandler<CreateRevisionCommand, Guid>

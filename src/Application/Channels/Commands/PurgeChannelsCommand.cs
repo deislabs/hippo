@@ -8,9 +8,7 @@ namespace Hippo.Application.Channels.Commands;
 
 [Authorize(Roles = "Administrator")]
 [Authorize(Policy = "CanPurge")]
-public class PurgeChannelsCommand : IRequest
-{
-}
+public class PurgeChannelsCommand : IRequest { }
 
 public class PurgeChannelsCommandHandler : IRequestHandler<PurgeChannelsCommand>
 {

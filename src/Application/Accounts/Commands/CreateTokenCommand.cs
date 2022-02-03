@@ -6,15 +6,9 @@ namespace Hippo.Application.Accounts.Commands;
 
 public class CreateTokenCommand : IRequest<TokenInfo>
 {
-    public string UserName { get; set; }
+    public string UserName { get; set; } = "";
 
-    public string Password { get; set; }
-
-    public CreateTokenCommand(string username, string password)
-    {
-        UserName = username;
-        Password = password;
-    }
+    public string Password { get; set; } = "";
 }
 
 public class CreateTokenCommandHandler : IRequestHandler<CreateTokenCommand, TokenInfo>
