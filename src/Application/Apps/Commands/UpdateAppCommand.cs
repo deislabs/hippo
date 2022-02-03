@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Core.Entities;
@@ -7,10 +8,13 @@ namespace Hippo.Application.Apps.Commands;
 
 public class UpdateAppCommand : IRequest
 {
+    [Required]
     public Guid Id { get; set; }
 
+    [Required]
     public string Name { get; set; } = "";
 
+    [Required]
     public string StorageId { get; set; } = "";
 }
 

@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Hippo.Application.Common.Exceptions;
@@ -10,6 +11,7 @@ namespace Hippo.Application.Channels.Queries;
 
 public class GetChannelQuery : IRequest<ChannelDto>
 {
+    [Required]
     public Guid Id { get; set; }
 }
 

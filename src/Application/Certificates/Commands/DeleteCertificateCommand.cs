@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Core.Entities;
@@ -9,6 +10,7 @@ namespace Hippo.Application.Certificates.Commands;
 
 public class DeleteCertificateCommand : IRequest
 {
+    [Required]
     public Guid Id { get; set; }
 }
 

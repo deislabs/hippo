@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Hippo.Application.Common.Exceptions;
@@ -10,6 +11,7 @@ namespace Hippo.Application.Certificates.Queries;
 
 public class GetCertificateQuery : IRequest<CertificateDto>
 {
+    [Required]
     public Guid Id { get; set; }
 }
 

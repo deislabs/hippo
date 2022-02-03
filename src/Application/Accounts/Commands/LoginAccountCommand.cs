@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
 using MediatR;
@@ -6,8 +7,10 @@ namespace Hippo.Application.Accounts.Commands;
 
 public class LoginAccountCommand : IRequest
 {
+    [Required]
     public string UserName { get; set; } = "";
 
+    [Required]
     public string Password { get; set; } = "";
 
     public bool RememberMe { get; set; }

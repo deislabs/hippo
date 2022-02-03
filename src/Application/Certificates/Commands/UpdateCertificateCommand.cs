@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Core.Entities;
@@ -7,12 +8,16 @@ namespace Hippo.Application.Certificates.Commands;
 
 public class UpdateCertificateCommand : IRequest
 {
+    [Required]
     public Guid Id { get; set; }
 
+    [Required]
     public string Name { get; set; } = "";
 
+    [Required]
     public string PublicKey { get; set; } = "";
 
+    [Required]
     public string PrivateKey { get; set; } = "";
 }
 

@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Hippo.Application.Certificates.Queries;
 
 public class ExportCertificatesVm
@@ -9,9 +11,12 @@ public class ExportCertificatesVm
         Content = content;
     }
 
+    [Required]
     public string FileName { get; set; }
 
+    [Required]
     public string ContentType { get; set; }
 
+    [Required]
     public byte[] Content { get; set; }
 }

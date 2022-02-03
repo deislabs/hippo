@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Hippo.Application.Common.Exceptions;
@@ -10,6 +11,7 @@ namespace Hippo.Application.EnvironmentVariables.Queries;
 
 public class GetEnvironmentVariableQuery : IRequest<EnvironmentVariableDto>
 {
+    [Required]
     public Guid Id { get; set; }
 }
 
