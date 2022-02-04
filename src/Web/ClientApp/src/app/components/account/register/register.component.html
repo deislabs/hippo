@@ -1,0 +1,52 @@
+<article *ngIf="error" class="message is-danger">
+	<div class="message-header">
+		<p>Error</p>
+		<button class="delete" aria-label="delete"></button>
+	</div>
+	<div class="message-body">
+		{{error}}
+	</div>
+</article>
+
+<form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+	<div class="field">
+		<label class="label"><fa-icon class="icon" [icon]="faUser"></fa-icon>Username</label>
+		<div class="control has-icons-left has-icons-right">
+			<input type="text" formControlName="username"
+				[ngClass]="{ 'is-danger': submitted && f['username'].errors }"
+				class="input" placeholder="e.g. rhymenoceros" />
+			<div *ngIf="submitted && f['username'].errors" class="help is-danger">
+				<div *ngIf="f['username'].errors['required']">Username is required.</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="field">
+		<label class="label"><fa-icon class="icon" [icon]="faLock"></fa-icon>Password</label>
+		<div class="control has-icons-left">
+			<input type="password" formControlName="password"
+			[ngClass]="{ 'is-danger': submitted && f['password'].errors }"
+				class="input" placeholder="make it strong!" />
+			<div *ngIf="submitted && f['password'].errors" class="help is-danger">
+				<div *ngIf="f['password'].errors['required']">Password is required.</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="field">
+		<label class="label"><fa-icon class="icon" [icon]="faLock"></fa-icon>Confirm Password</label>
+		<div class="control has-icons-left">
+			<input type="password" formControlName="passwordConfirm"
+			[ngClass]="{ 'is-danger': submitted && f['passwordConfirm'].errors }"
+				class="input" placeholder="make it strong!" />
+			<div *ngIf="submitted && f['passwordConfirm'].errors" class="help is-danger">
+				<div *ngIf="f['passwordConfirm'].errors['required']">Password is required.</div>
+			</div>
+		</div>
+	</div>
+
+	<button [disabled]="loading" class="button is-primary">
+		<span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+		Register
+	</button>
+</form>
