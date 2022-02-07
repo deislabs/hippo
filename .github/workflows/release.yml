@@ -67,7 +67,7 @@ jobs:
         shell: bash
 
       - name: dotnet publish
-        run: dotnet publish src/Web/Web.csproj --runtime "${{ matrix.target }}" -c Release -o ${{ matrix.target }}
+        run: dotnet publish src/Web/Web.csproj --runtime "${{ matrix.target }}" -c Release --self-contained -o ${{ matrix.target }}
 
       - name: Package
         shell: bash
