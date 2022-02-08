@@ -1,5 +1,7 @@
 using Hippo.Application.Common.Interfaces;
 using Hippo.Application.Common.Models;
+using Hippo.Application.Jobs;
+using Hippo.Core.Entities;
 using Hippo.Core.Events;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -10,40 +12,49 @@ public class ActiveRevisionChangedEventHandler : INotificationHandler<DomainEven
 {
     private readonly ILogger<ActiveRevisionChangedEventHandler> _logger;
 
-    private readonly IJobScheduler _jobScheduler;
+    private readonly IJobFactory _jobFactory;
 
-    private readonly IReverseProxy _reverseProxy;
+    private readonly JobScheduler _jobScheduler = JobScheduler.Current;
 
-    public ActiveRevisionChangedEventHandler(ILogger<ActiveRevisionChangedEventHandler> logger, IJobScheduler jobScheduler, IReverseProxy reverseProxy)
+    public ActiveRevisionChangedEventHandler(ILogger<ActiveRevisionChangedEventHandler> logger, IJobFactory jobFactory)
     {
         _logger = logger;
-        _jobScheduler = jobScheduler;
-        _reverseProxy = reverseProxy;
+        _jobFactory = jobFactory;
     }
 
     public Task Handle(DomainEventNotification<ActiveRevisionChangedEvent> notification, CancellationToken cancellationToken)
     {
         var domainEvent = notification.DomainEvent;
+        Channel channel = domainEvent.Channel;
 
         _logger.LogInformation("Hippo Domain Event: {DomainEvent}", domainEvent.GetType().Name);
 
-        if (domainEvent.Channel.ActiveRevision != null)
+        if (channel.ActiveRevision != null)
         {
-            _logger.LogInformation($"{domainEvent.Channel.App.Name}: Stopping channel {domainEvent.Channel.Name} at revision {domainEvent.Channel.ActiveRevision.RevisionNumber}");
-            _jobScheduler.Stop(domainEvent.Channel);
-            _logger.LogInformation($"{domainEvent.Channel.App.Name}: Starting channel {domainEvent.Channel.Name} at revision {domainEvent.Channel.ActiveRevision.RevisionNumber}");
-            var status = _jobScheduler.Start(domainEvent.Channel);
-            if (!status.IsRunning)
+            _logger.LogInformation($"{channel.App.Name}: Stopping channel {channel.Name} at revision {channel.ActiveRevision.RevisionNumber}");
+            foreach (var j in _jobScheduler.GetRunningJobs())
             {
-                _logger.LogInformation($"{domainEvent.Channel.App.Name}: Channel {domainEvent.Channel.Name} at revision {domainEvent.Channel.ActiveRevision.RevisionNumber} failed to start");
-                _reverseProxy.Stop(domainEvent.Channel);
+                if (j.Id == channel.Id)
+                {
+                    j.Stop();
+                }
             }
-            _logger.LogInformation($"Started {domainEvent.Channel.App.Name} Channel {domainEvent.Channel.Name} at revision {domainEvent.Channel.ActiveRevision.RevisionNumber}");
-            _reverseProxy.Start(domainEvent.Channel, status.ListenAddress);
+            _logger.LogInformation($"{channel.App.Name}: Starting channel {channel.Name} at revision {channel.ActiveRevision.RevisionNumber}");
+            var envvars = channel.EnvironmentVariables
+                .ToDictionary(
+                    e => e.Key!,
+                    e => e.Value!
+                );
+            var job = _jobFactory.StartNew(channel.Id, $"{channel.App.StorageId}/{channel.ActiveRevision.RevisionNumber}", envvars, channel.Domain);
+            if (!job.IsRunning)
+            {
+                _logger.LogError($"{channel.App.Name}: Channel {channel.Name} at revision {channel.ActiveRevision.RevisionNumber} failed to start");
+            }
+            _logger.LogInformation($"Started {channel.App.Name} Channel {channel.Name} at revision {channel.ActiveRevision.RevisionNumber}");
         }
         else
         {
-            _logger.LogInformation($"Not restarting {domainEvent.Channel.App.Name} Channel {domainEvent.Channel.Name}: no active revision");
+            _logger.LogInformation($"Not restarting {channel.App.Name} Channel {channel.Name}: no active revision");
         }
 
         return Task.CompletedTask;

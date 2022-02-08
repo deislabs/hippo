@@ -1,10 +1,12 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using FluentValidation.AspNetCore;
 using Hippo.Application;
 using Hippo.Application.Common.Interfaces;
+using Hippo.Application.Jobs;
 using Hippo.Core.Entities;
 using Hippo.Infrastructure;
 using Hippo.Infrastructure.Data;
@@ -70,7 +72,7 @@ public class TestBase : IDisposable
         services.AddTransient(provider =>
             Mock.Of<ICurrentUserService>(s => s.UserId == _currentUserId));
 
-        services.AddSingleton<IJobScheduler, NullJobScheduler>();
+        services.AddSingleton<IJobFactory, NullJobFactory>();
 
         _scopeFactory = services.BuildServiceProvider().GetRequiredService<IServiceScopeFactory>();
 
@@ -193,9 +195,30 @@ public class TestBase : IDisposable
     }
 }
 
-public class NullJobScheduler : IJobScheduler
+public class NullJobFactory : IJobFactory
 {
-    public ChannelStatus Start(Channel c) => new ChannelStatus(true, "");
+    public Job StartNew(Guid id, string bindleId, Dictionary<string, string> environmentVariables, string? domain)
+    {
+        return new NullJob();
+    }
 
-    public void Stop(Channel c) { }
+    private class NullJob : Job
+    {
+        public override void Run()
+        {
+            _status = JobStatus.Running;
+        }
+
+        public override void Stop()
+        {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                _status = JobStatus.Stopped;
+            }
+            else
+            {
+                _status = JobStatus.Completed;
+            }
+        }
+    }
 }

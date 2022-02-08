@@ -108,10 +108,6 @@ app.UseEndpoints(endpoints =>
         "default",
         "{controller=App}/{action=Index}/{id?}"
     );
-    if (builder.Configuration.GetValue<bool>("ReverseProxy:Enabled"))
-    {
-        endpoints.MapReverseProxy();
-    }
     endpoints.MapSwagger();
 });
 

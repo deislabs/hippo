@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
+using Hippo.Application.Jobs;
 using Hippo.Core.Entities;
 using MediatR;
 
@@ -22,12 +23,11 @@ public class UpdateAppCommandHandler : IRequestHandler<UpdateAppCommand>
 {
     private readonly IApplicationDbContext _context;
 
-    private readonly IJobScheduler _jobScheduler;
+    private readonly JobScheduler _jobScheduler = JobScheduler.Current;
 
-    public UpdateAppCommandHandler(IApplicationDbContext context, IJobScheduler jobScheduler)
+    public UpdateAppCommandHandler(IApplicationDbContext context)
     {
         _context = context;
-        _jobScheduler = jobScheduler;
     }
 
     public async Task<Unit> Handle(UpdateAppCommand request, CancellationToken cancellationToken)
@@ -45,9 +45,15 @@ public class UpdateAppCommandHandler : IRequestHandler<UpdateAppCommand>
         // TODO: how do we want to handle channels that requested ChannelRevisionSelectionStrategy.UseSpecifiedRevision?
         if (entity.StorageId != request.StorageId)
         {
-            foreach (var channel in entity.Channels)
+            foreach (Job job in _jobScheduler.GetRunningJobs())
             {
-                _jobScheduler.Stop(channel);
+                foreach (var channel in entity.Channels)
+                {
+                    if (job.Id == channel.Id)
+                    {
+                        job.Stop();
+                    }
+                }
             }
         }
 
