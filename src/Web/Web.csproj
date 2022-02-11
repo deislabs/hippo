@@ -72,12 +72,6 @@
 			<PrivateAssets>all</PrivateAssets>
 		</PackageReference>
 	</ItemGroup>
-	<ItemGroup>
-		<PackageReference Include="MinVer" Version="2.5.0">
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-			<PrivateAssets>all</PrivateAssets>
-		</PackageReference>
-	</ItemGroup>
 
 	<PropertyGroup>
 		<MinVerDefaultPreReleasePhase>preview</MinVerDefaultPreReleasePhase>
