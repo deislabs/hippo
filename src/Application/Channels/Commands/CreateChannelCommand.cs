@@ -54,13 +54,11 @@ public class CreateChannelCommandHandler : IRequestHandler<CreateChannelCommand,
             throw new NotFoundException(nameof(App), request.AppId);
         }
 
-        var platformDomain = (_config.PlatformDomain != null) ? _config.PlatformDomain : "hippofactory.io";
-
         var entity = new Channel
         {
             AppId = request.AppId,
             Name = request.Name,
-            Domain = (request.Domain != null) ? request.Domain : $"{request.Name}.{app.Name}.{platformDomain}",
+            Domain = (request.Domain != null) ? request.Domain : $"{request.Name}.{app.Name}.{_config.PlatformDomain}",
             RevisionSelectionStrategy = request.RevisionSelectionStrategy,
             RangeRule = request.RangeRule,
             ActiveRevisionId = request.ActiveRevisionId,
