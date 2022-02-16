@@ -210,7 +210,13 @@ job """ + name + @""" {
       }
     }
     task ""wagi"" {
-      driver = ""raw_exec""
+      driver = ""exec""
+
+      artifact {
+        source = ""https://github.com/deislabs/wagi/releases/download/v0.6.2/wagi-v0.6.2-linux-amd64.tar.gz""
+        options {
+          checksum = ""sha256:232d623e8cd9c5b72e2b76d0668eda0049edbe18f7bb5d6d5f979da2e69d1738""
+      }
       env {
         RUST_LOG = ""warn,wagi=debug""
         BINDLE_URL = var.bindle_url
