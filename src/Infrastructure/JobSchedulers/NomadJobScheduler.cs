@@ -40,7 +40,7 @@ public class NomadJobScheduler : IJobScheduler
         }
 
         var bindle = $"{c.App.StorageId}/{c.ActiveRevision.RevisionNumber}";
-        var hcl = JobDefinition(c);
+        var hcl = JobDefinition(c, configuration);
 
         logger.LogTrace($"Starting nomad job {c.App.Name}-{c.Name}");
 
@@ -167,11 +167,12 @@ public class NomadJobScheduler : IJobScheduler
         RUST_TRACE_LEVELS.Where(level => fragment.Contains(level, StringComparison.InvariantCultureIgnoreCase)).FirstOrDefault();
 
     // ActiveRevision can safely ignore nullability thanks to the null check on line 35
-    private static string JobDefinition(Channel c)
+    private static string JobDefinition(Channel c, IConfiguration configuration)
     {
         var name = $"{c.App.Name}-{c.Name}";
         var bindle = $"{c.App.StorageId}/{c.ActiveRevision!.RevisionNumber}";
         var env = String.Join(' ', c.EnvironmentVariables.Select(ev => $"\"--env\", \"{ev.Key}='{ev.Value}'\","));
+        var datacenters = string.Join(", ", configuration.GetValue<string[]>("Nomad:Datacenters", new string[]{"dc1"}).Select(item => "\"" + item + "\""));
 
         var hcl = @"
 variable ""bindle_id"" {
@@ -186,7 +187,7 @@ variable ""host"" {
   type = string
 }
 job """ + name + @""" {
-  datacenters = [""dc1""]
+  datacenters = [" + datacenters + @"]
   type = ""service""
   group """ + name + @""" {
     count = 1
