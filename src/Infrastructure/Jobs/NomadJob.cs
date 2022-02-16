@@ -159,6 +159,10 @@ job """ + Id + @""" {
       tags = [
         ""traefik.enable=true"",
         ""traefik.http.routers." + Id + @".rule=Host(`${var.host}`)"",
+        ""traefik.http.routers." + Id + @".entryPoints=websecure"",
+        ""traefik.http.routers." + Id + @".tls=true"",
+        ""traefik.http.routers." + Id + @".tls.certresolver=letsencrypt"",
+        ""traefik.http.routers." + Id + @".tls.domains[0].main=${var.host}""
       ]
       check {
         name = ""alive""
