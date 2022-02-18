@@ -64,7 +64,7 @@ public class NomadJob : Job
                         Stop();
                     }
                     catch (Exception) { }
-                    _status = JobStatus.Stopped;
+                    _status = JobStatus.Canceled;
                 });
             }
         }
