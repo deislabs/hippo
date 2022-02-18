@@ -1,6 +1,6 @@
 using Hippo.Application.Common.Exceptions;
-using Hippo.Application.Common.Interfaces;
 using Hippo.Application.Common.Models;
+using Hippo.Application.Jobs;
 using Hippo.Core.Events;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -11,15 +11,11 @@ public class ChannelDeletedEventHandler : INotificationHandler<DomainEventNotifi
 {
     private readonly ILogger<ChannelDeletedEventHandler> _logger;
 
-    private readonly IJobScheduler _jobScheduler;
+    private readonly JobScheduler _jobScheduler = JobScheduler.Current;
 
-    private readonly IReverseProxy _reverseProxy;
-
-    public ChannelDeletedEventHandler(ILogger<ChannelDeletedEventHandler> logger, IJobScheduler jobScheduler, IReverseProxy reverseProxy)
+    public ChannelDeletedEventHandler(ILogger<ChannelDeletedEventHandler> logger)
     {
         _logger = logger;
-        _jobScheduler = jobScheduler;
-        _reverseProxy = reverseProxy;
     }
 
     public Task Handle(DomainEventNotification<ChannelDeletedEvent> notification, CancellationToken cancellationToken)
@@ -30,11 +26,19 @@ public class ChannelDeletedEventHandler : INotificationHandler<DomainEventNotifi
 
         try
         {
-            _reverseProxy.Stop(domainEvent.Channel);
-            _jobScheduler.Stop(domainEvent.Channel);
+            foreach (Job job in _jobScheduler.GetRunningJobs())
+            {
+                if (job.Id == domainEvent.Channel.Id)
+                {
+                    job.Stop();
+                }
+            }
         }
-        // do nothing if the job can't be found
-        catch (NotFoundException) { }
+        catch (JobFailedException e)
+        {
+            _logger.LogError(e.Message);
+            throw;
+        }
 
         return Task.CompletedTask;
     }

@@ -10,7 +10,8 @@ public class CreateAccountTests : TestBase
     [Fact]
     public async Task ShouldRequireUniqueUserName()
     {
-        var command = new CreateAccountCommand{
+        var command = new CreateAccountCommand
+        {
             UserName = "bob",
             Password = "Passw0rd!",
             PasswordConfirm = "Passw0rd!"
@@ -25,7 +26,8 @@ public class CreateAccountTests : TestBase
     [InlineData("bacongobbler", "Passw0rd!")]
     public void ShouldCreateAccount(string userName, string password)
     {
-        var command = new CreateAccountCommand{
+        var command = new CreateAccountCommand
+        {
             UserName = userName,
             Password = password,
             PasswordConfirm = password
@@ -47,7 +49,8 @@ public class CreateAccountTests : TestBase
     [InlineData("Bobby Tables", "Passw0rd!", "Passw0rd!")]
     public async Task ShouldNotCreateAccount(string userName, string password, string passwordConfirm)
     {
-        var command = new CreateAccountCommand{
+        var command = new CreateAccountCommand
+        {
             UserName = userName,
             Password = password,
             PasswordConfirm = passwordConfirm
