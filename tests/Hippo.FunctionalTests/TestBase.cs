@@ -197,13 +197,15 @@ public class TestBase : IDisposable
 
 public class NullJobFactory : IJobFactory
 {
-    public Job StartNew(Guid id, string bindleId, Dictionary<string, string> environmentVariables, string? domain)
+    public Job Start(Guid id, string bindleId, Dictionary<string, string> environmentVariables, string? domain)
     {
         return new NullJob();
     }
 
     private class NullJob : Job
     {
+        public override void Reload() { }
+
         public override void Run()
         {
             _status = JobStatus.Running;

@@ -31,25 +31,12 @@ public class ActiveRevisionChangedEventHandler : INotificationHandler<DomainEven
 
         if (channel.ActiveRevision != null)
         {
-            _logger.LogInformation($"{channel.App.Name}: Stopping channel {channel.Name} at revision {channel.ActiveRevision.RevisionNumber}");
-            foreach (var j in _jobScheduler.GetRunningJobs())
-            {
-                if (j.Id == channel.Id)
-                {
-                    j.Stop();
-                }
-            }
             _logger.LogInformation($"{channel.App.Name}: Starting channel {channel.Name} at revision {channel.ActiveRevision.RevisionNumber}");
-            var envvars = channel.EnvironmentVariables
-                .ToDictionary(
-                    e => e.Key!,
-                    e => e.Value!
-                );
-            var job = _jobFactory.StartNew(channel.Id, $"{channel.App.StorageId}/{channel.ActiveRevision.RevisionNumber}", envvars, channel.Domain);
-            if (!job.IsRunning)
-            {
-                _logger.LogError($"{channel.App.Name}: Channel {channel.Name} at revision {channel.ActiveRevision.RevisionNumber} failed to start");
-            }
+            var envvars = channel.EnvironmentVariables.ToDictionary(
+                e => e.Key!,
+                e => e.Value!
+            );
+            _jobFactory.Start(channel.Id, $"{channel.App.StorageId}/{channel.ActiveRevision.RevisionNumber}", envvars, channel.Domain);
             _logger.LogInformation($"Started {channel.App.Name} Channel {channel.Name} at revision {channel.ActiveRevision.RevisionNumber}");
         }
         else

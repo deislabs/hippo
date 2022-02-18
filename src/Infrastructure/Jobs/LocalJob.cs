@@ -12,7 +12,7 @@ namespace Hippo.Infrastructure.Jobs;
 public class LocalJob : Job
 {
     private static readonly IPEndPoint DefaultLoopbackEndpoint = new IPEndPoint(IPAddress.Loopback, port: 0);
-    private readonly string bindleId;
+    public string BindleId;
     private readonly Dictionary<string, string> environmentVariables = new Dictionary<string, string>();
     private readonly string bindleUrl;
     private readonly string wagiBinaryPath;
@@ -20,7 +20,7 @@ public class LocalJob : Job
 
     public LocalJob(IConfiguration configuration, Guid id, string bindleId) : base(id)
     {
-        this.bindleId = bindleId;
+        BindleId = bindleId;
         bindleUrl = configuration.GetValue<string>("Bindle:Url", "http://127.0.0.1:8080/v1");
         wagiBinaryPath = configuration.GetValue<string>("Wagi:BinaryPath", (OperatingSystem.IsWindows() ? "wagi.exe" : "wagi"));
     }
@@ -60,20 +60,6 @@ public class LocalJob : Job
         }
     }
 
-    private ProcessStartInfo psi()
-    {
-        var env = String.Join(' ', environmentVariables.Select(ev => $"--env {ev.Key}=\"{ev.Value}\""));
-
-        return new ProcessStartInfo
-        {
-            FileName = wagiBinaryPath,
-            Arguments = $"-b {bindleId} --bindle-url {bindleUrl} -l 127.0.0.1:{GetAvailablePort()} {env}",
-            RedirectStandardError = true,
-            RedirectStandardOutput = true,
-            UseShellExecute = false,
-        };
-    }
-
     public override void Stop()
     {
         // no need to tell wagi to stop if the process hasn't started
@@ -84,6 +70,30 @@ public class LocalJob : Job
 
         process?.Kill();
         _status = JobStatus.Completed;
+    }
+
+    public override void Reload()
+    {
+        if (IsRunning)
+        {
+            // TODO: restart process, re-binding to the same port number
+            process?.Kill();
+            Run();
+        }
+    }
+
+    private ProcessStartInfo psi()
+    {
+        var env = String.Join(' ', environmentVariables.Select(ev => $"--env {ev.Key}=\"{ev.Value}\""));
+
+        return new ProcessStartInfo
+        {
+            FileName = wagiBinaryPath,
+            Arguments = $"-b {BindleId} --bindle-url {bindleUrl} -l 127.0.0.1:{GetAvailablePort()} {env}",
+            RedirectStandardError = true,
+            RedirectStandardOutput = true,
+            UseShellExecute = false,
+        };
     }
 
     private static int GetAvailablePort()

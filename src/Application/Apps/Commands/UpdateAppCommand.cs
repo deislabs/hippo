@@ -23,8 +23,6 @@ public class UpdateAppCommandHandler : IRequestHandler<UpdateAppCommand>
 {
     private readonly IApplicationDbContext _context;
 
-    private readonly JobScheduler _jobScheduler = JobScheduler.Current;
-
     public UpdateAppCommandHandler(IApplicationDbContext context)
     {
         _context = context;
@@ -38,23 +36,6 @@ public class UpdateAppCommandHandler : IRequestHandler<UpdateAppCommand>
         if (entity == null)
         {
             throw new NotFoundException(nameof(App), request.Id);
-        }
-
-        // if the user changes the bindle storage id, ALL channels will stop working until the user registers new revisions that satisfy the channels' rules.
-        //
-        // TODO: how do we want to handle channels that requested ChannelRevisionSelectionStrategy.UseSpecifiedRevision?
-        if (entity.StorageId != request.StorageId)
-        {
-            foreach (Job job in _jobScheduler.GetRunningJobs())
-            {
-                foreach (var channel in entity.Channels)
-                {
-                    if (job.Id == channel.Id)
-                    {
-                        job.Stop();
-                    }
-                }
-            }
         }
 
         entity.Name = request.Name;

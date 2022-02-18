@@ -136,5 +136,8 @@ public abstract class Job
     /// </summary>
     public abstract void Stop();
 
-
+    /// <summary>
+    /// Reloads <see cref="Job" /> configuration.
+    /// </summary>
+    public abstract void Reload();
 }
