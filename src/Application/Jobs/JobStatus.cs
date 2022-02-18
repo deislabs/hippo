@@ -10,8 +10,8 @@ public enum JobStatus
     Running,
     /// The job completed execution successfully.
     Completed,
-    /// The job acknowledged that it has been stopped.
-    Stopped,
+    /// The job acknowledged that it has been canceled.
+    Canceled,
     /// The job's status is unknown due to an unhandled exception.
     Unknown,
 }

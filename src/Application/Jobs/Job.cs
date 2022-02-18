@@ -55,7 +55,7 @@ public abstract class Job
                 case JobStatus.Created:
                 case JobStatus.WaitingToRun:
                     return cancellationToken.IsCancellationRequested;
-                case JobStatus.Stopped:
+                case JobStatus.Canceled:
                     return true;
                 default:
                     return false;
@@ -70,7 +70,7 @@ public abstract class Job
             switch (_status)
             {
                 case JobStatus.Completed:
-                case JobStatus.Stopped:
+                case JobStatus.Canceled:
                 case JobStatus.Unknown:
                     return true;
                 default:
@@ -131,5 +131,10 @@ public abstract class Job
         }
     }
 
+    /// <summary>
+    /// Stops the <see cref="Job" />, marking it as completed.
+    /// </summary>
     public abstract void Stop();
+
+
 }

@@ -213,7 +213,7 @@ public class NullJobFactory : IJobFactory
         {
             if (cancellationToken.IsCancellationRequested)
             {
-                _status = JobStatus.Stopped;
+                _status = JobStatus.Canceled;
             }
             else
             {

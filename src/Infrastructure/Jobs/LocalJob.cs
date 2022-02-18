@@ -47,7 +47,7 @@ public class LocalJob : Job
             cancellationToken.Register(() =>
             {
                 process.Kill();
-                _status = JobStatus.Stopped;
+                _status = JobStatus.Canceled;
             });
         }
         catch (Win32Exception e)  // yes, even on Linux
