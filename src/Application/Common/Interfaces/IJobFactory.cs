@@ -4,5 +4,5 @@ namespace Hippo.Application.Common.Interfaces;
 
 public interface IJobFactory
 {
-    Job StartNew(Guid id, string bindleId, Dictionary<string, string> environmentVariables, string? domain);
+    Job Start(Guid id, string bindleId, Dictionary<string, string> environmentVariables, string? domain);
 }

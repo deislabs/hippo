@@ -8,8 +8,8 @@ namespace Hippo.Infrastructure.Jobs;
 
 public class NomadJob : Job
 {
-    private readonly string bindleId;
-    private readonly string domain;
+    public string BindleId;
+    public string Domain;
     private readonly Dictionary<string, string> environmentVariables = new Dictionary<string, string>();
     private readonly string bindleUrl;
     private readonly string nomadBinaryPath;
@@ -18,8 +18,8 @@ public class NomadJob : Job
 
     public NomadJob(IConfiguration configuration, Guid id, string bindleId, string domain) : base(id)
     {
-        this.bindleId = bindleId;
-        this.domain = domain;
+        BindleId = bindleId;
+        Domain = domain;
         bindleUrl = configuration.GetValue<string>("Bindle:Url", "http://127.0.0.1:8080/v1");
         nomadBinaryPath = configuration.GetValue<string>("Nomad:BinaryPath", (OperatingSystem.IsWindows() ? "nomad.exe" : "nomad"));
         datacenters = string.Join(", ", configuration.GetSection("Nomad:Datacenters").Get<string[]>().Select(item => "\"" + item + "\""));
@@ -35,7 +35,7 @@ public class NomadJob : Job
         var psi = new ProcessStartInfo
         {
             FileName = nomadBinaryPath,
-            Arguments = $"job run -var=\"bindle_id={bindleId}\" -var=\"host={domain}\" -var=\"bindle_url={bindleUrl}\" -",
+            Arguments = $"job run -var=\"bindle_id={BindleId}\" -var=\"host={Domain}\" -var=\"bindle_url={bindleUrl}\" -",
             RedirectStandardError = true,
             RedirectStandardOutput = true,
             UseShellExecute = false,
@@ -43,30 +43,28 @@ public class NomadJob : Job
 
         try
         {
-            using (process = Process.Start(psi))
+            process = Process.Start(psi);
+            if (process == null)
             {
-                if (process == null)
-                {
-                    throw new JobFailedException("Job never started");
-                }
-
-                process.Start();
-                process.StandardInput.WriteLine(HclJobDefinition());
-                process.StandardInput.Close();
-                _status = JobStatus.Running;
-
-                // kill the process if the calling thread cancels the Job.
-                cancellationToken.Register(() =>
-                {
-                    process.Kill();
-                    try
-                    {
-                        Stop();
-                    }
-                    catch (Exception) { }
-                    _status = JobStatus.Canceled;
-                });
+                throw new JobFailedException("Job never started");
             }
+
+            process.Start();
+            process.StandardInput.WriteLine(HclJobDefinition());
+            process.StandardInput.Close();
+            _status = JobStatus.Running;
+
+            // kill the process if the calling thread cancels the Job.
+            cancellationToken.Register(() =>
+            {
+                process.Kill();
+                try
+                {
+                    Stop();
+                }
+                catch (Exception) { }
+                _status = JobStatus.Canceled;
+            });
         }
         catch (Win32Exception e)  // yes, even on Linux
         {
@@ -75,6 +73,15 @@ public class NomadJob : Job
                 throw new ArgumentException($"The system cannot find '{nomadBinaryPath}'; add '{nomadBinaryPath}' to your $PATH or set 'Nomad:BinaryPath' in your appsettings to the correct location.");
             }
             throw;
+        }
+    }
+
+    public override void Reload()
+    {
+        if (IsRunning)
+        {
+            process?.Kill();
+            Run();
         }
     }
 
