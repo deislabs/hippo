@@ -13,7 +13,7 @@
     },
     "devDependencies": {
         "clean-webpack-plugin": "^4.0.0",
-        "css-loader": "^6.6.0",
+        "css-loader": "^6.7.0",
         "file-loader": "^6.2.0",
         "mini-css-extract-plugin": "^2.5.3",
         "sass-loader": "^12.6.0",
