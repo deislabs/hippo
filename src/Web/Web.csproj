@@ -48,7 +48,7 @@
     </Target>
 
 	<ItemGroup>
-		<PackageReference Include="FluentValidation.AspNetCore" Version="10.3.6" />
+		<PackageReference Include="FluentValidation.AspNetCore" Version="10.4.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.3" />
 		<PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="6.0.3" />
