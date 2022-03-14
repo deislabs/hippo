@@ -76,7 +76,8 @@ builder.Services.AddSwaggerGen(c =>
 var app = builder.Build();
 
 app.UseHttpsRedirection();
-app.UseStaticFiles();
+
+app.UseFileServer();
 
 app.UseRouting();
 
@@ -103,10 +104,6 @@ app.UseEndpoints(endpoints =>
         "api_route",
         "API",
         "api/{controller}/{action}/{id?}"
-    );
-    endpoints.MapControllerRoute(
-        "default",
-        "{controller=App}/{action=Index}/{id?}"
     );
     endpoints.MapSwagger();
 });

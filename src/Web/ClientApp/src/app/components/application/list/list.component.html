@@ -1,0 +1,27 @@
+<article *ngIf="error" class="message is-danger">
+	<div class="message-header">
+		<p>Error</p>
+		<button class="delete" aria-label="delete"></button>
+	</div>
+	<div class="message-body">
+		{{error}}
+	</div>
+</article>
+
+<div class="columns">
+	<div *ngFor="let app of apps" class="column is-full-tablet is-half-desktop is-third-widescreen box">
+		<a routerLink="/app" [queryParams]="{ id: app.id }">
+			<div class="card">
+				<div class="card-content">
+					<p class="title is-size-3">{{ app.name }}</p>
+					<p class="subtitle is-size-4">{{ app.id }}</p>
+				</div>
+				<footer class="card-footer">
+					<button class="card-footer-item button is-primary" routerLink="/app" [queryParams]="{ id: app.id }">View</button>
+					<button class="card-footer-item button is-primary" (click)="editApp(app.id)">Edit</button>
+					<button class="card-footer-item button is-danger" (click)="deleteApp(app.id)">Delete</button>
+				</footer>
+			</div>
+		</a>
+	</div>
+</div>

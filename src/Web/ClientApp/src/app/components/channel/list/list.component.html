@@ -1,0 +1,11 @@
+<div class="columns">
+    <div class="column is-one-quarter" *ngFor="let channel of channels">
+        <app-channel [id]="channel.id"></app-channel>
+    </div>
+    <div class="column is-one-quarter">
+        <div class="box">
+            <a (click)="onAddChannel()"><fa-icon class="icon" [icon]="faPlus"></fa-icon><span>Add Channel</span></a>
+            <app-channel-new *ngIf="showChannelForm"></app-channel-new>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,8 @@
+<aside class="menu box">
+	<p class="menu-label">
+		Channels
+	</p>
+	<ul *ngFor="let channel of channels" class="menu-list">
+		<li><a routerLink="/channel" [queryParams]="{ id: channel.id }">{{ channel.name }}</a></li>
+	</ul>
+</aside>

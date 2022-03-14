@@ -1,0 +1,39 @@
+<nav class="navbar" role="navigation" aria-label="main navigation">
+	<div class="navbar-brand">
+		<a class="navbar-item" routerLink="/">
+			<fa-icon [icon]="faHippo" size="2x"></fa-icon><h1 class="title">Hippo</h1>
+		</a>
+
+		<a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="hippoMenu">
+			<span aria-hidden="true"></span>
+			<span aria-hidden="true"></span>
+			<span aria-hidden="true"></span>
+		</a>
+	</div>
+
+	<div id="hippoMenu" class="navbar-menu">
+		<div class="navbar-menu navbar-end" *ngIf="isLoggedIn(); else elseBlock">
+			<div class="navbar-item has-dropdown is-hoverable">
+				<a class="navbar-link">
+					<fa-icon class="icon" [icon]="faUser"></fa-icon>
+				</a>
+
+				<div class="navbar-dropdown">
+					<a class="navbar-item" routerLink="/app/new">New application...</a>
+					<a class="navbar-item" routerLink="/settings">Settings</a>
+					<a class="navbar-item" routerLink="/account">Profile</a>
+					<hr class="navbar-divider">
+					<a class="navbar-item" (click)="logout()">Log out</a>
+				</div>
+			</div>
+		</div>
+		<ng-template #elseBlock>
+			<div class="navbar-menu navbar-end">
+				<div class="buttons">
+					<a class="navbar-item button is-outlined" routerLink="/login">Log in</a>
+					<a class="navbar-item button is-primary" routerLink="/register">Sign up</a>
+				</div>
+			</div>
+		</ng-template>
+	</div>
+</nav>

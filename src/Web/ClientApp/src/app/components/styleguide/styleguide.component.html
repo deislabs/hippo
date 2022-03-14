@@ -1,0 +1,318 @@
+<div class="content">
+	<h2>Typography</h2>
+
+	<p>Examples of how different <strong>headings</strong> and <strong>text styles</strong> will look.</p>
+
+	<h1>H1 Heading One</h1>
+	<h2>H2 Heading Two</h2>
+	<h3>H3 Heading Three</h3>
+	<h4>H4 Heading Four</h4>
+	<h5>H5 Heading Five</h5>
+
+	<p>For additional sizing options, see the <a href="https://bulma.io/documentation/helpers/typography-helpers/">bulma
+			docs here</a>.</p>
+
+	<p>Cosby sweater iphone artisan, squid trust fund photo booth twee blog shoreditch single-origin coffee aesthetic
+		jean
+		shorts messenger bag brooklyn butcher. Iphone fap banksy next level put a bird on it, letterpress photo booth
+		thundercats biodiesel fanny pack etsy banh mi wayfarers. Sustainable four loko dreamcatcher, vegan single-origin
+		coffee yr cardigan biodiesel williamsburg thundercats salvia master cleanse terry richardson tumblr mcsweeney’s.
+		Lomo gluten-free salvia you probably haven’t heard of them portland. Mlkshk jean shorts carles, etsy artisan
+		farm-to-table sartorial williamsburg marfa PBR leggings trust fund. Mcsweeney’s banh mi lo-fi mustache, fixie
+		cosby
+		sweater tumblr twee fanny pack. Thundercats food truck vegan, hoodie irony artisan beard synth.</p>
+
+	<p><small><em>^ Hipster Ipsum</em>. Small text example.</small></p>
+
+	<h3>Colored text - good for <a href="https://bulma.io/documentation/components/message/">UI messages and alerts</a>.
+	</h3>
+
+	<p class="has-text-primary">Text that has the <code>is-primary</code> class.</p>
+	<p class="has-text-link">Text that has the <code>is-link</code> class.</p>
+	<p class="has-text-info">Text that has the <code>is-info</code> class.</p>
+	<p class="has-text-success">Text that has the <code>is-success</code> class.</p>
+	<p class="has-text-warning">Text that has the <code>is-warning</code> class.</p>
+	<p class="has-text-danger">Text that has the <code>is-danger</code> class.</p>
+	<p class="has-text-black">Text that has the <code>is-black</code> class.</p>
+	<p class="has-text-dark">Text that has the <code>is-dark</code> class.</p>
+	<p class="has-text-light">Text that has the <code>is-light</code> class.</p>
+	<p class="has-text-white">Text that has the <code>is-white</code> class.</p>
+
+	<p>For different color usages (background shades, inverted (dark mode) classes, etc view the docs for the <a
+			href="https://bulma.io/documentation/helpers/color-helpers/">color helpers</a>.</p>
+
+	<h2>Panels &amp; Sections</h2>
+
+	<article class="message is-danger">
+		<div class="message-header">
+			<p>Warning</p>
+			<button class="delete" aria-label="delete"></button>
+		</div>
+		<div class="message-body">
+			Lorem ipsum dolor sit amet, consectetur adipiscing elit. <strong>Pellentesque risus mi</strong>, tempus quis
+			placerat ut, porta nec nulla. Vestibulum rhoncus ac ex sit amet fringilla. Nullam gravida purus diam, et dictum
+			<a>felis venenatis</a> efficitur. Aenean ac <em>eleifend lacus</em>, in mollis lectus. Donec sodales, arcu et
+			sollicitudin porttitor, tortor urna tempor ligula, id porttitor mi magna a neque. Donec dui urna, vehicula et
+			sem
+			eget, facilisis sodales sem.
+		</div>
+	</article>
+
+	<h2>Buttons</h2>
+
+	<p>Buttons have many different states of interaction, and can have different styles depending on their role. By
+		default, Hippo buttons should be rounded and use the <code>is-normal</code> sizing.</p>
+
+	<p>
+		<button class="button is-rounded">Rounded</button>
+		<button class="button is-primary is-rounded">Rounded</button>
+		<button class="button is-link is-rounded">Rounded</button>
+		<button class="button is-info is-rounded">Rounded</button>
+		<button class="button is-success is-rounded">Rounded</button>
+		<button class="button is-danger is-rounded">Rounded</button>
+	</p>
+
+	<button class="button is-small">Small</button>
+	<button class="button">Default</button>
+	<button class="button is-normal">Normal</button>
+	<button class="button is-medium">Medium</button>
+	<button class="button is-large">Large</button>
+
+	<p>Squared buttons:</p>
+
+	<button class="button">Normal</button>
+	<button class="button is-primary">Normal</button>
+	<button class="button is-link">Normal</button>
+	<button class="button is-info">Normal</button>
+	<button class="button is-success">Normal</button>
+	<button class="button is-warning">Normal</button>
+	<button class="button is-danger">Normal</button>
+
+	<p>Grouped (inline) buttons:</p>
+
+	<div class="field is-grouped">
+		<p class="control">
+			<button class="button is-primary is-rounded">
+				Save changes
+			</button>
+		</p>
+		<p class="control">
+			<button class="button is-danger is-outlined is-rounded">
+				Cancel
+			</button>
+		</p>
+		<p class="control">
+			<button class="button is-danger is-rounded">
+				Delete post
+			</button>
+		</p>
+	</div>
+
+	<p>Loading...</p>
+
+	<button class="button is-loading">Loading</button>
+	<button class="button is-primary is-loading">Loading</button>
+	<button class="button is-link is-loading">Loading</button>
+	<button class="button is-info is-loading">Loading</button>
+
+	<p>With icons:</p>
+
+	<p class="buttons">
+		<button class="button">
+			<span class="icon is-small">
+				<fa-icon [icon]="faBold"></fa-icon>
+			</span>
+		</button>
+		<button class="button">
+			<span class="icon is-small">
+				<fa-icon [icon]="faItalic"></fa-icon>
+			</span>
+		</button>
+		<button class="button">
+			<span class="icon is-small">
+				<fa-icon [icon]="faUnderline"></fa-icon>
+			</span>
+		</button>
+	</p>
+	<p class="buttons">
+		<button class="button is-outline is-rounded">
+			<span class="icon">
+				<fa-icon [icon]="faGithub"></fa-icon>
+			</span>
+			<span>GitHub</span>
+		</button>
+		<button class="button is-primary">
+			<span class="icon is-small">
+				<fa-icon [icon]="faPlus"></fa-icon>
+			</span>
+			<span>Add News</span>
+		</button>
+		<button class="button is-success">
+			<span class="icon is-small">
+				<fa-icon [icon]="faCheck"></fa-icon>
+			</span>
+			<span>Save</span>
+		</button>
+		<button class="button is-danger is-outlined">
+			<span>Delete</span>
+			<span class="icon is-small">
+				<fa-icon [icon]="faTimes"></fa-icon>
+			</span>
+		</button>
+	</p>
+	<p class="buttons">
+		<button class="button is-small">
+			<span class="icon is-small">
+				<fa-icon [icon]="faGithub"></fa-icon>
+			</span>
+			<span>GitHub</span>
+		</button>
+		<button class="button">
+			<span class="icon">
+				<fa-icon [icon]="faGithub"></fa-icon>
+			</span>
+			<span>GitHub</span>
+		</button>
+		<button class="button is-medium">
+			<span class="icon">
+				<fa-icon [icon]="faGithub"></fa-icon>
+			</span>
+			<span>GitHub</span>
+		</button>
+		<button class="button is-large">
+			<span class="icon is-medium">
+				<fa-icon [icon]="faGithub"></fa-icon>
+			</span>
+			<span>GitHub</span>
+		</button>
+	</p>
+
+	<p>Disabled state:</p>
+
+	<button class="button" title="Disabled button" disabled>Disabled</button>
+	<button class="button is-primary" title="Disabled button" disabled>Disabled</button>
+	<button class="button is-link" title="Disabled button" disabled>Disabled</button>
+	<button class="button is-info" title="Disabled button" disabled>Disabled</button>
+	<button class="button is-success" title="Disabled button" disabled>Disabled</button>
+	<button class="button is-warning" title="Disabled button" disabled>Disabled</button>
+	<button class="button is-danger" title="Disabled button" disabled>Disabled</button>
+
+	<h2>Tables</h2>
+	<!-- temp content for testing styles -->
+	<div class="column">
+		<a class="button is-primary">
+			<span class="icon is-small">
+				<fa-icon [icon]="faPlus"></fa-icon>
+			</span>
+			<span>Add New Data</span>
+		</a>
+		<table class="table is-bordered is-striped is-narrow is-fullwidth mt-4">
+			<thead>
+				<tr>
+					<th class=""><abbr title="Generic">Generic</abbr></th>
+					<th class=""><abbr title="Table">Table</abbr></th>
+					<th><abbr title="Styles">Styles</abbr></th>
+					<th><abbr title="Test">Test</abbr></th>
+					<th>Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>Admin</td>
+					<td>Matt Fisher</td>
+					<td>BC, Canada</td>
+					<td>April 01, 2017</td>
+					<td>
+						<a class="button is-primary">
+							<span class="icon is-small">
+								<fa-icon [icon]="faEdit"></fa-icon>
+							</span>
+							<span>Edit</span>
+						</a>
+						<a class="button is-danger">
+							<span class="icon is-small">
+								<fa-icon [icon]="faTrash"></fa-icon>
+							</span>
+							<span>Delete</span>
+						</a>
+					</td>
+				</tr>
+				<tr>
+					<td>Admin</td>
+					<td>Carolyn Van Slyck</td>
+					<td>Chicago, Illinois</td>
+					<td>April 01, 2017</td>
+					<td>
+						<a class="button is-primary">
+							<span class="icon is-small">
+								<fa-icon [icon]="faEdit"></fa-icon>
+							</span>
+							<span>Edit</span>
+						</a>
+						<a class="button is-danger">
+							<span class="icon is-small">
+								<fa-icon [icon]="faTrash"></fa-icon>
+							</span>
+							<span>Delete</span>
+						</a>
+					</td>
+				</tr>
+				<tr>
+					<td>Admin</td>
+					<td>Ivan Towlson</td>
+					<td>New Zealand</td>
+					<td>April 01, 2017</td>
+					<td>
+						<a class="button is-primary">
+							<span class="icon is-small">
+								<fa-icon [icon]="faEdit"></fa-icon>
+							</span>
+							<span>Edit</span>
+						</a>
+						<a class="button is-danger">
+							<span class="icon is-small">
+								<fa-icon [icon]="faTrash"></fa-icon>
+							</span>
+							<span>Delete</span>
+						</a>
+					</td>
+				</tr>
+				<tr>
+					<td>Admin</td>
+					<td>Ronan Flynn-Curran</td>
+					<td>Bay Area, California</td>
+					<td>April 01, 2017</td>
+					<td>
+						<a class="button is-primary">
+							<span class="icon is-small">
+								<fa-icon [icon]="faEdit"></fa-icon>
+							</span>
+							<span>Edit</span>
+						</a>
+						<a class="button is-danger">
+							<span class="icon is-small">
+								<fa-icon [icon]="faTrash"></fa-icon>
+							</span>
+							<span>Delete</span>
+						</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		<nav class="pagination is-centered" role="navigation" aria-label="pagination">
+			<a class="pagination-previous">Previous</a>
+			<a class="pagination-next">Next page</a>
+			<ul class="pagination-list">
+				<li><a class="pagination-link" aria-label="Goto page 1">1</a></li>
+				<li><span class="pagination-ellipsis">…</span></li>
+				<li><a class="pagination-link" aria-label="Goto page 45">45</a></li>
+				<li>
+					<a class="pagination-link is-current" aria-label="Page 46" aria-current="page">46</a>
+				</li>
+				<li><a class="pagination-link" aria-label="Goto page 47">47</a></li>
+				<li><span class="pagination-ellipsis">…</span></li>
+				<li><a class="pagination-link" aria-label="Goto page 86">86</a></li>
+			</ul>
+		</nav>
+	</div>
+</div>
