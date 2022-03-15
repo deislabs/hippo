@@ -7,7 +7,7 @@ namespace Hippo.Application.Certificates.Commands;
 
 public class CreateCertificateCommandValidator : AbstractValidator<CreateCertificateCommand>
 {
-    private readonly Regex validName = new Regex("^[a-zA-Z0-9-_]*$");
+    private readonly Regex validName = new Regex("^[a-zA-Z0-9-_]*");
 
     private readonly IApplicationDbContext _context;
 

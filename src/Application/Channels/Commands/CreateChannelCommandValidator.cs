@@ -7,9 +7,9 @@ namespace Hippo.Application.Channels.Commands;
 
 public class CreateChannelCommandValidator : AbstractValidator<CreateChannelCommand>
 {
-    private readonly Regex validName = new Regex("^[a-zA-Z0-9-_]*$");
+    private readonly Regex validName = new Regex("^[a-zA-Z0-9-_]*");
 
-    private readonly Regex validDomainName = new Regex(@"^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$");
+    private readonly Regex validDomainName = new Regex(@"^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}");
 
     private readonly IApplicationDbContext _context;
 

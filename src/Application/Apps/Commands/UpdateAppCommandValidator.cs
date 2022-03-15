@@ -9,9 +9,9 @@ public class UpdateAppCommandValidator : AbstractValidator<UpdateAppCommand>
 {
     private readonly IApplicationDbContext _context;
 
-    private readonly Regex validName = new Regex("^[a-zA-Z0-9-_]*$");
+    private readonly Regex validName = new Regex("^[a-zA-Z0-9-_]*");
 
-    private readonly Regex validStorageId = new Regex("^[a-zA-Z0-9.-_/]*$");
+    private readonly Regex validStorageId = new Regex("^[a-zA-Z0-9.-_/]*");
 
     public UpdateAppCommandValidator(IApplicationDbContext context)
     {

@@ -5,7 +5,7 @@ namespace Hippo.Application.Revisions.Commands;
 
 public class RegisterRevisionCommandValidator : AbstractValidator<RegisterRevisionCommand>
 {
-    private readonly Regex validStorageId = new Regex("^[a-zA-Z0-9-_/]*$");
+    private readonly Regex validStorageId = new Regex("^[a-zA-Z0-9-_/]*");
 
     public RegisterRevisionCommandValidator()
     {

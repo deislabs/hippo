@@ -8,7 +8,7 @@ public class CreateAccountCommandValidator : AbstractValidator<CreateAccountComm
 {
     private readonly IIdentityService _identityService;
 
-    private readonly Regex validUserName = new Regex("^[a-zA-Z0-9-_]*$");
+    private readonly Regex validUserName = new Regex("^[a-zA-Z0-9-_]*");
 
     public CreateAccountCommandValidator(IIdentityService identityService)
     {
