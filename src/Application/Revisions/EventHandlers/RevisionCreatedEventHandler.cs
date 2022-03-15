@@ -31,6 +31,7 @@ public class RevisionCreatedEventHandler : INotificationHandler<DomainEventNotif
         // re-evaluate active revisions for every channel related to the same app
         var channels = await _context.Channels
             .Where(c => c.AppId == domainEvent.Revision.AppId)
+            .Include(c => c.EnvironmentVariables)
             .ToListAsync(cancellationToken);
 
         foreach (Channel channel in channels)
