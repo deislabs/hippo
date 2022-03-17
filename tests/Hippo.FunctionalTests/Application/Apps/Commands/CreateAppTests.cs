@@ -25,6 +25,8 @@ public class CreateAccountTests : TestBase
     [InlineData("bar", "bar")]
     [InlineData("name-with-hyphens", "bar")]
     [InlineData("name_with_underscores", "bar")]
+    [InlineData("storage-id-with-hyphens", "my-app")]
+    [InlineData("storage-id-with-underscores", "my_app")]
     [InlineData("storage-id-with-slash", "bacongobbler/myapp")]
     [InlineData("storage-id-with-dot", "github.com/bacongobbler/myapp")]
     public void ShouldCreateApp(string name, string storageId)
