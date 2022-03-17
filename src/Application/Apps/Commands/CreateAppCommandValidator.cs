@@ -11,7 +11,7 @@ public class CreateAppCommandValidator : AbstractValidator<CreateAppCommand>
 
     private readonly Regex validName = new Regex("^[a-zA-Z0-9-_]*$");
 
-    private readonly Regex validStorageId = new Regex("^[a-zA-Z0-9.-_/]*$");
+    private readonly Regex validStorageId = new Regex("^[a-zA-Z0-9-_./]*$");
 
     public CreateAppCommandValidator(IApplicationDbContext context)
     {
