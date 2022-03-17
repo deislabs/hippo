@@ -38,6 +38,7 @@ public class NomadJob : Job
             Arguments = $"job run -var=\"bindle_id={BindleId}\" -var=\"host={Domain}\" -var=\"bindle_url={bindleUrl}\" -",
             RedirectStandardError = true,
             RedirectStandardOutput = true,
+            RedirectStandardInput = true,
             UseShellExecute = false,
         };
 
