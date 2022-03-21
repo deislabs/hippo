@@ -15,9 +15,11 @@ public class NomadJob : Job
     private readonly string nomadBinaryPath;
     private readonly string datacenters;
     private Process? process;
+    private readonly IConfiguration _configuration;
 
     public NomadJob(IConfiguration configuration, Guid id, string bindleId, string domain) : base(id)
     {
+        _configuration = configuration;
         BindleId = bindleId;
         Domain = domain;
         bindleUrl = configuration.GetValue<string>("Bindle:Url", "http://127.0.0.1:8080/v1");
@@ -131,6 +133,18 @@ public class NomadJob : Job
     private string HclJobDefinition()
     {
         var env = String.Join(' ', environmentVariables.Select(ev => $"\"--env\", \"{ev.Key}='{ev.Value}'\","));
+        var entrypoint = _configuration.GetValue<string>("Nomad:Traefik:Entrypoint");
+        var certresolver = _configuration.GetValue<string>("Nomad:Traefik:CertResolver");
+
+        if (entrypoint != "")
+        {
+          entrypoint = @"""traefik.http.routers." + Id + @".entryPoints=" + entrypoint + @""",";
+        }
+
+        if (certresolver != "")
+        {
+          certresolver = @"""traefik.http.routers." + Id + @".tls.certresolver=" + certresolver + @""",";
+        }
 
         var hcl = @"
 variable ""bindle_id"" {
@@ -159,6 +173,10 @@ job """ + Id + @""" {
       tags = [
         ""traefik.enable=true"",
         ""traefik.http.routers." + Id + @".rule=Host(`${var.host}`)"",
+        " + entrypoint + @"
+        ""traefik.http.routers." + Id + @".tls=true"",
+        " + certresolver + @"
+        ""traefik.http.routers." + Id + @".tls.domains[0].main=${var.host}""
       ]
       check {
         name = ""alive""
