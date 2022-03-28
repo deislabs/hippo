@@ -14,7 +14,7 @@ RUN export DEBIAN_FRONTEND=noninteractive && apt-get update \
         curl \
         sudo \
         tar \
-        gcc \ 
+        gcc \
         gcc-multilib \
         procps \
         apache2-utils \
@@ -23,8 +23,8 @@ RUN export DEBIAN_FRONTEND=noninteractive && apt-get update \
 ARG USER_NAME=""
 ENV USER ${USER_NAME:-hippouser}
 
-RUN groupadd --gid 1000 ${USER} &&  useradd -s /bin/bash --uid 1000 --gid 1000 -m ${USER}  &&  echo ${USER}  ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/${USER}  && chmod 0440 /etc/sudoers.d/${USER} 
-RUN mkdir /data && chown ${USER} /data && chgrp ${USER} /data 
+RUN groupadd --gid 1000 ${USER} &&  useradd -s /bin/bash --uid 1000 --gid 1000 -m ${USER}  &&  echo ${USER}  ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/${USER}  && chmod 0440 /etc/sudoers.d/${USER}
+RUN mkdir /data && chown ${USER} /data && chgrp ${USER} /data
 RUN su ${USER} -c "mkdir -p /data/certs && mkdir -p /data/bindleserver && mkdir -p /data/hippo && mkdir -p /data/logs"
 
 # Install Node.js
@@ -35,18 +35,18 @@ RUN su ${USER} -c "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0
 WORKDIR /tmp
 
 # Install hippo cli
-ARG HIPPO_CLI_VERSION="v0.9.0"
-RUN mkdir hippocli && cd hippocli && curl -fsSLo hippocli.tar.gz https://github.com/deislabs/hippo-cli/releases/download/${HIPPO_CLI_VERSION}/hippo-${HIPPO_CLI_VERSION}-linux-amd64.tar.gz && tar -xvf hippocli.tar.gz && mv hippo README.md LICENSE /usr/local/bin/ && cd - && rm -r hippocli 
+ARG HIPPO_CLI_VERSION="v0.10.0"
+RUN mkdir hippocli && cd hippocli && curl -fsSLo hippocli.tar.gz https://github.com/deislabs/hippo-cli/releases/download/${HIPPO_CLI_VERSION}/hippo-${HIPPO_CLI_VERSION}-linux-amd64.tar.gz && tar -xvf hippocli.tar.gz && mv hippo README.md LICENSE /usr/local/bin/ && cd - && rm -r hippocli
 
 # Install bindle
-ARG BINDLE_VERSION="v0.6.0"
+ARG BINDLE_VERSION="v0.8.0"
 RUN mkdir bindle && cd bindle && curl -fsSLo bindle.tar.gz https://bindle.blob.core.windows.net/releases/bindle-${BINDLE_VERSION}-linux-amd64.tar.gz && tar -xvf bindle.tar.gz && mv bindle bindle-server README.md LICENSE.txt /usr/local/bin/ && cd - && rm -r bindle
 
 # Install WAGI
-ARG WAGI_VERSION="v0.4.0"
+ARG WAGI_VERSION="v0.8.1"
 RUN mkdir wagi && cd wagi && curl -fsSLo wagi.tar.gz https://github.com/deislabs/wagi/releases/download/${WAGI_VERSION}/wagi-${WAGI_VERSION}-linux-amd64.tar.gz  && tar -xvf wagi.tar.gz && mv wagi README.md LICENSE.txt /usr/local/bin/ && cd - && rm -r wagi
 
-# Install Rust 
+# Install Rust
 RUN su ${USER} -c "mkdir rust && cd rust && curl -fsSLo install_rust.sh https://sh.rustup.rs && chmod +x ./install_rust.sh  && ./install_rust.sh -y -t wasm32-wasi && cd - && rm -r rust"
 
 # Install yo-wasm
@@ -60,8 +60,8 @@ ARG ENVIRONMENT="Development"
 ENV ASPNETCORE_ENVIRONMENT ${ENVIRONMENT}
 
 ARG BINDLE_PORT="8080"
-ENV BINDLE_URL http://localhost:${BINDLE_PORT}/v1  
-ENV BINDLE_LISTEN_ADDRESS 0.0.0.0:${BINDLE_PORT}     
+ENV BINDLE_URL http://localhost:${BINDLE_PORT}/v1
+ENV BINDLE_LISTEN_ADDRESS 0.0.0.0:${BINDLE_PORT}
 
 ARG BINDLE_SERVER_USER=""
 ENV BINDLE_USERNAME ${BINDLE_SERVER_USER:-bindleuser}
@@ -81,7 +81,7 @@ ENV ASPNETCORE_URLS http://0.0.0.0:${HIPPO_HTTP_PORT};https://0.0.0.0:${HIPPO_HT
 
 # Generate certs for hippo-server and proxy
 WORKDIR /data/certs
-RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout localhost.key -out localhost.crt -config /hippo/certs/localhost.conf && openssl pkcs12 -export -out localhost.pfx -inkey localhost.key -in localhost.crt -password pass: &&  sudo chgrp ${USER} localhost.pfx && chmod g+r localhost.pfx 
+RUN openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout localhost.key -out localhost.crt -config /hippo/certs/localhost.conf && openssl pkcs12 -export -out localhost.pfx -inkey localhost.key -in localhost.crt -password pass: &&  sudo chgrp ${USER} localhost.pfx && chmod g+r localhost.pfx
 RUN cp /data/certs/localhost.crt /usr/local/share/ca-certificates && update-ca-certificates
 ENV KESTREL__CERTIFICATES__DEFAULT__PATH /data/certs/localhost.pfx
 ENV HIPPO_REVERSE_PROXY_KESTREL__CERTIFICATES__DEFAULT__PATH /data/certs/localhost.pfx
@@ -95,4 +95,4 @@ WORKDIR /hippo
 
 USER 1000
 
-ENTRYPOINT if [ -z ${BINDLE_PASSWORD} ]; then export BINDLE_PASSWORD=$(openssl rand -base64 12);echo export BINDLE_PASSWORD=${BINDLE_PASSWORD} >> ~/.bashrc;  fi && echo ${BINDLE_PASSWORD}|htpasswd -Bic /data/bindleserver/bindle-htpasswd ${BINDLE_USERNAME} && RUST_LOG=info bindle-server -i ${BINDLE_LISTEN_ADDRESS} --htpasswd-file /data/bindleserver/bindle-htpasswd -d /data/bindleserver >> /data/logs/bindle-server.log 2>&1 & ./hippo-server >> /data/logs/hippo-server.log 2>&1 
+ENTRYPOINT if [ -z ${BINDLE_PASSWORD} ]; then export BINDLE_PASSWORD=$(openssl rand -base64 12);echo export BINDLE_PASSWORD=${BINDLE_PASSWORD} >> ~/.bashrc;  fi && echo ${BINDLE_PASSWORD}|htpasswd -Bic /data/bindleserver/bindle-htpasswd ${BINDLE_USERNAME} && RUST_LOG=info bindle-server -i ${BINDLE_LISTEN_ADDRESS} --htpasswd-file /data/bindleserver/bindle-htpasswd -d /data/bindleserver >> /data/logs/bindle-server.log 2>&1 & ./hippo-server >> /data/logs/hippo-server.log 2>&1
