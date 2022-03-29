@@ -1,0 +1,8 @@
+[bindle]
+name = "helloworld"
+version = "0.1.0"
+authors = ["Matt Fisher <matt.fisher@fermyon.com>"]
+
+[[handler]]
+route = "/"
+name = "target/wasm32-wasi/release/helloworld.wasm"
