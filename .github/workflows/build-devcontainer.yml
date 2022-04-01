@@ -34,7 +34,7 @@ jobs:
             type=sha,priority=2
           flavor: |
             latest=true
-    
+
       - name: Build and push image
         uses: docker/build-push-action@v2
         with:
@@ -43,9 +43,9 @@ jobs:
           build-args: |
             VARIANT : 6.0
             NODE_VERSION: lts/*
-            HIPPO_VERSION: v0.9.0
-            BINDLE_VERSION: v0.6.0
-            WAGI_VERSION: v0.4.0
+            HIPPO_VERSION: v0.10.0
+            BINDLE_VERSION: v0.8.0
+            SPIN_VERSION: v0.1.0
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

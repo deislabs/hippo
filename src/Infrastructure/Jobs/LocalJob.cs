@@ -15,14 +15,14 @@ public class LocalJob : Job
     public string BindleId;
     private readonly Dictionary<string, string> environmentVariables = new Dictionary<string, string>();
     private readonly string bindleUrl;
-    private readonly string wagiBinaryPath;
+    private readonly string spinBinaryPath;
     private Process? process;
 
     public LocalJob(IConfiguration configuration, Guid id, string bindleId) : base(id)
     {
         BindleId = bindleId;
         bindleUrl = configuration.GetValue<string>("Bindle:Url", "http://127.0.0.1:8080/v1");
-        wagiBinaryPath = configuration.GetValue<string>("Wagi:BinaryPath", (OperatingSystem.IsWindows() ? "wagi.exe" : "wagi"));
+        spinBinaryPath = configuration.GetValue<string>("Spin:BinaryPath", (OperatingSystem.IsWindows() ? "spin.exe" : "spin"));
     }
 
     public void AddEnvironmentVariable(string key, string value)
@@ -54,7 +54,7 @@ public class LocalJob : Job
         {
             if (e.Message.Contains("No such file or directory", StringComparison.InvariantCultureIgnoreCase) || e.Message.Contains("The system cannot find the file specified", StringComparison.InvariantCultureIgnoreCase))
             {
-                throw new ArgumentException($"The system cannot find '{wagiBinaryPath}'; add '{wagiBinaryPath}' to your $PATH or set 'Nomad:BinaryPath' in your appsettings to the correct location.");
+                throw new ArgumentException($"The system cannot find '{spinBinaryPath}'; add '{spinBinaryPath}' to your $PATH or set 'Nomad:BinaryPath' in your appsettings to the correct location.");
             }
             throw;
         }
@@ -62,7 +62,7 @@ public class LocalJob : Job
 
     public override void Stop()
     {
-        // no need to tell wagi to stop if the process hasn't started
+        // no need to tell spin to stop if the process hasn't started
         if (IsWaitingToRun || IsCompleted)
         {
             return;
@@ -88,8 +88,8 @@ public class LocalJob : Job
 
         return new ProcessStartInfo
         {
-            FileName = wagiBinaryPath,
-            Arguments = $"-b {BindleId} --bindle-url {bindleUrl} -l 127.0.0.1:{GetAvailablePort()} {env}",
+            FileName = spinBinaryPath,
+            Arguments = $"up --bindle {BindleId} --server {bindleUrl} --listen 127.0.0.1:{GetAvailablePort()} {env}",
             RedirectStandardError = true,
             RedirectStandardOutput = true,
             UseShellExecute = false,
