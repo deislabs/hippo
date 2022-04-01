@@ -1,5 +1,5 @@
 using System.Security.Claims;
-using Hippo.Application.Common.Interfaces;
+using Hippo.Application.Identity;
 
 namespace Hippo.Web.Services;
 

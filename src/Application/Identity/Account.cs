@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 
-namespace Hippo.Infrastructure.Identity;
+namespace Hippo.Application.Identity;
 
 public class Account : IdentityUser
 {

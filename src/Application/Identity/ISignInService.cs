@@ -1,7 +1,7 @@
 using Hippo.Application.Common.Models;
 using MediatR;
 
-namespace Hippo.Application.Common.Interfaces;
+namespace Hippo.Application.Identity;
 
 public interface ISignInService
 {

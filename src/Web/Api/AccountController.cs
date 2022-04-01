@@ -1,5 +1,5 @@
 using Hippo.Application.Accounts.Commands;
-using Hippo.Application.Common.Interfaces;
+using Hippo.Application.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hippo.Web.Api;
@@ -13,7 +13,13 @@ public class AccountController : ApiControllerBase
     }
 
     [HttpPost("createtoken")]
-    public async Task<ActionResult<TokenInfo>> CreateToken([FromBody] CreateTokenCommand command)
+    [HttpPost("login")]
+    public async Task<ActionResult<ApiToken>> Login([FromBody] LoginAccountCommand command)
+    {
+        return await Mediator.Send(command);
+    }
+
+    public async Task<ActionResult<ApiToken>> RefreshToken([FromBody] RefreshCommand command)
     {
         return await Mediator.Send(command);
     }

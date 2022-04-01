@@ -1,8 +1,8 @@
 using System.Reflection;
 using Hippo.Application.Common.Interfaces;
+using Hippo.Application.Identity;
 using Hippo.Core.Common;
 using Hippo.Core.Entities;
-using Hippo.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -44,6 +44,8 @@ public class ApplicationDbContext : IdentityDbContext<Account>, IApplicationDbCo
     public DbSet<Channel> Channels => Set<Channel>();
 
     public DbSet<EnvironmentVariable> EnvironmentVariables => Set<EnvironmentVariable>();
+
+    public DbSet<RefreshToken> RefreshTokens => Set<RefreshToken>();
 
     public DbSet<Revision> Revisions => Set<Revision>();
 

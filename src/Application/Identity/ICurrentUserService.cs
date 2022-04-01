@@ -1,4 +1,4 @@
-﻿namespace Hippo.Application.Common.Interfaces;
+﻿namespace Hippo.Application.Identity;
 
 public interface ICurrentUserService
 {

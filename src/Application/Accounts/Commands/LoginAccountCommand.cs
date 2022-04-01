@@ -1,41 +1,45 @@
 using System.ComponentModel.DataAnnotations;
 using Hippo.Application.Common.Exceptions;
-using Hippo.Application.Common.Interfaces;
+using Hippo.Application.Identity;
 using MediatR;
 
 namespace Hippo.Application.Accounts.Commands;
 
-public class LoginAccountCommand : IRequest
+public class LoginAccountCommand : IRequest<ApiToken>
 {
     [Required]
     public string UserName { get; set; } = "";
 
     [Required]
     public string Password { get; set; } = "";
-
-    public bool RememberMe { get; set; }
 }
 
-public class LoginAccountCommandHandler : IRequestHandler<LoginAccountCommand>
+public class LoginAccountCommandHandler : IRequestHandler<LoginAccountCommand, ApiToken>
 {
+    private readonly IAuthenticateService _authenticateService;
     private readonly IIdentityService _identityService;
     private readonly ISignInService _signInService;
 
-    public LoginAccountCommandHandler(IIdentityService identityService, ISignInService signInService)
+    public LoginAccountCommandHandler(IAuthenticateService authenticateService, IIdentityService identityService, ISignInService signInService)
     {
+        _authenticateService = authenticateService;
         _identityService = identityService;
         _signInService = signInService;
     }
 
-    public async Task<Unit> Handle(LoginAccountCommand request, CancellationToken cancellationToken)
+    public async Task<ApiToken> Handle(LoginAccountCommand request, CancellationToken cancellationToken)
     {
-        var result = await _signInService.PasswordSignInAsync(request.UserName!, request.Password!, request.RememberMe);
-
-        if (!result.Succeeded)
+        var user = await _identityService.FindByIdAsync(request.UserName);
+        if (user is null)
         {
-            throw new LoginFailedException(result.Errors);
+            throw new NotFoundException(nameof(Account), request.UserName);
         }
 
-        return Unit.Value;
+        if ((await _signInService.PasswordSignInAsync(request.UserName, request.Password, false)).Succeeded)
+        {
+            return await _authenticateService.Authenticate(user, cancellationToken);
+        }
+
+        throw new LoginFailedException();
     }
 }

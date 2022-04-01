@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 using FluentValidation;
-using Hippo.Application.Common.Interfaces;
+using Hippo.Application.Identity;
 
 namespace Hippo.Application.Accounts.Commands;
 
@@ -32,7 +32,7 @@ public class CreateAccountCommandValidator : AbstractValidator<CreateAccountComm
     {
         try
         {
-            await _identityService.GetUserIdAsync(userName);
+            await _identityService.FindByIdAsync(userName);
             return false;
         }
         catch (Exception)

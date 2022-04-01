@@ -1,11 +1,12 @@
 using System.Text;
 using FluentValidation.AspNetCore;
 using Hippo.Application;
-using Hippo.Application.Common.Interfaces;
+using Hippo.Application.Common.Configuration;
+using Hippo.Application.Identity;
 using Hippo.Infrastructure;
 using Hippo.Infrastructure.Data;
-using Hippo.Infrastructure.Identity;
 using Hippo.Web.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,10 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var jwtConfiguration = new JwtConfiguration();
+builder.Configuration.Bind(nameof(jwtConfiguration), jwtConfiguration);
+builder.Services.AddSingleton(jwtConfiguration);
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -26,7 +31,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddHealthChecks()
             .AddDbContextCheck<ApplicationDbContext>();
 
-builder.Services.AddControllersWithViews().AddFluentValidation();
+builder.Services.AddControllers().AddFluentValidation();
 
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
@@ -41,9 +46,9 @@ builder.Services.AddAuthentication().AddCookie().AddJwtBearer(cfg =>
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration["Jwt:Issuer"],
-            ValidAudience = builder.Configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+            ValidIssuer = jwtConfiguration.Issuer,
+            ValidAudience = jwtConfiguration.Audience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfiguration.AccessTokenSecret))
         };
         cfg.SaveToken = true;
     }
@@ -57,7 +62,7 @@ builder.Services.AddSwaggerGen(c =>
         Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
         Type = SecuritySchemeType.ApiKey,
         In = ParameterLocation.Header,
-        Scheme = "Bearer",
+        Scheme = JwtBearerDefaults.AuthenticationScheme,
         BearerFormat = "JWT",
     });
 
@@ -66,9 +71,13 @@ builder.Services.AddSwaggerGen(c =>
         {
             new OpenApiSecurityScheme
             {
-                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = JwtBearerDefaults.AuthenticationScheme
+                }
             },
-            new List<string>()
+            Array.Empty<string>()
         }
     });
 });

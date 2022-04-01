@@ -7,6 +7,7 @@ using System;
 using System.Threading.Tasks;
 using System.Threading;
 using Hippo.Application.Apps.Commands;
+using Hippo.Application.Identity;
 
 namespace Hippo.Application.UnitTests.Common.Behaviours;
 

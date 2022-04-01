@@ -1,3 +1,4 @@
+using System.Text.Json;
 using System.Threading.Tasks;
 using Hippo.Application.Accounts.Commands;
 using Hippo.Application.Common.Exceptions;
@@ -57,5 +58,30 @@ public class CreateAccountTests : TestBase
         };
 
         await Assert.ThrowsAsync<ValidationException>(async () => await SendAsync(command));
+    }
+
+    [Fact]
+    public async Task ShouldGenerateApiToken()
+    {
+        var userName = RandomString(5);
+
+        await SendAsync(new CreateAccountCommand
+        {
+            UserName = userName,
+            Password = "Passw0rd!",
+            PasswordConfirm = "Passw0rd!"
+        });
+
+        var command = new LoginAccountCommand
+        {
+            UserName = userName,
+            Password = "Passw0rd!"
+        };
+
+        var apiToken = await SendAsync(command);
+
+        string jsonString = JsonSerializer.Serialize(apiToken);
+        Assert.Contains("\"AccessToken\":", jsonString);
+        Assert.Contains("\"RefreshToken\":", jsonString);
     }
 }

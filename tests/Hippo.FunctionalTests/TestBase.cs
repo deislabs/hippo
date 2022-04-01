@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using FluentValidation.AspNetCore;
 using Hippo.Application;
 using Hippo.Application.Common.Interfaces;
+using Hippo.Application.Identity;
 using Hippo.Application.Jobs;
 using Hippo.Core.Entities;
 using Hippo.Infrastructure;
@@ -61,7 +62,7 @@ public class TestBase : IDisposable
         services.AddHealthChecks()
                     .AddDbContextCheck<ApplicationDbContext>();
 
-        services.AddControllersWithViews().AddFluentValidation();
+        services.AddControllers().AddFluentValidation();
 
         services.AddRouting(options => options.LowercaseUrls = true);
 

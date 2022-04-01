@@ -1,4 +1,4 @@
-using Hippo.Infrastructure.Identity;
+using Hippo.Application.Identity;
 using Microsoft.AspNetCore.Identity;
 
 namespace Hippo.Infrastructure.Data;

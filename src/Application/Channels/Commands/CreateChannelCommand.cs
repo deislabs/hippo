@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using Hippo.Application.Common.Config;
+using Hippo.Application.Common.Configuration;
 using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Core.Entities;
@@ -34,9 +34,9 @@ public class CreateChannelCommandHandler : IRequestHandler<CreateChannelCommand,
 {
     private readonly IApplicationDbContext _context;
 
-    private readonly HippoConfig _config;
+    private readonly HippoConfiguration _config;
 
-    public CreateChannelCommandHandler(IApplicationDbContext context, HippoConfig config)
+    public CreateChannelCommandHandler(IApplicationDbContext context, HippoConfiguration config)
     {
         _context = context;
         _config = config;

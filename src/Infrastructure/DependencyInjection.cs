@@ -1,5 +1,6 @@
-using Hippo.Application.Common.Config;
+using Hippo.Application.Common.Configuration;
 using Hippo.Application.Common.Interfaces;
+using Hippo.Application.Identity;
 using Hippo.Infrastructure.Data;
 using Hippo.Infrastructure.Exceptions;
 using Hippo.Infrastructure.Files;
@@ -35,9 +36,9 @@ public static class DependencyInjection
                 throw new InvalidDatabaseDriverException(driver);
         }
 
-        HippoConfig hippoConfig = new HippoConfig();
-        configuration.GetSection("Hippo").Bind(hippoConfig);
-        services.AddSingleton<HippoConfig>(hippoConfig);
+        HippoConfiguration hippoConfiguration = new HippoConfiguration();
+        configuration.GetSection("Hippo").Bind(hippoConfiguration);
+        services.AddSingleton<HippoConfiguration>(hippoConfiguration);
 
         services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
@@ -53,7 +54,9 @@ public static class DependencyInjection
 
         services.AddTransient<ISignInService, SignInService>();
 
-        services.AddTransient<ITokenService, TokenService>();
+        services.AddTransient<IAccessTokenService, AccessTokenService>();
+
+        services.AddTransient<IRefreshTokenService, RefreshTokenService>();
 
         var schedulerDriver = configuration.GetValue<string>("Scheduler:Driver", "local").ToLower();
         switch (schedulerDriver)

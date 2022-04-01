@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using Hippo.Application.Common.Exceptions;
-using Hippo.Application.Common.Interfaces;
 using Hippo.Application.Common.Security;
+using Hippo.Application.Identity;
 using MediatR;
 
 namespace Hippo.Application.Common.Behaviours;

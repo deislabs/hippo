@@ -1,4 +1,5 @@
 using Hippo.Application.Common.Interfaces;
+using Hippo.Application.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 

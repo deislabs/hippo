@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using Hippo.Application.Common.Interfaces;
+using Hippo.Application.Identity;
 using MediatR;
 using Microsoft.Extensions.Logging;
 

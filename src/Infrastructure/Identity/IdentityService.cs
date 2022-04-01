@@ -1,5 +1,5 @@
-using Hippo.Application.Common.Interfaces;
 using Hippo.Application.Common.Models;
+using Hippo.Application.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -101,5 +101,10 @@ public class IdentityService : IIdentityService
     public async Task<string[]> GetUserNamesAsync()
     {
         return await _userManager.Users.Select(a => a.UserName).ToArrayAsync();
+    }
+
+    public Task<Account> FindByIdAsync(string id)
+    {
+        throw new NotImplementedException();
     }
 }

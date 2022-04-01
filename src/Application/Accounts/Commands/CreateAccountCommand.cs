@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using Hippo.Application.Common.Interfaces;
+using Hippo.Application.Identity;
 using MediatR;
 
 namespace Hippo.Application.Accounts.Commands;

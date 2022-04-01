@@ -1,5 +1,5 @@
-using Hippo.Application.Common.Interfaces;
 using Hippo.Application.Common.Models;
+using Hippo.Application.Identity;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 

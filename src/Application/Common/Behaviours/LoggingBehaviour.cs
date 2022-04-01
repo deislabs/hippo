@@ -1,4 +1,4 @@
-﻿using Hippo.Application.Common.Interfaces;
+﻿using Hippo.Application.Identity;
 using MediatR.Pipeline;
 using Microsoft.Extensions.Logging;
 

@@ -13,6 +13,8 @@ public interface IApplicationDbContext
 
     DbSet<EnvironmentVariable> EnvironmentVariables { get; }
 
+    DbSet<RefreshToken> RefreshTokens { get; }
+
     DbSet<Revision> Revisions { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
