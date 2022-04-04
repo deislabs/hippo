@@ -27,7 +27,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddHealthChecks()
             .AddDbContextCheck<ApplicationDbContext>();
 
-builder.Services.AddControllersWithViews()
+builder.Services.AddControllers()
     .AddJsonOptions(opt =>
     {
         opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
