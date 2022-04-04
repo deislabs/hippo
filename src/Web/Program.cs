@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using FluentValidation.AspNetCore;
 using Hippo.Application;
 using Hippo.Application.Common.Interfaces;
@@ -26,7 +27,12 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddHealthChecks()
             .AddDbContextCheck<ApplicationDbContext>();
 
-builder.Services.AddControllersWithViews().AddFluentValidation();
+builder.Services.AddControllersWithViews()
+    .AddJsonOptions(opt =>
+    {
+        opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    })
+    .AddFluentValidation();
 
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
