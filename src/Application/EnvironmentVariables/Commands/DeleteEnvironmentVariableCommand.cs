@@ -34,7 +34,7 @@ public class DeleteEnvironmentVariableCommandHandler : IRequestHandler<DeleteEnv
             throw new NotFoundException(nameof(EnvironmentVariable), request.Id);
         }
 
-        entity.DomainEvents.Add(new EnvironmentVariableDeletedEvent(entity));
+        entity.DomainEvents.Add(new DeletedEvent<EnvironmentVariable>(entity));
 
         _context.EnvironmentVariables.Remove(entity);
 

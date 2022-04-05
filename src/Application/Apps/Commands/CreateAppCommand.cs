@@ -32,7 +32,7 @@ public class CreateAppCommandHandler : IRequestHandler<CreateAppCommand, Guid>
             StorageId = request.StorageId
         };
 
-        entity.DomainEvents.Add(new AppCreatedEvent(entity));
+        entity.DomainEvents.Add(new CreatedEvent<App>(entity));
 
         _context.Apps.Add(entity);
 

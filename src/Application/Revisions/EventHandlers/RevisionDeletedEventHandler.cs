@@ -10,7 +10,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Hippo.Application.Revisions.EventHandlers;
 
-public class RevisionDeletedEventHandler : INotificationHandler<DomainEventNotification<RevisionDeletedEvent>>
+public class RevisionDeletedEventHandler : INotificationHandler<DomainEventNotification<DeletedEvent<Revision>>>
 {
     private readonly ILogger<RevisionCreatedEventHandler> _logger;
 
@@ -22,7 +22,7 @@ public class RevisionDeletedEventHandler : INotificationHandler<DomainEventNotif
         _context = context;
     }
 
-    public async Task Handle(DomainEventNotification<RevisionDeletedEvent> notification, CancellationToken cancellationToken)
+    public async Task Handle(DomainEventNotification<DeletedEvent<Revision>> notification, CancellationToken cancellationToken)
     {
         var domainEvent = notification.DomainEvent;
 
@@ -30,7 +30,7 @@ public class RevisionDeletedEventHandler : INotificationHandler<DomainEventNotif
 
         // re-evaluate active revisions for every channel related to the same app
         var channels = await _context.Channels
-            .Where(c => c.AppId == domainEvent.Revision.AppId)
+            .Where(c => c.AppId == domainEvent.Entity.AppId)
             .ToListAsync(cancellationToken);
 
         foreach (Channel channel in channels)

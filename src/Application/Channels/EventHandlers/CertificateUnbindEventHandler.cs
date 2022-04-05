@@ -1,4 +1,5 @@
 using Hippo.Application.Common.Models;
+using Hippo.Core.Entities;
 using Hippo.Core.Events;
 using MediatR;
 using Microsoft.Extensions.Configuration;
@@ -6,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Hippo.Application.Channels.EventHandlers;
 
-public class CertificateUnbindEventHandler : INotificationHandler<DomainEventNotification<ChannelCreatedEvent>>
+public class CertificateUnbindEventHandler : INotificationHandler<DomainEventNotification<CreatedEvent<Channel>>>
 {
     private readonly ILogger<CertificateUnbindEventHandler> _logger;
 
@@ -18,7 +19,7 @@ public class CertificateUnbindEventHandler : INotificationHandler<DomainEventNot
         _configuration = configuration;
     }
 
-    public Task Handle(DomainEventNotification<ChannelCreatedEvent> notification, CancellationToken cancellationToken)
+    public Task Handle(DomainEventNotification<CreatedEvent<Channel>> notification, CancellationToken cancellationToken)
     {
         var domainEvent = notification.DomainEvent;
 
@@ -26,7 +27,7 @@ public class CertificateUnbindEventHandler : INotificationHandler<DomainEventNot
 
         // remove certificate from kestrel config
         // TODO: we should probably delete the certificate file here
-        _configuration.GetSection($"{SniOptions.Position}:{notification.DomainEvent.Channel.Domain}").Bind(null);
+        _configuration.GetSection($"{SniOptions.Position}:{notification.DomainEvent.Entity.Domain}").Bind(null);
 
         return Task.CompletedTask;
     }
