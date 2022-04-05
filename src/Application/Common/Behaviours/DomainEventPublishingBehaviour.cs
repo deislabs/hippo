@@ -3,7 +3,7 @@ using Hippo.Core.Common;
 using MediatR.Pipeline;
 using Microsoft.Extensions.Logging;
 
-namespace CleanArchitecture.Application.Common.Behaviours
+namespace Hippo.Application.Common.Behaviours
 {
     public class DomainEventPublishingBehaviour<TRequest, TResponse> : IRequestPostProcessor<TRequest, TResponse> where TRequest : notnull
     {
