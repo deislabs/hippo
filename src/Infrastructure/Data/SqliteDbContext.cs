@@ -8,7 +8,7 @@ public class SqliteDbContext : ApplicationDbContext
 {
     public IConfiguration Configuration { get; }
 
-    public SqliteDbContext(IConfiguration configuration, ICurrentUserService currentUserService, IDateTime dateTime, IDomainEventService domainEventService) : base(currentUserService, dateTime, domainEventService)
+    public SqliteDbContext(IConfiguration configuration, ICurrentUserService currentUserService, IDateTime dateTime) : base(currentUserService, dateTime)
     {
         Configuration = configuration;
     }

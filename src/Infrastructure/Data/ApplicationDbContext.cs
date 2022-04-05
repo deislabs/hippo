@@ -14,27 +14,21 @@ public class ApplicationDbContext : IdentityDbContext<Account>, IApplicationDbCo
 
     private readonly IDateTime _dateTime;
 
-    private readonly IDomainEventService _domainEventService;
-
     public ApplicationDbContext(
             DbContextOptions<ApplicationDbContext> options,
             ICurrentUserService currentUserService,
-            IDateTime dateTime,
-            IDomainEventService domainEventService) : base(options)
+            IDateTime dateTime) : base(options)
     {
         _currentUserService = currentUserService;
         _dateTime = dateTime;
-        _domainEventService = domainEventService;
     }
 
     public ApplicationDbContext(
             ICurrentUserService currentUserService,
-            IDateTime dateTime,
-            IDomainEventService domainEventService)
+            IDateTime dateTime)
     {
         _currentUserService = currentUserService;
         _dateTime = dateTime;
-        _domainEventService = domainEventService;
     }
 
     public DbSet<App> Apps => Set<App>();
@@ -72,8 +66,6 @@ public class ApplicationDbContext : IdentityDbContext<Account>, IApplicationDbCo
 
         var result = await base.SaveChangesAsync(cancellationToken);
 
-        await DispatchEvents(events);
-
         return result;
     }
 
@@ -82,14 +74,5 @@ public class ApplicationDbContext : IdentityDbContext<Account>, IApplicationDbCo
         builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
         base.OnModelCreating(builder);
-    }
-
-    private async Task DispatchEvents(DomainEvent[] events)
-    {
-        foreach (var @event in events)
-        {
-            @event.IsPublished = true;
-            await _domainEventService.Publish(@event);
-        }
     }
 }

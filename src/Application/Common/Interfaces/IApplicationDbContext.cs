@@ -1,5 +1,6 @@
 ﻿using Hippo.Core.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Hippo.Application.Common.Interfaces;
 
@@ -14,6 +15,8 @@ public interface IApplicationDbContext
     DbSet<EnvironmentVariable> EnvironmentVariables { get; }
 
     DbSet<Revision> Revisions { get; }
+
+    ChangeTracker ChangeTracker { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 }
