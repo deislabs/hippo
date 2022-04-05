@@ -3,40 +3,39 @@ using Hippo.Core.Common;
 using MediatR.Pipeline;
 using Microsoft.Extensions.Logging;
 
-namespace CleanArchitecture.Application.Common.Behaviours
+namespace Hippo.Application.Common.Behaviours;
+
+public class DomainEventPublishingBehaviour<TRequest, TResponse> : IRequestPostProcessor<TRequest, TResponse> where TRequest : notnull
 {
-    public class DomainEventPublishingBehaviour<TRequest, TResponse> : IRequestPostProcessor<TRequest, TResponse> where TRequest : notnull
+    private readonly ILogger _logger;
+    private readonly IApplicationDbContext _dbContext;
+    private readonly IDomainEventService _domainEventService;
+
+    public DomainEventPublishingBehaviour(
+        ILogger<TRequest> logger,
+        IApplicationDbContext dbContext,
+        IDomainEventService domainEventService)
     {
-        private readonly ILogger _logger;
-        private readonly IApplicationDbContext _dbContext;
-        private readonly IDomainEventService _domainEventService;
+        _logger = logger;
+        _dbContext = dbContext;
+        _domainEventService = domainEventService;
+    }
 
-        public DomainEventPublishingBehaviour(
-            ILogger<TRequest> logger,
-            IApplicationDbContext dbContext,
-            IDomainEventService domainEventService)
+    public async Task Process(TRequest request, TResponse response, CancellationToken cancellationToken)
+    {
+        while (true)
         {
-            _logger = logger;
-            _dbContext = dbContext;
-            _domainEventService = domainEventService;
-        }
+            var domainEventEntity = _dbContext.ChangeTracker.Entries<IHasDomainEvent>()
+                                        .Select(x => x.Entity.DomainEvents)
+                                        .SelectMany(x => x)
+                                        .Where(domainEvent => !domainEvent.IsPublished)
+                                        .FirstOrDefault();
+            if (domainEventEntity == null) break;
 
-        public async Task Process(TRequest request, TResponse response, CancellationToken cancellationToken)
-        {
-            while (true)
-            {
-                var domainEventEntity = _dbContext.ChangeTracker.Entries<IHasDomainEvent>()
-                                                     .Select(x => x.Entity.DomainEvents)
-                                                     .SelectMany(x => x)
-                                                     .Where(domainEvent => !domainEvent.IsPublished)
-                                                     .FirstOrDefault();
-                if (domainEventEntity == null) break;
+            domainEventEntity.IsPublished = true;
+            await _domainEventService.Publish(domainEventEntity);
 
-                domainEventEntity.IsPublished = true;
-                await _domainEventService.Publish(domainEventEntity);
-
-                _logger.LogInformation("Published event: {Name}", domainEventEntity.GetType().Name);
-            }
+            _logger.LogInformation("Published event: {Name}", domainEventEntity.GetType().Name);
         }
     }
 }
