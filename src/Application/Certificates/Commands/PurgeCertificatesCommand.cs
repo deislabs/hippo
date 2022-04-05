@@ -23,7 +23,7 @@ public class PurgeCertificatesCommandHandler : IRequestHandler<PurgeCertificates
     {
         foreach (Certificate cert in _context.Certificates)
         {
-            cert.DomainEvents.Add(new CertificateDeletedEvent(cert));
+            cert.DomainEvents.Add(new DeletedEvent<Certificate>(cert));
         }
         _context.Certificates.RemoveRange(_context.Certificates);
 

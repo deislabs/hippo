@@ -23,7 +23,7 @@ public class PurgeAppsCommandHandler : IRequestHandler<PurgeAppsCommand>
     {
         foreach (App app in _context.Apps)
         {
-            app.DomainEvents.Add(new AppDeletedEvent(app));
+            app.DomainEvents.Add(new DeletedEvent<App>(app));
         }
         _context.Apps.RemoveRange(_context.Apps);
 

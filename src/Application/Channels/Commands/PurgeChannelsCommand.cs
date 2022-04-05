@@ -23,7 +23,7 @@ public class PurgeChannelsCommandHandler : IRequestHandler<PurgeChannelsCommand>
     {
         foreach (Channel channel in _context.Channels)
         {
-            channel.DomainEvents.Add(new ChannelDeletedEvent(channel));
+            channel.DomainEvents.Add(new DeletedEvent<Channel>(channel));
         }
         _context.Channels.RemoveRange(_context.Channels);
 

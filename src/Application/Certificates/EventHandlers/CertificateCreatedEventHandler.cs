@@ -1,11 +1,12 @@
 using Hippo.Application.Common.Models;
+using Hippo.Core.Entities;
 using Hippo.Core.Events;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace Hippo.Application.Certificates.EventHandlers;
 
-public class CertificateCreatedEventHandler : INotificationHandler<DomainEventNotification<CertificateCreatedEvent>>
+public class CertificateCreatedEventHandler : INotificationHandler<DomainEventNotification<CreatedEvent<Certificate>>>
 {
     private readonly ILogger<CertificateCreatedEventHandler> _logger;
 
@@ -14,7 +15,7 @@ public class CertificateCreatedEventHandler : INotificationHandler<DomainEventNo
         _logger = logger;
     }
 
-    public Task Handle(DomainEventNotification<CertificateCreatedEvent> notification, CancellationToken cancellationToken)
+    public Task Handle(DomainEventNotification<CreatedEvent<Certificate>> notification, CancellationToken cancellationToken)
     {
         var domainEvent = notification.DomainEvent;
 

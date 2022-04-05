@@ -1,11 +1,12 @@
 using Hippo.Application.Common.Models;
+using Hippo.Core.Entities;
 using Hippo.Core.Events;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace Hippo.Application.Apps.EventHandlers;
 
-public class AppDeletedEventHandler : INotificationHandler<DomainEventNotification<AppDeletedEvent>>
+public class AppDeletedEventHandler : INotificationHandler<DomainEventNotification<DeletedEvent<App>>>
 {
     private readonly ILogger<AppDeletedEventHandler> _logger;
 
@@ -14,7 +15,7 @@ public class AppDeletedEventHandler : INotificationHandler<DomainEventNotificati
         _logger = logger;
     }
 
-    public Task Handle(DomainEventNotification<AppDeletedEvent> notification, CancellationToken cancellationToken)
+    public Task Handle(DomainEventNotification<DeletedEvent<App>> notification, CancellationToken cancellationToken)
     {
         var domainEvent = notification.DomainEvent;
 

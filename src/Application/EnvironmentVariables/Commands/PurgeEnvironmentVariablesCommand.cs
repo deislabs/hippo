@@ -23,7 +23,7 @@ public class PurgeEnvironmentVariablesCommandHandler : IRequestHandler<PurgeEnvi
     {
         foreach (EnvironmentVariable environmentVariable in _context.EnvironmentVariables)
         {
-            environmentVariable.DomainEvents.Add(new EnvironmentVariableDeletedEvent(environmentVariable));
+            environmentVariable.DomainEvents.Add(new DeletedEvent<EnvironmentVariable>(environmentVariable));
         }
         _context.EnvironmentVariables.RemoveRange(_context.EnvironmentVariables);
 

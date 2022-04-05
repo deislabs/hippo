@@ -34,7 +34,7 @@ public class DeleteCertificateCommandHandler : IRequestHandler<DeleteCertificate
             throw new NotFoundException(nameof(Certificate), request.Id);
         }
 
-        entity.DomainEvents.Add(new CertificateDeletedEvent(entity));
+        entity.DomainEvents.Add(new DeletedEvent<Certificate>(entity));
 
         _context.Certificates.Remove(entity);
 

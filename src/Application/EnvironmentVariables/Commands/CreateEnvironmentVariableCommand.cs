@@ -36,7 +36,7 @@ public class CreateEnvironmentVariableCommandHandler : IRequestHandler<CreateEnv
             ChannelId = request.ChannelId
         };
 
-        entity.DomainEvents.Add(new EnvironmentVariableCreatedEvent(entity));
+        entity.DomainEvents.Add(new CreatedEvent<EnvironmentVariable>(entity));
 
         _context.EnvironmentVariables.Add(entity);
 

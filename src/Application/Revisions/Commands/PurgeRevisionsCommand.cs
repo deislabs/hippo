@@ -23,7 +23,7 @@ public class PurgeRevisionsCommandHandler : IRequestHandler<PurgeRevisionsComman
     {
         foreach (Revision revision in _context.Revisions)
         {
-            revision.DomainEvents.Add(new RevisionDeletedEvent(revision));
+            revision.DomainEvents.Add(new DeletedEvent<Revision>(revision));
         }
         _context.Revisions.RemoveRange(_context.Revisions);
 

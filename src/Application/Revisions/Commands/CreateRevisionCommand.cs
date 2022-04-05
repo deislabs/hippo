@@ -32,7 +32,7 @@ public class CreateRevisionCommandHandler : IRequestHandler<CreateRevisionComman
             RevisionNumber = request.RevisionNumber
         };
 
-        entity.DomainEvents.Add(new RevisionCreatedEvent(entity));
+        entity.DomainEvents.Add(new CreatedEvent<Revision>(entity));
 
         _context.Revisions.Add(entity);
 

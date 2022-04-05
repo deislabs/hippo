@@ -1,11 +1,12 @@
 using Hippo.Application.Common.Models;
+using Hippo.Core.Entities;
 using Hippo.Core.Events;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
 namespace Hippo.Application.EnvironmentVariables.EventHandlers;
 
-public class EnvironmentVariableCreatedEventHandler : INotificationHandler<DomainEventNotification<EnvironmentVariableCreatedEvent>>
+public class EnvironmentVariableCreatedEventHandler : INotificationHandler<DomainEventNotification<CreatedEvent<EnvironmentVariable>>>
 {
     private readonly ILogger<EnvironmentVariableCreatedEventHandler> _logger;
 
@@ -14,7 +15,7 @@ public class EnvironmentVariableCreatedEventHandler : INotificationHandler<Domai
         _logger = logger;
     }
 
-    public Task Handle(DomainEventNotification<EnvironmentVariableCreatedEvent> notification, CancellationToken cancellationToken)
+    public Task Handle(DomainEventNotification<CreatedEvent<EnvironmentVariable>> notification, CancellationToken cancellationToken)
     {
         var domainEvent = notification.DomainEvent;
 
