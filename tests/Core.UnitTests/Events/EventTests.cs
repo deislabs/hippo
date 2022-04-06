@@ -63,39 +63,4 @@ public class EventTests
         var x = new Revision();
         Assert.Equal(x, new DeletedEvent<Revision>(x).Entity);
     }
-
-    [Fact]
-    public void ActiveRevisionChangedEventTest()
-    {
-        var oldRevision = new Revision { RevisionNumber = "1.0.0" };
-        var newRevision = new Revision { RevisionNumber = "2.0.0" };
-        var channel = new Channel();
-        channel.ActiveRevisionId = oldRevision.Id;
-        channel.ActiveRevisionId = newRevision.Id;
-        Assert.Single(channel.DomainEvents);
-        Assert.Equal(typeof(ActiveRevisionChangedEvent), channel.DomainEvents.Last().GetType());
-        channel.ActiveRevision = oldRevision;
-        Assert.Equal(2, channel.DomainEvents.Count);
-        Assert.Equal(typeof(ActiveRevisionChangedEvent), channel.DomainEvents.Last().GetType());
-    }
-
-    [Fact]
-    public void CertificateBindEventTest()
-    {
-        var oldCertificate = new Certificate { };
-        var newCertificate = new Certificate { };
-        var channel = new Channel();
-        channel.CertificateId = oldCertificate.Id;
-        Assert.Single(channel.DomainEvents);
-        Assert.Equal(typeof(CertificateBindEvent), channel.DomainEvents.Last().GetType());
-        channel.CertificateId = newCertificate.Id;
-        Assert.Equal(2, channel.DomainEvents.Count);
-        Assert.Equal(typeof(CertificateBindEvent), channel.DomainEvents.Last().GetType());
-        channel.Certificate = oldCertificate;
-        Assert.Equal(3, channel.DomainEvents.Count);
-        Assert.Equal(typeof(CertificateBindEvent), channel.DomainEvents.Last().GetType());
-        channel.Certificate = null;
-        Assert.Equal(4, channel.DomainEvents.Count);
-        Assert.Equal(typeof(CertificateUnbindEvent), channel.DomainEvents.Last().GetType());
-    }
 }

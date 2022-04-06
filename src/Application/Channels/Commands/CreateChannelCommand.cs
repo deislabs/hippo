@@ -48,15 +48,12 @@ public class CreateChannelCommandHandler : IRequestHandler<CreateChannelCommand,
         var app = await _context.Apps
             .Where(a => a.Id == request.AppId)
             .SingleOrDefaultAsync(cancellationToken);
-
-        if (app == null)
-        {
-            throw new NotFoundException(nameof(App), request.AppId);
-        }
+        _ = app ?? throw new NotFoundException(nameof(App), request.AppId);
 
         var entity = new Channel
         {
             AppId = request.AppId,
+            App = app,
             Name = request.Name,
             Domain = (request.Domain != null) ? request.Domain : $"{request.Name}.{app.Name}.{_config.PlatformDomain}",
             RevisionSelectionStrategy = request.RevisionSelectionStrategy,
@@ -65,6 +62,24 @@ public class CreateChannelCommandHandler : IRequestHandler<CreateChannelCommand,
             PortId = _context.Channels.Count(),
             CertificateId = request.CertificateId
         };
+
+        if (request.ActiveRevisionId is not null)
+        {
+            var revision = await _context.Revisions
+                .Where(c => c.Id == request.ActiveRevisionId)
+                .SingleOrDefaultAsync(cancellationToken);
+            _ = revision ?? throw new NotFoundException(nameof(Revision), request.ActiveRevisionId);
+            entity.ActiveRevision = revision;
+        }
+
+        if (request.CertificateId is not null)
+        {
+            var certificate = await _context.Certificates
+                .Where(c => c.Id == request.CertificateId)
+                .SingleOrDefaultAsync(cancellationToken);
+            _ = certificate ?? throw new NotFoundException(nameof(Certificate), request.CertificateId);
+            entity.Certificate = certificate;
+        }
 
         if (entity.RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseRangeRule && entity.RangeRule == null)
         {

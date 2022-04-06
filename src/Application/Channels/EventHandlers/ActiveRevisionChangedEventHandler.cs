@@ -8,13 +8,11 @@ using Microsoft.Extensions.Logging;
 
 namespace Hippo.Application.Channels.EventHandlers;
 
-public class ActiveRevisionChangedEventHandler : INotificationHandler<DomainEventNotification<ActiveRevisionChangedEvent>>
+public class ActiveRevisionChangedEventHandler : INotificationHandler<DomainEventNotification<ModifiedEvent<Channel>>>
 {
     private readonly ILogger<ActiveRevisionChangedEventHandler> _logger;
 
     private readonly IJobFactory _jobFactory;
-
-    private readonly JobScheduler _jobScheduler = JobScheduler.Current;
 
     public ActiveRevisionChangedEventHandler(ILogger<ActiveRevisionChangedEventHandler> logger, IJobFactory jobFactory)
     {
@@ -22,12 +20,12 @@ public class ActiveRevisionChangedEventHandler : INotificationHandler<DomainEven
         _jobFactory = jobFactory;
     }
 
-    public Task Handle(DomainEventNotification<ActiveRevisionChangedEvent> notification, CancellationToken cancellationToken)
+    public Task Handle(DomainEventNotification<ModifiedEvent<Channel>> notification, CancellationToken cancellationToken)
     {
         var domainEvent = notification.DomainEvent;
-        Channel channel = domainEvent.Channel;
+        Channel channel = domainEvent.Entity;
 
-        _logger.LogInformation("Hippo Domain Event: {DomainEvent}", domainEvent.GetType().Name);
+        _logger.LogInformation($"Hippo Domain Event: {domainEvent.GetType().Name}");
 
         if (channel.ActiveRevision != null)
         {

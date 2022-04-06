@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Core.Entities;
+using Hippo.Core.Events;
 using MediatR;
 
 namespace Hippo.Application.Certificates.Commands;
@@ -43,6 +44,8 @@ public class UpdateCertificateCommandHandler : IRequestHandler<UpdateCertificate
         entity.Name = request.Name;
         entity.PublicKey = request.PublicKey;
         entity.PrivateKey = request.PrivateKey;
+
+        entity.DomainEvents.Add(new ModifiedEvent<Certificate>(entity));
 
         await _context.SaveChangesAsync(cancellationToken);
 

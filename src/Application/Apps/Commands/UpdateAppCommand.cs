@@ -3,6 +3,7 @@ using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Application.Jobs;
 using Hippo.Core.Entities;
+using Hippo.Core.Events;
 using MediatR;
 
 namespace Hippo.Application.Apps.Commands;
@@ -40,6 +41,8 @@ public class UpdateAppCommandHandler : IRequestHandler<UpdateAppCommand>
 
         entity.Name = request.Name;
         entity.StorageId = request.StorageId;
+
+        entity.DomainEvents.Add(new ModifiedEvent<App>(entity));
 
         await _context.SaveChangesAsync(cancellationToken);
 

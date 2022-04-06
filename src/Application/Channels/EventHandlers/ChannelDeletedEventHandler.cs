@@ -23,7 +23,7 @@ public class ChannelDeletedEventHandler : INotificationHandler<DomainEventNotifi
     {
         var domainEvent = notification.DomainEvent;
 
-        _logger.LogInformation("Hippo Domain Event: {DomainEvent}", domainEvent.GetType().Name);
+        _logger.LogInformation($"Hippo Domain Event: {domainEvent.GetType().Name}");
 
         try
         {
