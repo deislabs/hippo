@@ -34,7 +34,7 @@ public class UpdateAppCommandHandler : IRequestHandler<UpdateAppCommand>
         var entity = await _context.Apps
             .FindAsync(new object[] { request.Id }, cancellationToken);
 
-        if (entity == null)
+        if (entity is null)
         {
             throw new NotFoundException(nameof(App), request.Id);
         }

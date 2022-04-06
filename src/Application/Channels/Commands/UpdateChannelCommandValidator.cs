@@ -39,7 +39,7 @@ public class UpdateChannelCommandValidator : AbstractValidator<UpdateChannelComm
     {
         var channel = await _context.Channels.Where(c => c.Id == command.Id).SingleOrDefaultAsync(cancellationToken);
 
-        if (channel == null)
+        if (channel is null)
         {
             throw new NotFoundException(nameof(Channel), command.Id);
         }

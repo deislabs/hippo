@@ -36,7 +36,7 @@ public class UpdateCertificateCommandHandler : IRequestHandler<UpdateCertificate
         var entity = await _context.Certificates
             .FindAsync(new object[] { request.Id }, cancellationToken);
 
-        if (entity == null)
+        if (entity is null)
         {
             throw new NotFoundException(nameof(Certificate), request.Id);
         }

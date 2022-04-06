@@ -34,7 +34,7 @@ public class GetAppQueryHandler : IRequestHandler<GetAppQuery, AppDto>
             .ProjectTo<AppDto>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(cancellationToken);
 
-        if (entity == null)
+        if (entity is null)
         {
             throw new NotFoundException(nameof(App), request.Id);
         }

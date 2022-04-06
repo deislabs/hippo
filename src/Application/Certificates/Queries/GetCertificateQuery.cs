@@ -34,7 +34,7 @@ public class GetCertificateQueryHandler : IRequestHandler<GetCertificateQuery, C
             .ProjectTo<CertificateDto>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(cancellationToken);
 
-        if (entity == null)
+        if (entity is null)
         {
             throw new NotFoundException(nameof(Certificate), request.Id);
         }

@@ -34,7 +34,7 @@ public class GetEnvironmentVariableQueryHandler : IRequestHandler<GetEnvironment
             .ProjectTo<EnvironmentVariableDto>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(cancellationToken);
 
-        if (entity == null)
+        if (entity is null)
         {
             throw new NotFoundException(nameof(EnvironmentVariable), request.Id);
         }

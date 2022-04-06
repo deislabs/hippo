@@ -35,7 +35,7 @@ public class LocalJob : Job
         try
         {
             process = Process.Start(psi());
-            if (process == null)
+            if (process is null)
             {
                 throw new JobFailedException("Job never started");
             }

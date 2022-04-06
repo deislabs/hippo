@@ -29,7 +29,7 @@ public class DeleteAppCommandHandler : IRequestHandler<DeleteAppCommand>
             .Where(l => l.Id == request.Id)
             .SingleOrDefaultAsync(cancellationToken);
 
-        if (entity == null)
+        if (entity is null)
         {
             throw new NotFoundException(nameof(App), request.Id);
         }
