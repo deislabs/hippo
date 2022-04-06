@@ -1,8 +1,8 @@
 namespace Hippo.Core.Events;
 
-public class CreatedEvent<T> : DomainEvent
+public class ModifiedEvent<T> : DomainEvent
 {
-    public CreatedEvent(T entity)
+    public ModifiedEvent(T entity)
     {
         Entity = entity;
     }

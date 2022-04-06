@@ -1,4 +1,5 @@
 using Hippo.Application.Common.Models;
+using Hippo.Core.Entities;
 using Hippo.Core.Events;
 using MediatR;
 using Microsoft.Extensions.Configuration;
@@ -6,23 +7,32 @@ using Microsoft.Extensions.Logging;
 
 namespace Hippo.Application.Channels.EventHandlers;
 
-public class CertificateBindEventHandler : INotificationHandler<DomainEventNotification<CertificateBindEvent>>
+public class CertificateModifiedEventHandler : INotificationHandler<DomainEventNotification<ModifiedEvent<Channel>>>
 {
-    private readonly ILogger<CertificateBindEventHandler> _logger;
+    private readonly ILogger<CertificateModifiedEventHandler> _logger;
 
     private readonly IConfiguration _configuration;
 
-    public CertificateBindEventHandler(ILogger<CertificateBindEventHandler> logger, IConfiguration configuration)
+    public CertificateModifiedEventHandler(ILogger<CertificateModifiedEventHandler> logger, IConfiguration configuration)
     {
         _logger = logger;
         _configuration = configuration;
     }
 
-    public Task Handle(DomainEventNotification<CertificateBindEvent> notification, CancellationToken cancellationToken)
+    public Task Handle(DomainEventNotification<ModifiedEvent<Channel>> notification, CancellationToken cancellationToken)
     {
         var domainEvent = notification.DomainEvent;
+        Channel channel = domainEvent.Entity;
 
-        _logger.LogInformation("Hippo Domain Event: {DomainEvent}", domainEvent.GetType().Name);
+        _logger.LogInformation($"Hippo Domain Event: {domainEvent.GetType().Name}");
+
+        if (channel.Certificate is null || channel.Domain is null)
+        {
+            // remove certificate from kestrel config
+            // TODO: we should probably delete the certificate file here
+            _configuration.GetSection($"{SniOptions.Position}:{notification.DomainEvent.Entity.Domain}").Bind(null);
+            return Task.CompletedTask;
+        }
 
         // Add cert to kestrel config; kestrel will automatically reload
         // https://docs.microsoft.com/en-us/dotnet/core/compatibility/aspnet-core/5.0/kestrel-configuration-changes-at-run-time-detected-by-default
@@ -31,11 +41,9 @@ public class CertificateBindEventHandler : INotificationHandler<DomainEventNotif
         //
         // TODO: Do we need to handle cases when the domain name changes? Perhaps we should handle that with a new event.
         //       That being said, it is likely the certificate will need to be replaced... So this may not be an issue.
-        var certificate = notification.DomainEvent.Channel.Certificate!;
-        var domain = notification.DomainEvent.Channel.Domain!;
-        var sniOptions = new SniOptions(new SniOptions.CertificateOptions(certificate.PublicKey!, certificate.PrivateKey!, Path.Combine(System.IO.Directory.GetCurrentDirectory(), domain)));
+        var sniOptions = new SniOptions(new SniOptions.CertificateOptions(channel.Certificate.PublicKey!, channel.Certificate.PrivateKey!, Path.Combine(System.IO.Directory.GetCurrentDirectory(), channel.Domain)));
 
-        _configuration.GetSection($"{SniOptions.Position}:{notification.DomainEvent.Channel.Domain!}").Bind(sniOptions);
+        _configuration.GetSection($"{SniOptions.Position}:{channel.Domain}").Bind(sniOptions);
 
         return Task.CompletedTask;
     }
