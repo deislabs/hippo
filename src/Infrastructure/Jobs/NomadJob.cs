@@ -185,31 +185,27 @@ job """ + Id + @""" {
         timeout = ""2s""
       }
     }
-    task ""wagi"" {
+    task ""spin"" {
       driver = ""exec""
 
       artifact {
-        source = ""https://github.com/deislabs/wagi/releases/download/v0.6.2/wagi-v0.6.2-linux-amd64.tar.gz""
+        source = ""https://github.com/fermyon/spin/releases/download/v0.1.0/spin-v0.1.0-linux-amd64.tar.gz""
         options {
-          checksum = ""sha256:232d623e8cd9c5b72e2b76d0668eda0049edbe18f7bb5d6d5f979da2e69d1738""
+          checksum = ""sha256:de01ecd8d67dc218fc82690fd987e67cd8247477d24f0f1ac443a03e549c54ca""
         }
       }
       env {
-        RUST_LOG = ""warn,wagi=debug""
+        RUST_LOG = ""warn,spin=debug""
         BINDLE_URL = var.bindle_url
-        WAGI_LOG_DIR = ""local/log""
+        SPIN_LOG_DIR = ""local/log""
       }
       config {
-        command = ""wagi""
+        command = ""spin""
         args = [
+          ""up"",
           ""--listen"", ""${NOMAD_IP_http}:${NOMAD_PORT_http}"",
           ""--log-dir"", ""local/log"",
           ""--bindle"", var.bindle_id,
-          ""--cache"", ""local/cache.toml"",
-          # Use https://github.com/deislabs/wagi-fileserver/pull/10 as a workaround
-          # for https://github.com/deislabs/hippo-cli/issues/39
-          ""-e"", ""PATH_PREFIX=static/"",
-          ""-e"", ""BASE_URL=${var.host}"",
           " + env + @"
         ]
       }

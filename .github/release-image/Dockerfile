@@ -42,9 +42,9 @@ RUN mkdir hippocli && cd hippocli && curl -fsSLo hippocli.tar.gz https://github.
 ARG BINDLE_VERSION="v0.8.0"
 RUN mkdir bindle && cd bindle && curl -fsSLo bindle.tar.gz https://bindle.blob.core.windows.net/releases/bindle-${BINDLE_VERSION}-linux-amd64.tar.gz && tar -xvf bindle.tar.gz && mv bindle bindle-server README.md LICENSE.txt /usr/local/bin/ && cd - && rm -r bindle
 
-# Install WAGI
-ARG WAGI_VERSION="v0.8.1"
-RUN mkdir wagi && cd wagi && curl -fsSLo wagi.tar.gz https://github.com/deislabs/wagi/releases/download/${WAGI_VERSION}/wagi-${WAGI_VERSION}-linux-amd64.tar.gz  && tar -xvf wagi.tar.gz && mv wagi README.md LICENSE.txt /usr/local/bin/ && cd - && rm -r wagi
+# Install spin
+ARG SPIN_VERSION="v0.1.0"
+RUN mkdir spin && cd spin && curl -fsSLo spin.tar.gz https://github.com/fermyon/spin/releases/download/${SPIN_VERSION}/spin-${SPIN_VERSION}-linux-amd64.tar.gz  && tar -xvf spin.tar.gz && mv spin README.md LICENSE.txt /usr/local/bin/ && cd - && rm -r spin
 
 # Install Rust
 RUN su ${USER} -c "mkdir rust && cd rust && curl -fsSLo install_rust.sh https://sh.rustup.rs && chmod +x ./install_rust.sh  && ./install_rust.sh -y -t wasm32-wasi && cd - && rm -r rust"

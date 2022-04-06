@@ -17,9 +17,9 @@ RUN curl -fsSLo hippocli.tar.gz https://github.com/deislabs/hippo-cli/releases/d
 ARG BINDLE_VERSION="v0.8.0"
 RUN curl -fsSLo bindle.tar.gz https://bindle.blob.core.windows.net/releases/bindle-${BINDLE_VERSION}-linux-amd64.tar.gz && tar -xvf bindle.tar.gz && mv bindle bindle-server /usr/local/bin/
 
-# Install WAGI
-ARG WAGI_VERSION="v0.8.1"
-RUN curl -fsSLo wagi.tar.gz https://github.com/deislabs/wagi/releases/download/${WAGI_VERSION}/wagi-${WAGI_VERSION}-linux-amd64.tar.gz  && tar -xvf wagi.tar.gz && mv wagi /usr/local/bin/
+# Install spin
+ARG SPIN_VERSION="v0.1.0"
+RUN curl -fsSLo spin.tar.gz https://github.com/fermyon/spin/releases/download/${SPIN_VERSION}/spin-${SPIN_VERSION}-linux-amd64.tar.gz  && tar -xvf spin.tar.gz && mv spin /usr/local/bin/
 
 # Install yo-wasm
 RUN su vscode -c "umask 0002 && . /usr/local/share/nvm/nvm.sh && npm install -g yo && npm install -g generator-wasm"
