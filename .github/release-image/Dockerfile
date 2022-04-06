@@ -44,7 +44,7 @@ RUN mkdir bindle && cd bindle && curl -fsSLo bindle.tar.gz https://bindle.blob.c
 
 # Install spin
 ARG SPIN_VERSION="v0.1.0"
-RUN mkdir spin && cd spin && curl -fsSLo spin.tar.gz https://github.com/fermyon/spin/releases/download/${SPIN_VERSION}/spin-${SPIN_VERSION}-linux-amd64.tar.gz  && tar -xvf spin.tar.gz && mv spin README.md LICENSE.txt /usr/local/bin/ && cd - && rm -r spin
+RUN mkdir spin && cd spin && curl -fsSLo spin.tar.gz https://github.com/fermyon/spin/releases/download/${SPIN_VERSION}/spin-${SPIN_VERSION}-linux-amd64.tar.gz  && tar -xvf spin.tar.gz && mv spin readme.md LICENSE /usr/local/bin/ && cd - && rm -r spin
 
 # Install Rust
 RUN su ${USER} -c "mkdir rust && cd rust && curl -fsSLo install_rust.sh https://sh.rustup.rs && chmod +x ./install_rust.sh  && ./install_rust.sh -y -t wasm32-wasi && cd - && rm -r rust"
