@@ -43,7 +43,7 @@ public class UpdateChannelCommandHandler : IRequestHandler<UpdateChannelCommand>
         var entity = await _context.Channels
             .FindAsync(new object[] { request.Id }, cancellationToken);
 
-        if (entity == null)
+        if (entity is null)
         {
             throw new NotFoundException(nameof(Channel), request.Id);
         }
@@ -55,7 +55,7 @@ public class UpdateChannelCommandHandler : IRequestHandler<UpdateChannelCommand>
         entity.ActiveRevisionId = request.ActiveRevisionId;
         entity.CertificateId = request.CertificateId;
 
-        if (entity.RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseRangeRule && entity.RangeRule == null)
+        if (entity.RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseRangeRule && entity.RangeRule is null)
         {
             entity.RangeRule = "*";
         }

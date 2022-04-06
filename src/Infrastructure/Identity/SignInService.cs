@@ -21,7 +21,7 @@ public class SignInService : ISignInService
     {
         var user = _userManager.Users.SingleOrDefault(u => u.UserName == username);
 
-        if (user == null)
+        if (user is null)
         {
             return Result.Failure(new string[] { "Account does not exist." });
         }

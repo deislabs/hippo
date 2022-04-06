@@ -18,7 +18,7 @@ public class LocalJobFactory : IJobFactory
     public Job Start(Guid id, string bindleId, Dictionary<string, string> environmentVariables, string? _domain)
     {
         var job = jobs.Find(j => j.Id == id);
-        if (job != null)
+        if (job is not null)
         {
             job.BindleId = bindleId;
             foreach (var e in environmentVariables)

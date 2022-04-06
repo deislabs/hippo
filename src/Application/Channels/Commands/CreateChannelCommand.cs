@@ -55,7 +55,7 @@ public class CreateChannelCommandHandler : IRequestHandler<CreateChannelCommand,
             AppId = request.AppId,
             App = app,
             Name = request.Name,
-            Domain = (request.Domain != null) ? request.Domain : $"{request.Name}.{app.Name}.{_config.PlatformDomain}",
+            Domain = (request.Domain is not null) ? request.Domain : $"{request.Name}.{app.Name}.{_config.PlatformDomain}",
             RevisionSelectionStrategy = request.RevisionSelectionStrategy,
             RangeRule = request.RangeRule,
             ActiveRevisionId = request.ActiveRevisionId,
@@ -81,7 +81,7 @@ public class CreateChannelCommandHandler : IRequestHandler<CreateChannelCommand,
             entity.Certificate = certificate;
         }
 
-        if (entity.RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseRangeRule && entity.RangeRule == null)
+        if (entity.RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseRangeRule && entity.RangeRule is null)
         {
             entity.RangeRule = "*";
         }

@@ -47,7 +47,7 @@ public class NomadJob : Job
         try
         {
             process = Process.Start(psi);
-            if (process == null)
+            if (process is null)
             {
                 throw new JobFailedException("Job never started");
             }
@@ -109,7 +109,7 @@ public class NomadJob : Job
         {
             using (var process = Process.Start(psi))
             {
-                if (process == null)
+                if (process is null)
                 {
                     throw new JobFailedException("Job failed to stop");
                 }

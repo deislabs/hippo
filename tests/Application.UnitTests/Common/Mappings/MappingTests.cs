@@ -52,7 +52,7 @@ public class MappingTests
 
     private object GetInstanceOf(Type type)
     {
-        if (type.GetConstructor(Type.EmptyTypes) != null)
+        if (type.GetConstructor(Type.EmptyTypes) is not null)
             return Activator.CreateInstance(type)!;
 
         // Type without parameterless constructor

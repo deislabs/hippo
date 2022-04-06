@@ -29,7 +29,7 @@ public class DeleteCertificateCommandHandler : IRequestHandler<DeleteCertificate
             .Where(l => l.Id == request.Id)
             .SingleOrDefaultAsync(cancellationToken);
 
-        if (entity == null)
+        if (entity is null)
         {
             throw new NotFoundException(nameof(Certificate), request.Id);
         }

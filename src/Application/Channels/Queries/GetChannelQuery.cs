@@ -34,7 +34,7 @@ public class GetChannelQueryHandler : IRequestHandler<GetChannelQuery, ChannelDt
             .ProjectTo<ChannelDto>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(cancellationToken);
 
-        if (entity == null)
+        if (entity is null)
         {
             throw new NotFoundException(nameof(Channel), request.Id);
         }

@@ -33,7 +33,7 @@ public class UpdateEnvironmentVariableCommandHandler : IRequestHandler<UpdateEnv
         var entity = await _context.EnvironmentVariables
             .FindAsync(new object[] { request.Id }, cancellationToken);
 
-        if (entity == null)
+        if (entity is null)
         {
             throw new NotFoundException(nameof(EnvironmentVariable), request.Id);
         }

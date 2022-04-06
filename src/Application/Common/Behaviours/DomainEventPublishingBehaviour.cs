@@ -30,7 +30,7 @@ public class DomainEventPublishingBehaviour<TRequest, TResponse> : IRequestPostP
                                         .SelectMany(x => x)
                                         .Where(domainEvent => !domainEvent.IsPublished)
                                         .FirstOrDefault();
-            if (domainEventEntity == null) break;
+            if (domainEventEntity is null) break;
 
             domainEventEntity.IsPublished = true;
             await _domainEventService.Publish(domainEventEntity);

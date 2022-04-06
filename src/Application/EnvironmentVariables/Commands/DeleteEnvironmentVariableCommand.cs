@@ -29,7 +29,7 @@ public class DeleteEnvironmentVariableCommandHandler : IRequestHandler<DeleteEnv
             .Where(l => l.Id == request.Id)
             .SingleOrDefaultAsync(cancellationToken);
 
-        if (entity == null)
+        if (entity is null)
         {
             throw new NotFoundException(nameof(EnvironmentVariable), request.Id);
         }

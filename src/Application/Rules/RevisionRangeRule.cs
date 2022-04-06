@@ -48,7 +48,7 @@ public abstract class RevisionRangeRule
             var candidatesByVersion = candidates.ToDictionary(c => c.RevisionNumber!, c => c);
             var maxSatisfying = _range.MaxSatisfying(candidatesByVersion.Keys);
 
-            if (maxSatisfying == null)
+            if (maxSatisfying is null)
             {
                 return null;
             }
