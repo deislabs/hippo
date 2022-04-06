@@ -138,12 +138,12 @@ public class NomadJob : Job
 
         if (entrypoint != "")
         {
-          entrypoint = @"""traefik.http.routers." + Id + @".entryPoints=" + entrypoint + @""",";
+            entrypoint = @"""traefik.http.routers." + Id + @".entryPoints=" + entrypoint + @""",";
         }
 
         if (certresolver != "")
         {
-          certresolver = @"""traefik.http.routers." + Id + @".tls.certresolver=" + certresolver + @""",";
+            certresolver = @"""traefik.http.routers." + Id + @".tls.certresolver=" + certresolver + @""",";
         }
 
         var hcl = @"

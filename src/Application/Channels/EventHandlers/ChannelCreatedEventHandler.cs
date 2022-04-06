@@ -38,7 +38,7 @@ public class ChannelCreatedEventHandler : INotificationHandler<DomainEventNotifi
         }
         else
         {
-           // TODO: schedule a "parking lot" app instance to start serving requests
+            // TODO: schedule a "parking lot" app instance to start serving requests
         }
 
         return Task.CompletedTask;
