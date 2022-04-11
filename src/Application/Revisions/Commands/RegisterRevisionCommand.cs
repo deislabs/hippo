@@ -38,6 +38,7 @@ public class RegisterRevisionCommandHandler : IRequestHandler<RegisterRevisionCo
             var entity = new Revision
             {
                 AppId = app.Id,
+                App = app,
                 RevisionNumber = request.RevisionNumber
             };
 
