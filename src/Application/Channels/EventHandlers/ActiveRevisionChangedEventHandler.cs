@@ -1,6 +1,5 @@
 using Hippo.Application.Common.Interfaces;
 using Hippo.Application.Common.Models;
-using Hippo.Application.Jobs;
 using Hippo.Core.Entities;
 using Hippo.Core.Events;
 using MediatR;
