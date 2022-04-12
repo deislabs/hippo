@@ -35,9 +35,15 @@ public class RevisionDeletedEventHandler : INotificationHandler<DomainEventNotif
 
         foreach (Channel channel in channels)
         {
-            if (channel.RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseSpecifiedRevision)
+            if (channel.RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseRangeRule)
             {
-                channel.ActiveRevision = RevisionRangeRule.Parse(channel.RangeRule).Match(channel.App.Revisions);
+                var activeRevision = RevisionRangeRule.Parse(channel.RangeRule).Match(channel.App.Revisions);
+                if (activeRevision is not null && activeRevision != channel.ActiveRevision)
+                {
+                    _logger.LogInformation($"Channel {channel.Id} changed its active revision to {activeRevision.Id}");
+                    channel.ActiveRevision = activeRevision;
+                    channel.DomainEvents.Add(new ModifiedEvent<Channel>(channel));
+                }
             }
         }
 
