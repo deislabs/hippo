@@ -12,7 +12,8 @@
     },
     // Add the IDs of extensions you want installed when the container is created.
     "extensions": [
-        "ms-dotnettools.csharp"
+        "ms-dotnettools.csharp",
+        "DavidAnson.vscode-markdownlint"
     ],
     "containerEnv": {
         "BINDLE_URL": "http://localhost:8080/v1",
