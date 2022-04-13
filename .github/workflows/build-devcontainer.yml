@@ -43,7 +43,7 @@ jobs:
           build-args: |
             VARIANT : 6.0
             NODE_VERSION: lts/*
-            HIPPO_VERSION: v0.10.0
+            HIPPO_VERSION: v0.11.0
             BINDLE_VERSION: v0.8.0
             SPIN_VERSION: v0.1.0
           push: true
