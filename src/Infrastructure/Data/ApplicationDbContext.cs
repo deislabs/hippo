@@ -2,6 +2,7 @@ using System.Reflection;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Core.Common;
 using Hippo.Core.Entities;
+using Hippo.Core.Events;
 using Hippo.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -54,6 +55,25 @@ public class ApplicationDbContext : IdentityDbContext<Account>, IApplicationDbCo
                 case EntityState.Modified:
                     entry.Entity.LastModifiedBy = _currentUserService.UserId;
                     entry.Entity.LastModified = _dateTime.UtcNow;
+                    break;
+            }
+        }
+
+        foreach (var entry in ChangeTracker.Entries<IHasDomainEvent>())
+        {
+            switch (entry.State)
+            {
+                case EntityState.Added:
+                    var createdEvent = (DomainEvent)Activator.CreateInstance(typeof(CreatedEvent<>).MakeGenericType(entry.Entity.GetType()), entry.Entity)!;
+                    entry.Entity.DomainEvents.Add(createdEvent);
+                    break;
+                case EntityState.Modified:
+                    var modifiedEvent = (DomainEvent)Activator.CreateInstance(typeof(ModifiedEvent<>).MakeGenericType(entry.Entity.GetType()), entry.Entity)!;
+                    entry.Entity.DomainEvents.Add(modifiedEvent);
+                    break;
+                case EntityState.Deleted:
+                    var deletedEvent = (DomainEvent)Activator.CreateInstance(typeof(DeletedEvent<>).MakeGenericType(entry.Entity.GetType()), entry.Entity)!;
+                    entry.Entity.DomainEvents.Add(deletedEvent);
                     break;
             }
         }

@@ -45,8 +45,6 @@ public class UpdateCertificateCommandHandler : IRequestHandler<UpdateCertificate
         entity.PublicKey = request.PublicKey;
         entity.PrivateKey = request.PrivateKey;
 
-        entity.DomainEvents.Add(new ModifiedEvent<Certificate>(entity));
-
         await _context.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;

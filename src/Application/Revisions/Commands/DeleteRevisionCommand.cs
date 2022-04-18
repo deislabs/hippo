@@ -34,8 +34,6 @@ public class DeleteRevisionCommandHandler : IRequestHandler<DeleteRevisionComman
             throw new NotFoundException(nameof(Revision), request.Id);
         }
 
-        entity.DomainEvents.Add(new DeletedEvent<Revision>(entity));
-
         _context.Revisions.Remove(entity);
 
         await _context.SaveChangesAsync(cancellationToken);

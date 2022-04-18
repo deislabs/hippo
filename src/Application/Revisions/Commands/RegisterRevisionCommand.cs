@@ -42,8 +42,6 @@ public class RegisterRevisionCommandHandler : IRequestHandler<RegisterRevisionCo
                 RevisionNumber = request.RevisionNumber
             };
 
-            entity.DomainEvents.Add(new CreatedEvent<Revision>(entity));
-
             _context.Revisions.Add(entity);
 
             viewModel.Revisions.Add(_mapper.Map<RevisionDto>(entity));

@@ -34,8 +34,6 @@ public class DeleteAppCommandHandler : IRequestHandler<DeleteAppCommand>
             throw new NotFoundException(nameof(App), request.Id);
         }
 
-        entity.DomainEvents.Add(new DeletedEvent<App>(entity));
-
         _context.Apps.Remove(entity);
 
         await _context.SaveChangesAsync(cancellationToken);

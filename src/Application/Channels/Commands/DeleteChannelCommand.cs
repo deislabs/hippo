@@ -34,8 +34,6 @@ public class DeleteChannelCommandHandler : IRequestHandler<DeleteChannelCommand>
             throw new NotFoundException(nameof(Channel), request.Id);
         }
 
-        entity.DomainEvents.Add(new DeletedEvent<Channel>(entity));
-
         _context.Channels.Remove(entity);
 
         await _context.SaveChangesAsync(cancellationToken);

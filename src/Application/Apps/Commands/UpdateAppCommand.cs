@@ -41,8 +41,6 @@ public class UpdateAppCommandHandler : IRequestHandler<UpdateAppCommand>
         entity.Name = request.Name;
         entity.StorageId = request.StorageId;
 
-        entity.DomainEvents.Add(new ModifiedEvent<App>(entity));
-
         await _context.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;

@@ -60,8 +60,6 @@ public class UpdateChannelCommandHandler : IRequestHandler<UpdateChannelCommand>
             entity.RangeRule = "*";
         }
 
-        entity.DomainEvents.Add(new ModifiedEvent<Channel>(entity));
-
         await _context.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;
