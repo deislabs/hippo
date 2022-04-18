@@ -29,6 +29,19 @@ public class ChannelController : ApiControllerBase
         return await Mediator.Send(command);
     }
 
+    [HttpPut("{id}")]
+    public async Task<ActionResult> Update(Guid id, UpdateChannelCommand command)
+    {
+        if (id != command.Id)
+        {
+            return BadRequest();
+        }
+
+        await Mediator.Send(command);
+
+        return NoContent();
+    }
+
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(Guid id)
     {
