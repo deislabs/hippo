@@ -86,8 +86,6 @@ public class CreateChannelCommandHandler : IRequestHandler<CreateChannelCommand,
             entity.RangeRule = "*";
         }
 
-        entity.DomainEvents.Add(new CreatedEvent<Channel>(entity));
-
         _context.Channels.Add(entity);
 
         await _context.SaveChangesAsync(cancellationToken);

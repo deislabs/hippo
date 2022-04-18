@@ -45,8 +45,6 @@ public class CreateEnvironmentVariableCommandHandler : IRequestHandler<CreateEnv
             Channel = channel,
         };
 
-        entity.DomainEvents.Add(new CreatedEvent<EnvironmentVariable>(entity));
-
         _context.EnvironmentVariables.Add(entity);
 
         await _context.SaveChangesAsync(cancellationToken);

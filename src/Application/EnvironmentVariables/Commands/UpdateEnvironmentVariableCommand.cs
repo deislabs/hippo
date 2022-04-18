@@ -41,8 +41,6 @@ public class UpdateEnvironmentVariableCommandHandler : IRequestHandler<UpdateEnv
         entity.Key = request.Key;
         entity.Value = request.Value;
 
-        entity.DomainEvents.Add(new ModifiedEvent<EnvironmentVariable>(entity));
-
         await _context.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;

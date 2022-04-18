@@ -36,8 +36,6 @@ public class CreateCertificateCommandHandler : IRequestHandler<CreateCertificate
             PrivateKey = request.PrivateKey,
         };
 
-        entity.DomainEvents.Add(new CreatedEvent<Certificate>(entity));
-
         _context.Certificates.Add(entity);
 
         await _context.SaveChangesAsync(cancellationToken);
