@@ -1,5 +1,6 @@
 using Hippo.Application.Channels.Commands;
 using Hippo.Application.Channels.Queries;
+using Hippo.Application.Common.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,6 +22,12 @@ public class ChannelController : ApiControllerBase
         var vm = await Mediator.Send(new ExportChannelsQuery());
 
         return File(vm.Content, vm.ContentType, vm.FileName);
+    }
+
+    [HttpGet("logs")]
+    public async Task<ActionResult<PaginatedList<string>>> GetLogsWithPagination([FromQuery] GetLogsWithPaginationQuery query)
+    {
+        return await Mediator.Send(query);
     }
 
     [HttpPost]
