@@ -5,7 +5,6 @@ using Hippo.Application;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Infrastructure;
 using Hippo.Infrastructure.Data;
-using Hippo.Infrastructure.Identity;
 using Hippo.Web.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -128,7 +127,7 @@ using (var scope = app.Services.CreateScope())
             context.Database.Migrate();
         }
 
-        var userManager = services.GetRequiredService<UserManager<Account>>();
+        var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
         await ApplicationDbContextSeed.SeedIdentityRolesAsync(userManager, roleManager);

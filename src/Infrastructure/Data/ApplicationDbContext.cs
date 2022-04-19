@@ -3,13 +3,13 @@ using Hippo.Application.Common.Interfaces;
 using Hippo.Core.Common;
 using Hippo.Core.Entities;
 using Hippo.Core.Events;
-using Hippo.Infrastructure.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hippo.Infrastructure.Data;
 
-public class ApplicationDbContext : IdentityDbContext<Account>, IApplicationDbContext
+public class ApplicationDbContext : IdentityDbContext<IdentityUser>, IApplicationDbContext
 {
     private readonly ICurrentUserService _currentUserService;
 
@@ -31,6 +31,8 @@ public class ApplicationDbContext : IdentityDbContext<Account>, IApplicationDbCo
         _currentUserService = currentUserService;
         _dateTime = dateTime;
     }
+
+    public DbSet<Account> Accounts => Set<Account>();
 
     public DbSet<App> Apps => Set<App>();
 

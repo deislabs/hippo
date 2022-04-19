@@ -8,15 +8,15 @@ namespace Hippo.Infrastructure.Identity;
 
 public class IdentityService : IIdentityService
 {
-    private readonly UserManager<Account> _userManager;
+    private readonly UserManager<IdentityUser> _userManager;
 
-    private readonly IUserClaimsPrincipalFactory<Account> _userClaimsPrincipalFactory;
+    private readonly IUserClaimsPrincipalFactory<IdentityUser> _userClaimsPrincipalFactory;
 
     private readonly IAuthorizationService _authorizationService;
 
     public IdentityService(
-            UserManager<Account> userManager,
-            IUserClaimsPrincipalFactory<Account> userClaimsPrincipalFactory,
+            UserManager<IdentityUser> userManager,
+            IUserClaimsPrincipalFactory<IdentityUser> userClaimsPrincipalFactory,
             IAuthorizationService authorizationService)
     {
         _userManager = userManager;
@@ -38,7 +38,7 @@ public class IdentityService : IIdentityService
 
     public async Task<(Result Result, string UserId)> CreateUserAsync(string userName, string password)
     {
-        var user = new Account
+        var user = new IdentityUser
         {
             UserName = userName,
             Email = userName
@@ -79,7 +79,7 @@ public class IdentityService : IIdentityService
         return user is not null ? await DeleteUserAsync(user) : Result.Success();
     }
 
-    public async Task<Result> DeleteUserAsync(Account user)
+    public async Task<Result> DeleteUserAsync(IdentityUser user)
     {
         var result = await _userManager.DeleteAsync(user);
 

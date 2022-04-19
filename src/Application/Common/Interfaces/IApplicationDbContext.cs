@@ -6,6 +6,8 @@ namespace Hippo.Application.Common.Interfaces;
 
 public interface IApplicationDbContext
 {
+    DbSet<Account> Accounts { get; }
+
     DbSet<App> Apps { get; }
 
     DbSet<Certificate> Certificates { get; }

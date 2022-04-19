@@ -7,11 +7,11 @@ namespace Hippo.Infrastructure.Identity;
 
 public class SignInService : ISignInService
 {
-    private readonly SignInManager<Account> _signInManager;
+    private readonly SignInManager<IdentityUser> _signInManager;
 
-    private readonly UserManager<Account> _userManager;
+    private readonly UserManager<IdentityUser> _userManager;
 
-    public SignInService(SignInManager<Account> signInManager, UserManager<Account> userManager)
+    public SignInService(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager)
     {
         _signInManager = signInManager;
         _userManager = userManager;
