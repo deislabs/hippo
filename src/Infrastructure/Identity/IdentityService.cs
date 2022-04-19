@@ -59,7 +59,6 @@ public class IdentityService : IIdentityService
     public async Task<bool> AuthorizeAsync(string userId, string policyName)
     {
         var user = _userManager.Users.SingleOrDefault(u => u.Id == userId);
-
         if (user is null)
         {
             return false;

@@ -29,8 +29,7 @@ public class LoginAccountCommandHandler : IRequestHandler<LoginAccountCommand>
 
     public async Task<Unit> Handle(LoginAccountCommand request, CancellationToken cancellationToken)
     {
-        var result = await _signInService.PasswordSignInAsync(request.UserName!, request.Password!, request.RememberMe);
-
+        var result = await _signInService.PasswordSignInAsync(request.UserName, request.Password, request.RememberMe);
         if (!result.Succeeded)
         {
             throw new LoginFailedException(result.Errors);
