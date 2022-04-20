@@ -23,9 +23,6 @@ public class CreateAccountCommandValidator : AbstractValidator<CreateAccountComm
         RuleFor(a => a.Password)
             .NotEmpty()
             .MinimumLength(6);
-
-        RuleFor(a => a.PasswordConfirm)
-            .Equal(a => a.Password).WithMessage("Passwords do not match");
     }
 
     public async Task<bool> BeUniqueUserName(string userName, CancellationToken cancellationToken)

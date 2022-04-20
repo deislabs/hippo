@@ -52,7 +52,7 @@ export class RegisterComponent implements OnInit {
 		}
 
 		this.loading = true;
-		this.accountService.apiAccountPost({ userName: this.f['username'].value, password: this.f['password'].value, passwordConfirm: this.f['passwordConfirm'].value })
+		this.accountService.apiAccountPost({ userName: this.f['username'].value, password: this.f['password'].value })
 			.subscribe(
 				{
 					// TODO: navigate to registration confirmation page
