@@ -11,10 +11,10 @@
  */
 
 
-export type ChannelRevisionSelectionStrategy = 'UseRangeRule' | 'UseSpecifiedRevision';
-
-export const ChannelRevisionSelectionStrategy = {
-    UseRangeRule: 'UseRangeRule' as ChannelRevisionSelectionStrategy,
-    UseSpecifiedRevision: 'UseSpecifiedRevision' as ChannelRevisionSelectionStrategy
-};
+export interface UpdateCertificateCommand { 
+    id: string;
+    name: string;
+    publicKey: string;
+    privateKey: string;
+}
 

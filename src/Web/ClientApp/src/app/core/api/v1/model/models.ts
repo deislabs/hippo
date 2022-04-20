@@ -23,3 +23,7 @@ export * from './revision';
 export * from './revisionDto';
 export * from './revisionsVm';
 export * from './tokenInfo';
+export * from './updateAppCommand';
+export * from './updateCertificateCommand';
+export * from './updateChannelCommand';
+export * from './updateEnvironmentVariableCommand';

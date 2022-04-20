@@ -43,7 +43,7 @@ export class NewComponent implements OnInit {
     }
 
     this.loading = true;
-    this.channelService.apiChannelPost({ appId: this.appId, name: this.f['name'].value, revisionSelectionStrategy: ChannelRevisionSelectionStrategy.NUMBER_0, rangeRule: '*' })
+    this.channelService.apiChannelPost({ appId: this.appId, name: this.f['name'].value, revisionSelectionStrategy: ChannelRevisionSelectionStrategy.UseRangeRule, rangeRule: '*' })
     .subscribe({
       next: () => location.reload(),
       error: (error) => {
