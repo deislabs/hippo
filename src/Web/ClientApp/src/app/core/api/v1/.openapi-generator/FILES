@@ -38,4 +38,8 @@ model/revision.ts
 model/revisionDto.ts
 model/revisionsVm.ts
 model/tokenInfo.ts
+model/updateAppCommand.ts
+model/updateCertificateCommand.ts
+model/updateChannelCommand.ts
+model/updateEnvironmentVariableCommand.ts
 variables.ts

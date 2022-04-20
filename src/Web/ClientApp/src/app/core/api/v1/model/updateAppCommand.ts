@@ -11,10 +11,9 @@
  */
 
 
-export type ChannelRevisionSelectionStrategy = 'UseRangeRule' | 'UseSpecifiedRevision';
-
-export const ChannelRevisionSelectionStrategy = {
-    UseRangeRule: 'UseRangeRule' as ChannelRevisionSelectionStrategy,
-    UseSpecifiedRevision: 'UseSpecifiedRevision' as ChannelRevisionSelectionStrategy
-};
+export interface UpdateAppCommand { 
+    id: string;
+    name: string;
+    storageId: string;
+}
 

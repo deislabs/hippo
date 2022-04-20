@@ -12,10 +12,10 @@
 import { ChannelRevisionSelectionStrategy } from './channelRevisionSelectionStrategy';
 
 
-export interface CreateChannelCommand { 
-    appId: string;
+export interface UpdateChannelCommand { 
+    id: string;
     name: string;
-    domain?: string | null;
+    domain: string;
     revisionSelectionStrategy: ChannelRevisionSelectionStrategy;
     rangeRule?: string | null;
     activeRevisionId?: string | null;
