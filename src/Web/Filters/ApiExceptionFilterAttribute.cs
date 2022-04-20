@@ -18,6 +18,7 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
                 { typeof(NotFoundException), HandleNotFoundException },
                 { typeof(UnauthorizedAccessException), HandleUnauthorizedAccessException },
                 { typeof(ForbiddenAccessException), HandleForbiddenAccessException },
+                { typeof(JobFailedException), HandleJobFailedException },
             };
     }
 
@@ -117,6 +118,26 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
         context.Result = new ObjectResult(details)
         {
             StatusCode = StatusCodes.Status403Forbidden
+        };
+
+        context.ExceptionHandled = true;
+    }
+
+    private void HandleJobFailedException(ExceptionContext context)
+    {
+        var exception = (JobFailedException)context.Exception;
+
+        var details = new ProblemDetails()
+        {
+            Status = StatusCodes.Status500InternalServerError,
+            Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1",
+            Title = "Job failed.",
+            Detail = exception.Message
+        };
+
+        context.Result = new ObjectResult(details)
+        {
+            StatusCode = StatusCodes.Status500InternalServerError
         };
 
         context.ExceptionHandled = true;
