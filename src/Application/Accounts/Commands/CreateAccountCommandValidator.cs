@@ -22,7 +22,7 @@ public class CreateAccountCommandValidator : AbstractValidator<CreateAccountComm
 
         RuleFor(a => a.Password)
             .NotEmpty()
-            .MinimumLength(8);
+            .MinimumLength(6);
 
         RuleFor(a => a.PasswordConfirm)
             .Equal(a => a.Password).WithMessage("Passwords do not match");
