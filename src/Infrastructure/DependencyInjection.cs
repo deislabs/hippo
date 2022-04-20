@@ -55,6 +55,16 @@ public static class DependencyInjection
 
         services.AddTransient<ITokenService, TokenService>();
 
+        services.Configure<IdentityOptions>(options =>
+        {
+            options.Password.RequireDigit = false;
+            options.Password.RequireLowercase = false;
+            options.Password.RequireNonAlphanumeric = false;
+            options.Password.RequireUppercase = false;
+            options.Password.RequiredLength = 1;
+            options.Password.RequiredUniqueChars = 0;
+        });
+
         var schedulerDriver = configuration.GetValue<string>("Scheduler:Driver", "local").ToLower();
         switch (schedulerDriver)
         {
