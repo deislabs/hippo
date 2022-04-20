@@ -13,8 +13,7 @@ public class CreateAccountTests : TestBase
         var command = new CreateAccountCommand
         {
             UserName = "bob",
-            Password = "Passw0rd!",
-            PasswordConfirm = "Passw0rd!"
+            Password = "Passw0rd!"
         };
 
         await SendAsync(command);
@@ -34,33 +33,26 @@ public class CreateAccountTests : TestBase
         var command = new CreateAccountCommand
         {
             UserName = userName,
-            Password = password,
-            PasswordConfirm = password
+            Password = password
         };
 
         Assert.True(SendAsync(command).IsCompletedSuccessfully);
     }
 
     [Theory]
-    [InlineData("", "Passw0rd!", "Passw0rd!")]
-    [InlineData("bacongobbler", "", "Passw0rd!")]
-    [InlineData("bacongobbler", "Passw0rd!", "")]
-    [InlineData("", "", "Passw0rd!")]
-    [InlineData("bacongobbler", "", "")]
-    [InlineData("", "Passw0rd!", "")]
-    [InlineData("", "", "")]
-    [InlineData("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "Passw0rd!", "Passw0rd!")]
-    [InlineData("!@#$%^&*(){}[]<>\\|'\";:,./?=+", "Passw0rd!", "Passw0rd!")]
-    [InlineData("Bobby Tables", "Passw0rd!", "Passw0rd!")]
-    [InlineData("bacongobbler", "a", "a")]
-    [InlineData("bacongobbler", "12345", "12345")]
-    public async Task ShouldNotCreateAccount(string userName, string password, string passwordConfirm)
+    [InlineData("", "")]
+    [InlineData("bacongobbler", "")]
+    [InlineData("", "Passw0rd!")]
+    [InlineData("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "Passw0rd!")]
+    [InlineData("!@#$%^&*(){}[]<>\\|'\";:,./?=+", "Passw0rd!")]
+    [InlineData("bacongobbler", "a")]
+    [InlineData("bacongobbler", "12345")]
+    public async Task ShouldNotCreateAccount(string userName, string password)
     {
         var command = new CreateAccountCommand
         {
             UserName = userName,
-            Password = password,
-            PasswordConfirm = passwordConfirm
+            Password = password
         };
 
         await Assert.ThrowsAsync<ValidationException>(async () => await SendAsync(command));

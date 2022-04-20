@@ -14,6 +14,5 @@
 export interface CreateAccountCommand { 
     userName: string;
     password: string;
-    passwordConfirm: string;
 }
 

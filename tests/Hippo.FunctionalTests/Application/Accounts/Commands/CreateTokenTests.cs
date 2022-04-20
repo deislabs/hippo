@@ -16,8 +16,7 @@ public class CreateTokenTests : TestBase
         await SendAsync(new CreateAccountCommand
         {
             UserName = userName,
-            Password = password,
-            PasswordConfirm = password
+            Password = password
         });
 
         await Assert.ThrowsAsync<LoginFailedException>(

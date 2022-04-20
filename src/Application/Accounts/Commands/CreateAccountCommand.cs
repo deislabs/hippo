@@ -11,9 +11,6 @@ public class CreateAccountCommand : IRequest<string>
 
     [Required]
     public string Password { get; set; } = "";
-
-    [Required]
-    public string PasswordConfirm { get; set; } = "";
 }
 
 public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand, string>
