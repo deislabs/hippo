@@ -25,13 +25,10 @@ public class CreateAccountTests : TestBase
     [Theory]
     [InlineData("bacongobbler1", "Passw0rd!")]
     [InlineData("bacongobbler2", "Password!")]
-    [InlineData("bacongobbler3", "password")]
-    [InlineData("bacongobbler4", "Password")]
-    [InlineData("bacongobbler5", "password!")]
-    [InlineData("bacongobbler7", "a")]
-    [InlineData("bacongobbler8", "A")]
-    [InlineData("bacongobbler9", "1")]
-    [InlineData("bacongobbler10", "!")]
+    [InlineData("bacongobbler3", "password!")]
+    [InlineData("bacongobbler4", "password")]
+    [InlineData("bacongobbler5", "Password")]
+    [InlineData("bacongobbler6", "123456")]
     public void ShouldCreateAccount(string userName, string password)
     {
         var command = new CreateAccountCommand
@@ -55,6 +52,8 @@ public class CreateAccountTests : TestBase
     [InlineData("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "Passw0rd!", "Passw0rd!")]
     [InlineData("!@#$%^&*(){}[]<>\\|'\";:,./?=+", "Passw0rd!", "Passw0rd!")]
     [InlineData("Bobby Tables", "Passw0rd!", "Passw0rd!")]
+    [InlineData("bacongobbler", "a", "a")]
+    [InlineData("bacongobbler", "12345", "12345")]
     public async Task ShouldNotCreateAccount(string userName, string password, string passwordConfirm)
     {
         var command = new CreateAccountCommand
