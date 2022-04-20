@@ -8,7 +8,7 @@
 	</div>
 </article>
 
-<div class="columns">
+<div class="columns is-multiline">
 	<div *ngFor="let app of apps" class="column is-full-tablet is-half-desktop is-third-widescreen box">
 		<a routerLink="/app" [queryParams]="{ id: app.id }">
 			<div class="card">
