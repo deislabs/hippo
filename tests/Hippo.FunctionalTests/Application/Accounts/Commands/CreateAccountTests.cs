@@ -23,9 +23,15 @@ public class CreateAccountTests : TestBase
     }
 
     [Theory]
-    [InlineData("bacongobbler", "Passw0rd!")]
+    [InlineData("bacongobbler1", "Passw0rd!")]
     [InlineData("bacongobbler2", "Password!")]
-    [InlineData("bacongobbler3", "a")]
+    [InlineData("bacongobbler3", "password")]
+    [InlineData("bacongobbler4", "Password")]
+    [InlineData("bacongobbler5", "password!")]
+    [InlineData("bacongobbler7", "a")]
+    [InlineData("bacongobbler8", "A")]
+    [InlineData("bacongobbler9", "1")]
+    [InlineData("bacongobbler10", "!")]
     public void ShouldCreateAccount(string userName, string password)
     {
         var command = new CreateAccountCommand
