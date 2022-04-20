@@ -15,6 +15,7 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
         _exceptionHandlers = new Dictionary<Type, Action<ExceptionContext>>
             {
                 { typeof(ValidationException), HandleValidationException },
+                { typeof(LoginFailedException), HandleLoginFailedException },
                 { typeof(NotFoundException), HandleNotFoundException },
                 { typeof(UnauthorizedAccessException), HandleUnauthorizedAccessException },
                 { typeof(ForbiddenAccessException), HandleForbiddenAccessException },
@@ -53,6 +54,22 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
         var details = new ValidationProblemDetails(exception.Errors)
         {
             Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1"
+        };
+
+        context.Result = new BadRequestObjectResult(details);
+
+        context.ExceptionHandled = true;
+    }
+
+    private void HandleLoginFailedException(ExceptionContext context)
+    {
+        var exception = (LoginFailedException)context.Exception;
+
+        var details = new ProblemDetails()
+        {
+            Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+            Title = "Login failed.",
+            Detail = exception.Message
         };
 
         context.Result = new BadRequestObjectResult(details);
