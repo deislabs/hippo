@@ -25,6 +25,7 @@ public class CreateAccountTests : TestBase
     [Theory]
     [InlineData("bacongobbler", "Passw0rd!")]
     [InlineData("bacongobbler2", "Password!")]
+    [InlineData("bacongobbler3", "a")]
     public void ShouldCreateAccount(string userName, string password)
     {
         var command = new CreateAccountCommand
