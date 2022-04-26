@@ -5,7 +5,7 @@
 // It should match the value of the ENV VAR DEVCONTAINER_VERSION in build-devcontainer.yml
 {
     "name": "Hippo",
-    "image": "ghcr.io/deislabs/hippo-dev:v0.6.2",
+    "image": "ghcr.io/deislabs/hippo-dev:v0.7.0",
     // Set *default* container specific settings.json values on container create.
     "settings": {
         "remote.autoForwardPorts": false
@@ -18,7 +18,7 @@
     "containerEnv": {
         "BINDLE_URL": "http://localhost:8080/v1",
         "HIPPO_URL": "https://localhost:5309",
-        // This places bindle server data in the workspace so that state is retained across multiple invocations of the bindle server 
+        // This places bindle server data in the workspace so that state is retained across multiple invocations of the bindle server
         // Delete this folder and src/Web/hippo.db.* files to reset Hippo
         "BINDLE_DIRECTORY" : "${containerWorkspaceFolder}/bindleserver/data"
     },
@@ -31,7 +31,7 @@
     ],
     "remoteUser": "vscode",
     "updateRemoteUserUID": false,
-    // restore and build the application, add the dev cert. 
+    // restore and build the application, add the dev cert.
     "postCreateCommand": "cd src/Web && dotnet restore && dotnet build && dotnet dev-certs https",
     "portsAttributes": {
         "5309": {
