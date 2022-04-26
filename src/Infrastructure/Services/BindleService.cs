@@ -1,5 +1,6 @@
 using Deislabs.Bindle;
 using Hippo.Application.Common.Interfaces;
+using Microsoft.Extensions.Configuration;
 
 namespace Hippo.Infrastructure.Services;
 
@@ -7,8 +8,9 @@ public class BindleService : IBindleService
 {
     private BindleClient _client { get; set; }
 
-    public BindleService()
+    public BindleService(IConfiguration configuration)
     {
-        _client = new BindleClient(configuration.GetValue<string>("Bindle:Url", "http://127.0.0.1:8080/v1"));
+        var bindleUrl = configuration.GetValue<string>("Bindle:Url", "http://127.0.0.1:8080/v1");
+        _client = new BindleClient(bindleUrl);
     }
 }
