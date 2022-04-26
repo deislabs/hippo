@@ -1,7 +1,5 @@
 using Deislabs.Bindle;
 using Hippo.Application.Common.Interfaces;
-using Hippo.Application.Revisions.Commands;
-using Hippo.Core.Entities;
 using Microsoft.Extensions.Configuration;
 
 namespace Hippo.Infrastructure.Services;
