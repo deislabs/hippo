@@ -7,13 +7,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Hippo.Application.Revisions.Commands;
 
-public class ImportRevisionsCommand : IRequest<IEnumerable<Guid>>
+public class ImportRevisionsCommand : IRequest
 {
     [Required]
     public Guid AppId { get; set; }
 }
 
-public class ImportRevisionsCommandHandler : IRequestHandler<ImportRevisionsCommand, IEnumerable<Guid>>
+public class ImportRevisionsCommandHandler : IRequestHandler<ImportRevisionsCommand>
 {
     private readonly IApplicationDbContext _context;
     private readonly IBindleService _bindleService;
@@ -24,7 +24,7 @@ public class ImportRevisionsCommandHandler : IRequestHandler<ImportRevisionsComm
         _bindleService = bindleService;
     }
 
-    public async Task<IEnumerable<Guid>> Handle(ImportRevisionsCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(ImportRevisionsCommand request, CancellationToken cancellationToken)
     {
         var app = await _context.Apps
             .Where(a => a.Id == request.AppId)
@@ -32,7 +32,7 @@ public class ImportRevisionsCommandHandler : IRequestHandler<ImportRevisionsComm
         _ = app ?? throw new NotFoundException(nameof(App), request.AppId);
         if (app.StorageId is null)
         {
-            return new List<Guid>();
+            return Unit.Value;
         }
 
         var allAppRevisions = await _bindleService.GetBindleRevisionNumbers(app.StorageId);
@@ -43,7 +43,7 @@ public class ImportRevisionsCommandHandler : IRequestHandler<ImportRevisionsComm
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return missingRevisions.Select(r => r.Id).ToList();
+        return Unit.Value;
     }
 
     private static IEnumerable<Revision> GetMissingRevisions(IEnumerable<string> allAppRevisions, List<Revision> existingRevisions, Guid appId)
@@ -51,7 +51,7 @@ public class ImportRevisionsCommandHandler : IRequestHandler<ImportRevisionsComm
         return allAppRevisions.Where(revision => !existingRevisions.Any(er => er.RevisionNumber == revision))
             .Select(r => new Revision
             {
-                Id = appId,
+                AppId = appId,
                 RevisionNumber = r,
             })
             .ToList();
