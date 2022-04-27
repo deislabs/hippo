@@ -7,13 +7,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Hippo.Application.Revisions.Commands;
 
-public class ImportRevisionsCommand : IRequest<List<Revision>>
+public class ImportRevisionsCommand : IRequest<IEnumerable<Guid>>
 {
     [Required]
     public Guid AppId { get; set; }
 }
 
-public class ImportRevisionsCommandHandler : IRequestHandler<ImportRevisionsCommand, List<Revision>>
+public class ImportRevisionsCommandHandler : IRequestHandler<ImportRevisionsCommand, IEnumerable<Guid>>
 {
     private readonly IApplicationDbContext _context;
     private readonly IBindleService _bindleService;
@@ -24,41 +24,36 @@ public class ImportRevisionsCommandHandler : IRequestHandler<ImportRevisionsComm
         _bindleService = bindleService;
     }
 
-    public async Task<List<Revision>> Handle(ImportRevisionsCommand request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<Guid>> Handle(ImportRevisionsCommand request, CancellationToken cancellationToken)
     {
         var app = await _context.Apps
             .Where(a => a.Id == request.AppId)
             .SingleOrDefaultAsync(cancellationToken);
         _ = app ?? throw new NotFoundException(nameof(App), request.AppId);
-
-        var newRevisions = new List<Revision>();
         if (app.StorageId is null)
         {
-            return newRevisions;
+            return new List<Guid>();
         }
 
-        var appRevisions = await _bindleService.GetBindleRevisionNumbers(app.StorageId);
-        foreach (var revisionNumber in appRevisions)
-        {
-            var existingRevision = _context.Revisions
-                .FirstOrDefault(r => r.AppId == app.Id && r.RevisionNumber == revisionNumber);
-            if (existingRevision is not null)
-            {
-                continue;
-            }
+        var allAppRevisions = await _bindleService.GetBindleRevisionNumbers(app.StorageId);
+        var existingRevisions = _context.Revisions.Where(r => r.AppId == app.Id).ToList();
+        var missingRevisions = GetMissingRevisions(allAppRevisions, existingRevisions, app.Id);
 
-            var entity = new Revision
-            {
-                AppId = request.AppId,
-                RevisionNumber = revisionNumber,
-            };
-
-            _context.Revisions.Add(entity);
-            newRevisions.Add(entity);
-        }
+        _context.Revisions.AddRange(missingRevisions);
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return newRevisions;
+        return missingRevisions.Select(r => r.Id).ToList();
+    }
+
+    private static IEnumerable<Revision> GetMissingRevisions(IEnumerable<string> allAppRevisions, List<Revision> existingRevisions, Guid appId)
+    {
+        return allAppRevisions.Where(revision => !existingRevisions.Any(er => er.RevisionNumber == revision))
+            .Select(r => new Revision
+            {
+                Id = appId,
+                RevisionNumber = r,
+            })
+            .ToList();
     }
 }
