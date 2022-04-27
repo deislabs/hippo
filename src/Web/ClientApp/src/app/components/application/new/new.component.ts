@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faLock, faUser } from '@fortawesome/free-solid-svg-icons';
-import { AppService } from 'src/app/core/api/v1';
+import { AppService, StorageService } from 'src/app/core/api/v1';
 
 @Component({
   selector: 'app-application-new',
@@ -12,13 +12,14 @@ import { AppService } from 'src/app/core/api/v1';
 export class NewComponent implements OnInit {
   error = '';
   appForm!: FormGroup;
+  storageList: Array<string> = [];
   loading = false;
   submitted = false;
   returnUrl = '/';
   faUser = faUser;
   faLock = faLock;
 
-  constructor(private readonly appService: AppService, private route: ActivatedRoute, private readonly router: Router) { }
+  constructor(private readonly appService: AppService, private readonly storageService: StorageService, private route: ActivatedRoute, private readonly router: Router) { }
 
   ngOnInit() {
     this.appForm = new FormGroup({
@@ -29,6 +30,7 @@ export class NewComponent implements OnInit {
         Validators.required,
       ])
     });
+    this.storageList = ['first_storage', 'second_storage'];
 
     // get return url from route parameters or default to '/'
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';

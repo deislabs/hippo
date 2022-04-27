@@ -13,4 +13,10 @@ public class BindleService : IBindleService
         var bindleUrl = configuration.GetValue<string>("Bindle:Url", "http://127.0.0.1:8080/v1");
         _client = new BindleClient(bindleUrl);
     }
+
+    public async Task<List<string>> QueryAvailableStorages(string query, ulong? offset, int? limit)
+    {
+        var invoices = await _client.QueryInvoices(query, offset, limit);
+        return invoices.Select(i => i.Bindle.Name).Distinct().ToList();
+    }
 }

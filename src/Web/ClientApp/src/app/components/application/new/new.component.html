@@ -9,12 +9,13 @@
 </article>
 
 <form [formGroup]="appForm" (ngSubmit)="onSubmit()">
-	<div class="field">
-		<nav class="panel is-primary">
-			<p class="panel-heading">
-				Name
-			</p>
-			<div class="panel-block">
+	<nav class="panel is-primary">
+		<p class="panel-heading">
+			New Application
+		</p>
+		<div class="panel-block">
+			<div class="field">
+				<label class="label">Name</label>
 				<div class="control has-icons-left has-icons-right">
 					<input type="text" formControlName="name"
 						[ngClass]="{ 'is-danger': submitted && f['name'].errors }"
@@ -24,15 +25,10 @@
 					</div>
 				</div>
 			</div>
-		</nav>
-	</div>
-
-	<div class="field">
-		<nav class="panel is-primary">
-			<p class="panel-heading">
-				Storage
-			</p>
-			<div class="panel-block">
+		</div>
+		<div class="panel-block">
+			<div class="field">
+				<label class="label">Storage</label>
 				<div class="control has-icons-left">
 					<input type="text" formControlName="storageId"
 					[ngClass]="{ 'is-danger': submitted && f['storageId'].errors }"
@@ -45,14 +41,14 @@
 					</span>
 				</div>
 			</div>
-			<a class="panel-block is-active">
-				<span class="panel-icon">
-					<i class="fas fa-book" aria-hidden="true"></i>
-				</span>
-			  bulma
-			</a>
-		</nav>
-	</div>
+		</div>
+		<a *ngFor="let storage of storageList" class="panel-block is-active">
+			<span class="panel-icon">
+				<i class="fas fa-book" aria-hidden="true"></i>
+			</span>
+			{{ storage }}
+		</a>
+	</nav>
 
 	<button [disabled]="loading" class="button is-primary">
 		<span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
