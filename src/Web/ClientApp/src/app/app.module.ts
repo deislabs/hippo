@@ -27,7 +27,7 @@ import { environment } from './../environments/environment';
 
 export function apiConfigFactory(): Configuration {
 	const params: ConfigurationParameters = {
-		basePath: environment.basePath
+		basePath: `${window.location.protocol}//${window.location.host}`
 	};
 	return new Configuration(params);
 }
