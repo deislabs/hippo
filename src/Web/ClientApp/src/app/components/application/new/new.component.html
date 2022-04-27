@@ -10,27 +10,48 @@
 
 <form [formGroup]="appForm" (ngSubmit)="onSubmit()">
 	<div class="field">
-		<label class="label">Name</label>
-		<div class="control has-icons-left has-icons-right">
-			<input type="text" formControlName="name"
-				[ngClass]="{ 'is-danger': submitted && f['name'].errors }"
-				class="input" placeholder="amphibius" />
-			<div *ngIf="submitted && f['name'].errors" class="help is-danger">
-				<div *ngIf="f['name'].errors['required']">Name is required.</div>
+		<nav class="panel is-primary">
+			<p class="panel-heading">
+				Name
+			</p>
+			<div class="panel-block">
+				<div class="control has-icons-left has-icons-right">
+					<input type="text" formControlName="name"
+						[ngClass]="{ 'is-danger': submitted && f['name'].errors }"
+						class="input" placeholder="amphibius" />
+					<div *ngIf="submitted && f['name'].errors" class="help is-danger">
+						<div *ngIf="f['name'].errors['required']">Name is required.</div>
+					</div>
+				</div>
 			</div>
-		</div>
+		</nav>
 	</div>
 
 	<div class="field">
-		<label class="label">Storage ID</label>
-		<div class="control has-icons-left">
-			<input type="text" formControlName="storageId"
-			[ngClass]="{ 'is-danger': submitted && f['storageId'].errors }"
-				class="input" placeholder="amphibius" />
-			<div *ngIf="submitted && f['storageId'].errors" class="help is-danger">
-				<div *ngIf="f['storageId'].errors['required']">Storage ID is required.</div>
+		<nav class="panel is-primary">
+			<p class="panel-heading">
+				Storage
+			</p>
+			<div class="panel-block">
+				<div class="control has-icons-left">
+					<input type="text" formControlName="storageId"
+					[ngClass]="{ 'is-danger': submitted && f['storageId'].errors }"
+						class="input" placeholder="Storage ID" />
+					<div *ngIf="submitted && f['storageId'].errors" class="help is-danger">
+						<div *ngIf="f['storageId'].errors['required']">Storage ID is required.</div>
+					</div>
+					<span class="icon is-left">
+						<i class="fas fa-search" aria-hidden="true"></i>
+					</span>
+				</div>
 			</div>
-		</div>
+			<a class="panel-block is-active">
+				<span class="panel-icon">
+					<i class="fas fa-book" aria-hidden="true"></i>
+				</span>
+			  bulma
+			</a>
+		</nav>
 	</div>
 
 	<button [disabled]="loading" class="button is-primary">
