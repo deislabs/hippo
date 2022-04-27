@@ -23,10 +23,11 @@ import { NewComponent } from './components/application/new/new.component';
 import { NewComponent as NewChannelComponent } from './components/channel/new/new.component';
 import { ChannelComponent } from './components/channel/channel.component';
 import { HealthCheckComponent } from './components/health-check/health-check.component';
+import { environment } from './../environments/environment';
 
 export function apiConfigFactory(): Configuration {
 	const params: ConfigurationParameters = {
-		basePath: `https://localhost:5309`
+		basePath: environment.basePath
 	};
 	return new Configuration(params);
 }
