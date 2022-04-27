@@ -14,7 +14,7 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<SpaRoot>ClientApp</SpaRoot>
-	    <SpaProxyServerUrl>http://localhost:44467</SpaProxyServerUrl>
+		<SpaProxyServerUrl>http://localhost:44467</SpaProxyServerUrl>
 		<SpaProxyLaunchCommand>npm start</SpaProxyLaunchCommand>
 	</PropertyGroup>
 
