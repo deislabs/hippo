@@ -26,7 +26,7 @@ import { HealthCheckComponent } from './components/health-check/health-check.com
 
 export function apiConfigFactory(): Configuration {
 	const params: ConfigurationParameters = {
-		basePath: `${window.location.protocol}//${window.location.host}`
+		basePath: `https://localhost:5309`
 	};
 	return new Configuration(params);
 }
