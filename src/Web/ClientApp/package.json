@@ -1,7 +1,7 @@
 {
 	"scripts": {
 		"ng": "ng",
-		"start": "ng serve",
+		"start": "ng serve --port 44467",
 		"build": "ng build",
 		"watch": "ng build --watch --configuration development",
 		"test": "ng test",

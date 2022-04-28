@@ -14,6 +14,7 @@ public class NomadJob : Job
     private readonly string bindleUrl;
     private readonly string nomadBinaryPath;
     private readonly string datacenters;
+    private readonly string driver;
     private Process? process;
     private readonly IConfiguration _configuration;
 
@@ -25,6 +26,7 @@ public class NomadJob : Job
         bindleUrl = configuration.GetValue<string>("Bindle:Url", "http://127.0.0.1:8080/v1");
         nomadBinaryPath = configuration.GetValue<string>("Nomad:BinaryPath", (OperatingSystem.IsWindows() ? "nomad.exe" : "nomad"));
         datacenters = string.Join(", ", configuration.GetSection("Nomad:Datacenters").Get<string[]>().Select(item => "\"" + item + "\""));
+        driver = configuration.GetValue<string>("Nomad:Driver", OperatingSystem.IsLinux() ? "exec" : "raw_exec");
     }
 
     public void AddEnvironmentVariable(string key, string value)
@@ -187,6 +189,7 @@ job """ + Id + @""" {
     }
     task ""spin"" {
       driver = ""exec""
+      driver """ + driver + @""" {
 
       artifact {
         source = ""https://github.com/fermyon/spin/releases/download/v0.1.0/spin-v0.1.0-linux-amd64.tar.gz""
