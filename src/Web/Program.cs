@@ -39,17 +39,6 @@ builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services.Configure<ApiBehaviorOptions>(options =>
             options.SuppressModelStateInvalidFilter = true);
 
-builder.Services.AddCors(options =>
-{
-    options.AddDefaultPolicy(policy =>
-    {
-        policy.WithOrigins("http://localhost:44467")
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials();
-    });
-});
-
 builder.Services.AddAuthentication().AddCookie().AddJwtBearer(cfg =>
     {
         cfg.TokenValidationParameters = new TokenValidationParameters
@@ -97,8 +86,6 @@ app.UseHttpsRedirection();
 app.UseFileServer();
 
 app.UseRouting();
-
-app.UseCors();
 
 app.UseAuthentication();
 app.UseAuthorization();
