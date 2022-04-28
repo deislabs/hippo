@@ -18,10 +18,13 @@ public class CreateAppCommand : IRequest<Guid>
 public class CreateAppCommandHandler : IRequestHandler<CreateAppCommand, Guid>
 {
     private readonly IApplicationDbContext _context;
+    private readonly IBindleService _bindleService;
 
-    public CreateAppCommandHandler(IApplicationDbContext context)
+    public CreateAppCommandHandler(IApplicationDbContext context,
+        IBindleService bindleService)
     {
         _context = context;
+        _bindleService = bindleService;
     }
 
     public async Task<Guid> Handle(CreateAppCommand request, CancellationToken cancellationToken)
@@ -31,6 +34,13 @@ public class CreateAppCommandHandler : IRequestHandler<CreateAppCommand, Guid>
             Name = request.Name,
             StorageId = request.StorageId
         };
+
+        var storages = await _bindleService.QueryAvailableStorages(request.StorageId, 0, null);
+
+        if (!storages.Contains(request.StorageId))
+        {
+            throw new ArgumentException($"Storage ID not found: {request.StorageId}");
+        }
 
         _context.Apps.Add(entity);
 
