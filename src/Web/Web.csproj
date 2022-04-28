@@ -35,10 +35,6 @@
         <Exec WorkingDirectory="$(SpaRoot)\" Command="npm install" />
     </Target>
 
-    <Target Name="NpmRunBuild" BeforeTargets="Build" DependsOnTargets="NpmInstall">
-        <Exec WorkingDirectory="$(SpaRoot)\" Command="npm run build" />
-    </Target>
-
 	<Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
         <Exec WorkingDirectory="$(SpaRoot)\" Command="npm install" />
         <Exec WorkingDirectory="$(SpaRoot)\" Command="npm run build" />
