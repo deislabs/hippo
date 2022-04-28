@@ -14,11 +14,11 @@ public class BindleService : IBindleService
         _client = new BindleClient(bindleUrl);
     }
 
-    public async Task<List<string>> QueryAvailableStorages(string query, ulong? offset, int? limit)
+    public async Task<List<string?>> QueryAvailableStorages(string query, ulong? offset, int? limit)
     {
-        var invoices = await _client.QueryInvoices(query, offset, limit);
-        if (invoices == null || invoices.Count == 0)
-            return new List<string>();
-        return invoices.Select(i => i.Bindle.Name).Distinct().ToList();
+        var matches = await _client.QueryInvoices(query, offset, limit);
+        if (matches.Total == 0)
+            return new List<string?>();
+        return matches.Invoices.Select(i => i.Bindle?.Name).Distinct().ToList();
     }
 }
