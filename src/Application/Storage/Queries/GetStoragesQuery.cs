@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Hippo.Application.Revisions.Queries;
 
-public class ExportStoragesQuery : IRequest<ExportStoragesQueryVm>
+public class GetStoragesQuery : IRequest<GetStoragesQueryVm>
 {
-    public ExportStoragesQuery(string queryString, ulong? offset, int? limit)
+    public GetStoragesQuery(string queryString, ulong? offset, int? limit)
     {
         QueryString = queryString;
         Limit = limit;
@@ -20,7 +20,7 @@ public class ExportStoragesQuery : IRequest<ExportStoragesQueryVm>
     public ulong? Offset { get; set; }
 }
 
-public class ExportStoragesQueryHandler : IRequestHandler<ExportStoragesQuery, ExportStoragesQueryVm>
+public class ExportStoragesQueryHandler : IRequestHandler<GetStoragesQuery, GetStoragesQueryVm>
 {
     private readonly IBindleService _bindleService;
 
@@ -29,10 +29,10 @@ public class ExportStoragesQueryHandler : IRequestHandler<ExportStoragesQuery, E
         _bindleService = bindleService;
     }
 
-    public async Task<ExportStoragesQueryVm> Handle(ExportStoragesQuery request, CancellationToken cancellationToken)
+    public async Task<GetStoragesQueryVm> Handle(GetStoragesQuery request, CancellationToken cancellationToken)
     {
         var storages = await _bindleService.QueryAvailableStorages(request.QueryString, request.Offset, request.Limit);
-        var vm = new ExportStoragesQueryVm(storages);
+        var vm = new GetStoragesQueryVm(storages);
         return vm;
     }
 }

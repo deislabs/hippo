@@ -2,13 +2,13 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Hippo.Application.Revisions.Queries;
 
-public class ExportStoragesQueryVm
+public class GetStoragesQueryVm
 {
-    public ExportStoragesQueryVm(List<string> storages)
+    public GetStoragesQueryVm(List<string?> storages)
     {
         Storages = storages;
     }
 
     [Required]
-    public List<string> Storages { get; set; }
+    public List<string?> Storages { get; set; }
 }

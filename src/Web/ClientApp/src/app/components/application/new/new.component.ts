@@ -74,7 +74,7 @@ export class NewComponent implements OnInit {
 
   queryStorages(newQuery: any) {
     this.storageListLoading = true;
-    return this.storageService.apiStorageExportGet(newQuery, 0, 5);
+    return this.storageService.apiStorageQueryGet(newQuery, 0, 5);
   }
 
   selectStorage(storage: string) {
