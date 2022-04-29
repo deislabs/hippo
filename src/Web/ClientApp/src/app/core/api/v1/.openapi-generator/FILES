@@ -35,6 +35,7 @@ model/environmentVariablesVm.ts
 model/models.ts
 model/registerRevisionCommand.ts
 model/revision.ts
+model/revisionDetailsDto.ts
 model/revisionDto.ts
 model/revisionsVm.ts
 model/tokenInfo.ts

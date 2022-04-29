@@ -20,6 +20,7 @@ export * from './environmentVariableDto';
 export * from './environmentVariablesVm';
 export * from './registerRevisionCommand';
 export * from './revision';
+export * from './revisionDetailsDto';
 export * from './revisionDto';
 export * from './revisionsVm';
 export * from './tokenInfo';
