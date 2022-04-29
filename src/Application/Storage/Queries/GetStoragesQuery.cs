@@ -32,7 +32,7 @@ public class ExportStoragesQueryHandler : IRequestHandler<GetStoragesQuery, GetS
     public async Task<GetStoragesQueryVm> Handle(GetStoragesQuery request, CancellationToken cancellationToken)
     {
         var storages = await _bindleService.QueryAvailableStorages(request.QueryString, request.Offset, request.Limit);
-        var vm = new GetStoragesQueryVm(storages);
+        var vm = new GetStoragesQueryVm(storages.ToList());
         return vm;
     }
 }
