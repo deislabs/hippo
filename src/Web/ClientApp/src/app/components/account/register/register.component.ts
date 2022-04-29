@@ -11,7 +11,7 @@ import { MustMatch } from 'src/app/_helpers/must-match.validator';
 	styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
-	error = '';
+	errors:Array<string> = [];
 	registrationForm!: FormGroup;
 	loading = false;
 	submitted = false;
@@ -57,12 +57,22 @@ export class RegisterComponent implements OnInit {
 				{
 					// TODO: navigate to registration confirmation page
 					next: () => this.router.navigate(['/']),
-					error: (error) => {
-						console.log(error);
-						this.error = (error.message) ? error.message : error.status ? `${error.status} - ${error.statusText}` : 'Server error';
+					error: (err) => {
+						console.log(err.error.errors);
+						this.errors = this.parseRegistrationErrors(err.error.errors);
 						this.loading = false;
 					}
 				}
 			);
+	}
+
+	parseRegistrationErrors(error: any) {
+		let errors = [];
+		for (var prop in error) {
+			if (error.hasOwnProperty(prop)) {
+				errors.push(...error[prop]);
+			}
+		}
+		return errors;
 	}
 }
