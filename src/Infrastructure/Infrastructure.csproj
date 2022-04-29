@@ -28,11 +28,4 @@
 		<ProjectReference Include="..\Application\Application.csproj" />
 		<ProjectReference Include="..\Core\Core.csproj" />
 	</ItemGroup>
-
-	<ItemGroup>
-	  <Reference Include="Bindle">
-	    <HintPath>Packages\Bindle.dll</HintPath>
-	  </Reference>
-	</ItemGroup>
-
 </Project>
