@@ -1,8 +1,8 @@
-using System.ComponentModel.DataAnnotations;
+using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Core.Entities;
-using Hippo.Core.Events;
 using MediatR;
+using System.ComponentModel.DataAnnotations;
 
 namespace Hippo.Application.Apps.Commands;
 
@@ -39,7 +39,7 @@ public class CreateAppCommandHandler : IRequestHandler<CreateAppCommand, Guid>
 
         if (!storages.Contains(request.StorageId))
         {
-            throw new ArgumentException($"Storage ID not found: {request.StorageId}");
+            throw new NotFoundException($"Storage ID not found: {request.StorageId}");
         }
 
         _context.Apps.Add(entity);
