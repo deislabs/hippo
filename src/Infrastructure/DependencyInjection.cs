@@ -55,6 +55,8 @@ public static class DependencyInjection
 
         services.AddTransient<ITokenService, TokenService>();
 
+        services.AddTransient<IBindleService, BindleService>();
+
         services.Configure<IdentityOptions>(options =>
         {
             options.Password.RequireDigit = false;
