@@ -2,9 +2,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Hippo.Application.Revisions.Queries;
 
-public class GetStoragesQueryVm
+public class StorageList
 {
-    public GetStoragesQueryVm(List<string?> storages)
+    public StorageList(List<string?> storages)
     {
         Storages = storages;
     }

@@ -11,7 +11,7 @@
  */
 
 
-export interface GetStoragesQueryVm { 
+export interface StorageList { 
     storages: Array<string>;
 }
 

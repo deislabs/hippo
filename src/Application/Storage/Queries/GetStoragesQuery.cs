@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Hippo.Application.Revisions.Queries;
 
-public class GetStoragesQuery : IRequest<GetStoragesQueryVm>
+public class GetStoragesQuery : IRequest<StorageList>
 {
     public GetStoragesQuery(string queryString, ulong? offset, int? limit)
     {
@@ -20,7 +20,7 @@ public class GetStoragesQuery : IRequest<GetStoragesQueryVm>
     public ulong? Offset { get; set; }
 }
 
-public class ExportStoragesQueryHandler : IRequestHandler<GetStoragesQuery, GetStoragesQueryVm>
+public class ExportStoragesQueryHandler : IRequestHandler<GetStoragesQuery, StorageList>
 {
     private readonly IBindleService _bindleService;
 
@@ -29,10 +29,10 @@ public class ExportStoragesQueryHandler : IRequestHandler<GetStoragesQuery, GetS
         _bindleService = bindleService;
     }
 
-    public async Task<GetStoragesQueryVm> Handle(GetStoragesQuery request, CancellationToken cancellationToken)
+    public async Task<StorageList> Handle(GetStoragesQuery request, CancellationToken cancellationToken)
     {
         var storages = await _bindleService.QueryAvailableStorages(request.QueryString, request.Offset, request.Limit);
-        var vm = new GetStoragesQueryVm(storages.ToList());
+        var vm = new StorageList(storages.ToList());
         return vm;
     }
 }

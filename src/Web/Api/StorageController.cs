@@ -9,8 +9,8 @@ namespace Hippo.Web.Api;
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class StorageController : ApiControllerBase
 {
-    [HttpGet("query")]
-    public async Task<GetStoragesQueryVm> QueryStorages([FromQuery] string queryString,
+    [HttpGet]
+    public async Task<StorageList> QueryStorages([FromQuery] string queryString,
         [FromQuery] ulong? offset,
         [FromQuery] int? limit)
     {

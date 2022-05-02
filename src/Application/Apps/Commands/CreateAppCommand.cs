@@ -35,13 +35,6 @@ public class CreateAppCommandHandler : IRequestHandler<CreateAppCommand, Guid>
             StorageId = request.StorageId
         };
 
-        var storages = await _bindleService.QueryAvailableStorages(request.StorageId, 0, null);
-
-        if (!storages.Contains(request.StorageId))
-        {
-            throw new NotFoundException($"Storage ID not found: {request.StorageId}");
-        }
-
         _context.Apps.Add(entity);
 
         await _context.SaveChangesAsync(cancellationToken);
