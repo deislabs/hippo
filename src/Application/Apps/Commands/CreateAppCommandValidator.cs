@@ -28,7 +28,7 @@ public class CreateAppCommandValidator : AbstractValidator<CreateAppCommand>
 
         RuleFor(a => a.StorageId)
             .NotEmpty().WithMessage("Storage ID is required.")
-            .MustAsync(BeValidStorageId).WithMessage("Storage ID not found")
+            .MustAsync(ExistInBindleServer).WithMessage("Storage ID not found")
             .MaximumLength(200)
             .Matches(validStorageId);
 
@@ -39,7 +39,7 @@ public class CreateAppCommandValidator : AbstractValidator<CreateAppCommand>
         return await _context.Apps.AllAsync(a => a.Name != name, cancellationToken);
     }
 
-    public async Task<bool> BeValidStorageId(CreateAppCommand model, string storageId, CancellationToken cancellationToken)
+    public async Task<bool> ExistInBindleServer(CreateAppCommand model, string storageId, CancellationToken cancellationToken)
     {
         var storages = await _bindleService.QueryAvailableStorages(storageId, 0, null);
 
