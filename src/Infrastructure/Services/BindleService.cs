@@ -14,9 +14,10 @@ public class BindleService : IBindleService
         _client = new BindleClient(bindleUrl);
     }
 
-    public async Task<IEnumerable<string>> GetBindleRevisionNumbers(string bindleId)
+    public async Task<IEnumerable<string?>> GetBindleRevisionNumbers(string bindleId)
     {
         return (await _client.QueryInvoices(bindleId))
+            .Invoices
             .Where(i => i.Bindle.Name == bindleId)
             .Select(i => i.Bindle.Version)
             .ToList();
