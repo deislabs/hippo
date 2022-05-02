@@ -49,13 +49,16 @@ public class CreateChannelCommandHandler : IRequestHandler<CreateChannelCommand,
             .Where(a => a.Id == request.AppId)
             .SingleOrDefaultAsync(cancellationToken);
         _ = app ?? throw new NotFoundException(nameof(App), request.AppId);
+        var defaultDomain = $"{request.Name}.{app.Name}.{_config.PlatformDomain}"
+            .Replace('_', '-')
+            .ToLower();
 
         var entity = new Channel
         {
             AppId = request.AppId,
             App = app,
             Name = request.Name,
-            Domain = (request.Domain is not null) ? request.Domain : $"{request.Name}.{app.Name}.{_config.PlatformDomain}",
+            Domain = (request.Domain is not null) ? request.Domain : defaultDomain,
             RevisionSelectionStrategy = request.RevisionSelectionStrategy,
             RangeRule = request.RangeRule,
             ActiveRevisionId = request.ActiveRevisionId,
