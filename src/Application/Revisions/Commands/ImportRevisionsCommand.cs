@@ -46,7 +46,7 @@ public class ImportRevisionsCommandHandler : IRequestHandler<ImportRevisionsComm
         return Unit.Value;
     }
 
-    private static IEnumerable<Revision> GetMissingRevisions(IEnumerable<string> allAppRevisions, List<Revision> existingRevisions, Guid appId)
+    private static IEnumerable<Revision> GetMissingRevisions(IEnumerable<string?> allAppRevisions, List<Revision> existingRevisions, Guid appId)
     {
         return allAppRevisions.Where(revision => !existingRevisions.Any(er => er.RevisionNumber == revision))
             .Select(r => new Revision
