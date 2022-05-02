@@ -59,14 +59,22 @@ export class RegisterComponent implements OnInit {
 					next: () => this.router.navigate(['/']),
 					error: (err) => {
 						console.log(err.error.errors);
-						this.errors = this.parseRegistrationErrors(err.error.errors);
+						this.errors = this.parseError(err.error);
 						this.loading = false;
 					}
 				}
 			);
 	}
 
-	parseRegistrationErrors(error: any) {
+	parseError(error: any) {
+		if (error.errors) {
+			return this.parseValidationErrors(error.errors);
+		} else {
+			return [error.title];
+		}
+	}
+
+	parseValidationErrors(error: any) {
 		let errors = [];
 		for (var prop in error) {
 			if (error.hasOwnProperty(prop)) {
