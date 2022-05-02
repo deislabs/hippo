@@ -35,7 +35,7 @@ public class CreateInitialChannel : INotificationHandler<DomainEventNotification
             Name = "Production",
             RevisionSelectionStrategy = ChannelRevisionSelectionStrategy.UseRangeRule,
             RangeRule = "*",
-            Domain = $"{app.Name}.{_config.PlatformDomain}",
+            Domain = $"{app.Name}.{_config.PlatformDomain}".Replace('_', '-').ToLower(),
         };
 
          await _mediator.Send(command, cancellationToken);
