@@ -13,6 +13,7 @@ public class NomadJob : Job
     private readonly Dictionary<string, string> environmentVariables = new Dictionary<string, string>();
     private readonly string bindleUrl;
     private readonly string nomadBinaryPath;
+    private readonly string spinBinaryPath;
     private readonly string datacenters;
     private readonly string driver;
     private Process? process;
@@ -25,8 +26,9 @@ public class NomadJob : Job
         Domain = domain;
         bindleUrl = configuration.GetValue<string>("Bindle:Url", "http://127.0.0.1:8080/v1");
         nomadBinaryPath = configuration.GetValue<string>("Nomad:BinaryPath", (OperatingSystem.IsWindows() ? "nomad.exe" : "nomad"));
+        spinBinaryPath = configuration.GetValue<string>("Spin:BinaryPath", (OperatingSystem.IsWindows() ? "spin.exe" : "spin"));
         datacenters = string.Join(", ", configuration.GetSection("Nomad:Datacenters").Get<string[]>().Select(item => "\"" + item + "\""));
-        driver = configuration.GetValue<string>("Nomad:Driver", OperatingSystem.IsLinux() ? "exec" : "raw_exec");
+        driver = configuration.GetValue<string>("Nomad:Driver", (OperatingSystem.IsLinux() ? "exec" : "raw_exec"));
     }
 
     public void AddEnvironmentVariable(string key, string value)
@@ -188,22 +190,15 @@ job """ + Id + @""" {
       }
     }
     task ""spin"" {
-      driver = ""exec""
-      driver """ + driver + @""" {
+      driver = """ + driver + @"""
 
-      artifact {
-        source = ""https://github.com/fermyon/spin/releases/download/v0.1.0/spin-v0.1.0-linux-amd64.tar.gz""
-        options {
-          checksum = ""sha256:de01ecd8d67dc218fc82690fd987e67cd8247477d24f0f1ac443a03e549c54ca""
-        }
-      }
       env {
         RUST_LOG = ""warn,spin=debug""
         BINDLE_URL = var.bindle_url
         SPIN_LOG_DIR = ""local/log""
       }
       config {
-        command = ""spin""
+        command = """ + spinBinaryPath + @"""
         args = [
           ""up"",
           ""--listen"", ""${NOMAD_IP_http}:${NOMAD_PORT_http}"",
