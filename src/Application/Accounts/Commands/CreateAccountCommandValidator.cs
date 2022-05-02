@@ -15,14 +15,14 @@ public class CreateAccountCommandValidator : AbstractValidator<CreateAccountComm
         _identityService = identityService;
 
         RuleFor(a => a.UserName)
-            .NotEmpty()
-            .MaximumLength(64)
-            .Matches(validUserName)
+            .NotEmpty().WithMessage("The username cannot be empty")
+            .MaximumLength(64).WithMessage("The username cannot be longer than 64 characters")
+            .Matches(validUserName).WithMessage("The username cannot contain special characters")
             .MustAsync(BeUniqueUserName).WithMessage("The specified username already exists.");
 
         RuleFor(a => a.Password)
-            .NotEmpty()
-            .MinimumLength(6);
+            .NotEmpty().WithMessage("The password cannot be empty")
+            .MinimumLength(6).WithMessage("The password must be at least 6 characters long");
     }
 
     public async Task<bool> BeUniqueUserName(string userName, CancellationToken cancellationToken)
