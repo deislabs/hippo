@@ -1,14 +1,15 @@
-<article *ngIf="error" class="message is-danger">
-	<div class="message-header">
-		<p>Error</p>
-		<button class="delete" aria-label="delete"></button>
-	</div>
-	<div class="message-body">
-		{{error}}
-	</div>
-</article>
-
 <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
+	<article *ngIf="errors && errors.length > 0" class="message is-danger">
+		<div class="message-header">
+			<p>Error</p>
+		</div>
+		<div class="message-body">
+			<p *ngFor="let error of errors" >
+				{{error}}
+			</p>
+		</div>
+	</article>
+
 	<div class="field">
 		<label class="label"><fa-icon class="icon" [icon]="faUser"></fa-icon>Username</label>
 		<div class="control has-icons-left has-icons-right">
