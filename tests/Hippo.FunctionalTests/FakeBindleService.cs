@@ -5,9 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hippo.FunctionalTests
+namespace Hippo.FunctionalTests;
+
+internal class FakeBindleService : IBindleService
 {
-    internal class FakeBindleService : IBindleService
-    {
-    }
 }
