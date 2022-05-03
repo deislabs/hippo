@@ -30,6 +30,10 @@
 				class="input" placeholder="make it strong!" />
 			<div *ngIf="submitted && f['password'].errors" class="help is-danger">
 				<div *ngIf="f['password'].errors['required']">Password is required.</div>
+				<div *ngIf="f['password'].errors['minlength']">Password must be at least 8 characters long.</div>
+			</div>
+			<div *ngIf="submitted && registrationForm.errors?.['mustMatch']" class="help is-danger">
+				Passwords must match.
 			</div>
 		</div>
 	</div>
@@ -42,6 +46,10 @@
 				class="input" placeholder="make it strong!" />
 			<div *ngIf="submitted && f['passwordConfirm'].errors" class="help is-danger">
 				<div *ngIf="f['passwordConfirm'].errors['required']">Password is required.</div>
+				<div *ngIf="f['passwordConfirm'].errors['minlength']">Password must be at least 8 characters long.</div>
+			</div>
+			<div *ngIf="submitted && registrationForm.errors?.['mustMatch']" class="help is-danger">
+				Passwords must match.
 			</div>
 		</div>
 	</div>
