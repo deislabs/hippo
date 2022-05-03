@@ -22,6 +22,7 @@ export * from './registerRevisionCommand';
 export * from './revision';
 export * from './revisionDto';
 export * from './revisionsVm';
+export * from './storageList';
 export * from './tokenInfo';
 export * from './updateAppCommand';
 export * from './updateCertificateCommand';
