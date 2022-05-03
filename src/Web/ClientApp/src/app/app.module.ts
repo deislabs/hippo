@@ -5,7 +5,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AppRoutingModule } from './app-routing.module';
 import { ApiModule, Configuration, ConfigurationParameters } from './core/api/v1';
 import { AppComponent } from './app.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { TokenInterceptor } from './_helpers/token.interceptor';
 import { ApplicationComponent } from './components/application/application.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
@@ -56,6 +56,7 @@ export function apiConfigFactory(): Configuration {
 		ApiModule.forRoot(apiConfigFactory),
 		HttpClientModule,
 		ReactiveFormsModule,
+		FormsModule,
 		FontAwesomeModule
 	],
 	providers: [

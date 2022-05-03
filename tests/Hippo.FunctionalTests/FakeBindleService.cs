@@ -10,4 +10,9 @@ internal class FakeBindleService : IBindleService
     {
         return await Task.FromResult(new List<string> { "1.0.0" });
     }
+    
+    public async Task<IEnumerable<string>> QueryAvailableStorages(string query, ulong? offset, int? limit)
+    {
+        return await Task.FromResult(new List<string> { query });
+    }
 }
