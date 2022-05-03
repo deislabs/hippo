@@ -31,11 +31,11 @@ export class RegisterComponent implements OnInit {
 				]),
 				password: new FormControl('', [
 					Validators.required,
-					Validators.minLength(8),
+					Validators.minLength(6),
 				]),
 				passwordConfirm: new FormControl('', [
 					Validators.required,
-					Validators.minLength(8)
+					Validators.minLength(6)
 				])
 			},
 			MustMatch('password', 'passwordConfirm'),
