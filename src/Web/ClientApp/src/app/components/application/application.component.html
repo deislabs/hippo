@@ -1,10 +1,10 @@
 <div class="tabs">
     <ul>
         <li [ngClass]="{ 'is-active': activeTab == tabs.Channels }"
-            (click)="changeTab('Channels')">
+            (click)="changeTab(tabs.Channels)">
             <a>Channels</a>
         </li>
-        <li (click)="changeTab('Settings')"
+        <li (click)="changeTab(tabs.Settings)"
             [ngClass]="{ 'is-active': activeTab == tabs.Settings }">
             <a>Settings</a>
         </li>
