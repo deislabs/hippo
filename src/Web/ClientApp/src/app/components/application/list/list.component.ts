@@ -19,17 +19,4 @@ export class ListComponent implements OnInit {
 	refreshData() {
 		this.appService.apiAppGet().subscribe(vm => (this.apps = vm.apps));
 	}
-
-	deleteApp(id:string) {
-		this.appService.apiAppIdDelete(id)
-		.subscribe({
-			next: () => this.refreshData(),
-			error: (error) => {
-				console.log(error);
-				this.error = (error.message) ? error.message : error.status ? `${error.status} - ${error.statusText}` : 'Server error';
-			}
-		});
-	}
-
-	editApp(id:string) { }
 }
