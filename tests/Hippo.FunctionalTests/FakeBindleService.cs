@@ -5,13 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Hippo.FunctionalTests
+namespace Hippo.FunctionalTests;
+
+internal class FakeBindleService : IBindleService
 {
-    internal class FakeBindleService : IBindleService
+    public async Task<IEnumerable<string>> QueryAvailableStorages(string query, ulong? offset, int? limit)
     {
-        public async Task<IEnumerable<string>> QueryAvailableStorages(string query, ulong? offset, int? limit)
-        {
-            return await Task.FromResult(new List<string> { query });
-        }
+        return await Task.FromResult(new List<string> { query });
     }
 }
