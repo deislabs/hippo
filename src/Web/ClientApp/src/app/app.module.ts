@@ -50,7 +50,7 @@ export function apiConfigFactory(): Configuration {
 		NewChannelComponent,
 		ChannelComponent,
 		HealthCheckComponent,
-  SettingsComponent,
+		SettingsComponent,
 	],
 	imports: [
 		BrowserModule,
