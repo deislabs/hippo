@@ -1,8 +1,8 @@
-using System.ComponentModel.DataAnnotations;
+using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Core.Entities;
-using Hippo.Core.Events;
 using MediatR;
+using System.ComponentModel.DataAnnotations;
 
 namespace Hippo.Application.Apps.Commands;
 
@@ -18,10 +18,13 @@ public class CreateAppCommand : IRequest<Guid>
 public class CreateAppCommandHandler : IRequestHandler<CreateAppCommand, Guid>
 {
     private readonly IApplicationDbContext _context;
+    private readonly IBindleService _bindleService;
 
-    public CreateAppCommandHandler(IApplicationDbContext context)
+    public CreateAppCommandHandler(IApplicationDbContext context,
+        IBindleService bindleService)
     {
         _context = context;
+        _bindleService = bindleService;
     }
 
     public async Task<Guid> Handle(CreateAppCommand request, CancellationToken cancellationToken)
