@@ -11,7 +11,7 @@ jobs:
     name: Push devcontainer/codespaces image to GitHub Package Registry
     runs-on: ubuntu-latest
     env:
-      DEVCONTAINER_VERSION: v0.7.0
+      DEVCONTAINER_VERSION: v0.8.0
     permissions:
       contents: read
       packages: write
