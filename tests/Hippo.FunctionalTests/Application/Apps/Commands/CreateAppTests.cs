@@ -5,7 +5,7 @@ using Xunit;
 
 namespace Hippo.FunctionalTests.Application.Apps.Commands;
 
-public class CreateAccountTests : TestBase
+public class CreateAppTests : TestBase
 {
     [Fact]
     public async Task ShouldRequireUniqueName()

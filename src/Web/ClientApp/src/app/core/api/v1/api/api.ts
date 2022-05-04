@@ -10,4 +10,6 @@ export * from './environmentVariable.service';
 import { EnvironmentVariableService } from './environmentVariable.service';
 export * from './revision.service';
 import { RevisionService } from './revision.service';
-export const APIS = [AccountService, AppService, CertificateService, ChannelService, EnvironmentVariableService, RevisionService];
+export * from './storage.service';
+import { StorageService } from './storage.service';
+export const APIS = [AccountService, AppService, CertificateService, ChannelService, EnvironmentVariableService, RevisionService, StorageService];
