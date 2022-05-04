@@ -16,7 +16,7 @@ public class BindleService : IBindleService
         _client = new BindleClient(bindleUrl);
     }
 
-    public async Task<RevisionDetailsDto> GetRevisionDetails(string revisionId)
+    public async Task<RevisionDetails> GetRevisionDetails(string revisionId)
     {
         var invoice = await _client.GetInvoice(revisionId);
         if (invoice is null)
@@ -24,7 +24,7 @@ public class BindleService : IBindleService
             throw new NotFoundException($"Revision Id: {revisionId}");
         }
 
-        return new RevisionDetailsDto
+        return new RevisionDetails
         {
             Name = invoice.Bindle.Name,
             Version = invoice.Bindle.Version,

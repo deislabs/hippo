@@ -7,12 +7,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Hippo.Application.Revisions.Queries;
 
-public class GetActiveRevisionDetailsQuery : IRequest<RevisionDetailsDto?>
+public class GetActiveRevisionDetailsQuery : IRequest<RevisionDetails?>
 {
     public Guid ChannelId { get; set; }
 }
 
-public class GetActiveRevisionDetailsQueryHandler : IRequestHandler<GetActiveRevisionDetailsQuery, RevisionDetailsDto?>
+public class GetActiveRevisionDetailsQueryHandler : IRequestHandler<GetActiveRevisionDetailsQuery, RevisionDetails?>
 {
     private readonly IApplicationDbContext _context;
     private readonly IBindleService _bindleService;
@@ -23,7 +23,7 @@ public class GetActiveRevisionDetailsQueryHandler : IRequestHandler<GetActiveRev
         _bindleService = bindleService;
     }
 
-    public async Task<RevisionDetailsDto?> Handle(GetActiveRevisionDetailsQuery request, CancellationToken cancellationToken)
+    public async Task<RevisionDetails?> Handle(GetActiveRevisionDetailsQuery request, CancellationToken cancellationToken)
     {
         var channel = _context.Channels
             .Where(c => c.Id == request.ChannelId)

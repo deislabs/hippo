@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Hippo.Application.Revisions.Queries;
 
-public class RevisionDetailsDto
+public class RevisionDetails
 {
     [Required]
     public string Name { get; set; } = "";
