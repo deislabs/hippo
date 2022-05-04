@@ -1,5 +1,4 @@
 export class ApplicationTabs {
-    public static Channels = "Channels";
-    public static Settings = "Settings";
- }
- 
+	public static Channels = "Channels";
+	public static Settings = "Settings";
+}
