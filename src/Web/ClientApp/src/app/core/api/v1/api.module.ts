@@ -8,6 +8,7 @@ import { CertificateService } from './api/certificate.service';
 import { ChannelService } from './api/channel.service';
 import { EnvironmentVariableService } from './api/environmentVariable.service';
 import { RevisionService } from './api/revision.service';
+import { StorageService } from './api/storage.service';
 
 @NgModule({
   imports:      [],
