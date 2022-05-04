@@ -8,6 +8,7 @@ api/certificate.service.ts
 api/channel.service.ts
 api/environmentVariable.service.ts
 api/revision.service.ts
+api/storage.service.ts
 configuration.ts
 encoder.ts
 git_push.sh
@@ -38,6 +39,7 @@ model/revision.ts
 model/revisionDetailsDto.ts
 model/revisionDto.ts
 model/revisionsVm.ts
+model/storageList.ts
 model/tokenInfo.ts
 model/updateAppCommand.ts
 model/updateCertificateCommand.ts
