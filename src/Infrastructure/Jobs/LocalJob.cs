@@ -88,7 +88,7 @@ public class LocalJob : Job
         return new ProcessStartInfo
         {
             FileName = spinBinaryPath,
-            Arguments = $"up --bindle {BindleId} --server {bindleUrl} --listen 127.0.0.1:{GetAvailablePort()} {env}",
+            Arguments = $"up --bindle {BindleId} --bindle-server {bindleUrl} --listen 127.0.0.1:{GetAvailablePort()} {env}",
             RedirectStandardError = true,
             RedirectStandardOutput = true,
             UseShellExecute = false,
