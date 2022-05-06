@@ -1,6 +1,8 @@
+import { toBase64String } from '@angular/compiler/src/output/source_map';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AppDto, AppService } from 'src/app/core/api/v1';
+import { ApplicationTabs } from 'src/app/_helpers/constants';
 
 @Component({
 	selector: 'app-application',
@@ -10,6 +12,8 @@ import { AppDto, AppService } from 'src/app/core/api/v1';
 export class ApplicationComponent implements OnInit {
 	id!: string;
 	app!: AppDto;
+	tabs = ApplicationTabs;
+	activeTab = ApplicationTabs.Channels; 
 
 	constructor(
 		private route: ActivatedRoute,
@@ -21,6 +25,10 @@ export class ApplicationComponent implements OnInit {
 			this.id = params['id'];
 			this.refreshData();
 		});
+	}
+
+	changeTab(tab: string) {
+		this.activeTab = tab;
 	}
 
 	refreshData() {
