@@ -7,12 +7,14 @@ namespace Hippo.Infrastructure.Jobs;
 public class NomadJobFactory : IJobFactory
 {
     private readonly IConfiguration configuration;
+    private readonly INomadService _nomadService;
 
     private List<NomadJob> jobs = new List<NomadJob>();
 
-    public NomadJobFactory(IConfiguration configuration)
+    public NomadJobFactory(IConfiguration configuration, INomadService nomadService)
     {
         this.configuration = configuration;
+        _nomadService = nomadService;
     }
 
     public Job Start(Guid id, string bindleId, Dictionary<string, string> environmentVariables, string? domain)
@@ -26,7 +28,7 @@ public class NomadJobFactory : IJobFactory
             {
                 job.AddEnvironmentVariable(e.Key, e.Value);
             }
-            job.Reload();
+            _nomadService.ReloadJob(job);
         }
         else
         {
@@ -35,7 +37,7 @@ public class NomadJobFactory : IJobFactory
             {
                 job.AddEnvironmentVariable(e.Key, e.Value);
             }
-            job.Start();
+            _nomadService.PostJob(job);
             jobs.Add(job);
         }
         return job;

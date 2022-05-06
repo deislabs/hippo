@@ -39,7 +39,7 @@ public class RevisionCreatedEventHandler : INotificationHandler<DomainEventNotif
             if (channel.RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseRangeRule)
             {
                 var activeRevision = RevisionRangeRule.Parse(channel.RangeRule).Match(channel.App.Revisions);
-                if (activeRevision is not null && activeRevision != channel.ActiveRevision)
+                if (activeRevision is not null && activeRevision != channel.ActiveRevision && activeRevision.RevisionNumber == domainEvent.Entity.RevisionNumber)
                 {
                     _logger.LogInformation($"Channel {channel.Id} changed its active revision to {activeRevision.Id}");
                     channel.ActiveRevision = activeRevision;

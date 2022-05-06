@@ -10,12 +10,12 @@ public class NomadJob : Job
 {
     public string BindleId;
     public string Domain;
-    private readonly Dictionary<string, string> environmentVariables = new Dictionary<string, string>();
-    private readonly string bindleUrl;
-    private readonly string nomadBinaryPath;
-    private readonly string spinBinaryPath;
-    private readonly string datacenters;
-    private readonly string driver;
+    public readonly Dictionary<string, string> environmentVariables = new Dictionary<string, string>();
+    public readonly string bindleUrl;
+    public readonly string nomadBinaryPath;
+    public readonly string spinBinaryPath;
+    public List<string> datacenters;
+    public readonly string driver;
     private Process? process;
     private readonly IConfiguration _configuration;
 
@@ -27,7 +27,7 @@ public class NomadJob : Job
         bindleUrl = configuration.GetValue<string>("Bindle:Url", "http://127.0.0.1:8080/v1");
         nomadBinaryPath = configuration.GetValue<string>("Nomad:BinaryPath", (OperatingSystem.IsWindows() ? "nomad.exe" : "nomad"));
         spinBinaryPath = configuration.GetValue<string>("Spin:BinaryPath", (OperatingSystem.IsWindows() ? "spin.exe" : "spin"));
-        datacenters = string.Join(", ", configuration.GetSection("Nomad:Datacenters").Get<string[]>().Select(item => "\"" + item + "\""));
+        datacenters = configuration.GetSection("Nomad:Datacenters").Get<string[]>().ToList();
         driver = configuration.GetValue<string>("Nomad:Driver", (OperatingSystem.IsLinux() ? "exec" : "raw_exec"));
     }
 

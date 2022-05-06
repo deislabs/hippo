@@ -20,6 +20,9 @@ public class ChannelDto : IMapFrom<Channel>
     public Guid AppId { get; set; }
 
     [Required]
+    public string Status { get; set; } = "";
+
+    [Required]
     public string Name { get; set; } = "";
 
     [Required]
