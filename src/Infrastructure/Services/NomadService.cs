@@ -78,7 +78,7 @@ public class NomadService : INomadService
                                 {
                                     Name = "alive",
                                     Type = "tcp",
-                                    Interval = 1000000000, // is this in mseconds ?? 
+                                    Interval = 10000000000,
                                     Timeout = 2000000000
                                 }
                             }
