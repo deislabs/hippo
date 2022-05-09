@@ -32,9 +32,6 @@ export class NewComponent implements OnInit {
   ngOnInit() {
     this.appForm = new FormGroup({
       name: new FormControl('', [
-        Validators.required
-      ]),
-      storageId: new FormControl('', [
         Validators.required,
       ])
     });
@@ -80,7 +77,7 @@ export class NewComponent implements OnInit {
   selectStorage(storage: string) {
     this.selectedStorage = storage;
     this.appForm.patchValue({
-      storageId: storage
+      name: storage
    });
   }
 
@@ -94,7 +91,7 @@ export class NewComponent implements OnInit {
     }
 
     this.loading = true;
-    this.appService.apiAppPost({ name: this.f['name'].value, storageId: this.f['storageId'].value })
+    this.appService.apiAppPost({ name: this.f['name'].value, storageId: this.f['name'].value })
     .subscribe({
       // TODO: navigate to registration confirmation page
       next: () => this.router.navigate(['/app']),

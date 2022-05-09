@@ -18,22 +18,6 @@
 				<div class="panel-block">
 					<div class="control">
 						<label class="label">Name</label>
-						<div class="control has-icons-left has-icons-right">
-							<input type="text" formControlName="name"
-								[ngClass]="{ 'is-danger': submitted && f['name'].errors }"
-								class="input" placeholder="Name your application" />
-							<div *ngIf="submitted && f['name'].errors" class="help is-danger">
-								<div *ngIf="f['name'].errors['required']">Name is required.</div>
-							</div>
-							<span class="icon is-left">
-								<fa-icon [icon]="faTable"></fa-icon>
-							</span>
-						</div>
-					</div>
-				</div>
-				<div class="panel-block">
-					<div class="control">
-						<label class="label">Choose storage</label>
 						<div class="control has-icons-left"
 						[ngClass]="{ 'is-loading': storageListLoading }">
 							<input type="text"
@@ -41,7 +25,7 @@
 							#storageSearchInput
 							(ngModelChange)="searchStorages($event)"
 							[ngModelOptions]="{standalone: true}"
-								class="input" placeholder="Storage ID" />
+								class="input" placeholder="Name" />
 							<span class="icon is-left">
 								<fa-icon [icon]="faSearch"></fa-icon>
 							</span>
