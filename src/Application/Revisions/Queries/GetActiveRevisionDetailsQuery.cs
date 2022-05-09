@@ -1,26 +1,30 @@
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
-namespace Hippo.Application.Revisions.Models;
+namespace Hippo.Application.Revisions.Queries;
 
-public class GetActiveRevisionDetailsQuery : IRequest<RevisionDetails?>
+public class GetActiveRevisionDetailsQuery : IRequest<RevisionDetailsVm?>
 {
     public Guid ChannelId { get; set; }
 }
 
-public class GetActiveRevisionDetailsQueryHandler : IRequestHandler<GetActiveRevisionDetailsQuery, RevisionDetails?>
+public class GetActiveRevisionDetailsQueryHandler : IRequestHandler<GetActiveRevisionDetailsQuery, RevisionDetailsVm?>
 {
     private readonly IApplicationDbContext _context;
-    private readonly IBindleService _bindleService;
 
-    public GetActiveRevisionDetailsQueryHandler(IApplicationDbContext context, IBindleService bindleService)
+    private readonly IMapper _mapper;
+
+    public GetActiveRevisionDetailsQueryHandler(IApplicationDbContext context, IMapper mapper)
     {
         _context = context;
-        _bindleService = bindleService;
+        _mapper = mapper;
     }
 
-    public async Task<RevisionDetails?> Handle(GetActiveRevisionDetailsQuery request, CancellationToken cancellationToken)
+    public async Task<RevisionDetailsVm?> Handle(GetActiveRevisionDetailsQuery request, CancellationToken cancellationToken)
     {
         var channel = _context.Channels
             .Where(c => c.Id == request.ChannelId)
@@ -35,8 +39,22 @@ public class GetActiveRevisionDetailsQueryHandler : IRequestHandler<GetActiveRev
             return null;
         }
 
-        var revisionId = $"{channel.App.StorageId}/{channel.ActiveRevision.RevisionNumber}";
+        return new RevisionDetailsVm
+        {
+            Id = channel.ActiveRevision.Id,
+            RevisionNumber = channel.ActiveRevision.RevisionNumber,
+            Description = channel.ActiveRevision.Description,
+            Type = channel.ActiveRevision.Type,
+            Base = channel.ActiveRevision.Base,
+            Components = await GetRevisionComponents(channel.ActiveRevision.Id, cancellationToken),
+        };
+    }
 
-        return await _bindleService.GetRevisionDetails(revisionId);
+    private async Task<List<RevisionComponentDto>> GetRevisionComponents(Guid revisionId, CancellationToken cancellationToken)
+    {
+        return await _context.RevisionComponents
+            .Where(c => c.RevisionId == revisionId)
+            .ProjectTo<RevisionComponentDto>(_mapper.ConfigurationProvider)
+            .ToListAsync(cancellationToken);
     }
 }

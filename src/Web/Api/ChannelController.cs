@@ -1,6 +1,6 @@
 using Hippo.Application.Channels.Commands;
 using Hippo.Application.Channels.Queries;
-using Hippo.Application.Revisions.Models;
+using Hippo.Application.Revisions.Queries;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,7 +17,7 @@ public class ChannelController : ApiControllerBase
     }
 
     [HttpGet("{channelId}/active-revision")]
-    public async Task<ActionResult<RevisionDetails?>> GetActiveRevisionDetails(Guid channelId)
+    public async Task<ActionResult<RevisionDetailsVm?>> GetActiveRevisionDetails(Guid channelId)
     {
         return await Mediator.Send(new GetActiveRevisionDetailsQuery { ChannelId = channelId });
     }
