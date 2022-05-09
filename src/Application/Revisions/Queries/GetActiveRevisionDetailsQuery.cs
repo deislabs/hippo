@@ -28,6 +28,7 @@ public class GetActiveRevisionDetailsQueryHandler : IRequestHandler<GetActiveRev
     {
         var channel = _context.Channels
             .Where(c => c.Id == request.ChannelId)
+            .Include(c => c.ActiveRevision)
             .FirstOrDefault();
         if (channel is null)
         {

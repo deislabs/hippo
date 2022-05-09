@@ -9,12 +9,21 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { RevisionComponentTrigger } from './revisionComponentTrigger';
+import { Revision } from './revision';
+import { DomainEvent } from './domainEvent';
 
 
 export interface RevisionComponent { 
-    source: string;
-    id: string;
-    trigger: RevisionComponentTrigger;
+    created?: string;
+    createdBy?: string | null;
+    lastModified?: string;
+    lastModifiedBy?: string | null;
+    id?: string;
+    source?: string | null;
+    name?: string | null;
+    route?: string | null;
+    revisionId?: string;
+    revision?: Revision;
+    domainEvents?: Array<DomainEvent> | null;
 }
 
