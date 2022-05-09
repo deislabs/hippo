@@ -1,4 +1,5 @@
 using Hippo.Application.Common.Exceptions;
+using Hippo.Application.Common.Interfaces;
 using Hippo.Application.Common.Models;
 using Hippo.Application.Jobs;
 using Hippo.Core.Entities;
@@ -14,9 +15,13 @@ public class ChannelDeletedEventHandler : INotificationHandler<DomainEventNotifi
 
     private readonly JobScheduler _jobScheduler = JobScheduler.Current;
 
-    public ChannelDeletedEventHandler(ILogger<ChannelDeletedEventHandler> logger)
+    private readonly INomadService _nomadService;
+
+    public ChannelDeletedEventHandler(ILogger<ChannelDeletedEventHandler> logger,
+        INomadService nomadService)
     {
         _logger = logger;
+        _nomadService = nomadService;
     }
 
     public Task Handle(DomainEventNotification<DeletedEvent<Channel>> notification, CancellationToken cancellationToken)
@@ -27,13 +32,7 @@ public class ChannelDeletedEventHandler : INotificationHandler<DomainEventNotifi
 
         try
         {
-            foreach (Job job in _jobScheduler.GetRunningJobs())
-            {
-                if (job.Id == domainEvent.Entity.Id)
-                {
-                    job.Stop();
-                }
-            }
+            _nomadService.DeleteJob(domainEvent.Entity.Id.ToString());
         }
         catch (JobFailedException e)
         {

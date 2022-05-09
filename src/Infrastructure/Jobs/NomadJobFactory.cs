@@ -19,9 +19,10 @@ public class NomadJobFactory : IJobFactory
 
     public Job Start(Guid id, string bindleId, Dictionary<string, string> environmentVariables, string? domain)
     {
-        var job = jobs.Find(j => j.Id == id);
-        if (job is not null)
+        NomadJob job = null;
+        if (_nomadService.DoesJobExist(id.ToString()))
         {
+            job = jobs.Find(j => j.Id == id);
             job.BindleId = bindleId;
             job.Domain = domain!;
             foreach (var e in environmentVariables)

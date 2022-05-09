@@ -18,7 +18,7 @@ public class NomadService : INomadService
     {
         _configuration = configuration;
         var nomadUrl = configuration.GetValue("Nomad:Url", "http://localhost:4646/v1");
-        var nomadSecret = configuration.GetValue("Nomad:Secret", "bd8c4f74-ad8c-364d-e5d3-e130bf1ea865");
+        var nomadSecret = configuration.GetValue("Nomad:Secret", "");
 
         Configuration config = new Configuration();
         config.BasePath = nomadUrl;
@@ -111,6 +111,11 @@ public class NomadService : INomadService
         return new Guid();
     }
 
+    public bool DoesJobExist(string jobName)
+    {
+        return _client.GetJobs().Any(job => job.Name == jobName);
+    }
+
     public void DeleteJob(string jobName)
     {
         _client.DeleteJob(jobName);
@@ -124,8 +129,14 @@ public class NomadService : INomadService
 
     public string GetJobStatus(string jobName)
     {
-        var job = _client.GetJob(jobName);
-
-        return job?.Status;
+        try
+        {
+            var job = _client.GetJob(jobName);
+            return job?.Status;
+        }
+        catch
+        {
+            return "not found";
+        }
     }
 }
