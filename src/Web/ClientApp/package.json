@@ -22,7 +22,7 @@
 		"@fortawesome/free-brands-svg-icons": "^5.15.4",
 		"@fortawesome/free-regular-svg-icons": "^5.15.4",
 		"@fortawesome/free-solid-svg-icons": "^5.15.4",
-		"bulma": "^0.9.3",
+		"bulma": "^0.9.4",
 		"rxjs": "~7.5.5",
 		"tslib": "^2.4.0",
 		"zone.js": "^0.11.5"
