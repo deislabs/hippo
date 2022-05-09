@@ -1,4 +1,4 @@
-using Hippo.Application.Revisions.Queries;
+using Hippo.Application.Revisions.Models;
 
 namespace Hippo.Application.Common.Interfaces;
 

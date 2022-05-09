@@ -1,11 +1,8 @@
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
-namespace Hippo.Application.Revisions.Queries;
+namespace Hippo.Application.Revisions.Models;
 
 public class GetActiveRevisionDetailsQuery : IRequest<RevisionDetails?>
 {

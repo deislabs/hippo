@@ -16,12 +16,16 @@ public class ImportRevisionsCommand : IRequest
 public class ImportRevisionsCommandHandler : IRequestHandler<ImportRevisionsCommand>
 {
     private readonly IApplicationDbContext _context;
+
     private readonly IBindleService _bindleService;
 
-    public ImportRevisionsCommandHandler(IApplicationDbContext context, IBindleService bindleService)
+    private readonly IMediator _mediator;
+
+    public ImportRevisionsCommandHandler(IApplicationDbContext context, IBindleService bindleService, IMediator mediator)
     {
         _context = context;
         _bindleService = bindleService;
+        _mediator = mediator;
     }
 
     public async Task<Unit> Handle(ImportRevisionsCommand request, CancellationToken cancellationToken)
@@ -37,23 +41,19 @@ public class ImportRevisionsCommandHandler : IRequestHandler<ImportRevisionsComm
 
         var allAppRevisions = await _bindleService.GetBindleRevisionNumbers(app.StorageId);
         var existingRevisions = _context.Revisions.Where(r => r.AppId == app.Id).ToList();
-        var missingRevisions = GetMissingRevisions(allAppRevisions, existingRevisions, app.Id);
+        var missingRevisions = allAppRevisions.Where(revision => !existingRevisions.Any(er => er.RevisionNumber == revision)).ToList();
 
-        _context.Revisions.AddRange(missingRevisions);
+        foreach (var revisionNumber in missingRevisions)
+        {
+            var command = new CreateRevisionCommand
+            {
+                AppId = app.Id,
+                RevisionNumber = revisionNumber,
+            };
 
-        await _context.SaveChangesAsync(cancellationToken);
+            await _mediator.Send(command, cancellationToken);
+        }        
 
         return Unit.Value;
-    }
-
-    private static IEnumerable<Revision> GetMissingRevisions(IEnumerable<string?> allAppRevisions, List<Revision> existingRevisions, Guid appId)
-    {
-        return allAppRevisions.Where(revision => !existingRevisions.Any(er => er.RevisionNumber == revision))
-            .Select(r => new Revision
-            {
-                AppId = appId,
-                RevisionNumber = r,
-            })
-            .ToList();
     }
 }

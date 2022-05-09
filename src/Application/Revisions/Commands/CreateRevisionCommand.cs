@@ -21,9 +21,12 @@ public class CreateRevisionCommandHandler : IRequestHandler<CreateRevisionComman
 {
     private readonly IApplicationDbContext _context;
 
-    public CreateRevisionCommandHandler(IApplicationDbContext context)
+    private readonly IBindleService _bindleService;
+
+    public CreateRevisionCommandHandler(IApplicationDbContext context, IBindleService bindleService)
     {
         _context = context;
+        _bindleService = bindleService;
     }
 
     public async Task<Guid> Handle(CreateRevisionCommand request, CancellationToken cancellationToken)
@@ -33,17 +36,41 @@ public class CreateRevisionCommandHandler : IRequestHandler<CreateRevisionComman
             .SingleOrDefaultAsync(cancellationToken);
         _ = app ?? throw new NotFoundException(nameof(App), request.AppId);
 
-        var entity = new Revision
+        var revisionDetails = await _bindleService.GetRevisionDetails($"{app.StorageId}/{request.RevisionNumber}");
+
+        var newRevision = new Revision
         {
             AppId = request.AppId,
             App = app,
-            RevisionNumber = request.RevisionNumber
+            RevisionNumber = request.RevisionNumber,
+            Description = revisionDetails?.Description,
+            Type = revisionDetails?.SpinToml?.Trigger?.Type,
+            Base = revisionDetails?.SpinToml?.Trigger?.Base,
         };
 
-        _context.Revisions.Add(entity);
+        var newRevisionComponents = GetRevisionComponents(newRevision, revisionDetails?.SpinToml?.Component);
+
+        _context.RevisionComponents.AddRange(newRevisionComponents);
+        _context.Revisions.Add(newRevision);
 
         await _context.SaveChangesAsync(cancellationToken);
 
-        return entity.Id;
+        return newRevision.Id;
+    }
+
+    private static IEnumerable<RevisionComponent> GetRevisionComponents(Revision newRevision, List<Models.RevisionComponent>? components)
+    {
+        if (components is null || !components.Any())
+        {
+            return new List<RevisionComponent>();
+        }
+
+        return components.Select(c => new RevisionComponent
+        {
+            Source = c.Source,
+            Name = c.Id,
+            Route = c.Trigger?.Route ?? "/",
+            Revision = newRevision,
+        }).ToList();
     }
 }

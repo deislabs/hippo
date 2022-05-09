@@ -1,5 +1,5 @@
 ﻿using Hippo.Application.Common.Interfaces;
-using Hippo.Application.Revisions.Queries;
+using Hippo.Application.Revisions.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

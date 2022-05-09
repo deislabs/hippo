@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Hippo.Application.Revisions.Queries;
+namespace Hippo.Application.Revisions.Models;
 
 public class RevisionDetails
 {
@@ -10,7 +10,7 @@ public class RevisionDetails
     [Required]
     public string? Version { get; set; }
 
-    public string? Description { get; set; } = null;
+    public string? Description { get; set; }
 
     [Required]
     public IEnumerable<string> Authors { get; set; } = new List<string>();

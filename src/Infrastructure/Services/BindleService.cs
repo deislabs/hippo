@@ -1,10 +1,9 @@
 using Deislabs.Bindle;
 using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
-using Hippo.Application.Revisions.Queries;
+using Hippo.Application.Revisions.Models;
 using Microsoft.Extensions.Configuration;
 using Tomlyn;
-using Tomlyn.Syntax;
 
 namespace Hippo.Infrastructure.Services;
 
