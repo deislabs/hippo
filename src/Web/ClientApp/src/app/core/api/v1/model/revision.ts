@@ -22,8 +22,6 @@ export interface Revision {
     id?: string;
     revisionNumber?: string | null;
     description?: string | null;
-    type?: string | null;
-    base?: string | null;
     appId?: string;
     app?: App;
     readonly components?: Array<RevisionComponent> | null;

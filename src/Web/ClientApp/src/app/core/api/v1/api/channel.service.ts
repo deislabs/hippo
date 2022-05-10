@@ -19,11 +19,11 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
+import { ChannelDetailsDto } from '../model/channelDetailsDto';
+// @ts-ignore
 import { ChannelsVm } from '../model/channelsVm';
 // @ts-ignore
 import { CreateChannelCommand } from '../model/createChannelCommand';
-// @ts-ignore
-import { RevisionDetailsVm } from '../model/revisionDetailsVm';
 // @ts-ignore
 import { UpdateChannelCommand } from '../model/updateChannelCommand';
 
@@ -98,12 +98,12 @@ export class ChannelService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiChannelChannelIdActiveRevisionGet(channelId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<RevisionDetailsVm>;
-    public apiChannelChannelIdActiveRevisionGet(channelId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<RevisionDetailsVm>>;
-    public apiChannelChannelIdActiveRevisionGet(channelId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<RevisionDetailsVm>>;
-    public apiChannelChannelIdActiveRevisionGet(channelId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiChannelChannelIdGet(channelId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<ChannelDetailsDto>;
+    public apiChannelChannelIdGet(channelId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<ChannelDetailsDto>>;
+    public apiChannelChannelIdGet(channelId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<ChannelDetailsDto>>;
+    public apiChannelChannelIdGet(channelId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (channelId === null || channelId === undefined) {
-            throw new Error('Required parameter channelId was null or undefined when calling apiChannelChannelIdActiveRevisionGet.');
+            throw new Error('Required parameter channelId was null or undefined when calling apiChannelChannelIdGet.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -146,7 +146,7 @@ export class ChannelService {
             }
         }
 
-        return this.httpClient.get<RevisionDetailsVm>(`${this.configuration.basePath}/api/channel/${encodeURIComponent(String(channelId))}/active-revision`,
+        return this.httpClient.get<ChannelDetailsDto>(`${this.configuration.basePath}/api/channel/${encodeURIComponent(String(channelId))}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
