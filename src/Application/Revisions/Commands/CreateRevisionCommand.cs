@@ -20,12 +20,9 @@ public class CreateRevisionCommandHandler : IRequestHandler<CreateRevisionComman
 {
     private readonly IApplicationDbContext _context;
 
-    private readonly IBindleService _bindleService;
-
-    public CreateRevisionCommandHandler(IApplicationDbContext context, IBindleService bindleService)
+    public CreateRevisionCommandHandler(IApplicationDbContext context)
     {
         _context = context;
-        _bindleService = bindleService;
     }
 
     public async Task<Guid> Handle(CreateRevisionCommand request, CancellationToken cancellationToken)

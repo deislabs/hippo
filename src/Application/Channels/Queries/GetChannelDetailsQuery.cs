@@ -42,12 +42,4 @@ public class GetChannelDetailsQueryHandler : IRequestHandler<GetChannelDetailsQu
 
         return channelDetails;
     }
-
-    private async Task<List<RevisionComponentDto>> GetRevisionComponents(Guid revisionId, CancellationToken cancellationToken)
-    {
-        return await _context.RevisionComponents
-            .Where(c => c.RevisionId == revisionId)
-            .ProjectTo<RevisionComponentDto>(_mapper.ConfigurationProvider)
-            .ToListAsync(cancellationToken);
-    }
 }

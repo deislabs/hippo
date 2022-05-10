@@ -20,12 +20,9 @@ public class UpdateRevisionDetailsCommandHandler : IRequestHandler<UpdateRevisio
 {
     private readonly IApplicationDbContext _context;
 
-    private readonly IBindleService _bindleService;
-
-    public UpdateRevisionDetailsCommandHandler(IApplicationDbContext context, IBindleService bindleService)
+    public UpdateRevisionDetailsCommandHandler(IApplicationDbContext context)
     {
         _context = context;
-        _bindleService = bindleService;
     }
 
     public async Task<Unit> Handle(UpdateRevisionDetailsCommand request, CancellationToken cancellationToken)

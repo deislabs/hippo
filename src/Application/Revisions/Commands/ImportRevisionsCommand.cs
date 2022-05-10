@@ -19,13 +19,10 @@ public class ImportRevisionsCommandHandler : IRequestHandler<ImportRevisionsComm
 
     private readonly IBindleService _bindleService;
 
-    private readonly IMediator _mediator;
-
-    public ImportRevisionsCommandHandler(IApplicationDbContext context, IBindleService bindleService, IMediator mediator)
+    public ImportRevisionsCommandHandler(IApplicationDbContext context, IBindleService bindleService)
     {
         _context = context;
         _bindleService = bindleService;
-        _mediator = mediator;
     }
 
     public async Task<Unit> Handle(ImportRevisionsCommand request, CancellationToken cancellationToken)
