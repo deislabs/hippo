@@ -13,8 +13,6 @@ public class ChannelDeletedEventHandler : INotificationHandler<DomainEventNotifi
 {
     private readonly ILogger<ChannelDeletedEventHandler> _logger;
 
-    private readonly JobScheduler _jobScheduler = JobScheduler.Current;
-
     private readonly INomadService _nomadService;
 
     public ChannelDeletedEventHandler(ILogger<ChannelDeletedEventHandler> logger,

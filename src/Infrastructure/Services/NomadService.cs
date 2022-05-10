@@ -27,7 +27,31 @@ public class NomadService : INomadService
         _client = new JobsApi(config);
     }
 
-    public Guid PostJob(Application.Jobs.Job job)
+    public void StartJob(Guid id, string bindleId, Dictionary<string, string> environmentVariables, string? domain)
+    {
+        var job = new NomadJob(_configuration, id, bindleId, domain!);
+
+        foreach (var e in environmentVariables)
+        {
+            job.AddEnvironmentVariable(e.Key, e.Value);
+        }
+
+        if (DoesJobExist(id.ToString()))
+        {
+            ReloadJob(job);
+        }
+        else
+        {
+            PostJob(job);
+        }
+    }
+
+    public void DeleteJob(string jobName)
+    {
+        _client.DeleteJob(jobName);
+    }
+
+    private void PostJob(Application.Jobs.Job job)
     {
         var entrypoint = _configuration.GetValue<string>("Nomad:Traefik:Entrypoint");
         var certresolver = _configuration.GetValue<string>("Nomad:Traefik:CertResolver");
@@ -107,36 +131,17 @@ public class NomadService : INomadService
             }
 
         });
-        var result = _client.PostJob(nomadJob.Id.ToString(), jobRegisterRequest);
-        return new Guid();
+        _client.PostJob(nomadJob.Id.ToString(), jobRegisterRequest);
     }
 
-    public bool DoesJobExist(string jobName)
+    private bool DoesJobExist(string jobName)
     {
         return _client.GetJobs().Any(job => job.Name == jobName);
     }
 
-    public void DeleteJob(string jobName)
-    {
-        _client.DeleteJob(jobName);
-    }
-
-    public void ReloadJob(Application.Jobs.Job job)
+    private void ReloadJob(Application.Jobs.Job job)
     {
         _client.DeleteJob(job.Id.ToString());
         PostJob(job);
-    }
-
-    public string GetJobStatus(string jobName)
-    {
-        try
-        {
-            var job = _client.GetJob(jobName);
-            return job?.Status;
-        }
-        catch
-        {
-            return "not found";
-        }
     }
 }

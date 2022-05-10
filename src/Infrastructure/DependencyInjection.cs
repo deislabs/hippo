@@ -69,17 +69,6 @@ public static class DependencyInjection
             options.Password.RequiredUniqueChars = 0;
         });
 
-        var schedulerDriver = configuration.GetValue<string>("Scheduler:Driver", "local").ToLower();
-        switch (schedulerDriver)
-        {
-            case "local":
-                services.AddSingleton<IJobFactory, LocalJobFactory>();
-                break;
-            case "nomad":
-                services.AddSingleton<IJobFactory, NomadJobFactory>();
-                break;
-        }
-
         services.AddTransient<IJsonFileBuilder, JsonFileBuilder>();
 
         services.AddAuthorization(options =>

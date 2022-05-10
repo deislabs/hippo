@@ -16,15 +16,11 @@ public class GetAppsQueryHandler : IRequestHandler<GetAppsQuery, AppsVm>
 
     private readonly IMapper _mapper;
 
-    private readonly INomadService _nomadService;
-
     public GetAppsQueryHandler(IApplicationDbContext context,
-        IMapper mapper,
-        INomadService nomadService)
+        IMapper mapper)
     {
         _context = context;
         _mapper = mapper;
-        _nomadService = nomadService;
     }
 
     public async Task<AppsVm> Handle(GetAppsQuery request, CancellationToken cancellationToken)
@@ -33,14 +29,6 @@ public class GetAppsQueryHandler : IRequestHandler<GetAppsQuery, AppsVm>
             .ProjectTo<AppDto>(_mapper.ConfigurationProvider)
             .OrderBy(a => a.Name)
             .ToListAsync(cancellationToken);
-
-        foreach(var app in apps)
-        {
-            foreach(var channel in app.Channels)
-            {
-                channel.Status = _nomadService.GetJobStatus(channel.Id.ToString());
-            }
-        }
 
         return new AppsVm
         {
