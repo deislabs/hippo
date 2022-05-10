@@ -1,5 +1,6 @@
 using Hippo.Application.Common.Interfaces;
 using Hippo.Application.Common.Models;
+using Hippo.Application.Revisions.Commands;
 using Hippo.Core.Entities;
 using Hippo.Core.Events;
 using MediatR;
@@ -11,17 +12,17 @@ public class UpdateRevisionDetails : INotificationHandler<DomainEventNotificatio
 {
     private readonly ILogger<UpdateRevisionDetails> _logger;
 
-    private readonly IApplicationDbContext _context;
-
     private readonly IBindleService _bindleService;
 
+    private readonly IMediator _mediator;
+
     public UpdateRevisionDetails(ILogger<UpdateRevisionDetails> logger,
-        IApplicationDbContext context,
-        IBindleService bindleService)
+        IBindleService bindleService,
+        IMediator mediator)
     {
         _logger = logger;
-        _context = context;
         _bindleService = bindleService;
+        _mediator = mediator;
     }
 
     public async Task Handle(DomainEventNotification<CreatedEvent<Revision>> notification, CancellationToken cancellationToken)
@@ -32,22 +33,12 @@ public class UpdateRevisionDetails : INotificationHandler<DomainEventNotificatio
         _logger.LogInformation("Hippo Domain Event: {DomainEvent}", domainEvent.GetType().Name);
 
         var revisionDetails = await _bindleService.GetRevisionDetails($"{revision.App.StorageId}/{revision.RevisionNumber}");
-        if (revisionDetails == null || revisionDetails.SpinToml == null)
+        var command = new UpdateRevisionDetailsCommand
         {
-            return;
-        }
+            RevisionId = revision.Id,
+            RevisionDetails = revisionDetails,
+        };
 
-        revision.Description = revisionDetails.Description;
-        var newComponents = revisionDetails.SpinToml.Component
-            .Select(c => new RevisionComponent
-        {
-            Source = c.Source,
-            Name = c.Id,
-            Route = c.Trigger?.Route ?? "/",
-            Revision = revision,
-        });
-        _context.RevisionComponents.AddRange(newComponents);
-
-        await _context.SaveChangesAsync(cancellationToken);
+        await _mediator.Send(command, cancellationToken);
     }
 }
