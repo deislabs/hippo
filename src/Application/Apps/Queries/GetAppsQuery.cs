@@ -16,8 +16,7 @@ public class GetAppsQueryHandler : IRequestHandler<GetAppsQuery, AppsVm>
 
     private readonly IMapper _mapper;
 
-    public GetAppsQueryHandler(IApplicationDbContext context,
-        IMapper mapper)
+    public GetAppsQueryHandler(IApplicationDbContext context, IMapper mapper)
     {
         _context = context;
         _mapper = mapper;
@@ -25,14 +24,12 @@ public class GetAppsQueryHandler : IRequestHandler<GetAppsQuery, AppsVm>
 
     public async Task<AppsVm> Handle(GetAppsQuery request, CancellationToken cancellationToken)
     {
-        var apps = await _context.Apps
-            .ProjectTo<AppDto>(_mapper.ConfigurationProvider)
-            .OrderBy(a => a.Name)
-            .ToListAsync(cancellationToken);
-
         return new AppsVm
         {
-            Apps = apps
+            Apps = await _context.Apps
+                .ProjectTo<AppDto>(_mapper.ConfigurationProvider)
+                .OrderBy(a => a.Name)
+                .ToListAsync(cancellationToken)
         };
     }
 }
