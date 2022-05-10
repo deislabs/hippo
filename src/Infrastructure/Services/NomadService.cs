@@ -38,12 +38,10 @@ public class NomadService : INomadService
 
         if (DoesJobExist(id.ToString()))
         {
-            ReloadJob(job);
+            DeleteJob(job.Id.ToString());
         }
-        else
-        {
-            PostJob(job);
-        }
+        
+        PostJob(job);
     }
 
     public void DeleteJob(string jobName)
@@ -53,11 +51,14 @@ public class NomadService : INomadService
 
     private void PostJob(Application.Jobs.Job job)
     {
-        var entrypoint = _configuration.GetValue<string>("Nomad:Traefik:Entrypoint");
-        var certresolver = _configuration.GetValue<string>("Nomad:Traefik:CertResolver");
-
         var nomadJob = job as NomadJob;
-        var jobRegisterRequest = new JobRegisterRequest(job: new Fermyon.Nomad.Model.Job
+        var jobRegisterRequest = GenerateJobRegisterRequest(nomadJob);
+        _client.PostJob(nomadJob.Id.ToString(), jobRegisterRequest);
+    }
+
+    private JobRegisterRequest GenerateJobRegisterRequest(NomadJob nomadJob)
+    {
+        return new JobRegisterRequest(job: new Fermyon.Nomad.Model.Job
         {
             Name = nomadJob.Id.ToString(),
             ID = nomadJob.Id.ToString(),
@@ -69,79 +70,91 @@ public class NomadService : INomadService
                 {
                     Networks = new List<NetworkResource>
                     {
-                        new NetworkResource
-                        {
-                            DynamicPorts = new List<Port>
-                            {
-                                new Port
-                                {
-                                    Label = "http",
-                                }
-                            }
-                        }
+                        GenerateJobNetworkResources()
                     },
                     Name = nomadJob.Id.ToString(),
                     Services = new List<Service>
                     {
-                        new Service
-                        {
-                            PortLabel = "http",
-                            Name = nomadJob.Id.ToString(),
-                            Tags = new List<string>
-                            {
-                                "traefik.enable=true",
-                                "traefik.http.routers." + nomadJob.Id + @".rule=Host(`" + nomadJob.Domain + "`)",
-                                "traefik.http.routers." + nomadJob.Id + @".tls.entryPoints=" + entrypoint,
-                                "traefik.http.routers." + nomadJob.Id + @".tls=false",
-                                "traefik.http.routers." + nomadJob.Id + @".tls.certresolver=" + certresolver,
-                                "traefik.http.routers." + nomadJob.Id + @".tls.domains[0].main=" + nomadJob.Domain + ""
-                            },
-                            Checks = new List<ServiceCheck>
-                            {
-                                new ServiceCheck
-                                {
-                                    Name = "alive",
-                                    Type = "tcp",
-                                    Interval = 10000000000,
-                                    Timeout = 2000000000
-                                }
-                            }
-                        }
+                        GenerateJobService(nomadJob)
                     },
                     Tasks = new List<Fermyon.Nomad.Model.Task>
                     {
-                        new Fermyon.Nomad.Model.Task
-                        {
-                            Name = "spin",
-                            Driver = nomadJob.driver,
-                            Env = new Dictionary<string, string>
-                            {
-                                { "RUST_LOG", "warn,spin=debug" },
-                                { "BINDLE_URL", nomadJob.bindleUrl },
-                                { "SPIN_LOG_DIR", "local/log" }
-                            },
-                            Config = new Dictionary<string, object>
-                            {
-                                { "command", nomadJob.spinBinaryPath },
-                                { "args", new List<string> { "up", "--listen", "[${NOMAD_IP_http}]:${NOMAD_PORT_http}", "--log-dir", "local/log", "--bindle", nomadJob.BindleId } }
-                            }
-                        }
+                        GenerateJobTask(nomadJob)
                     }
                 }
             }
 
         });
-        _client.PostJob(nomadJob.Id.ToString(), jobRegisterRequest);
+    }
+
+    private NetworkResource GenerateJobNetworkResources()
+    {
+        return new NetworkResource
+        {
+            DynamicPorts = new List<Port>
+            {
+                new Port
+                {
+                    Label = "http",
+                }
+            }
+        };
+    }
+
+    private Service GenerateJobService(NomadJob nomadJob)
+    {
+        var entrypoint = _configuration.GetValue<string>("Nomad:Traefik:Entrypoint");
+        var certresolver = _configuration.GetValue<string>("Nomad:Traefik:CertResolver");
+
+        return new Service
+        {
+            PortLabel = "http",
+            Name = nomadJob.Id.ToString(),
+            Tags = new List<string>
+            {
+                "traefik.enable=true",
+                "traefik.http.routers." + nomadJob.Id + @".rule=Host(`" + nomadJob.Domain + "`)",
+                "traefik.http.routers." + nomadJob.Id + @".tls.entryPoints=" + entrypoint,
+                "traefik.http.routers." + nomadJob.Id + @".tls=false",
+                "traefik.http.routers." + nomadJob.Id + @".tls.certresolver=" + certresolver,
+                "traefik.http.routers." + nomadJob.Id + @".tls.domains[0].main=" + nomadJob.Domain + ""
+            },
+            Checks = new List<ServiceCheck>
+            {
+                new ServiceCheck
+                {
+                    Name = "alive",
+                    Type = "tcp",
+                    Interval = 10000000000,
+                    Timeout = 2000000000
+                }
+            }
+        };
+    }
+
+    private Fermyon.Nomad.Model.Task GenerateJobTask(NomadJob nomadJob)
+    {
+        return new Fermyon.Nomad.Model.Task
+        {
+            Name = "spin",
+            Driver = nomadJob.driver,
+            Env = new Dictionary<string, string>
+            {
+                { "RUST_LOG", "warn,spin=debug" },
+                { "BINDLE_URL", nomadJob.bindleUrl
+},
+                { "SPIN_LOG_DIR", "local/log" }
+            },
+            Config = new Dictionary<string, object>
+            {
+                { "command", nomadJob.spinBinaryPath },
+                { "args", new List<string> { "up", "--listen", "[${NOMAD_IP_http}]:${NOMAD_PORT_http}", "--log-dir", "local/log", "--bindle", nomadJob.BindleId } }
+            }
+        };
     }
 
     private bool DoesJobExist(string jobName)
     {
         return _client.GetJobs().Any(job => job.Name == jobName);
-    }
-
-    private void ReloadJob(Application.Jobs.Job job)
-    {
-        _client.DeleteJob(job.Id.ToString());
-        PostJob(job);
     }
 }

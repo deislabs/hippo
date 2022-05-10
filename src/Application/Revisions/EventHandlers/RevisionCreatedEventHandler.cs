@@ -44,6 +44,7 @@ public class RevisionCreatedEventHandler : INotificationHandler<DomainEventNotif
                     _logger.LogInformation($"Channel {channel.Id} changed its active revision to {activeRevision.Id}");
                     channel.ActiveRevision = activeRevision;
                     channel.DomainEvents.Add(new ModifiedEvent<Channel>(channel));
+                    // TODO Call a command instead of updating the database in the EventHandler
                 }
             }
         }

@@ -30,7 +30,7 @@ public class ChannelDeletedEventHandler : INotificationHandler<DomainEventNotifi
 
         try
         {
-            _nomadService.DeleteJob(domainEvent.Entity.Id.ToString());
+            _nomadService.DeleteJob(jobName: domainEvent.Entity.Id.ToString());
         }
         catch (JobFailedException e)
         {
