@@ -2,7 +2,6 @@ using System.ComponentModel.DataAnnotations;
 using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Core.Entities;
-using Hippo.Core.Events;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -58,7 +57,7 @@ public class CreateRevisionCommandHandler : IRequestHandler<CreateRevisionComman
         return newRevision.Id;
     }
 
-    private static IEnumerable<RevisionComponent> GetRevisionComponents(Revision newRevision, List<Models.RevisionComponent>? components)
+    private static IEnumerable<RevisionComponent> GetRevisionComponents(Revision newRevision, List<Common.Interfaces.BindleService.RevisionComponent>? components)
     {
         if (components is null || !components.Any())
         {

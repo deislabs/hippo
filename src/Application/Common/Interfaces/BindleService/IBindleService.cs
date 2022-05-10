@@ -1,4 +1,4 @@
-using Hippo.Application.Revisions.Models;
+using Hippo.Application.Common.Interfaces.BindleService;
 
 namespace Hippo.Application.Common.Interfaces;
 

@@ -1,7 +1,7 @@
 using Deislabs.Bindle;
 using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
-using Hippo.Application.Revisions.Models;
+using Hippo.Application.Common.Interfaces.BindleService;
 using Microsoft.Extensions.Configuration;
 using Tomlyn;
 
