@@ -41,19 +41,23 @@ public class ImportRevisionsCommandHandler : IRequestHandler<ImportRevisionsComm
 
         var allAppRevisions = await _bindleService.GetBindleRevisionNumbers(app.StorageId);
         var existingRevisions = _context.Revisions.Where(r => r.AppId == app.Id).ToList();
-        var missingRevisions = allAppRevisions.Where(revision => !existingRevisions.Any(er => er.RevisionNumber == revision)).ToList();
+        var missingRevisions = GetMissingRevisions(allAppRevisions, existingRevisions, app.Id);
 
-        foreach (var revisionNumber in missingRevisions)
-        {
-            var command = new CreateRevisionCommand
-            {
-                AppId = app.Id,
-                RevisionNumber = revisionNumber,
-            };
+        _context.Revisions.AddRange(missingRevisions);
 
-            await _mediator.Send(command, cancellationToken);
-        }        
+        await _context.SaveChangesAsync(cancellationToken);
 
         return Unit.Value;
+    }
+
+    private static IEnumerable<Revision> GetMissingRevisions(IEnumerable<string?> allAppRevisions, List<Revision> existingRevisions, Guid appId)
+    {
+        return allAppRevisions.Where(revision => !existingRevisions.Any(er => er.RevisionNumber == revision))
+            .Select(r => new Revision
+            {
+                AppId = appId,
+                RevisionNumber = r,
+            })
+            .ToList();
     }
 }

@@ -16,10 +16,10 @@ public class ChannelController : ApiControllerBase
         return await Mediator.Send(new GetChannelsQuery());
     }
 
-    [HttpGet("{channelId}/active-revision")]
-    public async Task<ActionResult<RevisionDetailsVm?>> GetActiveRevisionDetails(Guid channelId)
+    [HttpGet("{channelId}")]
+    public async Task<ActionResult<ChannelDetailsDto?>> GetChannelDetails(Guid channelId)
     {
-        return await Mediator.Send(new GetActiveRevisionDetailsQuery { ChannelId = channelId });
+        return await Mediator.Send(new GetChannelDetailsQuery { ChannelId = channelId });
     }
 
     [HttpGet("export")]

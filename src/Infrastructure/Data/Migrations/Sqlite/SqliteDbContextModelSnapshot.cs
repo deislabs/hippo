@@ -188,9 +188,6 @@ namespace Hippo.Infrastructure.Data.Migrations.Sqlite
                     b.Property<Guid>("AppId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Base")
-                        .HasColumnType("TEXT");
-
                     b.Property<DateTime>("Created")
                         .HasColumnType("TEXT");
 
@@ -209,9 +206,6 @@ namespace Hippo.Infrastructure.Data.Migrations.Sqlite
                     b.Property<string>("RevisionNumber")
                         .IsRequired()
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Type")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

@@ -1,8 +1,10 @@
+using Hippo.Application.Common.Mappings;
+using Hippo.Core.Entities;
 using System.ComponentModel.DataAnnotations;
 
 namespace Hippo.Application.Revisions.Queries;
 
-public class RevisionDetailsVm
+public class RevisionDetailsDto : IMapFrom<Revision>
 {
     [Required]
     public Guid Id { get; set; }
@@ -13,11 +15,5 @@ public class RevisionDetailsVm
     [Required]
     public string? Description { get; set; }
 
-    [Required]
-    public string? Type { get; set; }
-
-    [Required]
-    public string? Base { get; set; }
-
-    public List<RevisionComponentDto> Components { get; set; } = new List<RevisionComponentDto>();
+    public IList<RevisionComponentDto> Components { get; private set; } = new List<RevisionComponentDto>();
 }

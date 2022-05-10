@@ -35,41 +35,17 @@ public class CreateRevisionCommandHandler : IRequestHandler<CreateRevisionComman
             .SingleOrDefaultAsync(cancellationToken);
         _ = app ?? throw new NotFoundException(nameof(App), request.AppId);
 
-        var revisionDetails = await _bindleService.GetRevisionDetails($"{app.StorageId}/{request.RevisionNumber}");
-
         var newRevision = new Revision
         {
             AppId = request.AppId,
             App = app,
             RevisionNumber = request.RevisionNumber,
-            Description = revisionDetails?.Description,
-            Type = revisionDetails?.SpinToml?.Trigger?.Type,
-            Base = revisionDetails?.SpinToml?.Trigger?.Base,
         };
 
-        var newRevisionComponents = GetRevisionComponents(newRevision, revisionDetails?.SpinToml?.Component);
-
-        _context.RevisionComponents.AddRange(newRevisionComponents);
         _context.Revisions.Add(newRevision);
 
         await _context.SaveChangesAsync(cancellationToken);
 
         return newRevision.Id;
-    }
-
-    private static IEnumerable<RevisionComponent> GetRevisionComponents(Revision newRevision, List<Common.Interfaces.BindleService.RevisionComponent>? components)
-    {
-        if (components is null || !components.Any())
-        {
-            return new List<RevisionComponent>();
-        }
-
-        return components.Select(c => new RevisionComponent
-        {
-            Source = c.Source,
-            Name = c.Id,
-            Route = c.Trigger?.Route ?? "/",
-            Revision = newRevision,
-        }).ToList();
     }
 }
