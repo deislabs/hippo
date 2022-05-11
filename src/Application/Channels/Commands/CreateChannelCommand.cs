@@ -92,26 +92,26 @@ public class CreateChannelCommandHandler : IRequestHandler<CreateChannelCommand,
 
     private async Task<Revision?> GetActiveRevision(CreateChannelCommand request, Channel entity, CancellationToken cancellationToken)
     {
+        Revision? revision = null;
+
         if (entity.RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseRangeRule &&
                     request.ActiveRevisionId is null)
         {
             var revisions = _context.Revisions
                 .Where(c => c.AppId == request.AppId).ToList();
 
-            var revision = RevisionRangeRule.Parse(entity.RangeRule).Match(revisions);
-            return revision;
+            revision = RevisionRangeRule.Parse(entity.RangeRule).Match(revisions);
         }
 
         if (entity.RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseSpecifiedRevision &&
             request.ActiveRevisionId is not null)
         {
-            var revision = await _context.Revisions
+            revision = await _context.Revisions
                 .Where(c => c.Id == request.ActiveRevisionId)
                 .SingleOrDefaultAsync(cancellationToken);
             _ = revision ?? throw new NotFoundException(nameof(Revision), request.ActiveRevisionId);
-            return revision;
         }
 
-        return null;
+        return revision;
     }
 }
