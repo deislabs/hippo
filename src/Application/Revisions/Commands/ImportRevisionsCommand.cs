@@ -16,7 +16,6 @@ public class ImportRevisionsCommand : IRequest
 public class ImportRevisionsCommandHandler : IRequestHandler<ImportRevisionsCommand>
 {
     private readonly IApplicationDbContext _context;
-
     private readonly IBindleService _bindleService;
 
     public ImportRevisionsCommandHandler(IApplicationDbContext context, IBindleService bindleService)
