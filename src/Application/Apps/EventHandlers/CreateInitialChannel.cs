@@ -38,7 +38,7 @@ public class CreateInitialChannel : INotificationHandler<DomainEventNotification
             Domain = $"{app.Name}.{_config.PlatformDomain}".Replace('_', '-').ToLower(),
         };
 
-         await _mediator.Send(command, cancellationToken);
+        await _mediator.Send(command, cancellationToken);
 
         _logger.LogInformation("Hippo Domain Event: {DomainEvent}", domainEvent.GetType().Name);
     }

@@ -30,7 +30,7 @@ public class GetAppQueryHandler : IRequestHandler<GetAppQuery, AppDto>
     public async Task<AppDto> Handle(GetAppQuery request, CancellationToken cancellationToken)
     {
         var entity = await _context.Apps
-            .Where(a => a.Id == request.Id)            
+            .Where(a => a.Id == request.Id)
             .FirstOrDefaultAsync(cancellationToken);
 
         if (entity is null)

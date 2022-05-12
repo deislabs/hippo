@@ -35,7 +35,7 @@ public class NomadService : INomadService
         {
             job.AddEnvironmentVariable(e.Key, e.Value);
         }
-        
+
         PostJob(job);
     }
 
@@ -48,7 +48,7 @@ public class NomadService : INomadService
     {
         var nomadJob = job as NomadJob;
 
-        if(nomadJob is null)
+        if (nomadJob is null)
         {
             throw new ArgumentException("Job must be of type NomadJob.");
         }
