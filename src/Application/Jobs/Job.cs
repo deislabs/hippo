@@ -10,8 +10,6 @@ public abstract class Job
 
     protected readonly CancellationToken cancellationToken = CancellationToken.None;
 
-    protected readonly JobScheduler _jobScheduler = JobScheduler.Current;
-
     protected JobStatus _status = JobStatus.Created;
 
     public Job(Guid id)
@@ -88,54 +86,4 @@ public abstract class Job
     {
         cancellationToken = token;
     }
-
-    public void Start()
-    {
-        _jobScheduler.Enqueue(this);
-        _status = JobStatus.WaitingToRun;
-    }
-
-    public void Start(JobScheduler scheduler)
-    {
-        scheduler.Enqueue(this);
-        _status = JobStatus.WaitingToRun;
-    }
-
-    /// <summary>
-    /// Called by the <see cref="JobScheduler" /> when the <see cref="Job" /> is scheduled for execution.
-    /// </summary>
-    /// <exception cref="JobFailedException">when the <see cref="Job" /> fails to run.</exception>
-    public abstract void Run();
-
-    /// <summary>
-    /// Waits for the <see cref="Job" /> to complete execution.
-    /// </summary>
-    /// <remarks>
-    /// Wait is a synchronization method that causes the calling thread to wait until the <see cref="Job" /> has completed.
-    /// It blocks the calling thread until the <see cref="Job" /> completes.
-    ///
-    /// If the <see cref="Job" /> has not begun execution, the calling thread will block until the <see cref="Job" /> starts running.
-    /// </remarks>
-    public void Wait()
-    {
-        // return early if the process has already finished
-        if (IsCompleted)
-        {
-            return;
-        }
-        while (IsWaitingToRun || IsRunning)
-        {
-            Thread.Sleep(10);
-        }
-    }
-
-    /// <summary>
-    /// Stops the <see cref="Job" />, marking it as completed.
-    /// </summary>
-    public abstract void Stop();
-
-    /// <summary>
-    /// Reloads <see cref="Job" /> configuration.
-    /// </summary>
-    public abstract void Reload();
 }

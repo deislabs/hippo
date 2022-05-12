@@ -74,7 +74,7 @@ public class TestBase : IDisposable
 
         services.AddTransient<IBindleService, FakeBindleService>();
 
-        services.AddSingleton<IJobFactory, NullJobFactory>();
+        services.AddSingleton<INomadService, NullNomadService>();
 
         _scopeFactory = services.BuildServiceProvider().GetRequiredService<IServiceScopeFactory>();
 
@@ -197,23 +197,28 @@ public class TestBase : IDisposable
     }
 }
 
-public class NullJobFactory : IJobFactory
+public class NullNomadService: INomadService
 {
-    public Job Start(Guid id, string bindleId, Dictionary<string, string> environmentVariables, string? domain)
+    public void StartJob(Guid id, string bindleId, Dictionary<string, string> environmentVariables, string? domain)
     {
-        return new NullJob();
+        new NullJob();
+    }
+
+    public void DeleteJob(string jobId)
+    {
+
     }
 
     private class NullJob : Job
     {
-        public override void Reload() { }
+        public void Reload() { }
 
-        public override void Run()
+        public void Run()
         {
             _status = JobStatus.Running;
         }
 
-        public override void Stop()
+        public void Stop()
         {
             if (cancellationToken.IsCancellationRequested)
             {
