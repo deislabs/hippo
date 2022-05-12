@@ -142,8 +142,7 @@ public class NomadService : INomadService
             Env = new Dictionary<string, string>
             {
                 { "RUST_LOG", "warn,spin=debug" },
-                { "BINDLE_URL", nomadJob.bindleUrl
-},
+                { "BINDLE_URL", nomadJob.bindleUrl },
                 { "SPIN_LOG_DIR", "local/log" }
             },
             Config = new Dictionary<string, object>
