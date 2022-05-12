@@ -1,6 +1,7 @@
 using System.Text.RegularExpressions;
 using FluentValidation;
 using Hippo.Application.Common.Interfaces;
+using Hippo.Core.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hippo.Application.Channels.Commands;
@@ -31,6 +32,9 @@ public class CreateChannelCommandValidator : AbstractValidator<CreateChannelComm
         RuleFor(v => v.RangeRule)
             .NotEqual("").WithMessage("Range rule cannot be an empty string.");
 
+        RuleFor(v => v.RevisionSelectionStrategy)
+            .Must(BeValidRevisionSelectionStrategy).WithMessage("ActiveRevisionId and the specified ChannelRevisionSelectionStrategy do not match up.");
+
         // TODO: validate RangeRule syntax
     }
 
@@ -42,5 +46,11 @@ public class CreateChannelCommandValidator : AbstractValidator<CreateChannelComm
     public async Task<bool> BeUniqueDomainName(string domain, CancellationToken cancellationToken)
     {
         return await _context.Channels.AllAsync(a => a.Domain != domain, cancellationToken);
+    }
+
+    public bool BeValidRevisionSelectionStrategy(CreateChannelCommand command, ChannelRevisionSelectionStrategy revisionStrategy)
+    {
+        return (revisionStrategy == ChannelRevisionSelectionStrategy.UseRangeRule && command.ActiveRevisionId is null) ||
+            (revisionStrategy == ChannelRevisionSelectionStrategy.UseSpecifiedRevision && command.ActiveRevisionId is not null);
     }
 }
