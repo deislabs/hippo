@@ -21,9 +21,6 @@
 		<Content Remove="$(SpaRoot)\**" />
 		<None Remove="$(SpaRoot)\**" />
 		<None Include="$(SpaRoot)\**" Exclude="$(SpaRoot)\node_modules\**" />
-		<None Include="wwwroot\**">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -44,6 +41,16 @@
 	<Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
 		<Exec WorkingDirectory="$(SpaRoot)\" Command="npm install" />
 		<Exec WorkingDirectory="$(SpaRoot)\" Command="npm run publish" />
+
+		<!-- Include the newly-built files in the publish output -->
+		<ItemGroup>
+			<DistFiles Include="wwwroot\**" />
+			<ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+				<RelativePath>%(DistFiles.Identity)</RelativePath>
+				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+				<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			</ResolvedFileToPublish>
+		</ItemGroup>
 	</Target>
 
 	<Target Name="NpmClean" BeforeTargets="Clean">
