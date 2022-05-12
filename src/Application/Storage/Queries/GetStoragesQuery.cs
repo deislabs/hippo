@@ -1,8 +1,5 @@
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Hippo.Application.Common.Interfaces;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Hippo.Application.Revisions.Queries;
 

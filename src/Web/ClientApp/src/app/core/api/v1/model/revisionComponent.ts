@@ -9,22 +9,21 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { App } from './app';
-import { RevisionComponent } from './revisionComponent';
+import { Revision } from './revision';
 import { DomainEvent } from './domainEvent';
 
 
-export interface Revision { 
+export interface RevisionComponent { 
     created?: string;
     createdBy?: string | null;
     lastModified?: string;
     lastModifiedBy?: string | null;
     id?: string;
-    revisionNumber?: string | null;
-    description?: string | null;
-    appId?: string;
-    app?: App;
-    readonly components?: Array<RevisionComponent> | null;
+    source?: string | null;
+    name?: string | null;
+    route?: string | null;
+    revisionId?: string;
+    revision?: Revision;
     domainEvents?: Array<DomainEvent> | null;
 }
 

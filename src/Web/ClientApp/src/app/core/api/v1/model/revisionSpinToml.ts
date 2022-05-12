@@ -9,13 +9,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ChannelSummaryDto } from './channelSummaryDto';
+import { RevisionComponent } from './revisionComponent';
+import { RevisionTrigger } from './revisionTrigger';
 
 
-export interface AppDto { 
-    id: string;
-    name: string;
-    storageId: string;
-    channels: Array<ChannelSummaryDto>;
+export interface RevisionSpinToml { 
+    trigger: RevisionTrigger;
+    component: Array<RevisionComponent>;
 }
 

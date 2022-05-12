@@ -9,13 +9,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ChannelSummaryDto } from './channelSummaryDto';
 
 
-export interface AppDto { 
+export interface RevisionComponentDto { 
     id: string;
+    source: string;
     name: string;
-    storageId: string;
-    channels: Array<ChannelSummaryDto>;
+    route: string;
 }
 

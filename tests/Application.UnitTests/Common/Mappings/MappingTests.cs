@@ -33,7 +33,6 @@ public class MappingTests
     }
 
     [Theory]
-    [InlineData(typeof(App), typeof(AppDto))]
     [InlineData(typeof(App), typeof(AppRecord))]
     [InlineData(typeof(Certificate), typeof(CertificateDto))]
     [InlineData(typeof(Certificate), typeof(CertificateRecord))]

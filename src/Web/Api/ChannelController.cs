@@ -1,5 +1,6 @@
 using Hippo.Application.Channels.Commands;
 using Hippo.Application.Channels.Queries;
+using Hippo.Application.Revisions.Queries;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,12 @@ public class ChannelController : ApiControllerBase
     public async Task<ActionResult<ChannelsVm>> Index()
     {
         return await Mediator.Send(new GetChannelsQuery());
+    }
+
+    [HttpGet("{channelId}")]
+    public async Task<ActionResult<ChannelDetailsDto?>> GetChannelDetails(Guid channelId)
+    {
+        return await Mediator.Send(new GetChannelDetailsQuery { ChannelId = channelId });
     }
 
     [HttpGet("export")]
