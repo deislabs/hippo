@@ -19,31 +19,34 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-        <!-- Don't publish the SPA source files, but do show them in the project files list -->
-        <Content Remove="$(SpaRoot)\**" />
-        <None Remove="$(SpaRoot)\**" />
-        <None Include="$(SpaRoot)\**" Exclude="$(SpaRoot)\node_modules\**" />
-    </ItemGroup>
+		<!-- Don't publish the SPA source files, but do show them in the project files list -->
+		<Content Remove="$(SpaRoot)\**" />
+		<None Remove="$(SpaRoot)\**" />
+		<None Include="$(SpaRoot)\**" Exclude="$(SpaRoot)\node_modules\**" />
+		<None Include="wwwroot\**">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 
 	<Target Name="NpmInstall" BeforeTargets="Build" Condition="!Exists('$(SpaRoot)\node_modules')">
-        <!-- Ensure Node.js is installed -->
-        <Exec Command="node --version" ContinueOnError="true" EchoOff="true">
-            <Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
-        </Exec>
-        <Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
-        <Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
-        <Exec WorkingDirectory="$(SpaRoot)\" Command="npm install" />
-    </Target>
+		<!-- Ensure Node.js is installed -->
+		<Exec Command="node --version" ContinueOnError="true" EchoOff="true">
+			<Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
+		</Exec>
+		<Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
+		<Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
+		<Exec WorkingDirectory="$(SpaRoot)\" Command="npm install" />
+	</Target>
 
 	<Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
-        <Exec WorkingDirectory="$(SpaRoot)\" Command="npm install" />
-        <Exec WorkingDirectory="$(SpaRoot)\" Command="npm run build" />
-    </Target>
+		<Exec WorkingDirectory="$(SpaRoot)\" Command="npm install" />
+		<Exec WorkingDirectory="$(SpaRoot)\" Command="npm run build" />
+	</Target>
 
 	<Target Name="NpmClean" BeforeTargets="Clean">
-        <RemoveDir Directories="$(WWWRoot)" />
-        <RemoveDir Directories="$(SpaRoot)\node_modules" />
-    </Target>
+		<RemoveDir Directories="$(WWWRoot)" />
+		<RemoveDir Directories="$(SpaRoot)\node_modules" />
+	</Target>
 
 	<ItemGroup>
 		<PackageReference Include="FluentValidation.AspNetCore" Version="10.4.0" />
@@ -52,7 +55,7 @@
 		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.4" />
 		<PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="6.0.4" />
 		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="6.0.4" />
-		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.15.1" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.15.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.4">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

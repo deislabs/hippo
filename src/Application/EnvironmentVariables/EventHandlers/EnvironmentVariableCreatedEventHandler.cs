@@ -10,12 +10,13 @@ namespace Hippo.Application.EnvironmentVariables.EventHandlers;
 public class EnvironmentVariableCreatedEventHandler : INotificationHandler<DomainEventNotification<CreatedEvent<EnvironmentVariable>>>
 {
     private readonly ILogger<EnvironmentVariableCreatedEventHandler> _logger;
-    private readonly IJobFactory _jobFactory;
+    private readonly INomadService _nomadService;
 
-    public EnvironmentVariableCreatedEventHandler(ILogger<EnvironmentVariableCreatedEventHandler> logger, IJobFactory jobFactory)
+    public EnvironmentVariableCreatedEventHandler(ILogger<EnvironmentVariableCreatedEventHandler> logger,
+        INomadService nomadService)
     {
         _logger = logger;
-        _jobFactory = jobFactory;
+        _nomadService = nomadService;
     }
 
     public Task Handle(DomainEventNotification<CreatedEvent<EnvironmentVariable>> notification, CancellationToken cancellationToken)
@@ -32,7 +33,7 @@ public class EnvironmentVariableCreatedEventHandler : INotificationHandler<Domai
                 e => e.Key!,
                 e => e.Value!
             );
-            _jobFactory.Start(channel.Id, $"{channel.App.StorageId}/{channel.ActiveRevision.RevisionNumber}", envvars, channel.Domain);
+            _nomadService.StartJob(channel.Id, $"{channel.App.StorageId}/{channel.ActiveRevision.RevisionNumber}", envvars, channel.Domain);
             _logger.LogInformation($"Started {channel.App.Name} Channel {channel.Name} at revision {channel.ActiveRevision.RevisionNumber}");
         }
         else

@@ -17,7 +17,7 @@ namespace Hippo.Infrastructure.Data.Migrations.Postgresql
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.1")
+                .HasAnnotation("ProductVersion", "6.0.4")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -199,6 +199,9 @@ namespace Hippo.Infrastructure.Data.Migrations.Postgresql
                     b.Property<string>("CreatedBy")
                         .HasColumnType("text");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("LastModified")
                         .HasColumnType("timestamp with time zone");
 
@@ -215,6 +218,47 @@ namespace Hippo.Infrastructure.Data.Migrations.Postgresql
                     b.HasIndex("AppId");
 
                     b.ToTable("Revisions");
+                });
+
+            modelBuilder.Entity("Hippo.Core.Entities.RevisionComponent", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("LastModified")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<Guid>("RevisionId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Route")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Source")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RevisionId");
+
+                    b.ToTable("RevisionComponents");
                 });
 
             modelBuilder.Entity("Hippo.Infrastructure.Identity.Account", b =>
@@ -458,6 +502,17 @@ namespace Hippo.Infrastructure.Data.Migrations.Postgresql
                     b.Navigation("App");
                 });
 
+            modelBuilder.Entity("Hippo.Core.Entities.RevisionComponent", b =>
+                {
+                    b.HasOne("Hippo.Core.Entities.Revision", "Revision")
+                        .WithMany("Components")
+                        .HasForeignKey("RevisionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Revision");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -524,6 +579,11 @@ namespace Hippo.Infrastructure.Data.Migrations.Postgresql
             modelBuilder.Entity("Hippo.Core.Entities.Channel", b =>
                 {
                     b.Navigation("EnvironmentVariables");
+                });
+
+            modelBuilder.Entity("Hippo.Core.Entities.Revision", b =>
+                {
+                    b.Navigation("Components");
                 });
 #pragma warning restore 612, 618
         }

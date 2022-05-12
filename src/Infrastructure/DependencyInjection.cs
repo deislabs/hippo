@@ -57,6 +57,8 @@ public static class DependencyInjection
 
         services.AddTransient<IBindleService, BindleService>();
 
+        services.AddTransient<INomadService, NomadService>();
+
         services.Configure<IdentityOptions>(options =>
         {
             options.Password.RequireDigit = false;
@@ -66,17 +68,6 @@ public static class DependencyInjection
             options.Password.RequiredLength = 1;
             options.Password.RequiredUniqueChars = 0;
         });
-
-        var schedulerDriver = configuration.GetValue<string>("Scheduler:Driver", "local").ToLower();
-        switch (schedulerDriver)
-        {
-            case "local":
-                services.AddSingleton<IJobFactory, LocalJobFactory>();
-                break;
-            case "nomad":
-                services.AddSingleton<IJobFactory, NomadJobFactory>();
-                break;
-        }
 
         services.AddTransient<IJsonFileBuilder, JsonFileBuilder>();
 
