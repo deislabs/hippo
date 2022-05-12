@@ -16,12 +16,9 @@ public class NomadJob : Job
     public readonly string spinBinaryPath;
     public List<string> datacenters;
     public readonly string driver;
-    private Process? process;
-    private readonly IConfiguration _configuration;
 
     public NomadJob(IConfiguration configuration, Guid id, string bindleId, string domain) : base(id)
     {
-        _configuration = configuration;
         BindleId = bindleId;
         Domain = domain;
         bindleUrl = configuration.GetValue<string>("Bindle:Url", "http://127.0.0.1:8080/v1");

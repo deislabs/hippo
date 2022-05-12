@@ -35,11 +35,6 @@ public class NomadService : INomadService
         {
             job.AddEnvironmentVariable(e.Key, e.Value);
         }
-
-        if (DoesJobExist(id.ToString()))
-        {
-            DeleteJob(job.Id.ToString());
-        }
         
         PostJob(job);
     }
@@ -52,6 +47,12 @@ public class NomadService : INomadService
     private void PostJob(Application.Jobs.Job job)
     {
         var nomadJob = job as NomadJob;
+
+        if(nomadJob is null)
+        {
+            throw new ArgumentException("Job must be of type NomadJob.");
+        }
+
         var jobRegisterRequest = GenerateJobRegisterRequest(nomadJob);
         _client.PostJob(nomadJob.Id.ToString(), jobRegisterRequest);
     }
@@ -151,10 +152,5 @@ public class NomadService : INomadService
                 { "args", new List<string> { "up", "--listen", "[${NOMAD_IP_http}]:${NOMAD_PORT_http}", "--log-dir", "local/log", "--bindle", nomadJob.BindleId } }
             }
         };
-    }
-
-    private bool DoesJobExist(string jobName)
-    {
-        return _client.GetJobs().Any(job => job.Name == jobName);
     }
 }
