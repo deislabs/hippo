@@ -3,7 +3,7 @@
 		"ng": "ng",
 		"start": "ng serve --port 44467",
 		"build": "ng build --configuration development",
-		"build:prod": "ng build --configuration production",
+		"publish": "ng build --configuration production",
 		"watch": "ng build --watch --configuration development",
 		"test": "ng test",
 		"generate:api": "JAVA_OPTS='-Dio.swagger.parser.util.RemoteUrl.trustAll=true -Dio.swagger.v3.parser.util.RemoteUrl.trustAll=true' openapi-generator-cli generate -i https://localhost:5309/swagger/v1/swagger.json -g typescript-angular -o src/app/core/api/v1"

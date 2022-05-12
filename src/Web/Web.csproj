@@ -43,11 +43,11 @@
 
 	<Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
 		<Exec WorkingDirectory="$(SpaRoot)\" Command="npm install" />
-		<Exec WorkingDirectory="$(SpaRoot)\" Command="npm run build" />
+		<Exec WorkingDirectory="$(SpaRoot)\" Command="npm run publish" />
 	</Target>
 
 	<Target Name="NpmClean" BeforeTargets="Clean">
-		<RemoveDir Directories="$(WWWRoot)" />
+		<RemoveDir Directories="wwwroot" />
 		<RemoveDir Directories="$(SpaRoot)\node_modules" />
 	</Target>
 
