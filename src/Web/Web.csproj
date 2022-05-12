@@ -14,8 +14,6 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<SpaRoot>ClientApp</SpaRoot>
-		<SpaProxyServerUrl>http://localhost:44467</SpaProxyServerUrl>
-		<SpaProxyLaunchCommand>npm start</SpaProxyLaunchCommand>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -26,6 +24,11 @@
 		<None Include="wwwroot\**">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- Extends watching group to include Angular app changes -->
+		<Watch Include="$(SpaRoot)\**\*" Exclude="$(SpaRoot)\node_modules\**\*;$(SpaRoot)\**\*.spec.ts" />
 	</ItemGroup>
 
 	<Target Name="NpmInstall" BeforeTargets="Build" Condition="!Exists('$(SpaRoot)\node_modules')">
@@ -50,7 +53,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="FluentValidation.AspNetCore" Version="10.4.0" />
-		<PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="6.0.4" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.4" />
 		<PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="6.0.4" />
