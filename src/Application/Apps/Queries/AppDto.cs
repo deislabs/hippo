@@ -20,5 +20,8 @@ public class AppDto
     public string StorageId { get; set; } = "";
 
     [Required]
+    public string? Description { get; set; } = "";
+
+    [Required]
     public IList<ChannelSummaryDto> Channels { get; set; }
 }

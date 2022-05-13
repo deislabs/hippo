@@ -8,15 +8,17 @@
 	</div>
 </article>
 
+<div class="mb-4">
+	<h1 class="title">Applications</h1>
+</div>
 
-<h1 class="title">Applications</h1>
 <div class="columns is-multiline">
-	<div *ngFor="let app of apps" class="column is-full-tablet is-half-desktop is-third-widescreen box">
+	<div *ngFor="let app of apps" class="column is-full-tablet is-half-desktop is-third-widescreen">
 		<a routerLink="/app" [queryParams]="{ id: app.id }">
 			<div class="card">
 				<div class="card-content">
 					<p class="title is-size-3">{{ app.name }}</p>
-					<p class="subtitle is-size-4">{{ app.id }}</p>
+					<p class="subtitle is-size-4">{{ app.description }}</p>
 				</div>
 			</div>
 		</a>
