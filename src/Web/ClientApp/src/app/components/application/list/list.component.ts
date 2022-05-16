@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AppDto, AppService } from 'src/app/core/api/v1';
+import { faPlus, faCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
 	selector: 'app-application-list',
@@ -9,6 +10,9 @@ import { AppDto, AppService } from 'src/app/core/api/v1';
 export class ListComponent implements OnInit {
 	apps: AppDto[] = [];
 	error = '';
+	faPlus = faPlus;
+	faCircle = faCircle;
+	constanta = "ceva";
 
 	constructor(private readonly appService: AppService) { }
 

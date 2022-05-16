@@ -25,6 +25,7 @@ import { ChannelComponent } from './components/channel/channel.component';
 import { HealthCheckComponent } from './components/health-check/health-check.component';
 import { environment } from './../environments/environment';
 import { SettingsComponent } from './components/application/settings/settings.component';
+import { NgxJdenticonModule, JDENTICON_CONFIG } from 'ngx-jdenticon';
 
 export function apiConfigFactory(): Configuration {
 	const params: ConfigurationParameters = {
@@ -59,7 +60,8 @@ export function apiConfigFactory(): Configuration {
 		HttpClientModule,
 		ReactiveFormsModule,
 		FormsModule,
-		FontAwesomeModule
+		FontAwesomeModule,
+		NgxJdenticonModule,
 	],
 	providers: [
 		{
@@ -72,6 +74,12 @@ export function apiConfigFactory(): Configuration {
 			useClass: AuthInterceptor,
 			multi: true,
 			deps: [SessionService]
+		},
+		{
+			provide: JDENTICON_CONFIG,
+			useValue: {
+				replaceMode: "observe"
+			}
 		}
 	],
 	bootstrap: [AppComponent]

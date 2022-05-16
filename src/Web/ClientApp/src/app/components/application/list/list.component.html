@@ -8,19 +8,40 @@
 	</div>
 </article>
 
-<div class="mb-4">
+<div class="is-flex is-flex-direction-row is-align-items-center mb-4">
 	<h1 class="title">Applications</h1>
+	<button class="button is-medium is-link" routerLink="/app/new">
+		<span class="icon">
+			<fa-icon [icon]="faPlus"></fa-icon>
+		</span>
+		<span>Add</span>
+	</button>
 </div>
 
 <div class="columns is-multiline">
 	<div *ngFor="let app of apps" class="column is-full-tablet is-half-desktop is-third-widescreen">
-		<a routerLink="/app" [queryParams]="{ id: app.id }">
-			<div class="card">
-				<div class="card-content">
-					<p class="title is-size-3">{{ app.name }}</p>
-					<p class="subtitle is-size-4">{{ app.description }}</p>
+		<a class="box" routerLink="/app" [queryParams]="{ id: app.id }" >
+			<article class="media">
+				<div class="media-left">
+					<svg class="image is-128x128" [data-jdenticon-value]="app.name"></svg>
 				</div>
-			</div>
+				<div class="media-content">
+					<div class="content">
+						<p class="title is-size-3">{{ app.name }}</p>
+						<p class="subtitle is-size-4">{{ app.description }}</p>
+						<p class="has-text-right">
+							<span *ngFor="let channel of app.channels">
+								<span>{{channel.name}}</span>: 
+								<span *ngIf="channel.activeRevisionNumber"><strong>v{{channel.activeRevisionNumber}}</strong></span>
+								<span class="icon">
+									<!-- TODO: adapt color to channel status -->
+									<fa-icon [icon]="faCircle" [ngStyle]="{'color': 'green'}"></fa-icon>
+								</span>
+							</span>
+						</p>
+					</div>
+				</div>
+			</article>
 		</a>
-	</div>
+  	</div>
 </div>
