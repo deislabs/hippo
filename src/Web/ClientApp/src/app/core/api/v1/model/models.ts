@@ -18,6 +18,7 @@ export * from './domainEvent';
 export * from './environmentVariable';
 export * from './environmentVariableDto';
 export * from './environmentVariablesVm';
+export * from './getChannelLogsVm';
 export * from './registerRevisionCommand';
 export * from './revision';
 export * from './revisionDto';

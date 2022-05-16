@@ -11,13 +11,13 @@ public class EnvironmentVariableDeletedEventHandler : INotificationHandler<Domai
 {
     private readonly ILogger<EnvironmentVariableDeletedEventHandler> _logger;
 
-    private readonly INomadService _nomadService;
+    private readonly IJobService _jobService;
 
     public EnvironmentVariableDeletedEventHandler(ILogger<EnvironmentVariableDeletedEventHandler> logger,
-        INomadService nomadService)
+        IJobService nomadService)
     {
         _logger = logger;
-        _nomadService = nomadService;
+        _jobService = nomadService;
     }
 
     public Task Handle(DomainEventNotification<DeletedEvent<EnvironmentVariable>> notification, CancellationToken cancellationToken)
@@ -34,7 +34,7 @@ public class EnvironmentVariableDeletedEventHandler : INotificationHandler<Domai
                 e => e.Key!,
                 e => e.Value!
             );
-            _nomadService.StartJob(channel.Id, $"{channel.App.StorageId}/{channel.ActiveRevision.RevisionNumber}", envvars, channel.Domain);
+            _jobService.StartJob(channel.Id, $"{channel.App.StorageId}/{channel.ActiveRevision.RevisionNumber}", envvars, channel.Domain);
             _logger.LogInformation($"Started {channel.App.Name} Channel {channel.Name} at revision {channel.ActiveRevision.RevisionNumber}");
         }
         else

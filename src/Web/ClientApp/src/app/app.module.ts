@@ -25,6 +25,7 @@ import { ChannelComponent } from './components/channel/channel.component';
 import { HealthCheckComponent } from './components/health-check/health-check.component';
 import { environment } from './../environments/environment';
 import { SettingsComponent } from './components/application/settings/settings.component';
+import { LogsComponent } from './components/channel/logs/logs.component';
 
 export function apiConfigFactory(): Configuration {
 	const params: ConfigurationParameters = {
@@ -51,6 +52,7 @@ export function apiConfigFactory(): Configuration {
 		ChannelComponent,
 		HealthCheckComponent,
 		SettingsComponent,
+  		LogsComponent,
 	],
 	imports: [
 		BrowserModule,
