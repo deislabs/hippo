@@ -15,7 +15,7 @@ namespace Hippo.Infrastructure.Data.Migrations.Sqlite
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "6.0.1");
+            modelBuilder.HasAnnotation("ProductVersion", "6.0.4");
 
             modelBuilder.Entity("Hippo.Core.Entities.App", b =>
                 {
@@ -194,6 +194,9 @@ namespace Hippo.Infrastructure.Data.Migrations.Sqlite
                     b.Property<string>("CreatedBy")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("LastModified")
                         .HasColumnType("TEXT");
 
@@ -210,6 +213,47 @@ namespace Hippo.Infrastructure.Data.Migrations.Sqlite
                     b.HasIndex("AppId");
 
                     b.ToTable("Revisions");
+                });
+
+            modelBuilder.Entity("Hippo.Core.Entities.RevisionComponent", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("LastModified")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastModifiedBy")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("RevisionId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Route")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Source")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RevisionId");
+
+                    b.ToTable("RevisionComponents");
                 });
 
             modelBuilder.Entity("Hippo.Infrastructure.Identity.Account", b =>
@@ -417,7 +461,7 @@ namespace Hippo.Infrastructure.Data.Migrations.Sqlite
                         .IsRequired();
 
                     b.HasOne("Hippo.Core.Entities.Certificate", "Certificate")
-                        .WithMany()
+                        .WithMany("Channels")
                         .HasForeignKey("CertificateId");
 
                     b.Navigation("ActiveRevision");
@@ -447,6 +491,17 @@ namespace Hippo.Infrastructure.Data.Migrations.Sqlite
                         .IsRequired();
 
                     b.Navigation("App");
+                });
+
+            modelBuilder.Entity("Hippo.Core.Entities.RevisionComponent", b =>
+                {
+                    b.HasOne("Hippo.Core.Entities.Revision", "Revision")
+                        .WithMany("Components")
+                        .HasForeignKey("RevisionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Revision");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -507,9 +562,19 @@ namespace Hippo.Infrastructure.Data.Migrations.Sqlite
                     b.Navigation("Revisions");
                 });
 
+            modelBuilder.Entity("Hippo.Core.Entities.Certificate", b =>
+                {
+                    b.Navigation("Channels");
+                });
+
             modelBuilder.Entity("Hippo.Core.Entities.Channel", b =>
                 {
                     b.Navigation("EnvironmentVariables");
+                });
+
+            modelBuilder.Entity("Hippo.Core.Entities.Revision", b =>
+                {
+                    b.Navigation("Components");
                 });
 #pragma warning restore 612, 618
         }

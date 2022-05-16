@@ -42,6 +42,8 @@ public class ApplicationDbContext : IdentityDbContext<Account>, IApplicationDbCo
 
     public DbSet<Revision> Revisions => Set<Revision>();
 
+    public DbSet<RevisionComponent> RevisionComponents => Set<RevisionComponent>();
+
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
         foreach (var entry in ChangeTracker.Entries<AuditableEntity>())

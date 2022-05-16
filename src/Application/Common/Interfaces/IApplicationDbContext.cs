@@ -16,6 +16,8 @@ public interface IApplicationDbContext
 
     DbSet<Revision> Revisions { get; }
 
+    DbSet<RevisionComponent> RevisionComponents { get; }
+
     ChangeTracker ChangeTracker { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);

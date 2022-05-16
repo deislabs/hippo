@@ -41,11 +41,6 @@ public class NomadJobService : IJobService
         {
             job.AddEnvironmentVariable(e.Key, e.Value);
         }
-
-        if (DoesJobExist(id.ToString()))
-        {
-            DeleteJob(job.Id.ToString());
-        }
         
         PostJob(job);
     }
@@ -69,6 +64,12 @@ public class NomadJobService : IJobService
     private void PostJob(Application.Jobs.Job job)
     {
         var nomadJob = job as NomadJob;
+
+        if(nomadJob is null)
+        {
+            throw new ArgumentException("Job must be of type NomadJob.");
+        }
+
         var jobRegisterRequest = GenerateJobRegisterRequest(nomadJob);
         _jobsClient.PostJob(nomadJob.Id.ToString(), jobRegisterRequest);
     }

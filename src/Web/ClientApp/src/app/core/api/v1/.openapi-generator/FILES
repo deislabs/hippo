@@ -20,8 +20,10 @@ model/certificate.ts
 model/certificateDto.ts
 model/certificatesVm.ts
 model/channel.ts
+model/channelDetailsDto.ts
 model/channelDto.ts
 model/channelRevisionSelectionStrategy.ts
+model/channelSummaryDto.ts
 model/channelsVm.ts
 model/createAccountCommand.ts
 model/createAppCommand.ts
@@ -37,6 +39,9 @@ model/getChannelLogsVm.ts
 model/models.ts
 model/registerRevisionCommand.ts
 model/revision.ts
+model/revisionComponent.ts
+model/revisionComponentDto.ts
+model/revisionDetailsDto.ts
 model/revisionDto.ts
 model/revisionsVm.ts
 model/storageList.ts

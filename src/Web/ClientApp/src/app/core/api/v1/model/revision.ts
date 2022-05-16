@@ -10,6 +10,7 @@
  * Do not edit the class manually.
  */
 import { App } from './app';
+import { RevisionComponent } from './revisionComponent';
 import { DomainEvent } from './domainEvent';
 
 
@@ -20,8 +21,10 @@ export interface Revision {
     lastModifiedBy?: string | null;
     id?: string;
     revisionNumber?: string | null;
+    description?: string | null;
     appId?: string;
     app?: App;
+    readonly components?: Array<RevisionComponent> | null;
     domainEvents?: Array<DomainEvent> | null;
 }
 
