@@ -56,6 +56,12 @@ public class NomadJobService : IJobService
             .OrderByDescending(a => a.CreateTime)
             .Select(a => a.ID)
             .FirstOrDefault();
+
+        if (allocationId == null)
+        {
+            return new string[] { };
+        }
+
         var allocationData = _clientsClient.GetAllocationLogs(_taskName, _logSource, allocationId).Data.ToString();
         byte[] data = Convert.FromBase64String(allocationData);
         return Encoding.UTF8.GetString(data).Split("\n");

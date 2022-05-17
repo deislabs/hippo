@@ -1,4 +1,4 @@
-<div class="card">
+<div *ngIf="channel" class="card">
     <header class="card-header">
         <h1 class="title card-header-title">{{ channel.name }}</h1>
         <button class="button is-small is-danger" (click)="deleteChannel(id)"><fa-icon class="icon" [icon]="faTrash"></fa-icon><span>Delete</span></button>
