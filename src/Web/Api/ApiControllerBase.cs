@@ -6,6 +6,7 @@ namespace Hippo.Web.Api;
 
 [Area("API")]
 [Route("api/[controller]")]
+[ApiVersion("0.1")]
 [ApiController]
 [ApiExceptionFilter]
 public abstract class ApiControllerBase : Controller

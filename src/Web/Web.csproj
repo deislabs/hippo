@@ -14,8 +14,6 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<SpaRoot>ClientApp</SpaRoot>
-		<SpaProxyServerUrl>http://localhost:44467</SpaProxyServerUrl>
-		<SpaProxyLaunchCommand>npm start</SpaProxyLaunchCommand>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -23,9 +21,11 @@
 		<Content Remove="$(SpaRoot)\**" />
 		<None Remove="$(SpaRoot)\**" />
 		<None Include="$(SpaRoot)\**" Exclude="$(SpaRoot)\node_modules\**" />
-		<None Include="wwwroot\**">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- Extends watching group to include Angular app changes -->
+		<Watch Include="$(SpaRoot)\**\*" Exclude="$(SpaRoot)\node_modules\**\*;$(SpaRoot)\**\*.spec.ts" />
 	</ItemGroup>
 
 	<Target Name="NpmInstall" BeforeTargets="Build" Condition="!Exists('$(SpaRoot)\node_modules')">
@@ -40,23 +40,33 @@
 
 	<Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
 		<Exec WorkingDirectory="$(SpaRoot)\" Command="npm install" />
-		<Exec WorkingDirectory="$(SpaRoot)\" Command="npm run build" />
+		<Exec WorkingDirectory="$(SpaRoot)\" Command="npm run publish" />
+
+		<!-- Include the newly-built files in the publish output -->
+		<ItemGroup>
+			<DistFiles Include="wwwroot\**" />
+			<ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
+				<RelativePath>%(DistFiles.Identity)</RelativePath>
+				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+				<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+			</ResolvedFileToPublish>
+		</ItemGroup>
 	</Target>
 
 	<Target Name="NpmClean" BeforeTargets="Clean">
-		<RemoveDir Directories="$(WWWRoot)" />
+		<RemoveDir Directories="wwwroot" />
 		<RemoveDir Directories="$(SpaRoot)\node_modules" />
 	</Target>
 
 	<ItemGroup>
 		<PackageReference Include="FluentValidation.AspNetCore" Version="10.4.0" />
-		<PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="6.0.4" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
-		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.4" />
-		<PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="6.0.4" />
-		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="6.0.4" />
-		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.15.0" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.4">
+		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.5" />
+		<PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="6.0.5" />
+		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="6.0.5" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.15.1" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.5">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>

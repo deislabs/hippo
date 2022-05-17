@@ -46,7 +46,7 @@ public class BindleService : IBindleService
         {
             return null;
         }
-        
+
         var parcelHttpResponse = await _client.GetParcel(revisionId, parcelId);
         return await ParseSpinTomlParcel(parcelHttpResponse);
     }
@@ -80,7 +80,7 @@ public class BindleService : IBindleService
             .Select(i => new string(i.Bindle?.Version))
             .ToList();
     }
-    
+
     public async Task<IEnumerable<string>> QueryAvailableStorages(string query, ulong? offset, int? limit)
     {
         var matches = await _client.QueryInvoices(query, offset, limit);
