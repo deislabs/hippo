@@ -12,7 +12,6 @@ export class ListComponent implements OnInit {
 	error = '';
 	faPlus = faPlus;
 	faCircle = faCircle;
-	constanta = "ceva";
 
 	constructor(private readonly appService: AppService) { }
 
