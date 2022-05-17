@@ -9,6 +9,7 @@ using Hippo.Infrastructure.Identity;
 using Hippo.Web.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -54,6 +55,14 @@ builder.Services.AddAuthentication().AddCookie().AddJwtBearer(cfg =>
         cfg.SaveToken = true;
     }
 );
+
+builder.Services.AddApiVersioning(options =>
+{
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.DefaultApiVersion = new ApiVersion(0, 1);
+    options.ReportApiVersions = true;
+    options.ApiVersionReader = new HeaderApiVersionReader("Api-Version");
+});
 
 builder.Services.AddSwaggerGen(c =>
 {

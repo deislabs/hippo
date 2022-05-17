@@ -51,7 +51,7 @@
 									"with": "src/environments/environment.prod.ts"
 								}
 							],
-							"outputHashing": "all"
+							"outputHashing": "none"
 						},
 						"development": {
 							"buildOptimizer": false,
@@ -71,8 +71,7 @@
 							"browserTarget": "ClientApp:build:production"
 						},
 						"development": {
-							"browserTarget": "ClientApp:build:development",
-							"proxyConfig": "proxy.conf.js"
+							"browserTarget": "ClientApp:build:development"
 						}
 					},
 					"defaultConfiguration": "development"
