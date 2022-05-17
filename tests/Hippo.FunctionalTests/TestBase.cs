@@ -197,7 +197,7 @@ public class TestBase : IDisposable
     }
 }
 
-public class NullNomadService: INomadService
+public class NullNomadService : INomadService
 {
     public void StartJob(Guid id, string bindleId, Dictionary<string, string> environmentVariables, string? domain)
     {

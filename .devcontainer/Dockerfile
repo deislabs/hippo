@@ -18,7 +18,7 @@ ARG BINDLE_VERSION="v0.8.0"
 RUN curl -fsSLo bindle.tar.gz https://bindle.blob.core.windows.net/releases/bindle-${BINDLE_VERSION}-linux-amd64.tar.gz && tar -xvf bindle.tar.gz && mv bindle bindle-server /usr/local/bin/
 
 # Install spin
-ARG SPIN_VERSION="v0.1.0"
+ARG SPIN_VERSION="v0.2.0"
 RUN curl -fsSLo spin.tar.gz https://github.com/fermyon/spin/releases/download/${SPIN_VERSION}/spin-${SPIN_VERSION}-linux-amd64.tar.gz  && tar -xvf spin.tar.gz && mv spin /usr/local/bin/
 
 # Install Rust

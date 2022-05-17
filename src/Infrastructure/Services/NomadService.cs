@@ -35,7 +35,7 @@ public class NomadService : INomadService
         {
             job.AddEnvironmentVariable(e.Key, e.Value);
         }
-        
+
         PostJob(job);
     }
 
@@ -48,7 +48,7 @@ public class NomadService : INomadService
     {
         var nomadJob = job as NomadJob;
 
-        if(nomadJob is null)
+        if (nomadJob is null)
         {
             throw new ArgumentException("Job must be of type NomadJob.");
         }
@@ -142,8 +142,7 @@ public class NomadService : INomadService
             Env = new Dictionary<string, string>
             {
                 { "RUST_LOG", "warn,spin=debug" },
-                { "BINDLE_URL", nomadJob.bindleUrl
-},
+                { "BINDLE_URL", nomadJob.bindleUrl },
                 { "SPIN_LOG_DIR", "local/log" }
             },
             Config = new Dictionary<string, object>

@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using Hippo.Application.Common.Config;
 using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
+using Hippo.Application.Rules;
 using Hippo.Core.Entities;
 using Hippo.Core.Enums;
 using Hippo.Core.Events;
@@ -66,15 +67,6 @@ public class CreateChannelCommandHandler : IRequestHandler<CreateChannelCommand,
             CertificateId = request.CertificateId
         };
 
-        if (request.ActiveRevisionId is not null)
-        {
-            var revision = await _context.Revisions
-                .Where(c => c.Id == request.ActiveRevisionId)
-                .SingleOrDefaultAsync(cancellationToken);
-            _ = revision ?? throw new NotFoundException(nameof(Revision), request.ActiveRevisionId);
-            entity.ActiveRevision = revision;
-        }
-
         if (request.CertificateId is not null)
         {
             var certificate = await _context.Certificates
@@ -89,10 +81,37 @@ public class CreateChannelCommandHandler : IRequestHandler<CreateChannelCommand,
             entity.RangeRule = "*";
         }
 
+        entity.ActiveRevision = await GetActiveRevision(request, entity, cancellationToken);
+
         _context.Channels.Add(entity);
 
         await _context.SaveChangesAsync(cancellationToken);
 
         return entity.Id;
+    }
+
+    private async Task<Revision?> GetActiveRevision(CreateChannelCommand request, Channel entity, CancellationToken cancellationToken)
+    {
+        Revision? revision = null;
+
+        if (entity.RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseRangeRule &&
+                    request.ActiveRevisionId is null)
+        {
+            var revisions = _context.Revisions
+                .Where(c => c.AppId == request.AppId).ToList();
+
+            revision = RevisionRangeRule.Parse(entity.RangeRule).Match(revisions);
+        }
+
+        if (entity.RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseSpecifiedRevision &&
+            request.ActiveRevisionId is not null)
+        {
+            revision = await _context.Revisions
+                .Where(c => c.Id == request.ActiveRevisionId)
+                .SingleOrDefaultAsync(cancellationToken);
+            _ = revision ?? throw new NotFoundException(nameof(Revision), request.ActiveRevisionId);
+        }
+
+        return revision;
     }
 }

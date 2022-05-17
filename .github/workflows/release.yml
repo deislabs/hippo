@@ -3,8 +3,7 @@ name: Create a Release
 on:
   push:
     tags:
-    - 'v[0-9]+.[0-9]+.[0-9]+'
-    - 'v[0-9]+.[0-9]+.[0-9]+-preview'
+    - "*"
 
 jobs:
   release:
