@@ -38,8 +38,7 @@
 		<Exec WorkingDirectory="$(SpaRoot)\" Command="npm install" />
 	</Target>
 
-	<Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
-		<Exec WorkingDirectory="$(SpaRoot)\" Command="npm install" />
+	<Target Name="PublishRunWebpack" BeforeTargets="Build" DependsOnTargets="NpmInstall">
 		<Exec WorkingDirectory="$(SpaRoot)\" Command="npm run publish" />
 
 		<!-- Include the newly-built files in the publish output -->
