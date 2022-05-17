@@ -8,12 +8,12 @@
 	</div>
 </article>
 
-<div class="is-flex is-flex-direction-row is-align-items-center mb-4">
+<div class="is-flex is-flex-direction-row is-align-items-center is-justify-content-space-between mb-4">
 	<div>
 		<h1 class="title">Applications</h1>
 	</div>
-	<div class="ml-3">
-		<button class="button is-medium is-outlined is-link" routerLink="/app/new">
+	<div>
+		<button class="button is-medium is-rounded is-dark" routerLink="/app/new">
 			<span class="icon">
 				<fa-icon [icon]="faPlus"></fa-icon>
 			</span>
@@ -23,7 +23,7 @@
 </div>
 
 <div class="columns is-multiline">
-	<div *ngFor="let app of apps" class="column is-flex is-full-tablet is-half-desktop is-third-widescreen">
+	<div *ngFor="let app of apps" class="column is-full-tablet is-half-desktop is-third-widescreen">
 		<a class="box" routerLink="/app" [queryParams]="{ id: app.id }" >
 			<article class="media is-align-items-center">
 				<div class="media-left">
