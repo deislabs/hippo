@@ -16,6 +16,7 @@ export interface AppDto {
     id: string;
     name: string;
     storageId: string;
+    description: string;
     channels: Array<ChannelSummaryDto>;
 }
 
