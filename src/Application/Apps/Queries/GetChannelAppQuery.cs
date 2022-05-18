@@ -14,7 +14,7 @@ public class GetChannelAppQuery : IRequest<AppDto>
     public Guid ChannelId { get; set; }
 }
 
-public class GetChannelAppQueryHandler : IRequestHandler<GetAppQuery, AppDto>
+public class GetChannelAppQueryHandler : IRequestHandler<GetChannelAppQuery, AppDto>
 {
     private readonly IApplicationDbContext _context;
 
@@ -23,10 +23,10 @@ public class GetChannelAppQueryHandler : IRequestHandler<GetAppQuery, AppDto>
         _context = context;
     }
 
-    public async Task<AppDto> Handle(GetAppQuery request, CancellationToken cancellationToken)
+    public async Task<AppDto> Handle(GetChannelAppQuery request, CancellationToken cancellationToken)
     {
         var channel = await _context.Channels
-            .Where(c => c.Id == request.Id)
+            .Where(c => c.Id == request.ChannelId)
             .Include(c => c.App)
             .Include(c => c.App.Channels)
             .Include(c => c.App.Revisions)
@@ -34,7 +34,7 @@ public class GetChannelAppQueryHandler : IRequestHandler<GetAppQuery, AppDto>
 
         if (channel is null || channel.App is null)
         {
-            throw new NotFoundException(nameof(Channel), request.Id);
+            throw new NotFoundException(nameof(Channel), request.ChannelId);
         }
 
         var entity = channel.App.ToAppDto();

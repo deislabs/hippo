@@ -1,6 +1,7 @@
-<div class="is-flex is-flex-direction-row is-align-items-center is-justify-content-space-between mb-6">
+<div *ngIf="app" class="is-flex is-flex-direction-row is-align-items-center is-justify-content-space-between mb-6">
     <div>
         <h1 class="is-size-1">{{app.name}}</h1>
+        <a href="https://{{app.selectedChannelUrl}}" target="_blank">{{app.selectedChannelUrl}}</a>
     </div>
     <div *ngIf="app.channels.length > 1 && activeTab != tabs.Settings">
         <div class="dropdown"
@@ -18,7 +19,8 @@
               <div class="dropdown-content">
                 <a *ngFor="let channel of app.channels" class="dropdown-item"
                     [ngClass]="{ 'is-active': selectedChannel.id == channel.id }"
-                    (click)="changeSelectedChannel(channel)">
+                    (click)="changeSelectedChannel(channel)"
+                    routerLink="/app" [queryParams]="{ id: channel.id }">
                   {{channel.name}}
                 </a>
               </div>
@@ -66,8 +68,8 @@
         </ul>
     </aside>
     <div class="column">
-        <app-channel-list *ngIf="activeTab == tabs.Overview" [appId]="id"></app-channel-list>
-        <app-settings *ngIf="activeTab == tabs.Settings" [appId]="id"></app-settings>
+        <!-- <app-channel-list *ngIf="activeTab == tabs.Overview" [appId]="app.id"></app-channel-list> -->
+        <app-settings *ngIf="activeTab == tabs.Settings" [appId]="app.id"></app-settings>
     </div>
 </div>
 

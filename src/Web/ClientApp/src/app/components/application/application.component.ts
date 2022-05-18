@@ -12,7 +12,7 @@ import { faCog, faStream, faFilter, faChartBar, faAngleDown } from '@fortawesome
 })
 export class ApplicationComponent implements OnInit {
 	icons = { faCog, faStream, faFilter, faChartBar, faAngleDown };
-	id!: string;
+	channelId!: string;
 	app!: AppDto;
 	selectedChannel!: ChannelSummaryDto;
 	isSelectClicked: boolean = false;
@@ -26,7 +26,7 @@ export class ApplicationComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.route.queryParams.subscribe(params => {
-			this.id = params['id'];
+			this.channelId = params['id'];
 			this.refreshData();
 		});
 	}
@@ -44,9 +44,8 @@ export class ApplicationComponent implements OnInit {
 	}
 
 	refreshData() {
-		this.appService.apiAppGet().subscribe(vm => {
-			let app = vm.apps.find(element => element.id == this.id);
-			app === undefined ? this.router.navigate(['/404']) : this.app = app;
+		this.appService.apiAppChannelIdGet(this.channelId).subscribe(app => {
+			!app ? this.router.navigate(['/404']) : this.app = app;
 			this.selectedChannel = <ChannelSummaryDto>(app?.channels[0]);
 		});
 	}

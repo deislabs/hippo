@@ -17,6 +17,6 @@ public static class ChannelExtensions
 
     public static IList<ChannelSummaryDto> ToChannelSummaryDtoList(this IList<Channel> channels)
     {
-        return channels.Select(x => x.ToChannelSummaryDto()).ToList();
+        return channels.OrderBy(c => c.Created).Select(x => x.ToChannelSummaryDto()).ToList();
     }
 }
