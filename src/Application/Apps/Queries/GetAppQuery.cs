@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
+using Hippo.Application.Apps.Extensions;
 using Hippo.Application.Channels.Queries;
 using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
@@ -31,6 +32,8 @@ public class GetAppQueryHandler : IRequestHandler<GetAppQuery, AppDto>
     {
         var entity = await _context.Apps
             .Where(a => a.Id == request.Id)
+            .Include(a => a.Channels)
+            .Include(a => a.Revisions)
             .FirstOrDefaultAsync(cancellationToken);
 
         if (entity is null)
@@ -38,12 +41,6 @@ public class GetAppQueryHandler : IRequestHandler<GetAppQuery, AppDto>
             throw new NotFoundException(nameof(App), request.Id);
         }
 
-        return new AppDto
-        {
-            Id = entity.Id,
-            Name = entity.Name,
-            StorageId = entity.StorageId,
-            Channels = entity.Channels.ToChannelSummaryDtoList(),
-        };
+        return entity.ToAppDto();
     }
 }

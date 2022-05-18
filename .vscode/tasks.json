@@ -7,10 +7,10 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/src/Web/Web.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
             ],
+            "options": {
+                "cwd": "${workspaceFolder}/src/Web"
+            },
             "problemMatcher": "$msCompile"
         },
         {
@@ -19,10 +19,10 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/src/Web/Web.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
             ],
+            "options": {
+                "cwd": "${workspaceFolder}/src/Web"
+            },
             "problemMatcher": "$msCompile"
         },
         {
@@ -32,10 +32,23 @@
             "args": [
                 "watch",
                 "run",
-                "${workspaceFolder}/src/Web/Web.csproj",
-                "/property:GenerateFullPaths=true",
-                "/consoleloggerparameters:NoSummary"
             ],
+            "options": {
+                "cwd": "${workspaceFolder}/src/Web"
+            },
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "ng:watch",
+            "command": "ng",
+            "type": "process",
+            "args": [
+                "build",
+                "--watch"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/src/Web/ClientApp"
+            },
             "problemMatcher": "$msCompile"
         }
     ]

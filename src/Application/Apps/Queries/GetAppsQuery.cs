@@ -1,4 +1,5 @@
 using AutoMapper;
+using Hippo.Application.Apps.Extensions;
 using Hippo.Application.Channels.Queries;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Core.Entities;
@@ -25,14 +26,10 @@ public class GetAppsQueryHandler : IRequestHandler<GetAppsQuery, AppsVm>
         return new AppsVm
         {
             Apps = await _context.Apps
-                .Select(a => new AppDto
-                {
-                    Id = a.Id,
-                    Name = a.Name,
-                    StorageId = a.StorageId,
-                    Channels = a.Channels.ToChannelSummaryDtoList(),
-                })
                 .OrderBy(a => a.Name)
+                .Include(a => a.Channels)
+                .Include(a => a.Revisions)
+                .Select(a => a.ToAppDto())                
                 .ToListAsync(cancellationToken)
         };
     }
