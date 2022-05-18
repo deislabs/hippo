@@ -14,6 +14,8 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 		<SpaRoot>ClientApp</SpaRoot>
+		<SpaProxyServerUrl>http://localhost:44467</SpaProxyServerUrl>
+		<SpaProxyLaunchCommand>npm start</SpaProxyLaunchCommand>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -21,11 +23,6 @@
 		<Content Remove="$(SpaRoot)\**" />
 		<None Remove="$(SpaRoot)\**" />
 		<None Include="$(SpaRoot)\**" Exclude="$(SpaRoot)\node_modules\**" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<!-- Extends watching group to include Angular app changes -->
-		<Watch Include="$(SpaRoot)\**\*" Exclude="$(SpaRoot)\node_modules\**\*;$(SpaRoot)\**\*.spec.ts" />
 	</ItemGroup>
 
 	<Target Name="NpmInstall" BeforeTargets="Build" Condition="!Exists('$(SpaRoot)\node_modules')">
@@ -38,7 +35,12 @@
 		<Exec WorkingDirectory="$(SpaRoot)\" Command="npm install" />
 	</Target>
 
-	<Target Name="PublishRunWebpack" BeforeTargets="Build" DependsOnTargets="NpmInstall">
+	<Target Name="NpmRunBuild" AfterTargets="NpmInstall">
+		<Exec WorkingDirectory="$(SpaRoot)\" Command="npm run build"/>
+	</Target>
+
+	<Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
+		<Exec WorkingDirectory="$(SpaRoot)\" Command="npm install" />
 		<Exec WorkingDirectory="$(SpaRoot)\" Command="npm run publish" />
 
 		<!-- Include the newly-built files in the publish output -->
@@ -59,6 +61,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="FluentValidation.AspNetCore" Version="10.4.0" />
+		<PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="6.0.4" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.3.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.5" />
