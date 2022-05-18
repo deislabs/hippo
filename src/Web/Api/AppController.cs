@@ -15,6 +15,12 @@ public class AppController : ApiControllerBase
         return await Mediator.Send(new GetAppsQuery());
     }
 
+    [HttpGet("{channelId}")]
+    public async Task<ActionResult<AppDto>> GetChannelApp(Guid channelId)
+    {
+        return await Mediator.Send(new GetChannelAppQuery { ChannelId = channelId });
+    }
+
     [HttpGet("export")]
     public async Task<FileResult> Export()
     {

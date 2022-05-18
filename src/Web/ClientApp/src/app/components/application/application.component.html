@@ -1,15 +1,74 @@
-<div class="tabs">
-    <ul>
-        <li [ngClass]="{ 'is-active': activeTab == tabs.Channels }"
-            (click)="changeTab(tabs.Channels)">
-            <a>Channels</a>
-        </li>
-        <li (click)="changeTab(tabs.Settings)"
-            [ngClass]="{ 'is-active': activeTab == tabs.Settings }">
-            <a>Settings</a>
-        </li>
-    </ul>
+<div class="is-flex is-flex-direction-row is-align-items-center is-justify-content-space-between mb-6">
+    <div>
+        <h1 class="is-size-1">{{app.name}}</h1>
+    </div>
+    <div *ngIf="app.channels.length > 1 && activeTab != tabs.Settings">
+        <div class="dropdown"
+            [ngClass]="{ 'is-active': isSelectClicked }"
+            (click)="toggleIsSelectClicked()">
+            <div class="dropdown-trigger">
+              <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                <span [ngStyle]="{ 'min-width': '150px' }">{{selectedChannel.name}}</span>
+                <span class="icon is-small">
+                    <fa-icon [icon]="icons.faAngleDown"></fa-icon>
+                </span>
+              </button>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+              <div class="dropdown-content">
+                <a *ngFor="let channel of app.channels" class="dropdown-item"
+                    [ngClass]="{ 'is-active': selectedChannel.id == channel.id }"
+                    (click)="changeSelectedChannel(channel)">
+                  {{channel.name}}
+                </a>
+              </div>
+            </div>
+          </div>
+    </div>
 </div>
 
-<app-channel-list *ngIf="activeTab == tabs.Channels" [appId]="id"></app-channel-list>
-<app-settings *ngIf="activeTab == tabs.Settings" [appId]="id"></app-settings>
+
+<div class="columns">
+    <aside class="menu column is-full-mobile is-one-fifth-tablet has-background-light">
+        <ul class="menu-list">
+            <li (click)="changeTab(tabs.Overview)">
+                <a [ngClass]="{ 'is-active': activeTab == tabs.Overview }">
+                    <span class="icons">
+                        <fa-icon [icon]="icons.faChartBar"></fa-icon>
+                    </span>
+                    Overview
+                </a>
+            </li>
+            <li>
+                <a>
+                    <span class="icons">
+                        <fa-icon [icon]="icons.faStream"></fa-icon>
+                    </span>
+                    Logs
+                </a>
+            </li>
+            <li>
+                <a>
+                    <span class="icons">
+                        <fa-icon [icon]="icons.faFilter"></fa-icon>
+                    </span>
+                    Environment
+                </a>
+            </li>
+            <li (click)="changeTab(tabs.Settings)">
+                <a [ngClass]="{ 'is-active': activeTab == tabs.Settings }">
+                    <span class="icons">
+                        <fa-icon [icon]="icons.faCog"></fa-icon>
+                    </span>
+                    Settings
+                </a>
+            </li>
+        </ul>
+    </aside>
+    <div class="column">
+        <app-channel-list *ngIf="activeTab == tabs.Overview" [appId]="id"></app-channel-list>
+        <app-settings *ngIf="activeTab == tabs.Settings" [appId]="id"></app-settings>
+    </div>
+</div>
+
+

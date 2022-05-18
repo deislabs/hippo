@@ -1,8 +1,9 @@
 import { toBase64String } from '@angular/compiler/src/output/source_map';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AppDto, AppService } from 'src/app/core/api/v1';
+import { AppDto, ChannelSummaryDto, AppService } from 'src/app/core/api/v1';
 import { ApplicationTabs } from 'src/app/_helpers/constants';
+import { faCog, faStream, faFilter, faChartBar, faAngleDown } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
 	selector: 'app-application',
@@ -10,10 +11,13 @@ import { ApplicationTabs } from 'src/app/_helpers/constants';
 	styleUrls: ['./application.component.css']
 })
 export class ApplicationComponent implements OnInit {
+	icons = { faCog, faStream, faFilter, faChartBar, faAngleDown };
 	id!: string;
 	app!: AppDto;
+	selectedChannel!: ChannelSummaryDto;
+	isSelectClicked: boolean = false;
 	tabs = ApplicationTabs;
-	activeTab = ApplicationTabs.Channels; 
+	activeTab = ApplicationTabs.Overview;
 
 	constructor(
 		private route: ActivatedRoute,
@@ -31,10 +35,19 @@ export class ApplicationComponent implements OnInit {
 		this.activeTab = tab;
 	}
 
+	changeSelectedChannel(channel: ChannelSummaryDto) {
+		this.selectedChannel = channel;
+	}
+
+	toggleIsSelectClicked() {
+		this.isSelectClicked = !this.isSelectClicked;
+	}
+
 	refreshData() {
 		this.appService.apiAppGet().subscribe(vm => {
 			let app = vm.apps.find(element => element.id == this.id);
 			app === undefined ? this.router.navigate(['/404']) : this.app = app;
+			this.selectedChannel = <ChannelSummaryDto>(app?.channels[0]);
 		});
 	}
 }
