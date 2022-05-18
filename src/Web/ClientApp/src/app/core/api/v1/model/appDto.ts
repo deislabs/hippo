@@ -17,6 +17,7 @@ export interface AppDto {
     name: string;
     storageId: string;
     description: string;
+    selectedChannelUrl?: string | null;
     channels: Array<ChannelSummaryDto>;
 }
 
