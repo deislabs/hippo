@@ -28,7 +28,7 @@ public class CreateAppCommandValidator : AbstractValidator<CreateAppCommand>
 
         RuleFor(a => a.StorageId)
             .NotEmpty().WithMessage("Storage ID is required.")
-            .MustAsync(ExistInBindleServer).WithMessage("Storage ID not found")
+            .MustAsync(ExistInBindleServer).WithMessage("Storage ID not found in bindle server")
             .MaximumLength(200)
             .Matches(validStorageId);
 
