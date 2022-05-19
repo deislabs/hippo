@@ -19,19 +19,17 @@ public class GetChannelQueryHandler : IRequestHandler<GetChannelQuery, ChannelDt
 {
     private readonly IApplicationDbContext _context;
 
-    private readonly IMapper _mapper;
-
-    public GetChannelQueryHandler(IApplicationDbContext context, IMapper mapper)
+    public GetChannelQueryHandler(IApplicationDbContext context)
     {
         _context = context;
-        _mapper = mapper;
     }
 
     public async Task<ChannelDto> Handle(GetChannelQuery request, CancellationToken cancellationToken)
     {
         var entity = await _context.Channels
             .Where(a => a.Id == request.Id)
-            .ProjectTo<ChannelDto>(_mapper.ConfigurationProvider)
+            .Include(a => a.App)
+            .Select(a => a.ToChannelDto())
             .FirstOrDefaultAsync(cancellationToken);
 
         if (entity is null)
