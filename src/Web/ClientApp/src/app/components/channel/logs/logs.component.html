@@ -1,0 +1,10 @@
+<div *ngIf="logs.length > 0; else noLogs" class="box has-background-dark scrollable-horizontally">
+    <p *ngFor="let log of logs" class="has-text-white single-line">
+        {{log}}
+    </p>
+</div>
+<ng-template #noLogs>
+    <div class="box">
+        There are no logs.
+    </div>
+</ng-template>

@@ -4,6 +4,10 @@
             (click)="changeTab(tabs.Channels)">
             <a>Channels</a>
         </li>
+        <li (click)="changeTab(tabs.Logs)"
+            [ngClass]="{ 'is-active': activeTab == tabs.Logs }">
+            <a>Logs</a>
+        </li>
         <li (click)="changeTab(tabs.Settings)"
             [ngClass]="{ 'is-active': activeTab == tabs.Settings }">
             <a>Settings</a>
@@ -12,4 +16,5 @@
 </div>
 
 <app-channel-list *ngIf="activeTab == tabs.Channels" [appId]="id"></app-channel-list>
+<app-logs *ngIf="activeTab == tabs.Logs" [appId]="id" [channleId]="activeChannelId"></app-logs>
 <app-settings *ngIf="activeTab == tabs.Settings" [appId]="id"></app-settings>

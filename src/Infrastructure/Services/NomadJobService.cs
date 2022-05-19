@@ -4,15 +4,20 @@ using Fermyon.Nomad.Model;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Infrastructure.Jobs;
 using Microsoft.Extensions.Configuration;
+using System.Text;
 
 namespace Hippo.Infrastructure.Services;
 
-public class NomadService : INomadService
+public class NomadJobService : IJobService
 {
-    private readonly JobsApi _client;
+    private readonly JobsApi _jobsClient;
+    private readonly ClientsApi _clientsClient;
     private readonly IConfiguration _configuration;
 
-    public NomadService(IConfiguration configuration)
+    private static string _taskName = "spin";
+    private static string _logSource = "stdout";
+
+    public NomadJobService(IConfiguration configuration)
     {
         _configuration = configuration;
         var nomadUrl = configuration.GetValue("Nomad:Url", "http://localhost:4646/v1");
@@ -22,7 +27,8 @@ public class NomadService : INomadService
         config.BasePath = nomadUrl;
         config.ApiKey.Add("X-Nomad-Token", nomadSecret);
 
-        _client = new JobsApi(config);
+        _jobsClient = new JobsApi(config);
+        _clientsClient = new ClientsApi(config);
     }
 
     public void StartJob(Guid id, string bindleId, Dictionary<string, string> environmentVariables, string? domain)
@@ -39,7 +45,24 @@ public class NomadService : INomadService
 
     public void DeleteJob(string jobName)
     {
-        _client.DeleteJob(jobName);
+        _jobsClient.DeleteJob(jobName);
+    }
+
+    public string[] GetJobLogs(string jobName)
+    {
+        var allocationId = _jobsClient.GetJobAllocations(jobName: jobName)
+            .OrderByDescending(a => a.CreateTime)
+            .Select(a => a.ID)
+            .FirstOrDefault();
+
+        if (allocationId == null)
+        {
+            return new string[] { };
+        }
+
+        var allocationData = _clientsClient.GetAllocationLogs(_taskName, _logSource, allocationId).Data.ToString();
+        byte[] data = Convert.FromBase64String(allocationData);
+        return Encoding.UTF8.GetString(data).Split("\n");
     }
 
     private void PostJob(Application.Jobs.Job job)
@@ -52,7 +75,7 @@ public class NomadService : INomadService
         }
 
         var jobRegisterRequest = GenerateJobRegisterRequest(nomadJob);
-        _client.PostJob(nomadJob.Id.ToString(), jobRegisterRequest);
+        _jobsClient.PostJob(nomadJob.Id.ToString(), jobRegisterRequest);
     }
 
     private JobRegisterRequest GenerateJobRegisterRequest(NomadJob nomadJob)
@@ -79,7 +102,7 @@ public class NomadService : INomadService
                     Tasks = new List<Fermyon.Nomad.Model.Task>
                     {
                         GenerateJobTask(nomadJob)
-                    }
+                    },
                 }
             }
 
@@ -135,7 +158,7 @@ public class NomadService : INomadService
     {
         return new Fermyon.Nomad.Model.Task
         {
-            Name = "spin",
+            Name = _taskName,
             Driver = nomadJob.driver,
             Env = new Dictionary<string, string>
             {
@@ -146,8 +169,13 @@ public class NomadService : INomadService
             Config = new Dictionary<string, object>
             {
                 { "command", nomadJob.spinBinaryPath },
-                { "args", new List<string> { "up", "--listen", "${NOMAD_IP_http}:${NOMAD_PORT_http}", "--log-dir", "local/log", "--bindle", nomadJob.BindleId } }
+                { "args", new List<string> { "up", "--listen", "[${NOMAD_IP_http}]:${NOMAD_PORT_http}", "--follow-all", "--bindle", nomadJob.BindleId } }
             }
         };
+    }
+
+    private bool DoesJobExist(string jobName)
+    {
+        return _jobsClient.GetJobs().Any(job => job.Name == jobName);
     }
 }

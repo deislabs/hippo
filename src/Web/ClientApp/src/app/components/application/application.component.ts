@@ -13,7 +13,8 @@ export class ApplicationComponent implements OnInit {
 	id!: string;
 	app!: AppDto;
 	tabs = ApplicationTabs;
-	activeTab = ApplicationTabs.Channels; 
+	activeTab = ApplicationTabs.Channels;
+	activeChannelId: string = '';
 
 	constructor(
 		private route: ActivatedRoute,
@@ -35,6 +36,7 @@ export class ApplicationComponent implements OnInit {
 		this.appService.apiAppGet().subscribe(vm => {
 			let app = vm.apps.find(element => element.id == this.id);
 			app === undefined ? this.router.navigate(['/404']) : this.app = app;
+			this.activeChannelId = <string>(app?.channels[0]?.id);
 		});
 	}
 }
