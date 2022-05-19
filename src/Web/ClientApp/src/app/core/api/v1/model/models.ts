@@ -1,5 +1,6 @@
 export * from './app';
 export * from './appDto';
+export * from './appSummaryDto';
 export * from './appsVm';
 export * from './certificate';
 export * from './certificateDto';

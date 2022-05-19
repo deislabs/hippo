@@ -15,6 +15,7 @@ git_push.sh
 index.ts
 model/app.ts
 model/appDto.ts
+model/appSummaryDto.ts
 model/appsVm.ts
 model/certificate.ts
 model/certificateDto.ts

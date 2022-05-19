@@ -29,6 +29,7 @@ public class GetChannelQueryHandler : IRequestHandler<GetChannelQuery, ChannelDt
         var entity = await _context.Channels
             .Where(a => a.Id == request.Id)
             .Include(a => a.App)
+            .Include(a => a.App.Channels)
             .Select(a => a.ToChannelDto())
             .FirstOrDefaultAsync(cancellationToken);
 
