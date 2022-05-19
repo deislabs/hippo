@@ -1,6 +1,16 @@
 ﻿{
   "$schema": "http://json.schemastore.org/launchsettings.json",
   "profiles": {
+    "no-proxy": {
+      "commandName": "Project",
+      "dotnetRunMessages": "true",
+      "launchBrowser": true,
+      "launchUrl": "",
+      "applicationUrl": "https://localhost:5309",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    },
     "hippo-server": {
       "commandName": "Project",
       "dotnetRunMessages": "true",
@@ -10,16 +20,6 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "ASPNETCORE_HOSTINGSTARTUPASSEMBLIES": "Microsoft.AspNetCore.SpaProxy"
-      }
-    },
-    "no-proxy": {
-      "commandName": "Project",
-      "dotnetRunMessages": "true",
-      "launchBrowser": true,
-      "launchUrl": "",
-      "applicationUrl": "https://localhost:5309",
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     }
   }
