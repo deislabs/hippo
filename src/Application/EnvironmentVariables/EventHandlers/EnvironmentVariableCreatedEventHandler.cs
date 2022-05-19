@@ -13,10 +13,10 @@ public class EnvironmentVariableCreatedEventHandler : INotificationHandler<Domai
     private readonly IJobService _jobService;
 
     public EnvironmentVariableCreatedEventHandler(ILogger<EnvironmentVariableCreatedEventHandler> logger,
-        IJobService nomadService)
+        IJobService jobService)
     {
         _logger = logger;
-        _jobService = nomadService;
+        _jobService = jobService;
     }
 
     public Task Handle(DomainEventNotification<CreatedEvent<EnvironmentVariable>> notification, CancellationToken cancellationToken)

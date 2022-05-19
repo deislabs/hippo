@@ -14,10 +14,10 @@ public class ChannelCreatedEventHandler : INotificationHandler<DomainEventNotifi
     private readonly IJobService _jobService;
 
     public ChannelCreatedEventHandler(ILogger<ChannelCreatedEventHandler> logger,
-        IJobService nomadService)
+        IJobService jobService)
     {
         _logger = logger;
-        _jobService = nomadService;
+        _jobService = jobService;
     }
 
     public Task Handle(DomainEventNotification<CreatedEvent<Channel>> notification, CancellationToken cancellationToken)

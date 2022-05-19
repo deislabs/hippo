@@ -14,10 +14,10 @@ public class ActiveRevisionChangedEventHandler : INotificationHandler<DomainEven
     private readonly IJobService _jobService;
 
     public ActiveRevisionChangedEventHandler(ILogger<ActiveRevisionChangedEventHandler> logger,
-        IJobService nomadService)
+        IJobService jobService)
     {
         _logger = logger;
-        _jobService = nomadService;
+        _jobService = jobService;
     }
 
     public Task Handle(DomainEventNotification<ModifiedEvent<Channel>> notification, CancellationToken cancellationToken)

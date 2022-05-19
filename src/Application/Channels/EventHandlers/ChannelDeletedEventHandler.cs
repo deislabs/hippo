@@ -16,10 +16,10 @@ public class ChannelDeletedEventHandler : INotificationHandler<DomainEventNotifi
     private readonly IJobService _jobService;
 
     public ChannelDeletedEventHandler(ILogger<ChannelDeletedEventHandler> logger,
-        IJobService nomadService)
+        IJobService jobService)
     {
         _logger = logger;
-        _jobService = nomadService;
+        _jobService = jobService;
     }
 
     public Task Handle(DomainEventNotification<DeletedEvent<Channel>> notification, CancellationToken cancellationToken)

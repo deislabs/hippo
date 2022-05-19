@@ -14,10 +14,10 @@ public class EnvironmentVariableDeletedEventHandler : INotificationHandler<Domai
     private readonly IJobService _jobService;
 
     public EnvironmentVariableDeletedEventHandler(ILogger<EnvironmentVariableDeletedEventHandler> logger,
-        IJobService nomadService)
+        IJobService jobService)
     {
         _logger = logger;
-        _jobService = nomadService;
+        _jobService = jobService;
     }
 
     public Task Handle(DomainEventNotification<DeletedEvent<EnvironmentVariable>> notification, CancellationToken cancellationToken)

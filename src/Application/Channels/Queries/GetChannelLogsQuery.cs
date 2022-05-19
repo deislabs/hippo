@@ -18,9 +18,9 @@ public class GetChannelLogsQueryHandler : IRequestHandler<GetChannelLogsQuery, G
 {
     private readonly IJobService _jobService;
 
-    public GetChannelLogsQueryHandler(IJobService nomadService)
+    public GetChannelLogsQueryHandler(IJobService jobService)
     {
-        _jobService = nomadService;
+        _jobService = jobService;
     }
 
     public async Task<GetChannelLogsVm> Handle(GetChannelLogsQuery request, CancellationToken cancellationToken)
