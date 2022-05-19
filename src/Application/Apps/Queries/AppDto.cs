@@ -22,8 +22,6 @@ public class AppDto
     [Required]
     public string? Description { get; set; } = "";
 
-    public string? SelectedChannelUrl { get; set; }
-
     [Required]
     public IList<ChannelSummaryDto> Channels { get; set; }
 }
