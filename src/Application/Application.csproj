@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<PackageId>Hippo.Application</PackageId>
-		<Version>0.9.1</Version>
+		<Version>0.10.0</Version>
 		<Authors>Matt Fisher</Authors>
 		<Company>Microsoft</Company>
 		<RepositoryUrl>https://github.com/deislabs/hippo</RepositoryUrl>
