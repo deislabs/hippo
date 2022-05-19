@@ -1,9 +1,7 @@
-using Deislabs.Bindle;
 using Fermyon.Nomad.Api;
 using Fermyon.Nomad.Client;
 using Fermyon.Nomad.Model;
 using Hippo.Application.Common.Interfaces;
-using Hippo.Application.Jobs;
 using Hippo.Infrastructure.Jobs;
 using Microsoft.Extensions.Configuration;
 
@@ -148,7 +146,7 @@ public class NomadService : INomadService
             Config = new Dictionary<string, object>
             {
                 { "command", nomadJob.spinBinaryPath },
-                { "args", new List<string> { "up", "--listen", "[${NOMAD_IP_http}]:${NOMAD_PORT_http}", "--log-dir", "local/log", "--bindle", nomadJob.BindleId } }
+                { "args", new List<string> { "up", "--listen", "${NOMAD_IP_http}:${NOMAD_PORT_http}", "--log-dir", "local/log", "--bindle", nomadJob.BindleId } }
             }
         };
     }

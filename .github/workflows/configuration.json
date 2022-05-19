@@ -1,28 +1,24 @@
 {
     "categories": [
       {
-        "title": "## 🚀 Features",
+        "title": "## 🚀 New Features",
         "labels": [
           "feature",
           "enhancement"
         ]
       },
       {
-        "title": "## 🐛 Fixes",
+        "title": "## 🐛 Bug Fixes",
         "labels": [
           "fix", 
           "bug"
         ]
       },
       {
-        "title": "## 🧪 Tests",
+        "title": "## 💤 Custodial Tasks",
         "labels": [
-          "test"
-        ]
-      },
-      {
-        "title": "## 📦 Dependencies",
-        "labels": [
+          "chore",
+          "test",
           "dependencies"
         ]
       },
