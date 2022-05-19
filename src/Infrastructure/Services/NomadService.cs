@@ -1,9 +1,7 @@
-using Deislabs.Bindle;
 using Fermyon.Nomad.Api;
 using Fermyon.Nomad.Client;
 using Fermyon.Nomad.Model;
 using Hippo.Application.Common.Interfaces;
-using Hippo.Application.Jobs;
 using Hippo.Infrastructure.Jobs;
 using Microsoft.Extensions.Configuration;
 
