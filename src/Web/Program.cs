@@ -120,6 +120,7 @@ app.UseEndpoints(endpoints =>
         "API",
         "api/{controller}/{action}/{id?}"
     );
+    endpoints.MapHealthChecks("/healthz");
     endpoints.MapSwagger();
 });
 
