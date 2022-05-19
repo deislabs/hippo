@@ -35,6 +35,7 @@ model/domainEvent.ts
 model/environmentVariable.ts
 model/environmentVariableDto.ts
 model/environmentVariablesVm.ts
+model/getChannelLogsVm.ts
 model/models.ts
 model/registerRevisionCommand.ts
 model/revision.ts

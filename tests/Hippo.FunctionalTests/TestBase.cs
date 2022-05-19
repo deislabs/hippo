@@ -74,7 +74,7 @@ public class TestBase : IDisposable
 
         services.AddTransient<IBindleService, FakeBindleService>();
 
-        services.AddSingleton<INomadService, NullNomadService>();
+        services.AddSingleton<IJobService, NullNomadService>();
 
         _scopeFactory = services.BuildServiceProvider().GetRequiredService<IServiceScopeFactory>();
 
@@ -197,7 +197,7 @@ public class TestBase : IDisposable
     }
 }
 
-public class NullNomadService : INomadService
+public class NullNomadService: IJobService
 {
     public void StartJob(Guid id, string bindleId, Dictionary<string, string> environmentVariables, string? domain)
     {
@@ -207,6 +207,11 @@ public class NullNomadService : INomadService
     public void DeleteJob(string jobId)
     {
 
+    }
+
+    public string[] GetJobLogs(string jobName)
+    {
+        return new string[] {};
     }
 
     private class NullJob : Job

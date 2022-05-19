@@ -13,13 +13,13 @@ public class ChannelDeletedEventHandler : INotificationHandler<DomainEventNotifi
 {
     private readonly ILogger<ChannelDeletedEventHandler> _logger;
 
-    private readonly INomadService _nomadService;
+    private readonly IJobService _jobService;
 
     public ChannelDeletedEventHandler(ILogger<ChannelDeletedEventHandler> logger,
-        INomadService nomadService)
+        IJobService jobService)
     {
         _logger = logger;
-        _nomadService = nomadService;
+        _jobService = jobService;
     }
 
     public Task Handle(DomainEventNotification<DeletedEvent<Channel>> notification, CancellationToken cancellationToken)
@@ -30,7 +30,7 @@ public class ChannelDeletedEventHandler : INotificationHandler<DomainEventNotifi
 
         try
         {
-            _nomadService.DeleteJob(jobName: domainEvent.Entity.Id.ToString());
+            _jobService.DeleteJob(jobName: domainEvent.Entity.Id.ToString());
         }
         catch (JobFailedException e)
         {
