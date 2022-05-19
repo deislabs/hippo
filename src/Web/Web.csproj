@@ -84,7 +84,7 @@
 	</ItemGroup>
 
 	<PropertyGroup>
-		<MinVerDefaultPreReleasePhase>preview</MinVerDefaultPreReleasePhase>
+		<MinVerDefaultPreReleasePhase>rc.1</MinVerDefaultPreReleasePhase>
 		<MinVerMinimumMajorMinor>0.1</MinVerMinimumMajorMinor>
 		<MinVerTagPrefix>v</MinVerTagPrefix>
 	</PropertyGroup>

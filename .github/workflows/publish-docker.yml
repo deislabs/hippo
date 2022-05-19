@@ -1,10 +1,13 @@
-name: Manually build and push runtime container
+name: Publish Docker Image
+
 on:
-  workflow_dispatch:
+  push:
+    tags:
+    - "*"
 
 jobs:
-  push_to_registry:
-    name: Push image to GitHub Package Registry
+  push_to_gpr:
+    name: Push Docker image to GitHub Package Registry
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -20,11 +23,8 @@ jobs:
         with:
           dotnet-version: 6.0.x
 
-      - name: Set MINVERBUILDMETADATA and Image Version Tag
-        run: |
-          echo MINVERBUILDMETADATA=$(git rev-parse --short ${GITHUB_SHA})  >> $GITHUB_ENV
-          TAG_COMMIT=$(git rev-list --tags --max-count=1)
-          echo IMAGE_VERSION_TAG=$(git describe --tags --abbrev=0 ${TAG_COMMIT})  >> $GITHUB_ENV
+      - name: Set MINVERBUILDMETADATA
+        run: echo MINVERBUILDMETADATA=$(git rev-parse --short ${GITHUB_SHA})  >> $GITHUB_ENV
         shell: bash
 
       - name: dotnet publish
@@ -49,9 +49,9 @@ jobs:
         with:
           images: ghcr.io/${{ github.repository }}
           tags: |
-            type=semver,pattern={{raw}},priority=1,value=${{ env.IMAGE_VERSION_TAG }}
-            type=semver,pattern={{version}},priority=2,value=${{ env.IMAGE_VERSION_TAG }}
-            type=semver,pattern={{major}}.{{minor}},priority=3,value=${{ env.IMAGE_VERSION_TAG }}
+            type=semver,pattern={{raw}},priority=1
+            type=semver,pattern={{version}},priority=2
+            type=semver,pattern={{major}}.{{minor}},priority=3
             type=sha,priority=4
           flavor: |
             latest=true
