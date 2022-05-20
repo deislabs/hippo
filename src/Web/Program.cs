@@ -5,6 +5,7 @@ using Hippo.Application;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Infrastructure;
 using Hippo.Infrastructure.Data;
+using Hippo.Infrastructure.HealthChecks;
 using Hippo.Infrastructure.Identity;
 using Hippo.Web.Services;
 using Microsoft.AspNetCore.Identity;
@@ -26,7 +27,9 @@ builder.Services.AddSingleton<ICurrentUserService, CurrentUserService>();
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddHealthChecks()
-            .AddDbContextCheck<ApplicationDbContext>();
+            .AddDbContextCheck<ApplicationDbContext>()
+            .AddCheck<BindleHealthCheck>("Bindle")
+            .AddCheck<NomadHealthCheck>("Nomad");
 
 builder.Services.AddControllers()
     .AddJsonOptions(opt =>
@@ -120,6 +123,7 @@ app.UseEndpoints(endpoints =>
         "API",
         "api/{controller}/{action}/{id?}"
     );
+    endpoints.MapHealthChecks("/healthz");
     endpoints.MapSwagger();
 });
 

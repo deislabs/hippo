@@ -19,7 +19,7 @@ jobs:
     - name: Set MINVERBUILDMETADATA
       run: echo MINVERBUILDMETADATA=$(git rev-parse --short ${GITHUB_SHA})  >> $GITHUB_ENV
     - name: Build
-      run: dotnet build  --configuration Release --no-restore
+      run: dotnet pack --configuration Release --no-restore
     - name: Publish NuGet packages
       run: |
           for nupkg in $(find . -name *.nupkg)

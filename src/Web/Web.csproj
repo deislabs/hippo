@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<PackageId>Hippo.Web</PackageId>
-		<Version>0.9.0</Version>
+		<Version>0.10.0</Version>
 		<Authors>Matt Fisher</Authors>
 		<Company>Microsoft</Company>
 		<RepositoryUrl>https://github.com/deislabs/hippo</RepositoryUrl>
@@ -87,7 +87,7 @@
 	</ItemGroup>
 
 	<PropertyGroup>
-		<MinVerDefaultPreReleasePhase>preview</MinVerDefaultPreReleasePhase>
+		<MinVerDefaultPreReleasePhase>rc.1</MinVerDefaultPreReleasePhase>
 		<MinVerMinimumMajorMinor>0.1</MinVerMinimumMajorMinor>
 		<MinVerTagPrefix>v</MinVerTagPrefix>
 	</PropertyGroup>
