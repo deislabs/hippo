@@ -169,7 +169,7 @@ public class NomadJobService : IJobService
             Config = new Dictionary<string, object>
             {
                 { "command", nomadJob.spinBinaryPath },
-                { "args", new List<string> { "up", "--listen", "[${NOMAD_IP_http}]:${NOMAD_PORT_http}", "--follow-all", "--bindle", nomadJob.BindleId } }
+                { "args", new List<string> { "up", "--listen", "${NOMAD_IP_http}:${NOMAD_PORT_http}", "--follow-all", "--bindle", nomadJob.BindleId } }
             }
         };
     }
