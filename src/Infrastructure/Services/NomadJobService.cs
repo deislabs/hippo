@@ -133,13 +133,17 @@ public class NomadJobService : IJobService
         {
             "traefik.enable=true",
             "traefik.http.routers." + nomadJob.Id + @".rule=Host(`" + nomadJob.Domain + "`)",
-    };
+        };
 
-        if (!string.IsNullOrEmpty(entrypoint) && !string.IsNullOrEmpty(certresolver))
+        if (!string.IsNullOrEmpty(entrypoint))
         {
             tags.Add("traefik.http.routers." + nomadJob.Id + @".entryPoints=" + entrypoint);
-            tags.Add("traefik.http.routers." + nomadJob.Id + @".tls.certresolver=" + certresolver);
+        }
+
+        if (!string.IsNullOrEmpty(certresolver))
+        {
             tags.Add("traefik.http.routers." + nomadJob.Id + @".tls=true");
+            tags.Add("traefik.http.routers." + nomadJob.Id + @".tls.certresolver=" + certresolver);
             tags.Add("traefik.http.routers." + nomadJob.Id + @".tls.domains[0].main=" + nomadJob.Domain);
         }
 
