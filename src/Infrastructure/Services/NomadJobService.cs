@@ -131,9 +131,9 @@ public class NomadJobService : IJobService
 
         var tags = new List<string>
         {
-		"traefik.enable=true",
-		"traefik.http.routers." + nomadJob.Id + @".rule=Host(`" + nomadJob.Domain + "`)",
-	};
+            "traefik.enable=true",
+            "traefik.http.routers." + nomadJob.Id + @".rule=Host(`" + nomadJob.Domain + "`)",
+    };
 
         if (!string.IsNullOrEmpty(entrypoint) && !string.IsNullOrEmpty(certresolver))
         {
@@ -147,7 +147,7 @@ public class NomadJobService : IJobService
         {
             PortLabel = "http",
             Name = nomadJob.Id.ToString(),
-	    Tags = tags,
+            Tags = tags,
             Checks = new List<ServiceCheck>
             {
                 new ServiceCheck
