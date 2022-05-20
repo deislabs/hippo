@@ -126,21 +126,28 @@ public class NomadJobService : IJobService
     private Service GenerateJobService(NomadJob nomadJob)
     {
         var entrypoint = _configuration.GetValue<string>("Nomad:Traefik:Entrypoint");
+
         var certresolver = _configuration.GetValue<string>("Nomad:Traefik:CertResolver");
+
+        var tags = new List<string>
+        {
+		"traefik.enable=true",
+		"traefik.http.routers." + nomadJob.Id + @".rule=Host(`" + nomadJob.Domain + "`)",
+	};
+
+        if (!string.IsNullOrEmpty(entrypoint) && !string.IsNullOrEmpty(certresolver))
+        {
+            tags.Add("traefik.http.routers." + nomadJob.Id + @".entryPoints=" + entrypoint);
+            tags.Add("traefik.http.routers." + nomadJob.Id + @".tls.certresolver=" + certresolver);
+            tags.Add("traefik.http.routers." + nomadJob.Id + @".tls=true");
+            tags.Add("traefik.http.routers." + nomadJob.Id + @".tls.domains[0].main=" + nomadJob.Domain);
+        }
 
         return new Service
         {
             PortLabel = "http",
             Name = nomadJob.Id.ToString(),
-            Tags = new List<string>
-            {
-                "traefik.enable=true",
-                "traefik.http.routers." + nomadJob.Id + @".rule=Host(`" + nomadJob.Domain + "`)",
-                "traefik.http.routers." + nomadJob.Id + @".entryPoints=" + entrypoint,
-                "traefik.http.routers." + nomadJob.Id + @".tls=true",
-                "traefik.http.routers." + nomadJob.Id + @".tls.certresolver=" + certresolver,
-                "traefik.http.routers." + nomadJob.Id + @".tls.domains[0].main=" + nomadJob.Domain + ""
-            },
+	    Tags = tags,
             Checks = new List<ServiceCheck>
             {
                 new ServiceCheck
