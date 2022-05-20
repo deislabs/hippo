@@ -136,7 +136,7 @@ public class NomadJobService : IJobService
             {
                 "traefik.enable=true",
                 "traefik.http.routers." + nomadJob.Id + @".rule=Host(`" + nomadJob.Domain + "`)",
-                "traefik.http.routers." + nomadJob.Id + @".tls.entryPoints=" + entrypoint,
+                "traefik.http.routers." + nomadJob.Id + @".entryPoints=" + entrypoint,
                 "traefik.http.routers." + nomadJob.Id + @".tls=true",
                 "traefik.http.routers." + nomadJob.Id + @".tls.certresolver=" + certresolver,
                 "traefik.http.routers." + nomadJob.Id + @".tls.domains[0].main=" + nomadJob.Domain + ""
