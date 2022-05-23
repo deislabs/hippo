@@ -3,7 +3,7 @@ using Hippo.Core.Entities;
 using System.ComponentModel.DataAnnotations;
 
 namespace Hippo.Application.EnvironmentVariables.Commands;
-public class EnvironmentVariableRequest
+public class UpdateEnvironmentVariableDto
 {
     [Required]
     public Guid? Id { get; set; }

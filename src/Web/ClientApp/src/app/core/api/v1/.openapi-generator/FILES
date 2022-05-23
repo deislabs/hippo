@@ -34,7 +34,6 @@ model/createTokenCommand.ts
 model/domainEvent.ts
 model/environmentVariable.ts
 model/environmentVariableDto.ts
-model/environmentVariableRequest.ts
 model/environmentVariablesVm.ts
 model/getChannelLogsVm.ts
 model/models.ts
@@ -51,5 +50,6 @@ model/updateAppCommand.ts
 model/updateCertificateCommand.ts
 model/updateChannelCommand.ts
 model/updateEnvironmentVariableCommand.ts
+model/updateEnvironmentVariableDto.ts
 model/updateEnvironmentVariablesCommand.ts
 variables.ts

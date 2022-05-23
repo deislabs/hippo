@@ -9,10 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { EnvironmentVariableRequest } from './environmentVariableRequest';
+import { UpdateEnvironmentVariableDto } from './updateEnvironmentVariableDto';
 
 
 export interface UpdateEnvironmentVariablesCommand { 
-    environmentVariables?: Array<EnvironmentVariableRequest> | null;
+    environmentVariables?: Array<UpdateEnvironmentVariableDto> | null;
 }
 
