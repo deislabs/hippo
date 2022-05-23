@@ -9,11 +9,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { AppSummaryDto } from './appSummaryDto';
 
 
 export interface ChannelSummaryDto { 
     id: string;
     name: string;
-    activeRevisionNumber?: string | null;
+    domain: string;
+    appSummary: AppSummaryDto;
 }
 

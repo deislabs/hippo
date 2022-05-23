@@ -21,7 +21,7 @@ import { Observable }                                        from 'rxjs';
 // @ts-ignore
 import { ChannelDetailsDto } from '../model/channelDetailsDto';
 // @ts-ignore
-import { ChannelDto } from '../model/channelDto';
+import { ChannelSummaryDto } from '../model/channelSummaryDto';
 // @ts-ignore
 import { ChannelsVm } from '../model/channelsVm';
 // @ts-ignore
@@ -102,9 +102,9 @@ export class ChannelService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiChannelChannelIdGet(channelId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<ChannelDto>;
-    public apiChannelChannelIdGet(channelId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<ChannelDto>>;
-    public apiChannelChannelIdGet(channelId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<ChannelDto>>;
+    public apiChannelChannelIdGet(channelId: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<ChannelSummaryDto>;
+    public apiChannelChannelIdGet(channelId: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<ChannelSummaryDto>>;
+    public apiChannelChannelIdGet(channelId: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<ChannelSummaryDto>>;
     public apiChannelChannelIdGet(channelId: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
         if (channelId === null || channelId === undefined) {
             throw new Error('Required parameter channelId was null or undefined when calling apiChannelChannelIdGet.');
@@ -150,7 +150,7 @@ export class ChannelService {
             }
         }
 
-        return this.httpClient.get<ChannelDto>(`${this.configuration.basePath}/api/channel/${encodeURIComponent(String(channelId))}`,
+        return this.httpClient.get<ChannelSummaryDto>(`${this.configuration.basePath}/api/channel/${encodeURIComponent(String(channelId))}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
