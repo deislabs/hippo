@@ -30,7 +30,7 @@
 
 
 <div class="columns">
-    <aside class="menu column is-full-mobile is-one-fifth-tablet has-background-light">
+    <aside class="menu column is-full-mobile is-one-fifth-tablet">
         <ul class="menu-list">
             <li (click)="changeTab(tabs.Overview)">
                 <a [ngClass]="{ 'is-active': activeTab == tabs.Overview }">
@@ -66,8 +66,7 @@
             </li>
         </ul>
     </aside>
-    <div class="column">
-        <!-- <app-channel-list *ngIf="activeTab == tabs.Overview" [appId]="app.id"></app-channel-list> -->
+    <div class="column has-background-light">
         <app-settings *ngIf="activeTab == tabs.Settings" [appId]="channel.appSummary.id"></app-settings>
     </div>
 </div>
