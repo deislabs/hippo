@@ -62,4 +62,10 @@ public class ChannelController : ApiControllerBase
 
         return NoContent();
     }
+
+    [HttpGet("logs/{channelId}")]
+    public async Task<GetChannelLogsVm> Logs([FromRoute] Guid channelId)
+    {
+        return await Mediator.Send(new GetChannelLogsQuery(channelId));
+    }
 }

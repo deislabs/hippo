@@ -57,7 +57,7 @@ public static class DependencyInjection
 
         services.AddTransient<IBindleService, BindleService>();
 
-        services.AddTransient<INomadService, NomadService>();
+        services.AddTransient<IJobService, NomadJobService>();
 
         services.Configure<IdentityOptions>(options =>
         {
