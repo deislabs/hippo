@@ -1,3 +1,5 @@
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Hippo.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -12,9 +14,12 @@ public class GetChannelsQueryHandler : IRequestHandler<GetChannelsQuery, Channel
 {
     private readonly IApplicationDbContext _context;
 
-    public GetChannelsQueryHandler(IApplicationDbContext context)
+    private readonly IMapper _mapper;
+
+    public GetChannelsQueryHandler(IApplicationDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
     public async Task<ChannelsVm> Handle(GetChannelsQuery request, CancellationToken cancellationToken)
@@ -22,8 +27,7 @@ public class GetChannelsQueryHandler : IRequestHandler<GetChannelsQuery, Channel
         return new ChannelsVm
         {
             Channels = await _context.Channels
-                .Include(c => c.App)
-                .Select(c => c.ToChannelDto())
+                .ProjectTo<ChannelDto>(_mapper.ConfigurationProvider)
                 .OrderBy(c => c.Name)
                 .ToListAsync(cancellationToken)
         };

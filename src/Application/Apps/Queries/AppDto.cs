@@ -7,7 +7,7 @@ public class AppDto
 {
     public AppDto()
     {
-        Channels = new List<ChannelSummaryDto>();
+        Channels = new List<ApplicationChannelSummary>();
     }
 
     [Required]
@@ -23,5 +23,5 @@ public class AppDto
     public string? Description { get; set; } = "";
 
     [Required]
-    public IList<ChannelSummaryDto> Channels { get; set; }
+    public IList<ApplicationChannelSummary> Channels { get; set; }
 }

@@ -36,6 +36,7 @@ public class MappingTests
     [InlineData(typeof(App), typeof(AppRecord))]
     [InlineData(typeof(Certificate), typeof(CertificateDto))]
     [InlineData(typeof(Certificate), typeof(CertificateRecord))]
+    [InlineData(typeof(Channel), typeof(ChannelDto))]
     [InlineData(typeof(Channel), typeof(ChannelRecord))]
     [InlineData(typeof(EnvironmentVariable), typeof(EnvironmentVariableDto))]
     [InlineData(typeof(EnvironmentVariable), typeof(EnvironmentVariableRecord))]
