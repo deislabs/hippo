@@ -197,7 +197,7 @@ public class TestBase : IDisposable
     }
 }
 
-public class NullNomadService: IJobService
+public class NullNomadService : IJobService
 {
     public void StartJob(Guid id, string bindleId, Dictionary<string, string> environmentVariables, string? domain)
     {
@@ -211,7 +211,7 @@ public class NullNomadService: IJobService
 
     public string[] GetJobLogs(string jobName)
     {
-        return new string[] {};
+        return new string[] { };
     }
 
     private class NullJob : Job
