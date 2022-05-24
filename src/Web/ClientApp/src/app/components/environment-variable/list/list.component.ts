@@ -74,6 +74,7 @@ export class ListComponent implements OnInit {
 			error: (err) => {
 				console.log(err.error.errors);
 				this.errors = this.parseError(err.error);
+				this.submitted = false;
 				this.loading = false;
 			}
 		});
@@ -97,6 +98,7 @@ export class ListComponent implements OnInit {
 				error: (err) => {
 					console.log(err.error.errors);
 					this.errors = this.parseError(err.error);
+					this.submitted = false;
 					this.loading = false;
 				}
 			});
