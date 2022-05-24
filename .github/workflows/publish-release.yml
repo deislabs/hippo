@@ -101,6 +101,7 @@ jobs:
 
   upload_assets:
     name: Upload artifacts to Github release
+    runs-on: ubuntu-latest
     needs: checksums
     steps:
       - name: download release assets
