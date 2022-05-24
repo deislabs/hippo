@@ -9,8 +9,6 @@ jobs:
   release:
     name: Push devcontainer/codespaces image to GitHub Package Registry
     runs-on: ubuntu-latest
-    env:
-      DEVCONTAINER_VERSION: ${{ github.ref }}
     permissions:
       contents: read
       packages: write
@@ -18,19 +16,21 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v2
       - name: Log in to the Container registry
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Extract metadata for Docker
         id: meta
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v4
         with:
           images: ghcr.io/${{ github.repository }}-dev
           tags: |
-            type=raw,value=${{ env.DEVCONTAINER_VERSION }}
-            type=sha,priority=2
+            type=semver,pattern={{raw}},priority=1
+            type=semver,pattern={{version}},priority=2
+            type=semver,pattern={{major}}.{{minor}},priority=3
+            type=sha,priority=4
           flavor: |
             latest=true
 
