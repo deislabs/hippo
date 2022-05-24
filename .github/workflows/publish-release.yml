@@ -68,14 +68,14 @@ jobs:
           fi
       
       - name: Upload binary as GitHub artifact
-        if: matrix.target == "win-x64"
+        if: ${{ matrix.target == 'win-x64' }}
         uses: actions/upload-artifact@v3
         with:
           name: hippo-server
           path: hippo-server-${{ matrix.target }}.zip
       
       - name: Upload binary as GitHub artifact
-        if: matrix.target != "win-x64"
+        if: ${{ matrix.target != 'win-x64' }}
         uses: actions/upload-artifact@v3
         with:
           name: hippo-server
