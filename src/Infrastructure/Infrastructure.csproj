@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<PackageId>Hippo.Infrastructure</PackageId>
-		<Version>0.11.0-rc.3</Version>
+		<Version>0.11.0-rc.4</Version>
 		<Authors>Matt Fisher</Authors>
 		<Company>Microsoft</Company>
 		<RepositoryUrl>https://github.com/deislabs/hippo</RepositoryUrl>
