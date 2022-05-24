@@ -22,9 +22,13 @@ public class UpdateEnvironmentVariablesCommandHandler : IRequestHandler<UpdateEn
 
     public async Task<Unit> Handle(UpdateEnvironmentVariablesCommand request, CancellationToken cancellationToken)
     {
+        var channel = _context.Channels
+            .Include(c => c.App)
+            .FirstOrDefault(c => c.Id == request.ChannelId);
+
         var existingVariables = GetExistingEnvironmentVariables(request.ChannelId);
 
-        var envVariablesToBeAdded = EnvironmentVariablesToBeAdded(request.EnvironmentVariables);
+        var envVariablesToBeAdded = EnvironmentVariablesToBeAdded(request.EnvironmentVariables, channel);
         var envVariablesToBeUpdated = EnvironmentVariablesToBeUpdated(existingVariables, request.EnvironmentVariables);
         var envVariablesToBeDeleted = EnvironmentVariablesToBeRemoved(existingVariables, request.EnvironmentVariables);
 
@@ -35,8 +39,11 @@ public class UpdateEnvironmentVariablesCommandHandler : IRequestHandler<UpdateEn
             foreach (var environmentVariable in request.EnvironmentVariables)
             {
                 var updatedEnvVar = existingVariables.FirstOrDefault(v => v.Id == environmentVariable.Id);
+                
                 if (updatedEnvVar == null)
+                {
                     continue;
+                }
                 updatedEnvVar.Key = environmentVariable.Key;
                 updatedEnvVar.Value = environmentVariable.Value;
             }
@@ -56,7 +63,7 @@ public class UpdateEnvironmentVariablesCommandHandler : IRequestHandler<UpdateEn
             .ToList();
     }
 
-    private static List<EnvironmentVariable> EnvironmentVariablesToBeAdded(List<UpdateEnvironmentVariableDto> environmentVariables)
+    private static List<EnvironmentVariable> EnvironmentVariablesToBeAdded(List<UpdateEnvironmentVariableDto> environmentVariables, Channel channel)
     {
         var toBeAdded = new List<EnvironmentVariable>();
         var newVariables = environmentVariables.Where(v => v.Id == null);
@@ -67,7 +74,7 @@ public class UpdateEnvironmentVariablesCommandHandler : IRequestHandler<UpdateEn
             {
                 Key = environmentVariable.Key,
                 Value = environmentVariable.Value,
-                ChannelId = environmentVariable.ChannelId
+                Channel = channel
             };
 
             toBeAdded.Add(entity);
