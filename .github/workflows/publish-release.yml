@@ -102,6 +102,7 @@ jobs:
   upload_assets:
     name: Upload artifacts to Github release
     needs: checksums
+    steps:
       - name: download release assets
         uses: actions/download-artifact@v3
         with:
