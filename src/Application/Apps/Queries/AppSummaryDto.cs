@@ -3,9 +3,9 @@ using Hippo.Application.Channels.Queries;
 
 namespace Hippo.Application.Apps.Queries;
 
-public class AppDto
+public class AppSummaryDto
 {
-    public AppDto()
+    public AppSummaryDto()
     {
         Channels = new List<ApplicationChannelSummary>();
     }
@@ -15,12 +15,6 @@ public class AppDto
 
     [Required]
     public string Name { get; set; } = "";
-
-    [Required]
-    public string StorageId { get; set; } = "";
-
-    [Required]
-    public string? Description { get; set; } = "";
 
     [Required]
     public IList<ApplicationChannelSummary> Channels { get; set; }

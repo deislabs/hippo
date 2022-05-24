@@ -8,14 +8,14 @@ import { ChannelService } from 'src/app/core/api/v1';
 })
 export class LogsComponent implements OnInit {
   @Input() appId = '';
-  @Input() channleId = '';
+  @Input() channelId = '';
 
   logs: Array<string> = [];
 
   constructor(private readonly channelService: ChannelService) { }
 
   ngOnInit(): void {
-    this.channelService.apiChannelLogsChannelIdGet(this.channleId).subscribe(vm => {
+    this.channelService.apiChannelLogsChannelIdGet(this.channelId).subscribe(vm => {
 			this.logs = vm.logs;
 		});
   }
