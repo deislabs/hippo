@@ -84,7 +84,7 @@ jobs:
   checksums:
     name: Generate release checksums
     runs-on: ubuntu-latest
-    needs: upload_assets
+    needs: build_assets
     steps:
       - name: download release assets
         uses: actions/download-artifact@v3
