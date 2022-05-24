@@ -13,6 +13,7 @@ import { UpdateEnvironmentVariableDto } from './updateEnvironmentVariableDto';
 
 
 export interface UpdateEnvironmentVariablesCommand { 
+    channelId?: string;
     environmentVariables?: Array<UpdateEnvironmentVariableDto> | null;
 }
 
