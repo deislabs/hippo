@@ -12,11 +12,9 @@
 import { ApplicationChannelSummary } from './applicationChannelSummary';
 
 
-export interface AppDto { 
+export interface AppSummaryDto { 
     id: string;
     name: string;
-    storageId: string;
-    description: string;
     channels: Array<ApplicationChannelSummary>;
 }
 

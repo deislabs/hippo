@@ -1,9 +1,8 @@
 using System.ComponentModel.DataAnnotations;
-using Hippo.Application.Apps.Queries;
 
 namespace Hippo.Application.Channels.Queries;
 
-public class ChannelSummaryDto
+public class ApplicationChannelSummary
 {
     [Required]
     public Guid Id { get; set; }
@@ -11,9 +10,5 @@ public class ChannelSummaryDto
     [Required]
     public string Name { get; set; } = "";
 
-    [Required]
-    public string? Domain { get; set; } = "";
-
-    [Required]
-    public AppSummaryDto? AppSummary { get; set; }
+    public string? ActiveRevisionNumber { get; set; }
 }
