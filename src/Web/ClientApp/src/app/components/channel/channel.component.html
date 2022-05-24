@@ -1,15 +1,73 @@
-<div *ngIf="channel" class="card">
-    <header class="card-header">
-        <h1 class="title card-header-title">{{ channel.name }}</h1>
-        <button class="button is-small is-danger" (click)="deleteChannel(id)"><fa-icon class="icon" [icon]="faTrash"></fa-icon><span>Delete</span></button>
-    </header>
-    <div class="card-content">
-
-        <div class="block">
-            <app-health-check></app-health-check>
-        </div>
+<div *ngIf="channel" class="is-flex is-flex-direction-row is-align-items-center is-justify-content-space-between mb-6">
+    <div>
+        <h1 class="is-size-1">{{channel.appSummary.name}}</h1>
+        <a href="https://{{channel.domain}}" target="_blank">{{channel.domain}}</a>
     </div>
-    <div class="card-footer">
-        <a class="card-footer-item" href="https://{{ channel.domain }}" target="_blank"><span>https://{{ channel.domain }}</span></a>
+    <div *ngIf="channel.appSummary.channels.length > 1 && activeTab != tabs.Settings">
+        <div class="dropdown"
+            [ngClass]="{ 'is-active': isSelectClicked }"
+            (click)="toggleIsSelectClicked()">
+            <div class="dropdown-trigger">
+              <button class="button" aria-haspopup="true" aria-controls="dropdown-menu">
+                <span [ngStyle]="{ 'min-width': '150px' }">{{selectedChannel.name}}</span>
+                <span class="icon is-small">
+                    <fa-icon [icon]="icons.faAngleDown"></fa-icon>
+                </span>
+              </button>
+            </div>
+            <div class="dropdown-menu" id="dropdown-menu" role="menu">
+              <div class="dropdown-content">
+                <a *ngFor="let channel of channel.appSummary.channels" class="dropdown-item"
+                    [ngClass]="{ 'is-active': selectedChannel.id == channel.id }"
+                    routerLink="/channel/{{channel.id}}">
+                  {{channel.name}}
+                </a>
+              </div>
+            </div>
+          </div>
+    </div>
+</div>
+
+<div class="columns">
+    <aside class="menu column is-full-mobile is-one-fifth-tablet">
+        <ul class="menu-list">
+            <li (click)="changeTab(tabs.Overview)">
+                <a [ngClass]="{ 'is-active': activeTab == tabs.Overview }">
+                    <span class="icons">
+                        <fa-icon [icon]="icons.faChartBar"></fa-icon>
+                    </span>
+                    Overview
+                </a>
+            </li>
+            <li (click)="changeTab(tabs.Logs)">
+                <a [ngClass]="{ 'is-active': activeTab == tabs.Logs }">
+                    <span class="icons">
+                        <fa-icon [icon]="icons.faStream"></fa-icon>
+                    </span>
+                    Logs
+                </a>
+            </li>
+            <li (click)="changeTab(tabs.Environment)">
+                <a [ngClass]="{ 'is-active': activeTab == tabs.Environment }">
+                    <span class="icons">
+                        <fa-icon [icon]="icons.faFilter"></fa-icon>
+                    </span>
+                    Environment
+                </a>
+            </li>
+            <li (click)="changeTab(tabs.Settings)">
+                <a [ngClass]="{ 'is-active': activeTab == tabs.Settings }">
+                    <span class="icons">
+                        <fa-icon [icon]="icons.faCog"></fa-icon>
+                    </span>
+                    Settings
+                </a>
+            </li>
+        </ul>
+    </aside>
+    <div class="column has-background-light">
+        <app-settings *ngIf="activeTab == tabs.Settings" [appId]="channel.appSummary.id"></app-settings>
+        <app-logs *ngIf="activeTab == tabs.Logs" [appId]="channel.appSummary.id" [channelId]="channel.id"></app-logs>
+        <app-environment-variable-list *ngIf="activeTab == tabs.Environment" [channelId]="channel.id"></app-environment-variable-list>
     </div>
 </div>

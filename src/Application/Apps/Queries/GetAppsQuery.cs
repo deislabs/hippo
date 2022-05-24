@@ -29,7 +29,7 @@ public class GetAppsQueryHandler : IRequestHandler<GetAppsQuery, AppsVm>
                 .OrderBy(a => a.Name)
                 .Include(a => a.Channels)
                 .Include(a => a.Revisions)
-                .Select(a => a.ToAppDto())                
+                .Select(a => a.ToAppDto())
                 .ToListAsync(cancellationToken)
         };
     }

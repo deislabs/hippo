@@ -24,4 +24,14 @@ public static class AppExtensions
             Channels = app.Channels.ToChannelSummaryDtoList(),
         };
     }
+
+    public static AppSummaryDto ToAppSummaryDto(this App app)
+    {
+        return new AppSummaryDto
+        {
+            Id = app.Id,
+            Name = app.Name,
+            Channels = app.Channels.ToChannelSummaryDtoList(),
+        };
+    }
 }
