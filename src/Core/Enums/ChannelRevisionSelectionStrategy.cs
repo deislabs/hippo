@@ -12,5 +12,5 @@ public enum ChannelRevisionSelectionStrategy
     /// <summary>
     /// Use a specific revision version for the channel
     /// </summary>
-    UseSpecifiedRevision = 1,
+    UseSpecifiedRevision = 1
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using FluentValidation.AspNetCore;
 using Hippo.Application;
 using Hippo.Application.Common.Interfaces;
+using Hippo.Application.Common.Security;
 using Hippo.Application.Jobs;
 using Hippo.Core.Entities;
 using Hippo.Infrastructure;
@@ -114,7 +115,7 @@ public class TestBase : IDisposable
 
     public static async Task<string> RunAsAdministratorAsync()
     {
-        return await RunAsUserAsync("administrator@local", "Administrator1234!", new[] { "Administrator" });
+        return await RunAsUserAsync("administrator@local", "Administrator1234!", new[] { UserRole.Administrator });
     }
 
     public static async Task<string> RunAsUserAsync(string userName, string password, string[] roles)

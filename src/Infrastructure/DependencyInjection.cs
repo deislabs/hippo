@@ -1,5 +1,6 @@
 using Hippo.Application.Common.Config;
 using Hippo.Application.Common.Interfaces;
+using Hippo.Application.Common.Security;
 using Hippo.Infrastructure.Data;
 using Hippo.Infrastructure.Exceptions;
 using Hippo.Infrastructure.Files;
@@ -72,7 +73,7 @@ public static class DependencyInjection
         services.AddTransient<IJsonFileBuilder, JsonFileBuilder>();
 
         services.AddAuthorization(options =>
-                options.AddPolicy("CanPurge", policy => policy.RequireRole("Administrator")));
+                options.AddPolicy(UserPolicy.CanPurge, policy => policy.RequireRole(UserRole.Administrator)));
 
         return services;
     }
