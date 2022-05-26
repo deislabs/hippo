@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { faDatabase, faSearch, faTable } from '@fortawesome/free-solid-svg-icons';
-import { AppService, StorageService } from 'src/app/core/api/v1';
+import { AppService, ChannelRevisionSelectionStrategy, ChannelService, StorageService } from 'src/app/core/api/v1';
 import { debounceTime, distinctUntilChanged, mergeMap, catchError } from 'rxjs/operators';
 import { Subject, of } from 'rxjs';
 
@@ -27,7 +27,7 @@ export class NewComponent implements OnInit {
 
   storageQueryChanged = new Subject<string>();
 
-  constructor(private readonly appService: AppService, private readonly storageService: StorageService, private route: ActivatedRoute, private readonly router: Router) { }
+  constructor(private readonly appService: AppService, private readonly channelService: ChannelService, private readonly storageService: StorageService, private route: ActivatedRoute, private readonly router: Router) { }
 
   ngOnInit() {
     this.appForm = new FormGroup({
@@ -96,11 +96,21 @@ export class NewComponent implements OnInit {
     this.loading = true;
     this.appService.apiAppPost({ name: this.f['name'].value, storageId: this.f['storageId'].value })
     .subscribe({
-      // TODO: navigate to registration confirmation page
-      next: () => this.router.navigate(['/app']),
+      next: (appId) => {
+        this.channelService.apiChannelPost({ appId: appId, name: 'Production', revisionSelectionStrategy: ChannelRevisionSelectionStrategy.UseRangeRule, rangeRule: "*", domain: this.f['name'].value + '.' + window.location.hostname})
+          .subscribe({
+            next: () => this.router.navigate(['/app']),
+            error: (error) => {
+              console.log(error);
+              this.error = (error.message) ? error.message : error.status ? `${error.status} - ${error.statusText}` : 'An error occurred while creating the channel';
+              // we can still continue at this point; the user will just have to add a channel to the app.
+              this.router.navigate(['/app']);
+            }
+          })
+      },
       error: (error) => {
         console.log(error);
-        this.error = (error.message) ? error.message : error.status ? `${error.status} - ${error.statusText}` : 'Server error';
+        this.error = (error.message) ? error.message : error.status ? `${error.status} - ${error.statusText}` : 'An error occurred while creating the application';
         this.loading = false;
       }
     });
