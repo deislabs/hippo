@@ -1,49 +1,66 @@
-<form [formGroup]="envvarForm" (ngSubmit)="addEnvironmentVariable(channelId)">
-    <table class="table is-bordered is-striped is-narrow is-fullwidth mt-4">
-        <thead>
-            <tr>
-                <th>Key</th>
-                <th>Value</th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr *ngFor="let envvar of envvars">
-                <td>{{ envvar.key }}</td>
-                <td>{{ envvar.value }}</td>
-                <td>
-                    <button class="button is-small is-danger" (click)="deleteEnvironmentVariable(envvar.id)"><fa-icon class="icon" [icon]="faTrash"></fa-icon><span>Delete</span></button>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <div class="control is-small">
-                        <input type="text" formControlName="key"
-                        [ngClass]="{ 'is-danger': submitted && f['key'].errors }"
-                        class="input is-small" placeholder="Key" />
-                        <div *ngIf="submitted && f['key'].errors" class="help is-danger">
-                            <div *ngIf="f['key'].errors['required']">Key is required.</div>
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <div class="control">
-                        <input type="text" formControlName="value"
-                        [ngClass]="{ 'is-danger': submitted && f['value'].errors }"
-                        class="input is-small" placeholder="Value" />
-                        <div *ngIf="submitted && f['value'].errors" class="help is-danger">
-                            <div *ngIf="f['value'].errors['required']">Value is required.</div>
-                        </div>
-                    </div>
-                </td>
-                <td>
-                    <button [disabled]="loading" class="button is-small is-primary">
-                        <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
-                        <fa-icon class="icon" [icon]="faPlus"></fa-icon>
-                        <span>Add</span>
+<article *ngIf="submitted" class="message is-success">
+    <div class="message-header">
+        <p>Success</p>
+    </div>
+    <div class="message-body">
+        Environment Variables Saved
+    </div>
+</article>
+<article *ngIf="errors && errors.length > 0" class="message is-danger">
+    <div class="message-header">
+        <p>Error</p>
+    </div>
+    <div class="message-body">
+        <p *ngFor="let error of errors" >
+            {{error}}
+        </p>
+    </div>
+</article>
+<div class="box columns is-multiline">
+    <ng-template [ngIf]="envvars.length <= 0">
+        <span class="column is-full">Channel has no environment variables</span>
+    </ng-template>
+    <ng-template *ngFor="let envvar of envvars"
+        [ngIf]="envvars.length > 0">
+        <div class="columns column is-full">
+            <div class="column is-4">
+                <input class="input" type="text" placeholder="Env. variable key" [(ngModel)]="envvar.key" (ngModelChange)="inputChanges(envvar)">
+            </div>
+            <div class="column is-4">
+                <input class="input" type="text" placeholder="Env. variable value" [(ngModel)]="envvar.value" (ngModelChange)="inputChanges(envvar)">
+            </div>
+            <div class="column is-4 field is-grouped">
+                <p class="control">
+                    <button (click)="removeVariable(envvar)"
+                        class="button is-link is-outlined is-fullwidth">
+                        <span class="icon is-small">
+                            <fa-icon [icon]="faTrash"></fa-icon>
+                        </span>
+                        <span>Remove</span>
                     </button>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-</form>
+                </p>
+                <p class="control">
+                    <button (click)="undoChange(envvar)"
+                        *ngIf="envvar.isChanged"
+                        class="button is-link is-outlined is-fullwidth">
+                        <span class="icon is-small">
+                            <fa-icon [icon]="faBackward"></fa-icon>
+                        </span>
+                        <span>Undo</span>
+                    </button>
+                </p>
+            </div>
+        </div>
+    </ng-template>
+    <div class="column is-1">
+        <button class="button is-link is-outlined" (click)="addNewVariable()">Add</button>
+    </div>
+    <div class="column is-2 is-offset-10">
+        <button class="button is-link is-outlined is-fullwidth env-save-button is-pulled-right" (click)="save()">
+            <span class="icon is-small">
+                <fa-icon [icon]="faSave"></fa-icon>
+            </span>
+            <span>Save</span>
+        </button>
+    </div>
+</div>
