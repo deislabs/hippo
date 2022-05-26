@@ -29,31 +29,33 @@
             <div class="column is-4">
                 <input class="input" type="text" placeholder="Env. variable value" [(ngModel)]="envvar.value" (ngModelChange)="inputChanges(envvar)">
             </div>
-            <div class="column is-2">
-                <button (click)="removeVariable(envvar)"
-                    class="button is-link is-outlined is-fullwidth">
-                    <span class="icon is-small">
-                        <fa-icon [icon]="faTrash"></fa-icon>
-                    </span>
-                    <span>Remove</span>
-                </button>
-            </div>
-            <div class="column is-2">
-                <button (click)="undoChange(envvar)"
-                    *ngIf="envvar.isChanged"
-                    class="button is-link is-outlined is-fullwidth">
-                    <span class="icon is-small">
-                        <fa-icon [icon]="faBackward"></fa-icon>
-                    </span>
-                    <span>Undo</span>
-                </button>
+            <div class="column is-4 field is-grouped">
+                <p class="control">
+                    <button (click)="removeVariable(envvar)"
+                        class="button is-link is-outlined is-fullwidth">
+                        <span class="icon is-small">
+                            <fa-icon [icon]="faTrash"></fa-icon>
+                        </span>
+                        <span>Remove</span>
+                    </button>
+                </p>
+                <p class="control">
+                    <button (click)="undoChange(envvar)"
+                        *ngIf="envvar.isChanged"
+                        class="button is-link is-outlined is-fullwidth">
+                        <span class="icon is-small">
+                            <fa-icon [icon]="faBackward"></fa-icon>
+                        </span>
+                        <span>Undo</span>
+                    </button>
+                </p>
             </div>
         </div>
     </ng-template>
     <div class="column is-1">
         <button class="button is-link is-outlined" (click)="addNewVariable()">Add</button>
     </div>
-    <div class="column is-2 is-offset-10">
+    <div class="column is-2 is-offset-9">
         <button class="button is-link is-outlined is-fullwidth" (click)="save()">
             <span class="icon is-small">
                 <fa-icon [icon]="faSave"></fa-icon>
