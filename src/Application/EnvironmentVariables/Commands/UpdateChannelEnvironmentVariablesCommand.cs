@@ -5,13 +5,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Hippo.Application.EnvironmentVariables.Commands;
 
-public class UpdateEnvironmentVariablesCommand : IRequest
+public class UpdateChannelEnvironmentVariablesCommand : IRequest
 {
     public Guid ChannelId { get; set; }
     public List<UpdateEnvironmentVariableDto> EnvironmentVariables { get; set; } = new List<UpdateEnvironmentVariableDto>();
 }
 
-public class UpdateEnvironmentVariablesCommandHandler : IRequestHandler<UpdateEnvironmentVariablesCommand>
+public class UpdateEnvironmentVariablesCommandHandler : IRequestHandler<UpdateChannelEnvironmentVariablesCommand>
 {
     private readonly IApplicationDbContext _context;
 
@@ -20,7 +20,7 @@ public class UpdateEnvironmentVariablesCommandHandler : IRequestHandler<UpdateEn
         _context = context;
     }
 
-    public async Task<Unit> Handle(UpdateEnvironmentVariablesCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(UpdateChannelEnvironmentVariablesCommand request, CancellationToken cancellationToken)
     {
         var channel = _context.Channels
             .Include(c => c.App)

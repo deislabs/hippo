@@ -9,11 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { UpdateEnvironmentVariableDto } from './updateEnvironmentVariableDto';
 
 
-export interface UpdateEnvironmentVariableDto { 
-    id: string;
-    key: string;
-    value: string;
+export interface UpdateChannelEnvironmentVariablesCommand { 
+    channelId?: string;
+    environmentVariables?: Array<UpdateEnvironmentVariableDto> | null;
 }
 

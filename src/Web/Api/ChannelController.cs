@@ -1,5 +1,6 @@
 using Hippo.Application.Channels.Commands;
 using Hippo.Application.Channels.Queries;
+using Hippo.Application.EnvironmentVariables.Commands;
 using Hippo.Application.Revisions.Queries;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -50,6 +51,16 @@ public class ChannelController : ApiControllerBase
             return BadRequest();
         }
 
+        await Mediator.Send(command);
+
+        return NoContent();
+    }
+
+    [HttpPut("{channelId}/environment-variables")]
+    public async Task<ActionResult> UpdateRange([FromRoute] Guid channelId,
+        [FromBody] UpdateChannelEnvironmentVariablesCommand command)
+    {
+        command.ChannelId = channelId;
         await Mediator.Send(command);
 
         return NoContent();

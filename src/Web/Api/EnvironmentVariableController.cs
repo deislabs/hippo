@@ -42,14 +42,6 @@ public class EnvironmentVariableController : ApiControllerBase
         return NoContent();
     }
 
-    [HttpPost("range")]
-    public async Task<ActionResult> UpdateRange(UpdateEnvironmentVariablesCommand command)
-    {
-        await Mediator.Send(command);
-
-        return NoContent();
-    }
-
     [HttpDelete("{id}")]
     public async Task<ActionResult> Delete(Guid id)
     {

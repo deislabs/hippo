@@ -13,7 +13,4 @@ public class UpdateEnvironmentVariableDto
 
     [Required]
     public string Value { get; set; } = "";
-
-    [Required]
-    public Guid ChannelId { get; set; }
 }

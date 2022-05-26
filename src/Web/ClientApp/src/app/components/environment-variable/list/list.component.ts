@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { faBackward, faTrash, faSave } from '@fortawesome/free-solid-svg-icons';
-import { EnvironmentVariableService } from 'src/app/core/api/v1';
+import { ChannelService, EnvironmentVariableService } from 'src/app/core/api/v1';
 
 @Component({
 	selector: 'app-environment-variable-list',
@@ -20,7 +20,7 @@ export class ListComponent implements OnInit {
 	faTrash = faTrash;
 	faSave = faSave;
 
-	constructor(private readonly envvarService: EnvironmentVariableService) { }
+	constructor(private readonly channelService: ChannelService, private readonly envVarService: EnvironmentVariableService) { }
 
 	ngOnInit(): void {
 		this.refreshData();
@@ -62,8 +62,7 @@ export class ListComponent implements OnInit {
 	}
 
 	save() {
-		this.envvarService.apiEnvironmentvariableRangePost({
-			channelId: this.channelId,
+		this.channelService.apiChannelChannelIdEnvironmentVariablesPut(this.channelId, {
 			environmentVariables: this.envvars
 		}).subscribe({
 			next: () => {
@@ -81,7 +80,7 @@ export class ListComponent implements OnInit {
 	}
 
 	refreshData() {
-		this.envvarService.apiEnvironmentvariableGet().subscribe(
+		this.envVarService.apiEnvironmentvariableGet().subscribe(
 			{
 				next: (vm) => {
 					this.errors = [];
