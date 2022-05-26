@@ -16,5 +16,7 @@ export interface RevisionComponentDto {
     source: string;
     name: string;
     route: string;
+    channel: string;
+    type: string;
 }
 

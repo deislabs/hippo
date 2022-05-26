@@ -22,5 +22,5 @@ public class RevisionComponentDto : IMapFrom<Core.Entities.RevisionComponent>
     public string? Channel { get; set; }
 
     [Required]
-    public RevisionComponentType? Type { get; set; }
+    public string? Type { get; set; }
 }
