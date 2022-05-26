@@ -1,5 +1,4 @@
 using Hippo.Application.Common.Mappings;
-using Hippo.Core.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace Hippo.Application.Revisions.Queries;
