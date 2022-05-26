@@ -1,4 +1,5 @@
 using Hippo.Application.Common.Mappings;
+using Hippo.Core.Enums;
 using System.ComponentModel.DataAnnotations;
 
 namespace Hippo.Application.Revisions.Queries;
@@ -15,5 +16,11 @@ public class RevisionComponentDto : IMapFrom<Core.Entities.RevisionComponent>
     public string Name { get; set; } = string.Empty;
 
     [Required]
-    public string Route { get; set; } = string.Empty;
+    public string? Route { get; set; }
+
+    [Required]
+    public string? Channel { get; set; }
+
+    [Required]
+    public RevisionComponentType? Type { get; set; }
 }

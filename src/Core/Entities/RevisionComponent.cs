@@ -8,7 +8,11 @@ public class RevisionComponent : AuditableEntity, IHasDomainEvent
 
     public string Name { get; set; } = string.Empty;
 
-    public string Route { get; set; } = string.Empty;
+    public string? Route { get; set; }
+
+    public string? Channel { get; set; }
+
+    public string? Type { get; set; }
 
     public Guid RevisionId { get; set; }
 
