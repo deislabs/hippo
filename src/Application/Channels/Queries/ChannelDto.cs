@@ -37,4 +37,6 @@ public class ChannelDto : IMapFrom<Channel>
 
     [Required]
     public IList<EnvironmentVariableDto> EnvironmentVariables { get; set; }
+
+    public AppSummaryDto? AppSummary { get; set; }
 }
