@@ -32,7 +32,7 @@
 	},
 	"devDependencies": {
 		"@angular-devkit/build-angular": "~13.3.6",
-		"@angular/cli": "~13.3.6",
+		"@angular/cli": "~13.3.7",
 		"@angular/compiler-cli": "~13.2.0",
 		"@openapitools/openapi-generator-cli": "^2.5.1",
 		"@types/jasmine": "~3.10.6",
