@@ -97,7 +97,8 @@ export class NewComponent implements OnInit {
     this.appService.apiAppPost({ name: this.f['name'].value, storageId: this.f['storageId'].value })
     .subscribe({
       next: (appId) => {
-        this.channelService.apiChannelPost({ appId: appId, name: 'Production', revisionSelectionStrategy: ChannelRevisionSelectionStrategy.UseRangeRule, rangeRule: "*", domain: this.f['name'].value + '.' + window.location.hostname})
+        this.channelService.apiChannelPost({ appId: appId, name: 'Production', revisionSelectionStrategy: ChannelRevisionSelectionStrategy.UseRangeRule, rangeRule: "*", 
+            domain: `${this.f['name'].value}.${window.location.hostname}`.replace('_', '-').toLowerCase()})
           .subscribe({
             next: () => this.router.navigate(['/app']),
             error: (error) => {
