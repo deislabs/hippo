@@ -1,7 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using Hippo.Application.Apps.Queries;
+using Hippo.Application.Certificates.Queries;
 using Hippo.Application.Common.Mappings;
 using Hippo.Application.EnvironmentVariables.Queries;
+using Hippo.Application.Revisions.Queries;
 using Hippo.Core.Entities;
 using Hippo.Core.Enums;
 
@@ -29,11 +31,11 @@ public class ChannelDto : IMapFrom<Channel>
     [Required]
     public ChannelRevisionSelectionStrategy RevisionSelectionStrategy { get; set; }
 
-    public Revision? ActiveRevision { get; set; }
+    public RevisionDto? ActiveRevision { get; set; }
 
     public string? RangeRule { get; set; }
 
-    public Certificate? Certificate { get; set; }
+    public CertificateDto? Certificate { get; set; }
 
     [Required]
     public IList<EnvironmentVariableDto> EnvironmentVariables { get; set; }

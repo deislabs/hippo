@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ChannelSummaryDto, ApplicationChannelSummary, ChannelService } from 'src/app/core/api/v1';
+import { ChannelService, ChannelDto, AppChannelSummary } from 'src/app/core/api/v1';
 import { ApplicationTabs } from 'src/app/_helpers/constants';
 import { faCog, faStream, faFilter, faChartBar, faAngleDown } from '@fortawesome/free-solid-svg-icons';
 
@@ -11,9 +11,9 @@ import { faCog, faStream, faFilter, faChartBar, faAngleDown } from '@fortawesome
 })
 export class ChannelComponent implements OnInit {
 	icons = { faCog, faStream, faFilter, faChartBar, faAngleDown };
-	channel!: ChannelSummaryDto;
+	channel!: ChannelDto;
 	channelId!: string;
-	selectedChannel!: ApplicationChannelSummary;
+	selectedChannel!: AppChannelSummary;
 	isSelectClicked: boolean = false;
 	tabs = ApplicationTabs;
 	activeTab = ApplicationTabs.Overview;
@@ -41,7 +41,7 @@ export class ChannelComponent implements OnInit {
 	refreshData() {
 		this.channelService.apiChannelChannelIdGet(this.channelId).subscribe(channel => {
 			!channel ? this.router.navigate(['/404']) : this.channel = channel;
-			this.selectedChannel = <ApplicationChannelSummary>(channel?.appSummary?.channels.filter((channel) => channel.id === this.channelId)[0]);
+			this.selectedChannel = <AppChannelSummary>(channel?.appSummary?.channels.filter((channel) => channel.id === this.channelId)[0]);
 		});
 	}
 }
