@@ -4,16 +4,19 @@ using System.ComponentModel;
 
 namespace Hippo.Application.Common.Extensions;
 
-public static class IgnoreNoMapExtensions
+public static class MappingExtensions
 {
-    public static IMappingExpression IgnoreNoMap(
-        this IMappingExpression expression, Type sourceType)
+    public static IMappingExpression IgnoreMarkedAttributes(
+        this IMappingExpression expression, Type destinationType)
     {
-        foreach (var property in sourceType.GetProperties())
+        foreach (var property in destinationType.GetProperties())
         {
-            PropertyDescriptor descriptor = TypeDescriptor.GetProperties(sourceType)[property.Name];
-            NoMapAttribute attribute = (NoMapAttribute)descriptor.Attributes[typeof(NoMapAttribute)];
-            if (attribute != null)
+            PropertyDescriptor? descriptor = TypeDescriptor.GetProperties(destinationType)?[property.Name];
+            if (descriptor == null || descriptor.Attributes == null)
+                continue;
+
+            var attribute = descriptor.Attributes[typeof(NoMapAttribute)];
+            if (attribute != null && (NoMapAttribute)attribute != null)
             {
                 expression.ForMember(property.Name, opt => opt.Ignore());
             }
