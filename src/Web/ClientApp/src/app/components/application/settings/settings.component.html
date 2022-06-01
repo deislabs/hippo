@@ -1,1 +1,33 @@
-<button class="card-footer-item button is-danger" (click)="deleteApp(appId)">Delete application</button>
+<div class="box columns is-multiline">
+    <span class="subtitle column is-12 has-text-weight-bold">
+        App info
+    </span>
+    <div class="field column is-12">
+        <label class="label">Name</label>
+        <div class="control">
+          <input class="input" type="text" placeholder="Name" [(ngModel)]="channel.appSummary.name" >
+        </div>
+    </div>
+    <div class="field column is-12">
+        <label class="label">Storage</label>
+        <div class="control">
+          <span>{{channel.appSummary.storageId}}</span>
+        </div>
+    </div>
+    <div class="column">
+        <button class="button is-danger" (click)="deleteApp(channel.appSummary.appId)">Delete application</button>
+    </div>
+    <span class="subtitle column is-12 has-text-weight-bold">
+        Channels
+    </span>
+    <div *ngFor="let chn of channel.appSummary.channels" class="column is-12">
+        {{chn.name}}
+    </div>
+    <app-channel-new *ngIf="showChannelForm" class="column is-12"></app-channel-new>
+    <button *ngIf="!showChannelForm"
+        class="button is-link is-outlined"
+        (click)="addNewChannel()">
+        <fa-icon class="icon" [icon]="faPlus"></fa-icon>
+        <span>Add Channel</span>
+    </button>
+</div>

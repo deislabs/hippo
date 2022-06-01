@@ -38,7 +38,7 @@
 	</Target>
 
 	<Target Name="PublishRunWebpack" BeforeTargets="Build" DependsOnTargets="NpmInstall">
-		<Exec WorkingDirectory="$(SpaRoot)\" Command="npm run publish" />
+		<!--<Exec WorkingDirectory="$(SpaRoot)\" Command="npm run publish" />-->
 
 		<!-- Include the newly-built files in the publish output -->
 		<ItemGroup>

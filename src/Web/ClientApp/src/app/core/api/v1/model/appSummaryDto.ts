@@ -15,6 +15,7 @@ import { AppChannelSummary } from './appChannelSummary';
 export interface AppSummaryDto { 
     id: string;
     name: string;
+    storageId: string;
     channels: Array<AppChannelSummary>;
 }
 
