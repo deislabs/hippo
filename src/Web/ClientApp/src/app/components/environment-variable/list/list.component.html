@@ -22,12 +22,18 @@
     </ng-template>
     <ng-template *ngFor="let envvar of envvars"
         [ngIf]="envvars.length > 0">
-        <div class="columns column is-full">
+        <div class="columns column is-full is-multiline">
             <div class="column is-4">
-                <input class="input" type="text" placeholder="Env. variable key" [(ngModel)]="envvar.key" (ngModelChange)="inputChanges(envvar)">
+                <input class="input" type="text" placeholder="Env. variable key"
+                    [(ngModel)]="envvar.key"
+                    (ngModelChange)="inputChanges(envvar)"
+                    [ngClass]="{ 'is-danger': envvar.errors && envvar.errors.length > 0 && !envvar.key }">
             </div>
             <div class="column is-4">
-                <input class="input" type="text" placeholder="Env. variable value" [(ngModel)]="envvar.value" (ngModelChange)="inputChanges(envvar)">
+                <input class="input" type="text" placeholder="Env. variable value"
+                    [(ngModel)]="envvar.value"
+                    (ngModelChange)="inputChanges(envvar)"
+                    [ngClass]="{ 'is-danger': envvar.errors && envvar.errors.length > 0 && !envvar.value }">
             </div>
             <div class="column is-4 field is-grouped">
                 <p class="control">

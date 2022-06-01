@@ -13,7 +13,7 @@ export class ListComponent implements OnInit {
 	envvars: any = [];
 	originalEnvVars: any = [];
 
-	errors:Array<string> = [];
+	errors: Array<string> = [];
 	loading = false;
 	submitted = false;
 	faBackward = faBackward;
@@ -62,6 +62,10 @@ export class ListComponent implements OnInit {
 	}
 
 	save() {
+		if (!this.validateEnvVars()) {
+			return;
+		}
+
 		this.channelService.apiChannelChannelIdEnvironmentVariablesPut(this.channelId, {
 			environmentVariables: this.envvars
 		}).subscribe({
@@ -77,6 +81,25 @@ export class ListComponent implements OnInit {
 				this.loading = false;
 			}
 		});
+	}
+
+	validateEnvVars() {
+		let isValid = true;
+		this.envvars.forEach((envvar: any) => {
+			envvar.errors = [];
+
+			if (envvar.key === '') {
+				envvar.errors.push('Must specify key');
+				isValid = false;
+			}
+
+			if (envvar.value === '') {
+				envvar.errors.push('Must specify value');
+				isValid = false;
+			}
+		});
+
+		return isValid;
 	}
 
 	refreshData() {
