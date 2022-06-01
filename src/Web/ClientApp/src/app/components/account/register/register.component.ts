@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -58,8 +59,8 @@ export class RegisterComponent implements OnInit {
 					// TODO: navigate to registration confirmation page
 					next: () => this.router.navigate(['/']),
 					error: (err) => {
-						console.log(err.error.errors);
-						this.errors = this.parseError(err.error);
+						console.log(err);
+						this.errors = this.parseError(err);
 						this.loading = false;
 					}
 				}
@@ -67,11 +68,16 @@ export class RegisterComponent implements OnInit {
 	}
 
 	parseError(error: any) {
-		if (error.errors) {
-			return this.parseValidationErrors(error.errors);
-		} else {
-			return [error.title];
+		if (error.error)
+		{
+			var err = error.error;
+			if (err.errors) {
+				return this.parseValidationErrors(err.errors);
+			} else {
+				return [(err.detail) ? err.detail : `${err.status} - ${err.title}`]
+			}
 		}
+		return [(error.message) ? error.message : error.status ? `${error.status} - ${error.statusText}` : 'Server error'];
 	}
 
 	parseValidationErrors(error: any) {

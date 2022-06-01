@@ -1,8 +1,7 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.187.0/containers/dotnet
 
-// If the devcontiner image is updated to a new version, the version number must be updated in the image tag below
-// It should match the value of the ENV VAR DEVCONTAINER_VERSION in build-devcontainer.yml
+// If a new version of Hippo is released, the version number should be updated in the image tag below
 {
     "name": "Hippo",
     "image": "ghcr.io/deislabs/hippo-dev:v0.10.0",

@@ -1,17 +1,14 @@
-# This is a temporary measure to pre-build the dev container image until GH support for codespaces pre-build is enabled.
-# If the contents of the docker file change then the image version env value here (DEVCONTAINER_VERSION) and in the devcontainer.json file should be changed.
-name: Build devcontainer image
+name: Publish devcontainer image
 
 on:
   push:
-    branches: [ main ]
+    tags:
+    - "*"
 
 jobs:
   release:
     name: Push devcontainer/codespaces image to GitHub Package Registry
     runs-on: ubuntu-latest
-    env:
-      DEVCONTAINER_VERSION: v0.10.0
     permissions:
       contents: read
       packages: write
@@ -19,19 +16,21 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v2
       - name: Log in to the Container registry
-        uses: docker/login-action@v1
+        uses: docker/login-action@v2
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
       - name: Extract metadata for Docker
         id: meta
-        uses: docker/metadata-action@v3
+        uses: docker/metadata-action@v4
         with:
           images: ghcr.io/${{ github.repository }}-dev
           tags: |
-            type=raw,value=${{ env.DEVCONTAINER_VERSION }}
-            type=sha,priority=2
+            type=semver,pattern={{raw}},priority=1
+            type=semver,pattern={{version}},priority=2
+            type=semver,pattern={{major}}.{{minor}},priority=3
+            type=sha,priority=4
           flavor: |
             latest=true
 
@@ -40,12 +39,6 @@ jobs:
         with:
           file: .devcontainer/Dockerfile
           context: .devcontainer
-          build-args: |
-            VARIANT : 6.0
-            NODE_VERSION: lts/*
-            HIPPO_VERSION: v0.12.0
-            BINDLE_VERSION: v0.8.0
-            SPIN_VERSION: v0.2.0
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
