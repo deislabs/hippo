@@ -27,7 +27,6 @@ export * from './registerRevisionCommand';
 export * from './revision';
 export * from './revisionComponent';
 export * from './revisionComponentDto';
-export * from './revisionDetailsDto';
 export * from './revisionDto';
 export * from './revisionsVm';
 export * from './storageList';

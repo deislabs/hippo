@@ -9,11 +9,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { RevisionComponentDto } from './revisionComponentDto';
 
 
 export interface RevisionDto { 
     id: string;
     appId: string;
     revisionNumber: string;
+    readonly components: Array<RevisionComponentDto>;
 }
 
