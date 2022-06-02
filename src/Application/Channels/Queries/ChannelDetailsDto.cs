@@ -26,7 +26,7 @@ public class ChannelDetailsDto : IMapFrom<Channel>
     [Required]
     public ChannelRevisionSelectionStrategy RevisionSelectionStrategy { get; set; }
 
-    public RevisionDetailsDto? ActiveRevision { get; set; }
+    public RevisionDto? ActiveRevision { get; set; }
 
     public string? RangeRule { get; set; }
 
