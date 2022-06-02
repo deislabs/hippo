@@ -23,6 +23,7 @@ import { HealthCheckComponent } from './components/health-check/health-check.com
 import { environment } from './../environments/environment';
 import { SettingsComponent } from './components/application/settings/settings.component';
 import { LogsComponent } from './components/channel/logs/logs.component';
+import { OverviewComponent } from './components/channel/overview/overview.component';
 import { NgxJdenticonModule, JDENTICON_CONFIG } from 'ngx-jdenticon';
 
 export function apiConfigFactory(): Configuration {
@@ -48,6 +49,7 @@ export function apiConfigFactory(): Configuration {
 		HealthCheckComponent,
 		SettingsComponent,
   		LogsComponent,
+    	OverviewComponent,
 	],
 	imports: [
 		BrowserModule,
