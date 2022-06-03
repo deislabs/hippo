@@ -5,6 +5,7 @@ using Hippo.Core.Entities;
 using Hippo.Core.Enums;
 using Hippo.Core.Events;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Hippo.Application.Channels.Commands;
 
@@ -40,8 +41,10 @@ public class UpdateChannelCommandHandler : IRequestHandler<UpdateChannelCommand>
 
     public async Task<Unit> Handle(UpdateChannelCommand request, CancellationToken cancellationToken)
     {
-        var entity = await _context.Channels
-            .FindAsync(new object[] { request.Id }, cancellationToken);
+        var entity = _context.Channels
+            .Include(c => c.ActiveRevision)
+            .Include(c => c.App)
+            .First(c => c.Id == request.Id);
 
         if (entity is null)
         {

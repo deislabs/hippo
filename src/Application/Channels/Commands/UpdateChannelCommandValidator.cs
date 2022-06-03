@@ -11,7 +11,7 @@ public class UpdateChannelCommandValidator : AbstractValidator<UpdateChannelComm
 {
     private readonly Regex validName = new Regex("^[a-zA-Z0-9-_]*$");
 
-    private readonly Regex validDomainName = new Regex("^((?!-)[A-Za-z0-9-]{1, 63}(?<!-)\\.)+[A-Za-z]{2, 6}$");
+    private readonly Regex validDomainName = new Regex(@"^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$");
     private readonly IApplicationDbContext _context;
 
     public UpdateChannelCommandValidator(IApplicationDbContext context)
