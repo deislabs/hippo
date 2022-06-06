@@ -39,7 +39,9 @@ export class ListComponent implements OnInit {
 
 		channelStatusList.forEach((channelStatus: any) => {
 			let channel = channels.filter((channel: any) => channel.id === channelStatus.channelId)[0];
-			channel.status = channelStatus.status;
+			if (channel) {
+				channel.status = channelStatus.status;
+			}
 		});
 	}
 
