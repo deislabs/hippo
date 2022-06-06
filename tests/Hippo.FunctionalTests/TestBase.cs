@@ -215,6 +215,11 @@ public class NullNomadService : IJobService
         return new string[] { };
     }
 
+    public string GetJobStatus(string jobName)
+    {
+        throw new NotImplementedException();
+    }
+
     private class NullJob : Job
     {
         public void Reload() { }

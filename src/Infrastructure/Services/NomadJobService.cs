@@ -1,6 +1,7 @@
 using Fermyon.Nomad.Api;
 using Fermyon.Nomad.Client;
 using Fermyon.Nomad.Model;
+using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Infrastructure.Jobs;
 using Microsoft.Extensions.Configuration;
@@ -180,13 +181,27 @@ public class NomadJobService : IJobService
             Config = new Dictionary<string, object>
             {
                 { "command", nomadJob.spinBinaryPath },
-                { "args", new List<string> { "up", "--listen", "${NOMAD_IP_http}:${NOMAD_PORT_http}", "--follow-all", "--bindle", nomadJob.BindleId } }
+                { "args", new List<string> { "up", "--listen", "[${NOMAD_IP_http}]:${NOMAD_PORT_http}", "--follow-all", "--bindle", nomadJob.BindleId } }
             }
         };
     }
 
-    private bool DoesJobExist(string jobName)
+    public string GetJobStatus(string jobName)
     {
-        return _jobsClient.GetJobs().Any(job => job.Name == jobName);
+        try
+        {
+            var job = _jobsClient.GetJob(jobName.ToLower());
+
+            if (job == null)
+            {
+                throw new NotFoundException($"Job {jobName} not found");
+            }
+
+            return job.Status;
+        }
+        catch
+        {
+            return JobStatus.Dead;
+        }
     }
 }

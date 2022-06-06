@@ -41,7 +41,7 @@
 								<span *ngIf="channel.activeRevisionNumber"><strong>v{{channel.activeRevisionNumber}}</strong></span>
 								<span class="icon">
 									<!-- TODO: adapt color to channel status and add tooltip -->
-									<fa-icon [icon]="faCircle" [ngStyle]="{'color': 'green'}"></fa-icon>
+									<fa-icon [icon]="faCircle" [ngStyle]="{'color': channel.status === jobStatus.Running ? 'green' : 'red'}"></fa-icon>
 								</span>
 							</span>
 						</p>

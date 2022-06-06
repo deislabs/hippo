@@ -23,6 +23,7 @@ export * from './environmentVariable';
 export * from './environmentVariableDto';
 export * from './environmentVariablesVm';
 export * from './getChannelLogsVm';
+export * from './jobStatus';
 export * from './registerRevisionCommand';
 export * from './revision';
 export * from './revisionComponent';

@@ -7,6 +7,7 @@ api/app.service.ts
 api/certificate.service.ts
 api/channel.service.ts
 api/environmentVariable.service.ts
+api/jobStatus.service.ts
 api/revision.service.ts
 api/storage.service.ts
 configuration.ts
@@ -38,6 +39,7 @@ model/environmentVariable.ts
 model/environmentVariableDto.ts
 model/environmentVariablesVm.ts
 model/getChannelLogsVm.ts
+model/jobStatus.ts
 model/models.ts
 model/registerRevisionCommand.ts
 model/revision.ts
