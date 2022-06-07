@@ -9,7 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ApplicationChannelSummary } from './applicationChannelSummary';
+import { AppChannelSummary } from './appChannelSummary';
 
 
 export interface AppDto { 
@@ -17,6 +17,6 @@ export interface AppDto {
     name: string;
     storageId: string;
     description: string;
-    channels: Array<ApplicationChannelSummary>;
+    channels: Array<AppChannelSummary>;
 }
 
