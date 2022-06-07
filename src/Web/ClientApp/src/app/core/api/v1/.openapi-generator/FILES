@@ -47,5 +47,7 @@ model/tokenInfo.ts
 model/updateAppCommand.ts
 model/updateCertificateCommand.ts
 model/updateChannelCommand.ts
+model/updateChannelEnvironmentVariablesCommand.ts
 model/updateEnvironmentVariableCommand.ts
+model/updateEnvironmentVariableDto.ts
 variables.ts

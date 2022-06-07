@@ -47,8 +47,8 @@
                     Logs
                 </a>
             </li>
-            <li>
-                <a>
+            <li (click)="changeTab(tabs.Environment)">
+                <a [ngClass]="{ 'is-active': activeTab == tabs.Environment }">
                     <span class="icons">
                         <fa-icon [icon]="icons.faFilter"></fa-icon>
                     </span>
@@ -68,5 +68,6 @@
     <div class="column has-background-light">
         <app-settings *ngIf="activeTab == tabs.Settings" [appId]="channel.appSummary.id"></app-settings>
         <app-logs *ngIf="activeTab == tabs.Logs" [appId]="channel.appSummary.id" [channelId]="channel.id"></app-logs>
+        <app-environment-variable-list *ngIf="activeTab == tabs.Environment" [channelId]="channel.id"></app-environment-variable-list>
     </div>
 </div>
