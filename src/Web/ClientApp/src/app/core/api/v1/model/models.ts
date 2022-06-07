@@ -24,4 +24,6 @@ export * from './tokenInfo';
 export * from './updateAppCommand';
 export * from './updateCertificateCommand';
 export * from './updateChannelCommand';
+export * from './updateChannelEnvironmentVariablesCommand';
 export * from './updateEnvironmentVariableCommand';
+export * from './updateEnvironmentVariableDto';
