@@ -21,8 +21,12 @@
 		</div>
 	</div>
 
-	<button [disabled]="loading" class="button is-primary">
+	<button [disabled]="loading" type="submit" class="button is-primary">
 		<span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
 		Create
+	</button>
+	<button [disabled]="loading" type="button" (click)="cancel()" class="button ml-1">
+		<span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+		Cancel
 	</button>
 </form>

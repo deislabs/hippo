@@ -9,11 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { RevisionDto } from './revisionDto';
+import { CertificateDto } from './certificateDto';
 import { ChannelRevisionSelectionStrategy } from './channelRevisionSelectionStrategy';
 import { AppSummaryDto } from './appSummaryDto';
 import { EnvironmentVariableDto } from './environmentVariableDto';
-import { CertificateDto } from './certificateDto';
+import { RevisionDto } from './revisionDto';
 
 
 export interface ChannelDto { 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ChannelRevisionSelectionStrategy, ChannelService } from 'src/app/core/api/v1';
@@ -9,20 +9,22 @@ import { ChannelRevisionSelectionStrategy, ChannelService } from 'src/app/core/a
   styleUrls: ['./new.component.css']
 })
 export class NewComponent implements OnInit {
-  appId = '';
+  @Input() appId: any = {};
   error = '';
   channelForm!: FormGroup;
   loading = false;
   submitted = false;
   returnUrl = '/';
 
+  @Output()
+  cancelled: EventEmitter<string> = new EventEmitter<string>();
+
+  @Output()
+  created: EventEmitter<Object> = new EventEmitter<Object>();
+
   constructor(private readonly channelService: ChannelService, private route: ActivatedRoute, private readonly router: Router) { }
 
   ngOnInit() {
-    this.route.queryParams.subscribe(params => {
-			this.appId = params['id'];
-		});
-
     this.channelForm = new FormGroup({
       name: new FormControl('', [
         Validators.required
@@ -35,6 +37,14 @@ export class NewComponent implements OnInit {
 
   get f() { return this.channelForm.controls; }
 
+  cancel() {
+    this.cancelled.emit('')
+  }
+
+  emitCreated(channelId: string, name: string) {
+    this.created.emit({channelId: channelId, name: name})
+  }
+
   onSubmit() {
     this.submitted = true;
 
@@ -45,7 +55,9 @@ export class NewComponent implements OnInit {
     this.loading = true;
     this.channelService.apiChannelPost({ appId: this.appId, name: this.f['name'].value, revisionSelectionStrategy: ChannelRevisionSelectionStrategy.UseRangeRule, rangeRule: '*' })
     .subscribe({
-      next: () => location.reload(),
+      next: (channelId) => {
+        this.emitCreated(channelId, this.f['name'].value);
+      },
       error: (error) => {
         console.log(error);
         this.error = (error.message) ? error.message : error.status ? `${error.status} - ${error.statusText}` : 'Server error';
