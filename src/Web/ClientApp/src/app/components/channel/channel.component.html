@@ -1,4 +1,4 @@
-<div *ngIf="channel" class="is-flex is-flex-direction-row is-align-items-center is-justify-content-space-between mb-6">
+<div *ngIf="channel && channel.appSummary" class="is-flex is-flex-direction-row is-align-items-center is-justify-content-space-between mb-6">
     <div>
         <h1 class="is-size-1">{{channel.appSummary.name}}</h1>
         <a href="https://{{channel.domain}}" target="_blank">{{channel.domain}}</a>
@@ -28,8 +28,7 @@
     </div>
 </div>
 
-
-<div class="columns">
+<div *ngIf="channel && channel.appSummary" class="columns">
     <aside class="menu column is-full-mobile is-one-fifth-tablet">
         <ul class="menu-list">
             <li (click)="changeTab(tabs.Overview)">

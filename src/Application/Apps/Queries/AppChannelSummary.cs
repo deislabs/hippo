@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Hippo.Application.Channels.Queries;
+namespace Hippo.Application.Apps.Queries;
 
-public class ApplicationChannelSummary
+public class AppChannelSummary
 {
     [Required]
     public Guid Id { get; set; }
