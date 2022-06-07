@@ -2,6 +2,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using FluentValidation.AspNetCore;
 using Hippo.Application;
+using Hippo.Application.Common.Config;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Infrastructure;
 using Hippo.Infrastructure.Data;
@@ -144,7 +145,15 @@ using (var scope = app.Services.CreateScope())
         var userManager = services.GetRequiredService<UserManager<Account>>();
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
-        await ApplicationDbContextSeed.SeedIdentityRolesAsync(userManager, roleManager);
+        await ApplicationDbContextSeed.SeedIdentityRolesAsync(roleManager);
+
+        HippoConfig hippoConfig = new HippoConfig();
+        builder.Configuration.GetSection("Hippo").Bind(hippoConfig);
+
+        foreach (var admin in hippoConfig.Administrators)
+        {
+            await ApplicationDbContextSeed.SeedAdministratorAccountsAsync(userManager, admin.Username, admin.Username, admin.Password);
+        }
     }
     catch (Exception ex)
     {

@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Hippo.Application.Apps.Extensions;
 using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Core.Entities;
@@ -9,34 +10,40 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Hippo.Application.Channels.Queries;
 
-public class GetChannelQuery : IRequest<ChannelSummaryDto>
+public class GetChannelQuery : IRequest<ChannelDto>
 {
     [Required]
     public Guid Id { get; set; }
 }
 
-public class GetChannelQueryHandler : IRequestHandler<GetChannelQuery, ChannelSummaryDto>
+public class GetChannelQueryHandler : IRequestHandler<GetChannelQuery, ChannelDto>
 {
     private readonly IApplicationDbContext _context;
+    private readonly IMapper _mapper;
 
-    public GetChannelQueryHandler(IApplicationDbContext context)
+    public GetChannelQueryHandler(IApplicationDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
-    public async Task<ChannelSummaryDto> Handle(GetChannelQuery request, CancellationToken cancellationToken)
+    public async Task<ChannelDto> Handle(GetChannelQuery request, CancellationToken cancellationToken)
     {
         var entity = await _context.Channels
             .Where(a => a.Id == request.Id)
-            .Include(a => a.App)
-            .Include(a => a.App.Channels)
-            .Select(a => a.ToChannelSummaryDto())
+            .ProjectTo<ChannelDto>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(cancellationToken);
 
         if (entity is null)
         {
             throw new NotFoundException(nameof(Channel), request.Id);
         }
+
+        entity.AppSummary = await _context.Apps
+            .Where(a => a.Id == entity.AppId)
+            .Include(a => a.Channels)
+            .Select(a => a.ToAppSummaryDto())
+            .FirstOrDefaultAsync(cancellationToken);
 
         return entity;
     }

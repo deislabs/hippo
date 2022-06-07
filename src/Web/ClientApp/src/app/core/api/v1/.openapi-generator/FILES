@@ -14,18 +14,16 @@ encoder.ts
 git_push.sh
 index.ts
 model/app.ts
+model/appChannelSummary.ts
 model/appDto.ts
 model/appSummaryDto.ts
-model/applicationChannelSummary.ts
 model/appsVm.ts
 model/certificate.ts
 model/certificateDto.ts
 model/certificatesVm.ts
 model/channel.ts
-model/channelDetailsDto.ts
 model/channelDto.ts
 model/channelRevisionSelectionStrategy.ts
-model/channelSummaryDto.ts
 model/channelsVm.ts
 model/createAccountCommand.ts
 model/createAppCommand.ts
@@ -50,5 +48,7 @@ model/tokenInfo.ts
 model/updateAppCommand.ts
 model/updateCertificateCommand.ts
 model/updateChannelCommand.ts
+model/updateChannelEnvironmentVariablesCommand.ts
 model/updateEnvironmentVariableCommand.ts
+model/updateEnvironmentVariableDto.ts
 variables.ts
