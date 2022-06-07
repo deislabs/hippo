@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using Hippo.Application.Channels.Queries;
 
 namespace Hippo.Application.Apps.Queries;
 
@@ -7,7 +6,7 @@ public class AppSummaryDto
 {
     public AppSummaryDto()
     {
-        Channels = new List<ApplicationChannelSummary>();
+        Channels = new List<AppChannelSummary>();
     }
 
     [Required]
@@ -17,5 +16,5 @@ public class AppSummaryDto
     public string Name { get; set; } = "";
 
     [Required]
-    public IList<ApplicationChannelSummary> Channels { get; set; }
+    public IList<AppChannelSummary> Channels { get; set; }
 }
