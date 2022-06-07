@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { AppDto, AppService, JobStatusService } from 'src/app/core/api/v1';
+import { AppDto, AppService, JobStatus, JobStatusService } from 'src/app/core/api/v1';
 import { faPlus, faCircle } from '@fortawesome/free-solid-svg-icons';
 import { interval, startWith, Subscription, switchMap } from 'rxjs';
-import { JobStatus } from 'src/app/_helpers/constants';
 
 @Component({
 	selector: 'app-application-list',
@@ -43,6 +42,19 @@ export class ListComponent implements OnInit {
 				channel.status = channelStatus.status;
 			}
 		});
+	}
+
+	getStatusColor(status: JobStatus) {
+		switch(status){
+			case JobStatus.Unknown:
+				return 'gray';
+			case JobStatus.Running:
+				return 'green';
+			case JobStatus.Dead:
+				return 'red';
+			default:
+				return 'gray';
+		}
 	}
 
 	getAllChannels() {

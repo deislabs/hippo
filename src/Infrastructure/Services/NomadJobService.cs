@@ -3,6 +3,7 @@ using Fermyon.Nomad.Client;
 using Fermyon.Nomad.Model;
 using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
+using Hippo.Application.Jobs;
 using Hippo.Infrastructure.Jobs;
 using Microsoft.Extensions.Configuration;
 using System.Text;
@@ -181,27 +182,32 @@ public class NomadJobService : IJobService
             Config = new Dictionary<string, object>
             {
                 { "command", nomadJob.spinBinaryPath },
-                { "args", new List<string> { "up", "--listen", "[${NOMAD_IP_http}]:${NOMAD_PORT_http}", "--follow-all", "--bindle", nomadJob.BindleId } }
+                { "args", new List<string> { "up", "--listen", "${NOMAD_IP_http}:${NOMAD_PORT_http}", "--follow-all", "--bindle", nomadJob.BindleId } }
             }
         };
     }
 
-    public string GetJobStatus(string jobName)
+    public IEnumerable<Application.Jobs.Job>? GetJobs()
     {
         try
         {
-            var job = _jobsClient.GetJob(jobName.ToLower());
+            var jobs = _jobsClient.GetJobs()
+                .Select(job => new NomadJob(_configuration, Guid.Parse(job.ID),
+                    string.Empty,
+                    string.Empty,
+                    Enum.Parse<JobStatus>(FormatNomadJobStatus(job.Status))))
+                .ToList();
 
-            if (job == null)
-            {
-                throw new NotFoundException($"Job {jobName} not found");
-            }
-
-            return job.Status;
+            return jobs;
         }
         catch
         {
-            return JobStatus.Dead;
+            return null;
         }
+    }
+
+    private string FormatNomadJobStatus(string status)
+    {
+        return char.ToUpper(status[0]) + status[1..];
     }
 }

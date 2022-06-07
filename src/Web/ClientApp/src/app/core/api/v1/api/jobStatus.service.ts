@@ -19,7 +19,7 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
-import { JobStatus } from '../model/jobStatus';
+import { ChannelJobStatus } from '../model/channelJobStatus';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -91,9 +91,9 @@ export class JobStatusService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiJobstatusGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Array<JobStatus>>;
-    public apiJobstatusGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Array<JobStatus>>>;
-    public apiJobstatusGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Array<JobStatus>>>;
+    public apiJobstatusGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<Array<ChannelJobStatus>>;
+    public apiJobstatusGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<Array<ChannelJobStatus>>>;
+    public apiJobstatusGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<Array<ChannelJobStatus>>>;
     public apiJobstatusGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
@@ -136,7 +136,7 @@ export class JobStatusService {
             }
         }
 
-        return this.httpClient.get<Array<JobStatus>>(`${this.configuration.basePath}/api/jobstatus`,
+        return this.httpClient.get<Array<ChannelJobStatus>>(`${this.configuration.basePath}/api/jobstatus`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,

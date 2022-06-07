@@ -215,9 +215,9 @@ public class NullNomadService : IJobService
         return new string[] { };
     }
 
-    public string GetJobStatus(string jobName)
+    public IEnumerable<Job>? GetJobs()
     {
-        throw new NotImplementedException();
+        return null;
     }
 
     private class NullJob : Job
@@ -226,19 +226,10 @@ public class NullNomadService : IJobService
 
         public void Run()
         {
-            _status = JobStatus.Running;
         }
 
         public void Stop()
         {
-            if (cancellationToken.IsCancellationRequested)
-            {
-                _status = JobStatus.Canceled;
-            }
-            else
-            {
-                _status = JobStatus.Completed;
-            }
         }
     }
 }

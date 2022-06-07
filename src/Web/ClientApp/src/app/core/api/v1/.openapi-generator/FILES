@@ -25,6 +25,7 @@ model/certificatesVm.ts
 model/channel.ts
 model/channelDetailsDto.ts
 model/channelDto.ts
+model/channelJobStatus.ts
 model/channelRevisionSelectionStrategy.ts
 model/channelSummaryDto.ts
 model/channelsVm.ts

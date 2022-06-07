@@ -9,6 +9,7 @@ export * from './certificatesVm';
 export * from './channel';
 export * from './channelDetailsDto';
 export * from './channelDto';
+export * from './channelJobStatus';
 export * from './channelRevisionSelectionStrategy';
 export * from './channelSummaryDto';
 export * from './channelsVm';

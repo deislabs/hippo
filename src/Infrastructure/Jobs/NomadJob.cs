@@ -17,7 +17,7 @@ public class NomadJob : Job
     public List<string> datacenters;
     public readonly string driver;
 
-    public NomadJob(IConfiguration configuration, Guid id, string bindleId, string domain) : base(id)
+    public NomadJob(IConfiguration configuration, Guid id, string bindleId, string domain, JobStatus status = JobStatus.Unknown) : base(id, status)
     {
         BindleId = bindleId;
         Domain = domain;

@@ -1,19 +1,15 @@
-using System.ComponentModel.DataAnnotations;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
-using Hippo.Core.Entities;
+using Hippo.Application.Jobs;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hippo.Application.Channels.Queries;
 
-public class GetJobStatusesQuery : IRequest<List<JobStatus>>
+public class GetJobStatusesQuery : IRequest<List<ChannelJobStatus>>
 {
 }
 
-public class GetChannelStatusesQueryHandler : IRequestHandler<GetJobStatusesQuery, List<JobStatus>>
+public class GetChannelStatusesQueryHandler : IRequestHandler<GetJobStatusesQuery, List<ChannelJobStatus>>
 {
     private readonly IApplicationDbContext _context;
     private readonly IJobService _jobService;
@@ -25,16 +21,29 @@ public class GetChannelStatusesQueryHandler : IRequestHandler<GetJobStatusesQuer
         _jobService = jobService;
     }
 
-    public async Task<List<JobStatus>> Handle(GetJobStatusesQuery request, CancellationToken cancellationToken)
+    public async Task<List<ChannelJobStatus>> Handle(GetJobStatusesQuery request, CancellationToken cancellationToken)
     {
+        var jobs = _jobService.GetJobs()?.ToList();
         var entities = await _context.Channels
-            .Select(c => new JobStatus
+            .Select(c => new ChannelJobStatus
             {
                 ChannelId = c.Id,
-                Status = _jobService.GetJobStatus(c.Id.ToString())
+                Status = GetJobStatus(jobs, c.Id),
             })
             .ToListAsync(cancellationToken);
 
         return entities;
+    }
+
+    private static JobStatus GetJobStatus(List<Job>? jobs, Guid jobId)
+    {
+        if (jobs == null)
+        {
+            return JobStatus.Unknown;
+        }
+
+        var job = jobs.Where(job => job.Id == jobId).FirstOrDefault();
+
+        return job != null ? job.Status : JobStatus.Dead;
     }
 }

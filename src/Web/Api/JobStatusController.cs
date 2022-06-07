@@ -9,7 +9,7 @@ namespace Hippo.Web.Api;
 public class JobStatusController : ApiControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<List<JobStatus>>> Index()
+    public async Task<ActionResult<List<ChannelJobStatus>>> Index()
     {
         return await Mediator.Send(new GetJobStatusesQuery());
     }

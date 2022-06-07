@@ -9,13 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { JobStatus } from './jobStatus';
 
 
-export type JobStatus = 'Running' | 'Dead' | 'Unknown';
-
-export const JobStatus = {
-    Running: 'Running' as JobStatus,
-    Dead: 'Dead' as JobStatus,
-    Unknown: 'Unknown' as JobStatus
-};
+export interface ChannelJobStatus { 
+    channelId: string;
+    status: JobStatus;
+}
 
