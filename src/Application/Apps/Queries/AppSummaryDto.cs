@@ -16,5 +16,8 @@ public class AppSummaryDto
     public string Name { get; set; } = "";
 
     [Required]
+    public string StorageId { get; set; } = "";
+
+    [Required]
     public IList<AppChannelSummary> Channels { get; set; }
 }
