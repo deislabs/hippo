@@ -65,7 +65,9 @@
             </li>
         </ul>
     </aside>
+
     <div class="column has-background-light">
+        <channel-overview *ngIf="activeTab == tabs.Overview" [channelId]="channel.id"></channel-overview>
         <app-settings *ngIf="activeTab == tabs.Settings" [channel]="channel"></app-settings>
         <app-logs *ngIf="activeTab == tabs.Logs" [appId]="channel.appSummary.id" [channelId]="channel.id"></app-logs>
         <app-environment-variable-list *ngIf="activeTab == tabs.Environment" [channelId]="channel.id"></app-environment-variable-list>
