@@ -35,7 +35,7 @@ RUN su ${USER} -c "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0
 WORKDIR /tmp
 
 # Install hippo cli
-ARG HIPPO_CLI_VERSION="v0.13.0"
+ARG HIPPO_CLI_VERSION="v0.14.0"
 RUN mkdir hippocli && cd hippocli && curl -fsSLo hippocli.tar.gz https://github.com/deislabs/hippo-cli/releases/download/${HIPPO_CLI_VERSION}/hippo-${HIPPO_CLI_VERSION}-linux-amd64.tar.gz && tar -xvf hippocli.tar.gz && mv hippo README.md LICENSE /usr/local/bin/ && cd - && rm -r hippocli
 
 # Install bindle
