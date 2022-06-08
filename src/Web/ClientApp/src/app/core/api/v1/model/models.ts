@@ -17,6 +17,7 @@ export * from './environmentVariableDto';
 export * from './environmentVariablesVm';
 export * from './getChannelLogsVm';
 export * from './registerRevisionCommand';
+export * from './revisionComponentDto';
 export * from './revisionDto';
 export * from './revisionsVm';
 export * from './storageList';

@@ -10,8 +10,8 @@
  * Do not edit the class manually.
  */
 import { ChannelRevisionSelectionStrategy } from './channelRevisionSelectionStrategy';
-import { RevisionDetailsDto } from './revisionDetailsDto';
 import { EnvironmentVariableDto } from './environmentVariableDto';
+import { RevisionDto } from './revisionDto';
 import { Certificate } from './certificate';
 
 
@@ -20,7 +20,7 @@ export interface ChannelDetailsDto {
     name: string;
     domain: string;
     revisionSelectionStrategy: ChannelRevisionSelectionStrategy;
-    activeRevision?: RevisionDetailsDto;
+    activeRevision?: RevisionDto;
     rangeRule?: string | null;
     certificate?: Certificate;
     environmentVariables: Array<EnvironmentVariableDto>;

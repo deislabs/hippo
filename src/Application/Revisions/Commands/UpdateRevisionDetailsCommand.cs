@@ -43,7 +43,9 @@ public class UpdateRevisionDetailsCommandHandler : IRequestHandler<UpdateRevisio
             {
                 Source = c.Source,
                 Name = c.Id,
-                Route = c.Trigger?.Route ?? "/",
+                Route = c.Trigger?.Route,
+                Channel = c.Trigger?.Channel,
+                Type = revisionDetails.SpinToml.Trigger?.Type,
                 Revision = revision,
             });
         _context.RevisionComponents.AddRange(newComponents);

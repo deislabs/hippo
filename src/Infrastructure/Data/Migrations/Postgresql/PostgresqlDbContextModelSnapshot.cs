@@ -17,7 +17,7 @@ namespace Hippo.Infrastructure.Data.Migrations.Postgresql
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.4")
+                .HasAnnotation("ProductVersion", "6.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -226,6 +226,9 @@ namespace Hippo.Infrastructure.Data.Migrations.Postgresql
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("Channel")
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("Created")
                         .HasColumnType("timestamp with time zone");
 
@@ -247,11 +250,13 @@ namespace Hippo.Infrastructure.Data.Migrations.Postgresql
                         .HasColumnType("uuid");
 
                     b.Property<string>("Route")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Source")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Type")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
