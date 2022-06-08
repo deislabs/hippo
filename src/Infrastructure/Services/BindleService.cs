@@ -83,10 +83,13 @@ public class BindleService : IBindleService
 
     public async Task<IEnumerable<string>> QueryAvailableStorages(string query, ulong? offset, int? limit)
     {
-        var matches = await _client.QueryInvoices(query, offset, limit);
+        var matches = await _client.QueryInvoices(query, offset);
         if (matches.Total == 0)
             return new List<string>();
-        return matches.Invoices.Where(i => i.Bindle != null && !string.IsNullOrEmpty(i.Bindle.Name))
-            .Select(i => new string(i.Bindle?.Name)).Distinct();
+        return matches.Invoices
+            .Where(i => i.Bindle != null && !string.IsNullOrEmpty(i.Bindle.Name))
+            .Select(i => new string(i.Bindle?.Name))
+            .Distinct()
+            .Take(limit ?? int.MaxValue);
     }
 }

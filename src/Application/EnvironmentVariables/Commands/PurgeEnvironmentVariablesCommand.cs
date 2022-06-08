@@ -6,8 +6,8 @@ using MediatR;
 
 namespace Hippo.Application.EnvironmentVariables.Commands;
 
-[Authorize(Roles = "Administrator")]
-[Authorize(Policy = "CanPurge")]
+[Authorize(Roles = UserRole.Administrator)]
+[Authorize(Policy = UserPolicy.CanPurge)]
 public class PurgeEnvironmentVariablesCommand : IRequest { }
 
 public class PurgeEnvironmentVariablesCommandHandler : IRequestHandler<PurgeEnvironmentVariablesCommand>

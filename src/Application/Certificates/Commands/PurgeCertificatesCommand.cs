@@ -6,8 +6,8 @@ using MediatR;
 
 namespace Hippo.Application.Certificates.Commands;
 
-[Authorize(Roles = "Administrator")]
-[Authorize(Policy = "CanPurge")]
+[Authorize(Roles = UserRole.Administrator)]
+[Authorize(Policy = UserPolicy.CanPurge)]
 public class PurgeCertificatesCommand : IRequest { }
 
 public class PurgeCertificatesCommandHandler : IRequestHandler<PurgeCertificatesCommand>

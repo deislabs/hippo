@@ -6,8 +6,8 @@ using MediatR;
 
 namespace Hippo.Application.Apps.Commands;
 
-[Authorize(Roles = "Administrator")]
-[Authorize(Policy = "CanPurge")]
+[Authorize(Roles = UserRole.Administrator)]
+[Authorize(Policy = UserPolicy.CanPurge)]
 public class PurgeAppsCommand : IRequest { }
 
 public class PurgeAppsCommandHandler : IRequestHandler<PurgeAppsCommand>
