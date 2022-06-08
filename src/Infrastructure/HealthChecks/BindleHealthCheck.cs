@@ -10,8 +10,7 @@ public class BindleHealthCheck : IHealthCheck
 
     public BindleHealthCheck(IConfiguration configuration)
     {
-        var bindleUrl = configuration.GetValue("Bindle:Url", "http://127.0.0.1:8080/v1");
-        _client = new BindleClient(bindleUrl);
+        _client = new BindleClient(configuration.GetConnectionString("Bindle"));
     }
 
     public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
