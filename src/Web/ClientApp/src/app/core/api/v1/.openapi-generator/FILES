@@ -33,6 +33,7 @@ model/environmentVariablesVm.ts
 model/getChannelLogsVm.ts
 model/models.ts
 model/registerRevisionCommand.ts
+model/revisionComponentDto.ts
 model/revisionDto.ts
 model/revisionsVm.ts
 model/storageList.ts

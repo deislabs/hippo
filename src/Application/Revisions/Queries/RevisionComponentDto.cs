@@ -15,5 +15,11 @@ public class RevisionComponentDto : IMapFrom<Core.Entities.RevisionComponent>
     public string Name { get; set; } = string.Empty;
 
     [Required]
-    public string Route { get; set; } = string.Empty;
+    public string? Route { get; set; }
+
+    [Required]
+    public string? Channel { get; set; }
+
+    [Required]
+    public string? Type { get; set; }
 }
