@@ -21,6 +21,6 @@ export class OverviewComponent implements OnInit {
   }
 
   refreshData() {
-		this.channelService.apiChannelChannelIdOverviewGet(this.channelId).subscribe(vm => (this.activeRevision = vm.activeRevision));
+		this.channelService.apiChannelChannelIdGet(this.channelId).subscribe(vm => (this.activeRevision = vm.activeRevision));
 	}
 }
