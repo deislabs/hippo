@@ -1,3 +1,4 @@
+using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Core.Entities;
 using MediatR;
@@ -26,6 +27,8 @@ public class UpdateEnvironmentVariablesCommandHandler : IRequestHandler<UpdateCh
             .Include(c => c.App)
             .FirstOrDefault(c => c.Id == request.ChannelId);
 
+        _ = channel ?? throw new NotFoundException(nameof(Channel), request.ChannelId);
+
         var existingVariables = GetExistingEnvironmentVariables(request.ChannelId);
 
         var envVariablesToBeAdded = EnvironmentVariablesToBeAdded(request.EnvironmentVariables, channel);
@@ -39,7 +42,7 @@ public class UpdateEnvironmentVariablesCommandHandler : IRequestHandler<UpdateCh
             foreach (var environmentVariable in request.EnvironmentVariables)
             {
                 var updatedEnvVar = existingVariables.FirstOrDefault(v => v.Id == environmentVariable.Id);
-                
+
                 if (updatedEnvVar == null)
                 {
                     continue;
