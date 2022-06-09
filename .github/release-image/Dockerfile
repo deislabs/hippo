@@ -71,13 +71,12 @@ ENV GLOBAL_AGENT_FORCE_GLOBAL_AGENT ${FORCE_GLOBAL_AGENT}
 
 # Docker/WSL2 has an issue exposing ports from localhost. the following tries to work around this issue.
 # See https://github.com/microsoft/WSL/issues/4983
-ARG HIPPO_HTTP_PORT="5308"
-ARG HIPPO_HTTPS_PORT="5309"
+ARG HIPPO_PORT="5309"
 
-ARG HIPPOURL=https://localhost:${HIPPO_HTTPS_PORT}
+ARG HIPPOURL=http://hippo.hippofactory.io:${HIPPO_PORT}
 ENV HIPPO_URL ${HIPPOURL}
 
-ENV ASPNETCORE_URLS http://0.0.0.0:${HIPPO_HTTP_PORT};https://0.0.0.0:${HIPPO_HTTPS_PORT}
+ENV ASPNETCORE_URLS http://0.0.0.0:${HIPPO_PORT}
 
 # Generate certs for hippo-server and proxy
 WORKDIR /data/certs

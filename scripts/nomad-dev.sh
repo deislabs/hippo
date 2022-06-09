@@ -60,7 +60,7 @@ echo "Consul:  http://localhost:8500"
 echo "Nomad:   http://localhost:4646"
 echo "Traefik: http://localhost:8081"
 echo "Bindle:  http://bindle.hippofactory.io:8080"
-echo "Hippo:   https://hippo.hippofactory.io:5309"
+echo "Hippo:   http://hippo.hippofactory.io:5309"
 echo
 echo
 echo "Press CTRL+C to exit."
