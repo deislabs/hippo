@@ -34,6 +34,7 @@
 	<PropertyGroup>
 		<MinVerDefaultPreReleasePhase>rc</MinVerDefaultPreReleasePhase>
 		<MinVerMinimumMajorMinor>0.1</MinVerMinimumMajorMinor>
+		<MinVerTagPrefix>v</MinVerTagPrefix>
 	</PropertyGroup>
 
 </Project>
