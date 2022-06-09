@@ -49,9 +49,6 @@ RUN mkdir spin && cd spin && curl -fsSLo spin.tar.gz https://github.com/fermyon/
 # Install Rust
 RUN su ${USER} -c "mkdir rust && cd rust && curl -fsSLo install_rust.sh https://sh.rustup.rs && chmod +x ./install_rust.sh  && ./install_rust.sh -y -t wasm32-wasi && cd - && rm -r rust"
 
-# Install yo-wasm
-RUN su ${USER} -c ". /home/${USER}/.nvm/nvm.sh && npm install -g yo && npm install -g generator-wasm"
-
 COPY --chown=1000:1000 . /hippo
 
 WORKDIR /hippo
