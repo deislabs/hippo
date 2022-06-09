@@ -3,7 +3,6 @@ using AutoMapper;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Application.Revisions.Queries;
 using Hippo.Core.Entities;
-using Hippo.Core.Events;
 using MediatR;
 
 namespace Hippo.Application.Revisions.Commands;

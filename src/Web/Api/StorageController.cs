@@ -1,4 +1,3 @@
-using Hippo.Application.Revisions.Commands;
 using Hippo.Application.Revisions.Queries;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
