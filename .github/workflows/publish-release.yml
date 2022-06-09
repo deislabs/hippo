@@ -50,10 +50,6 @@ jobs:
         with:
           dotnet-version: 6.0.x
 
-      - name: Set MINVERBUILDMETADATA
-        run: echo MINVERBUILDMETADATA=$(git rev-parse --short ${GITHUB_SHA})  >> $GITHUB_ENV
-        shell: bash
-
       - name: dotnet publish
         run: dotnet publish src/Web/Web.csproj --runtime "${{ matrix.target }}" -c Release --self-contained -o ${{ matrix.target }}
 
@@ -66,14 +62,14 @@ jobs:
           else
             tar czvf "hippo-server-${{ matrix.target }}.tar.gz" "${{ matrix.target }}"
           fi
-      
+
       - name: Upload binary as GitHub artifact
         if: ${{ matrix.target == 'win-x64' }}
         uses: actions/upload-artifact@v3
         with:
           name: hippo-server
           path: hippo-server-${{ matrix.target }}.zip
-      
+
       - name: Upload binary as GitHub artifact
         if: ${{ matrix.target != 'win-x64' }}
         uses: actions/upload-artifact@v3
