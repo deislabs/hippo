@@ -1,6 +1,4 @@
-﻿
-using Hippo.Application.Apps.Extensions;
-using Hippo.Application.Apps.Queries;
+﻿using Hippo.Application.Apps.Queries;
 using Hippo.Core.Entities;
 
 namespace Hippo.Application.Channels.Queries;
