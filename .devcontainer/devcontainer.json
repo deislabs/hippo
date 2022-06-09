@@ -4,7 +4,7 @@
 // If a new version of Hippo is released, the version number should be updated in the image tag below
 {
     "name": "Hippo",
-    "image": "ghcr.io/deislabs/hippo-dev:v0.10.0",
+    "image": "ghcr.io/deislabs/hippo-dev:v0.15.1",
     // Set *default* container specific settings.json values on container create.
     "settings": {
         "remote.autoForwardPorts": false
