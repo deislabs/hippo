@@ -2,7 +2,6 @@
 
 	<PropertyGroup>
 		<PackageId>Hippo.Infrastructure</PackageId>
-		<Version>0.15.0</Version>
 		<Authors>Matt Fisher</Authors>
 		<Company>Microsoft</Company>
 		<RepositoryUrl>https://github.com/deislabs/hippo</RepositoryUrl>
@@ -30,4 +29,14 @@
 		<ProjectReference Include="..\Application\Application.csproj" />
 		<ProjectReference Include="..\Core\Core.csproj" />
 	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="MinVer" Version="4.0.0" PrivateAssets="All" />
+	</ItemGroup>
+
+	<PropertyGroup>
+		<MinVerDefaultPreReleasePhase>rc</MinVerDefaultPreReleasePhase>
+		<MinVerMinimumMajorMinor>0.1</MinVerMinimumMajorMinor>
+	</PropertyGroup>
+
 </Project>
