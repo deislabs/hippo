@@ -44,7 +44,7 @@ public class UpdateChannelCommandValidator : AbstractValidator<UpdateChannelComm
             throw new NotFoundException(nameof(Channel), command.Id);
         }
 
-        return await _context.Channels.Where(c => c.AppId == channel.AppId).AllAsync(a => a.Name != name, cancellationToken);
+        return await _context.Channels.Where(c => c.AppId == channel.AppId && c.Id != channel.Id).AllAsync(a => a.Name != name, cancellationToken);
     }
 
     public async Task<bool> BeUniqueDomainName(UpdateChannelCommand command, string domain, CancellationToken cancellationToken)
