@@ -1,6 +1,4 @@
-using System.ComponentModel;
-using System.Diagnostics;
-using Hippo.Application.Common.Exceptions;
+using Deislabs.Bindle;
 using Hippo.Application.Jobs;
 using Microsoft.Extensions.Configuration;
 
@@ -21,7 +19,7 @@ public class NomadJob : Job
     {
         BindleId = bindleId;
         Domain = domain;
-        bindleUrl = configuration.GetValue<string>("Bindle:Url", "http://127.0.0.1:8080/v1");
+        bindleUrl = (new ConnectionInfo(configuration.GetConnectionString("Bindle"))).BaseUri;
         nomadBinaryPath = configuration.GetValue<string>("Nomad:BinaryPath", (OperatingSystem.IsWindows() ? "nomad.exe" : "nomad"));
         spinBinaryPath = configuration.GetValue<string>("Spin:BinaryPath", (OperatingSystem.IsWindows() ? "spin.exe" : "spin"));
         datacenters = configuration.GetSection("Nomad:Datacenters").Get<string[]>().ToList();

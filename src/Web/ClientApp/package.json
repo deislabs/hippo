@@ -6,7 +6,7 @@
 		"publish": "ng build --configuration production",
 		"watch": "ng build --watch --configuration development",
 		"test": "ng test",
-		"generate:api": "JAVA_OPTS='-Dio.swagger.parser.util.RemoteUrl.trustAll=true -Dio.swagger.v3.parser.util.RemoteUrl.trustAll=true' openapi-generator-cli generate -i https://localhost:5309/swagger/v1/swagger.json -g typescript-angular -o src/app/core/api/v1"
+		"generate:api": "JAVA_OPTS='-Dio.swagger.parser.util.RemoteUrl.trustAll=true -Dio.swagger.v3.parser.util.RemoteUrl.trustAll=true' openapi-generator-cli generate -i http://localhost:5309/swagger/v1/swagger.json -g typescript-angular -o src/app/core/api/v1"
 	},
 	"private": true,
 	"dependencies": {

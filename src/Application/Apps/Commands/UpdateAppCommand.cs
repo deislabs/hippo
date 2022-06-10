@@ -2,7 +2,6 @@ using System.ComponentModel.DataAnnotations;
 using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Core.Entities;
-using Hippo.Core.Events;
 using MediatR;
 
 namespace Hippo.Application.Apps.Commands;

@@ -35,7 +35,7 @@ RUN su ${USER} -c "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.38.0
 WORKDIR /tmp
 
 # Install hippo cli
-ARG HIPPO_CLI_VERSION="v0.13.0"
+ARG HIPPO_CLI_VERSION="v0.12.0"
 RUN mkdir hippocli && cd hippocli && curl -fsSLo hippocli.tar.gz https://github.com/deislabs/hippo-cli/releases/download/${HIPPO_CLI_VERSION}/hippo-${HIPPO_CLI_VERSION}-linux-amd64.tar.gz && tar -xvf hippocli.tar.gz && mv hippo README.md LICENSE /usr/local/bin/ && cd - && rm -r hippocli
 
 # Install bindle
@@ -48,9 +48,6 @@ RUN mkdir spin && cd spin && curl -fsSLo spin.tar.gz https://github.com/fermyon/
 
 # Install Rust
 RUN su ${USER} -c "mkdir rust && cd rust && curl -fsSLo install_rust.sh https://sh.rustup.rs && chmod +x ./install_rust.sh  && ./install_rust.sh -y -t wasm32-wasi && cd - && rm -r rust"
-
-# Install yo-wasm
-RUN su ${USER} -c ". /home/${USER}/.nvm/nvm.sh && npm install -g yo && npm install -g generator-wasm"
 
 COPY --chown=1000:1000 . /hippo
 
@@ -71,13 +68,12 @@ ENV GLOBAL_AGENT_FORCE_GLOBAL_AGENT ${FORCE_GLOBAL_AGENT}
 
 # Docker/WSL2 has an issue exposing ports from localhost. the following tries to work around this issue.
 # See https://github.com/microsoft/WSL/issues/4983
-ARG HIPPO_HTTP_PORT="5308"
-ARG HIPPO_HTTPS_PORT="5309"
+ARG HIPPO_PORT="5309"
 
-ARG HIPPOURL=https://localhost:${HIPPO_HTTPS_PORT}
+ARG HIPPOURL=http://hippo.hippofactory.io:${HIPPO_PORT}
 ENV HIPPO_URL ${HIPPOURL}
 
-ENV ASPNETCORE_URLS http://0.0.0.0:${HIPPO_HTTP_PORT};https://0.0.0.0:${HIPPO_HTTPS_PORT}
+ENV ASPNETCORE_URLS http://0.0.0.0:${HIPPO_PORT}
 
 # Generate certs for hippo-server and proxy
 WORKDIR /data/certs

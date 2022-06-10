@@ -10,7 +10,7 @@ RUN su vscode -c "umask 0002 && . /usr/local/share/nvm/nvm.sh && nvm install ${N
 WORKDIR /tmp
 
 # Install hippo CLI
-ARG HIPPO_VERSION="v0.13.0"
+ARG HIPPO_VERSION="v0.12.0"
 RUN curl -fsSLo hippocli.tar.gz https://github.com/deislabs/hippo-cli/releases/download/${HIPPO_VERSION}/hippo-${HIPPO_VERSION}-linux-amd64.tar.gz && tar -xvf hippocli.tar.gz && mv hippo /usr/local/bin/
 
 # Install bindle and bindle-server
