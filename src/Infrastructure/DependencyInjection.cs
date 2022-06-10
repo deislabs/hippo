@@ -5,7 +5,6 @@ using Hippo.Infrastructure.Data;
 using Hippo.Infrastructure.Exceptions;
 using Hippo.Infrastructure.Files;
 using Hippo.Infrastructure.Identity;
-using Hippo.Infrastructure.Jobs;
 using Hippo.Infrastructure.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

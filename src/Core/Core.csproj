@@ -2,7 +2,6 @@
 
 	<PropertyGroup>
 		<PackageId>Hippo.Core</PackageId>
-		<Version>0.12.0</Version>
 		<Authors>Matt Fisher</Authors>
 		<Company>Microsoft</Company>
 		<RepositoryUrl>https://github.com/deislabs/hippo</RepositoryUrl>
@@ -12,6 +11,16 @@
 		<AssemblyName>Hippo.Core</AssemblyName>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="MinVer" Version="4.0.0" PrivateAssets="All" />
+	</ItemGroup>
+
+	<PropertyGroup>
+		<MinVerDefaultPreReleasePhase>rc</MinVerDefaultPreReleasePhase>
+		<MinVerMinimumMajorMinor>0.1</MinVerMinimumMajorMinor>
+		<MinVerTagPrefix>v</MinVerTagPrefix>
 	</PropertyGroup>
 
 </Project>

@@ -1,6 +1,6 @@
 using Hippo.Application.Channels.Commands;
 using Hippo.Application.Channels.Queries;
-using Hippo.Application.Revisions.Queries;
+using Hippo.Application.EnvironmentVariables.Commands;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,14 +16,8 @@ public class ChannelController : ApiControllerBase
         return await Mediator.Send(new GetChannelsQuery());
     }
 
-    [HttpGet("{channelId}/overview")]
-    public async Task<ActionResult<ChannelDetailsDto?>> GetChannelDetails(Guid channelId)
-    {
-        return await Mediator.Send(new GetChannelDetailsQuery { ChannelId = channelId });
-    }
-
     [HttpGet("{channelId}")]
-    public async Task<ActionResult<ChannelSummaryDto?>> GetChannel(Guid channelId)
+    public async Task<ActionResult<ChannelDto>> GetChannel(Guid channelId)
     {
         return await Mediator.Send(new GetChannelQuery { Id = channelId });
     }
@@ -50,6 +44,16 @@ public class ChannelController : ApiControllerBase
             return BadRequest();
         }
 
+        await Mediator.Send(command);
+
+        return NoContent();
+    }
+
+    [HttpPut("{channelId}/environment-variables")]
+    public async Task<ActionResult> UpdateRange([FromRoute] Guid channelId,
+        [FromBody] UpdateChannelEnvironmentVariablesCommand command)
+    {
+        command.ChannelId = channelId;
         await Mediator.Send(command);
 
         return NoContent();

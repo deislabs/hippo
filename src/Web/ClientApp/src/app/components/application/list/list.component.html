@@ -24,7 +24,7 @@
 
 <div class="columns is-multiline">
 	<div *ngFor="let app of apps" class="column is-full-tablet is-half-desktop is-third-widescreen">
-		<a class="box" [ngStyle]="{'height':'100%'}" routerLink="/channel/{{app.channels[0].id}}">
+		<a class="box" [ngStyle]="{'height':'100%'}" [routerLink]="app.channels.length ? '/channel/' + app.channels[0].id : '/404'">
 			<article class="media is-align-items-center">
 				<div class="media-left">
 					<svg class="image is-128x128" [data-jdenticon-value]="app.name"></svg>

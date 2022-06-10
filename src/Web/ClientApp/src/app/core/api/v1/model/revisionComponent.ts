@@ -22,6 +22,8 @@ export interface RevisionComponent {
     source?: string | null;
     name?: string | null;
     route?: string | null;
+    channel?: string | null;
+    type?: string | null;
     revisionId?: string;
     revision?: Revision;
     domainEvents?: Array<DomainEvent> | null;

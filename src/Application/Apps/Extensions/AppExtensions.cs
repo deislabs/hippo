@@ -32,6 +32,7 @@ public static class AppExtensions
             Id = app.Id,
             Name = app.Name,
             Channels = app.Channels.ToChannelSummaryDtoList(),
+            StorageId = app.StorageId
         };
     }
 }

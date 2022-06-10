@@ -13,8 +13,7 @@ public class BindleService : IBindleService
 
     public BindleService(IConfiguration configuration)
     {
-        var bindleUrl = configuration.GetValue("Bindle:Url", "http://127.0.0.1:8080/v1");
-        _client = new BindleClient(bindleUrl);
+        _client = new BindleClient(configuration.GetConnectionString("Bindle"));
     }
 
     public async Task<RevisionDetails> GetRevisionDetails(string revisionId)

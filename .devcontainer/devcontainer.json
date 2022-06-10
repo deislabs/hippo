@@ -1,10 +1,8 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the README at:
 // https://github.com/microsoft/vscode-dev-containers/tree/v0.187.0/containers/dotnet
-
-// If a new version of Hippo is released, the version number should be updated in the image tag below
 {
     "name": "Hippo",
-    "image": "ghcr.io/deislabs/hippo-dev:v0.10.0",
+    "image": "ghcr.io/deislabs/hippo-dev:latest",
     // Set *default* container specific settings.json values on container create.
     "settings": {
         "remote.autoForwardPorts": false
@@ -16,13 +14,13 @@
     ],
     "containerEnv": {
         "BINDLE_URL": "http://localhost:8080/v1",
-        "HIPPO_URL": "https://localhost:5309",
+        "HIPPO_URL": "http://localhost:5309",
         // This places bindle server data in the workspace so that state is retained across multiple invocations of the bindle server
         // Delete this folder and src/Web/hippo.db.* files to reset Hippo
         "BINDLE_DIRECTORY" : "${containerWorkspaceFolder}/bindleserver/data"
     },
     // Use 'forwardPorts' to make a list of ports inside the container available locally.
-    // 5309 is the Hippo HTTPS port.
+    // 5309 is the Hippo HTTP port.
     // 8080 is the Bindle HTTP port.
     "forwardPorts": [
         5309,
@@ -34,8 +32,8 @@
     "postCreateCommand": "cd src/Web && dotnet restore && dotnet build && dotnet dev-certs https",
     "portsAttributes": {
         "5309": {
-            "label": "Hippo HTTPS Port",
-            "protocol": "https"
+            "label": "Hippo HTTP Port",
+            "protocol": "http"
         },
         "8080": {
             "label": "Bindle HTTP Port",

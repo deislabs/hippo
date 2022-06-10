@@ -15,7 +15,7 @@ namespace Hippo.Infrastructure.Data.Migrations.Sqlite
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "6.0.4");
+            modelBuilder.HasAnnotation("ProductVersion", "6.0.5");
 
             modelBuilder.Entity("Hippo.Core.Entities.App", b =>
                 {
@@ -221,6 +221,9 @@ namespace Hippo.Infrastructure.Data.Migrations.Sqlite
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Channel")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateTime>("Created")
                         .HasColumnType("TEXT");
 
@@ -242,11 +245,13 @@ namespace Hippo.Infrastructure.Data.Migrations.Sqlite
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Route")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Source")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Type")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

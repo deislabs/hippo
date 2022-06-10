@@ -1,5 +1,3 @@
-using Hippo.Application.Common.Exceptions;
-
 namespace Hippo.Application.Jobs;
 
 public abstract class Job
