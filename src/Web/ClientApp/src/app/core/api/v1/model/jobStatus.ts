@@ -11,11 +11,12 @@
  */
 
 
-export type JobStatus = 'Running' | 'Dead' | 'Unknown';
+export type JobStatus = 'Unknown' | 'Pending' | 'Running' | 'Dead';
 
 export const JobStatus = {
+    Unknown: 'Unknown' as JobStatus,
+    Pending: 'Pending' as JobStatus,
     Running: 'Running' as JobStatus,
-    Dead: 'Dead' as JobStatus,
-    Unknown: 'Unknown' as JobStatus
+    Dead: 'Dead' as JobStatus
 };
 
