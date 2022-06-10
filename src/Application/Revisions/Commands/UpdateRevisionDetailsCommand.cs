@@ -12,7 +12,6 @@ public class UpdateRevisionDetailsCommand : IRequest
     [Required]
     public Guid RevisionId { get; set; }
 
-    [Required]
     public RevisionDetails? RevisionDetails { get; set; }
 }
 

@@ -7,9 +7,7 @@ public class RevisionTrigger
     [Required]
     public string Type { get; set; } = string.Empty;
 
-    [Required]
     public string? Base { get; set; }
 
-    [Required]
     public string? Address { get; set; }
 }
