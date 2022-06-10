@@ -1,4 +1,3 @@
-using AutoMapper;
 using Hippo.Application.Common.Interfaces;
 using MediatR;
 

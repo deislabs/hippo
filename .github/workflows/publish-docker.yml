@@ -23,10 +23,6 @@ jobs:
         with:
           dotnet-version: 6.0.x
 
-      - name: Set MINVERBUILDMETADATA
-        run: echo MINVERBUILDMETADATA=$(git rev-parse --short ${GITHUB_SHA})  >> $GITHUB_ENV
-        shell: bash
-
       - name: dotnet publish
         run: dotnet publish src/Web/Web.csproj -c Release --self-contained -r linux-x64
 

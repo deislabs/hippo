@@ -17,6 +17,7 @@ export class ChannelComponent implements OnInit {
 	isSelectClicked: boolean = false;
 	tabs = ApplicationTabs;
 	activeTab = ApplicationTabs.Overview;
+	protocol = window.location.protocol;
 
 	constructor(
 		private route: ActivatedRoute,
