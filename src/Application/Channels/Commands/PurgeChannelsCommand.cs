@@ -21,10 +21,11 @@ public class PurgeChannelsCommandHandler : IRequestHandler<PurgeChannelsCommand>
 
     public async Task<Unit> Handle(PurgeChannelsCommand request, CancellationToken cancellationToken)
     {
-        foreach (Channel channel in _context.Channels)
+        foreach (var entity in _context.Channels)
         {
-            channel.DomainEvents.Add(new DeletedEvent<Channel>(channel));
+            entity.AddDomainEvent(new DeletedEvent<Channel>(entity));
         }
+
         _context.Channels.RemoveRange(_context.Channels);
 
         await _context.SaveChangesAsync(cancellationToken);

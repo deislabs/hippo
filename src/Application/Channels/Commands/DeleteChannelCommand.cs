@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Core.Entities;
+using Hippo.Core.Events;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,6 +33,8 @@ public class DeleteChannelCommandHandler : IRequestHandler<DeleteChannelCommand>
         {
             throw new NotFoundException(nameof(Channel), request.Id);
         }
+
+        entity.AddDomainEvent(new DeletedEvent<Channel>(entity));
 
         _context.Channels.Remove(entity);
 

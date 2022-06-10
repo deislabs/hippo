@@ -1,6 +1,6 @@
 namespace Hippo.Core.Events;
 
-public class DeletedEvent<T> : DomainEvent
+public class DeletedEvent<T> : BaseEvent
 {
     public DeletedEvent(T entity)
     {

@@ -1,6 +1,7 @@
 using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Core.Entities;
+using Hippo.Core.Events;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -49,6 +50,8 @@ public class UpdateEnvironmentVariablesCommandHandler : IRequestHandler<UpdateCh
                 }
                 updatedEnvVar.Key = environmentVariable.Key;
                 updatedEnvVar.Value = environmentVariable.Value;
+
+                updatedEnvVar.AddDomainEvent(new ModifiedEvent<EnvironmentVariable>(updatedEnvVar));
             }
         }
 

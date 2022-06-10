@@ -1,4 +1,3 @@
-using Hippo.Application.Common.Models;
 using Hippo.Application.Revisions.Commands;
 using Hippo.Core.Entities;
 using Hippo.Core.Events;
@@ -7,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Hippo.Application.Apps.EventHandlers;
 
-public class InitialRevisionImport : INotificationHandler<DomainEventNotification<CreatedEvent<App>>>
+public class InitialRevisionImport : INotificationHandler<CreatedEvent<App>>
 {
     private readonly ILogger<InitialRevisionImport> _logger;
     private readonly IMediator _mediator;
@@ -18,18 +17,14 @@ public class InitialRevisionImport : INotificationHandler<DomainEventNotificatio
         _mediator = mediator;
     }
 
-    public async Task Handle(DomainEventNotification<CreatedEvent<App>> notification, CancellationToken cancellationToken)
+    public async Task Handle(CreatedEvent<App> notification, CancellationToken cancellationToken)
     {
-        var domainEvent = notification.DomainEvent;
-        var app = domainEvent.Entity;
+        var app = notification.Entity;
 
-        var command = new ImportRevisionsCommand
-        {
-            AppId = app.Id,
-        };
+        var command = new ImportRevisionsCommand(app);
 
         await _mediator.Send(command, cancellationToken);
 
-        _logger.LogInformation("Hippo Domain Event: {DomainEvent}", domainEvent.GetType().Name);
+        _logger.LogInformation($"Hippo Domain Event: {notification.GetType().Name}");
     }
 }

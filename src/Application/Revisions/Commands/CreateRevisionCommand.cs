@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Core.Entities;
+using Hippo.Core.Events;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -38,6 +39,8 @@ public class CreateRevisionCommandHandler : IRequestHandler<CreateRevisionComman
             App = app,
             RevisionNumber = request.RevisionNumber
         };
+
+        entity.AddDomainEvent(new CreatedEvent<Revision>(entity));
 
         _context.Revisions.Add(entity);
 

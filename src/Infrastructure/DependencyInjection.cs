@@ -2,6 +2,7 @@ using Hippo.Application.Common.Config;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Application.Common.Security;
 using Hippo.Infrastructure.Data;
+using Hippo.Infrastructure.Data.Interceptors;
 using Hippo.Infrastructure.Exceptions;
 using Hippo.Infrastructure.Files;
 using Hippo.Infrastructure.Identity;
@@ -39,9 +40,9 @@ public static class DependencyInjection
         configuration.GetSection("Hippo").Bind(hippoConfig);
         services.AddSingleton<HippoConfig>(hippoConfig);
 
-        services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
+        services.AddScoped<AuditableEntitySaveChangesInterceptor>();
 
-        services.AddScoped<IDomainEventService, DomainEventService>();
+        services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
         services.AddIdentity<Account, IdentityRole>()
                 .AddRoles<IdentityRole>()

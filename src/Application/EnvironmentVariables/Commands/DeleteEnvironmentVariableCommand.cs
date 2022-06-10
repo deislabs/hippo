@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Core.Entities;
+using Hippo.Core.Events;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,6 +33,8 @@ public class DeleteEnvironmentVariableCommandHandler : IRequestHandler<DeleteEnv
         {
             throw new NotFoundException(nameof(EnvironmentVariable), request.Id);
         }
+
+        entity.AddDomainEvent(new DeletedEvent<EnvironmentVariable>(entity));
 
         _context.EnvironmentVariables.Remove(entity);
 

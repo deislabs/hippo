@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Core.Entities;
+using Hippo.Core.Events;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -43,6 +44,8 @@ public class CreateEnvironmentVariableCommandHandler : IRequestHandler<CreateEnv
             ChannelId = request.ChannelId,
             Channel = channel,
         };
+
+        entity.AddDomainEvent(new CreatedEvent<EnvironmentVariable>(entity));
 
         _context.EnvironmentVariables.Add(entity);
 

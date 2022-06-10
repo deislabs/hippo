@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Core.Entities;
+using Hippo.Core.Events;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,6 +33,8 @@ public class DeleteRevisionCommandHandler : IRequestHandler<DeleteRevisionComman
         {
             throw new NotFoundException(nameof(Revision), request.Id);
         }
+
+        entity.AddDomainEvent(new DeletedEvent<Revision>(entity));
 
         _context.Revisions.Remove(entity);
 
