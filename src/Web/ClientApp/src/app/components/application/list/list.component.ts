@@ -48,6 +48,8 @@ export class ListComponent implements OnInit {
 		switch(status){
 			case JobStatus.Unknown:
 				return 'gray';
+			case JobStatus.Pending:
+				return 'yellow';
 			case JobStatus.Running:
 				return 'green';
 			case JobStatus.Dead:
@@ -61,9 +63,7 @@ export class ListComponent implements OnInit {
 		let allChannels: any = [];
 
 		this.apps.forEach(app => {
-			app.channels.forEach((channel: any) => {
-				allChannels.push(channel);
-			})
+			allChannels = allChannels.concat(app.channels);
 		})
 
 		return allChannels;
