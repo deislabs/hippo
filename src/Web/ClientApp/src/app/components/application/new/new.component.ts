@@ -100,12 +100,12 @@ export class NewComponent implements OnInit {
         this.channelService.apiChannelPost({ appId: appId, name: 'Production', revisionSelectionStrategy: ChannelRevisionSelectionStrategy.UseRangeRule, rangeRule: "*", 
             domain: `${this.f['name'].value}.${window.location.hostname}`.replace('_', '-').toLowerCase()})
           .subscribe({
-            next: () => this.router.navigate(['/app']),
+            next: () => this.router.navigate(['/']),
             error: (error) => {
               console.log(error);
               this.error = (error.message) ? error.message : error.status ? `${error.status} - ${error.statusText}` : 'An error occurred while creating the channel';
               // we can still continue at this point; the user will just have to add a channel to the app.
-              this.router.navigate(['/app']);
+              this.router.navigate(['/']);
             }
           })
       },
