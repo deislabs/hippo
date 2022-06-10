@@ -7,6 +7,7 @@ api/app.service.ts
 api/certificate.service.ts
 api/channel.service.ts
 api/environmentVariable.service.ts
+api/jobStatus.service.ts
 api/revision.service.ts
 api/storage.service.ts
 configuration.ts
@@ -20,6 +21,7 @@ model/appsVm.ts
 model/certificateDto.ts
 model/certificatesVm.ts
 model/channelDto.ts
+model/channelJobStatus.ts
 model/channelRevisionSelectionStrategy.ts
 model/channelsVm.ts
 model/createAccountCommand.ts
@@ -31,6 +33,7 @@ model/createTokenCommand.ts
 model/environmentVariableDto.ts
 model/environmentVariablesVm.ts
 model/getChannelLogsVm.ts
+model/jobStatus.ts
 model/models.ts
 model/registerRevisionCommand.ts
 model/revisionComponentDto.ts
