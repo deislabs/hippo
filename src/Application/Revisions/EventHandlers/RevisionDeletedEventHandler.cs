@@ -1,5 +1,4 @@
 using Hippo.Application.Common.Interfaces;
-using Hippo.Application.Common.Models;
 using Hippo.Application.Rules;
 using Hippo.Core.Entities;
 using Hippo.Core.Enums;
@@ -10,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Hippo.Application.Revisions.EventHandlers;
 
-public class RevisionDeletedEventHandler : INotificationHandler<DomainEventNotification<DeletedEvent<Revision>>>
+public class RevisionDeletedEventHandler : INotificationHandler<DeletedEvent<Revision>>
 {
     private readonly ILogger<RevisionCreatedEventHandler> _logger;
 
@@ -22,15 +21,13 @@ public class RevisionDeletedEventHandler : INotificationHandler<DomainEventNotif
         _context = context;
     }
 
-    public async Task Handle(DomainEventNotification<DeletedEvent<Revision>> notification, CancellationToken cancellationToken)
+    public async Task Handle(DeletedEvent<Revision> notification, CancellationToken cancellationToken)
     {
-        var domainEvent = notification.DomainEvent;
-
-        _logger.LogInformation("Hippo Domain Event: {DomainEvent}", domainEvent.GetType().Name);
+        _logger.LogInformation($"Hippo Domain Event: {notification.GetType().Name}");
 
         // re-evaluate active revisions for every channel related to the same app
         var channels = await _context.Channels
-            .Where(c => c.AppId == domainEvent.Entity.AppId)
+            .Where(c => c.AppId == notification.Entity.AppId)
             .ToListAsync(cancellationToken);
 
         foreach (Channel channel in channels)
@@ -42,7 +39,7 @@ public class RevisionDeletedEventHandler : INotificationHandler<DomainEventNotif
                 {
                     _logger.LogInformation($"Channel {channel.Id} changed its active revision to {activeRevision.Id}");
                     channel.ActiveRevision = activeRevision;
-                    channel.DomainEvents.Add(new ModifiedEvent<Channel>(channel));
+                    channel.AddDomainEvent(new ModifiedEvent<Channel>(channel));
                 }
             }
         }

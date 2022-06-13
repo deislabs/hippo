@@ -1,4 +1,3 @@
-using Hippo.Application.Common.Models;
 using Hippo.Core.Entities;
 using Hippo.Core.Events;
 using MediatR;
@@ -6,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Hippo.Application.Certificates.EventHandlers;
 
-public class CertificateDeletedEventHandler : INotificationHandler<DomainEventNotification<DeletedEvent<Certificate>>>
+public class CertificateDeletedEventHandler : INotificationHandler<DeletedEvent<Certificate>>
 {
     private readonly ILogger<CertificateDeletedEventHandler> _logger;
 
@@ -15,11 +14,9 @@ public class CertificateDeletedEventHandler : INotificationHandler<DomainEventNo
         _logger = logger;
     }
 
-    public Task Handle(DomainEventNotification<DeletedEvent<Certificate>> notification, CancellationToken cancellationToken)
+    public Task Handle(DeletedEvent<Certificate> notification, CancellationToken cancellationToken)
     {
-        var domainEvent = notification.DomainEvent;
-
-        _logger.LogInformation("Hippo Domain Event: {DomainEvent}", domainEvent.GetType().Name);
+        _logger.LogInformation($"Hippo Domain Event: {notification.GetType().Name}");
 
         return Task.CompletedTask;
     }

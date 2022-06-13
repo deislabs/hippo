@@ -5,6 +5,7 @@ using Hippo.Application.Common.Interfaces;
 using Hippo.Application.Rules;
 using Hippo.Core.Entities;
 using Hippo.Core.Enums;
+using Hippo.Core.Events;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -81,6 +82,8 @@ public class CreateChannelCommandHandler : IRequestHandler<CreateChannelCommand,
         }
 
         entity.ActiveRevision = await GetActiveRevision(request, entity, cancellationToken);
+
+        entity.AddDomainEvent(new CreatedEvent<Channel>(entity));
 
         _context.Channels.Add(entity);
 

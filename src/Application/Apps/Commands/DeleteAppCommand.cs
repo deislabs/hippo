@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Core.Entities;
+using Hippo.Core.Events;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,13 +26,16 @@ public class DeleteAppCommandHandler : IRequestHandler<DeleteAppCommand>
     public async Task<Unit> Handle(DeleteAppCommand request, CancellationToken cancellationToken)
     {
         var entity = await _context.Apps
-            .Where(l => l.Id == request.Id)
+            .Where(a => a.Id == request.Id)
+            .Include(a => a.Channels)
             .SingleOrDefaultAsync(cancellationToken);
 
         if (entity is null)
         {
             throw new NotFoundException(nameof(App), request.Id);
         }
+
+        entity.AddDomainEvent(new DeletedEvent<App>(entity));
 
         _context.Apps.Remove(entity);
 

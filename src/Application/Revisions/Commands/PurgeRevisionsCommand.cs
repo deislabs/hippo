@@ -21,10 +21,11 @@ public class PurgeRevisionsCommandHandler : IRequestHandler<PurgeRevisionsComman
 
     public async Task<Unit> Handle(PurgeRevisionsCommand request, CancellationToken cancellationToken)
     {
-        foreach (Revision revision in _context.Revisions)
+        foreach (var entity in _context.Revisions)
         {
-            revision.DomainEvents.Add(new DeletedEvent<Revision>(revision));
+            entity.AddDomainEvent(new DeletedEvent<Revision>(entity));
         }
+
         _context.Revisions.RemoveRange(_context.Revisions);
 
         await _context.SaveChangesAsync(cancellationToken);

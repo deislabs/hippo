@@ -21,10 +21,11 @@ public class PurgeEnvironmentVariablesCommandHandler : IRequestHandler<PurgeEnvi
 
     public async Task<Unit> Handle(PurgeEnvironmentVariablesCommand request, CancellationToken cancellationToken)
     {
-        foreach (EnvironmentVariable environmentVariable in _context.EnvironmentVariables)
+        foreach (var entity in _context.EnvironmentVariables)
         {
-            environmentVariable.DomainEvents.Add(new DeletedEvent<EnvironmentVariable>(environmentVariable));
+            entity.AddDomainEvent(new DeletedEvent<EnvironmentVariable>(entity));
         }
+
         _context.EnvironmentVariables.RemoveRange(_context.EnvironmentVariables);
 
         await _context.SaveChangesAsync(cancellationToken);

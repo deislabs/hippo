@@ -1,5 +1,4 @@
 using Hippo.Application.Common.Interfaces;
-using Hippo.Application.Common.Models;
 using Hippo.Application.Rules;
 using Hippo.Core.Entities;
 using Hippo.Core.Enums;
@@ -10,7 +9,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Hippo.Application.Revisions.EventHandlers;
 
-public class RevisionCreatedEventHandler : INotificationHandler<DomainEventNotification<CreatedEvent<Revision>>>
+public class RevisionCreatedEventHandler : INotificationHandler<CreatedEvent<Revision>>
 {
     private readonly ILogger<RevisionCreatedEventHandler> _logger;
 
@@ -22,15 +21,13 @@ public class RevisionCreatedEventHandler : INotificationHandler<DomainEventNotif
         _context = context;
     }
 
-    public async Task Handle(DomainEventNotification<CreatedEvent<Revision>> notification, CancellationToken cancellationToken)
+    public async Task Handle(CreatedEvent<Revision> notification, CancellationToken cancellationToken)
     {
-        var domainEvent = notification.DomainEvent;
-
-        _logger.LogInformation("Hippo Domain Event: {DomainEvent}", domainEvent.GetType().Name);
+        _logger.LogInformation($"Hippo Domain Event: {notification.GetType().Name}");
 
         // re-evaluate active revisions for every channel related to the same app
         var channels = await _context.Channels
-            .Where(c => c.AppId == domainEvent.Entity.AppId)
+            .Where(c => c.AppId == notification.Entity.AppId)
             .Include(c => c.EnvironmentVariables)
             .ToListAsync(cancellationToken);
 
@@ -39,11 +36,11 @@ public class RevisionCreatedEventHandler : INotificationHandler<DomainEventNotif
             if (channel.RevisionSelectionStrategy == ChannelRevisionSelectionStrategy.UseRangeRule)
             {
                 var activeRevision = RevisionRangeRule.Parse(channel.RangeRule).Match(channel.App.Revisions);
-                if (activeRevision is not null && activeRevision != channel.ActiveRevision && activeRevision.RevisionNumber == domainEvent.Entity.RevisionNumber)
+                if (activeRevision is not null && activeRevision != channel.ActiveRevision && activeRevision.RevisionNumber == notification.Entity.RevisionNumber)
                 {
                     _logger.LogInformation($"Channel {channel.Id} changed its active revision to {activeRevision.Id}");
                     channel.ActiveRevision = activeRevision;
-                    channel.DomainEvents.Add(new ModifiedEvent<Channel>(channel));
+                    channel.AddDomainEvent(new ModifiedEvent<Channel>(channel));
                     // TODO Call a command instead of updating the database in the EventHandler
                 }
             }

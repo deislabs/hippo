@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Application.Common.Interfaces.BindleService;
+using Hippo.Core.Events;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -47,6 +48,12 @@ public class UpdateRevisionDetailsCommandHandler : IRequestHandler<UpdateRevisio
                 Type = revisionDetails.SpinToml.Trigger?.Type,
                 Revision = revision,
             });
+
+        foreach (var entity in newComponents)
+        {
+            entity.AddDomainEvent(new CreatedEvent<Core.Entities.RevisionComponent>(entity));
+        }
+
         _context.RevisionComponents.AddRange(newComponents);
 
         await _context.SaveChangesAsync(cancellationToken);

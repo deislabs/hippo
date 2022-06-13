@@ -1,5 +1,4 @@
 using Hippo.Application.Common.Interfaces;
-using Hippo.Application.Common.Models;
 using Hippo.Core.Entities;
 using Hippo.Core.Events;
 using MediatR;
@@ -7,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Hippo.Application.Channels.EventHandlers;
 
-public class ChannelCreatedEventHandler : INotificationHandler<DomainEventNotification<CreatedEvent<Channel>>>
+public class ChannelCreatedEventHandler : INotificationHandler<CreatedEvent<Channel>>
 {
     private readonly ILogger<ChannelCreatedEventHandler> _logger;
 
@@ -20,12 +19,11 @@ public class ChannelCreatedEventHandler : INotificationHandler<DomainEventNotifi
         _jobService = jobService;
     }
 
-    public Task Handle(DomainEventNotification<CreatedEvent<Channel>> notification, CancellationToken cancellationToken)
+    public Task Handle(CreatedEvent<Channel> notification, CancellationToken cancellationToken)
     {
-        var domainEvent = notification.DomainEvent;
-        Channel channel = domainEvent.Entity;
+        Channel channel = notification.Entity;
 
-        _logger.LogInformation($"Hippo Domain Event: {domainEvent.GetType().Name}");
+        _logger.LogInformation($"Hippo Domain Event: {notification.GetType().Name}");
 
         if (channel.ActiveRevision != null)
         {

@@ -1,9 +1,7 @@
 namespace Hippo.Core.Entities;
 
-public class Channel : AuditableEntity, IHasDomainEvent
+public class Channel : AuditableEntity
 {
-    public Guid Id { get; set; }
-
     public string Name { get; set; } = null!;
 
     public string? Domain { get; set; }
@@ -27,6 +25,4 @@ public class Channel : AuditableEntity, IHasDomainEvent
     public App App { get; set; } = null!;
 
     public IList<EnvironmentVariable> EnvironmentVariables { get; private set; } = new List<EnvironmentVariable>();
-
-    public List<DomainEvent> DomainEvents { get; set; } = new List<DomainEvent>();
 }

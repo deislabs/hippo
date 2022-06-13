@@ -1,5 +1,4 @@
 using Hippo.Application.Common.Interfaces;
-using Hippo.Application.Common.Models;
 using Hippo.Application.Revisions.Commands;
 using Hippo.Core.Entities;
 using Hippo.Core.Events;
@@ -8,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Hippo.Application.Revisions.EventHandlers;
 
-public class UpdateRevisionDetails : INotificationHandler<DomainEventNotification<CreatedEvent<Revision>>>
+public class UpdateRevisionDetails : INotificationHandler<CreatedEvent<Revision>>
 {
     private readonly ILogger<UpdateRevisionDetails> _logger;
 
@@ -25,12 +24,11 @@ public class UpdateRevisionDetails : INotificationHandler<DomainEventNotificatio
         _mediator = mediator;
     }
 
-    public async Task Handle(DomainEventNotification<CreatedEvent<Revision>> notification, CancellationToken cancellationToken)
+    public async Task Handle(CreatedEvent<Revision> notification, CancellationToken cancellationToken)
     {
-        var domainEvent = notification.DomainEvent;
-        var revision = notification.DomainEvent.Entity;
+        var revision = notification.Entity;
 
-        _logger.LogInformation("Hippo Domain Event: {DomainEvent}", domainEvent.GetType().Name);
+        _logger.LogInformation($"Hippo Domain Event: {notification.GetType().Name}");
 
         var revisionDetails = await _bindleService.GetRevisionDetails($"{revision.App.StorageId}/{revision.RevisionNumber}");
         var command = new UpdateRevisionDetailsCommand

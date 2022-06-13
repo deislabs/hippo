@@ -21,10 +21,11 @@ public class PurgeCertificatesCommandHandler : IRequestHandler<PurgeCertificates
 
     public async Task<Unit> Handle(PurgeCertificatesCommand request, CancellationToken cancellationToken)
     {
-        foreach (Certificate cert in _context.Certificates)
+        foreach (var entity in _context.Certificates)
         {
-            cert.DomainEvents.Add(new DeletedEvent<Certificate>(cert));
+            entity.AddDomainEvent(new DeletedEvent<Certificate>(entity));
         }
+
         _context.Certificates.RemoveRange(_context.Certificates);
 
         await _context.SaveChangesAsync(cancellationToken);

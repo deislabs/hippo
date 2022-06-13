@@ -1,6 +1,6 @@
 namespace Hippo.Core.Events;
 
-public class CreatedEvent<T> : DomainEvent
+public class CreatedEvent<T> : BaseEvent
 {
     public CreatedEvent(T entity)
     {

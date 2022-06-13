@@ -1,9 +1,7 @@
 namespace Hippo.Core.Entities;
 
-public class App : AuditableEntity, IHasDomainEvent
+public class App : AuditableEntity
 {
-    public Guid Id { get; set; }
-
     public string Name { get; set; } = null!;
 
     // This is the ID in Bindle or whatever storage backend is used.  It gets composed
@@ -17,6 +15,4 @@ public class App : AuditableEntity, IHasDomainEvent
     public IList<Channel> Channels { get; private set; } = new List<Channel>();
 
     public IList<Revision> Revisions { get; private set; } = new List<Revision>();
-
-    public List<DomainEvent> DomainEvents { get; set; } = new List<DomainEvent>();
 }
