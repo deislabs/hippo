@@ -171,6 +171,9 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
             Title = "An error occurred while processing your request.",
             Type = "https://tools.ietf.org/html/rfc7231#section-6.6.1"
         };
+        #if DEBUG
+            details.Detail = $"{context.Exception.GetType().Name}: {context.Exception.Message}";
+        #endif
 
         context.Result = new ObjectResult(details)
         {
