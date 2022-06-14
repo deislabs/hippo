@@ -215,25 +215,21 @@ public class NullNomadService : IJobService
         return new string[] { };
     }
 
+    public IEnumerable<Job>? GetJobs()
+    {
+        return null;
+    }
+
     private class NullJob : Job
     {
         public void Reload() { }
 
         public void Run()
         {
-            _status = JobStatus.Running;
         }
 
         public void Stop()
         {
-            if (cancellationToken.IsCancellationRequested)
-            {
-                _status = JobStatus.Canceled;
-            }
-            else
-            {
-                _status = JobStatus.Completed;
-            }
         }
     }
 }
