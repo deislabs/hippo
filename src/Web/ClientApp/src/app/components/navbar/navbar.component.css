@@ -2,3 +2,11 @@
     margin: 2rem 4rem;
     font-size: 1.25rem;
 }
+
+.navbar-brand {
+    padding-left: 1rem;
+}
+
+.navbar-end {
+    padding-right: 1rem;
+}
