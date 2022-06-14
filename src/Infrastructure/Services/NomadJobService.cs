@@ -192,6 +192,7 @@ public class NomadJobService : IJobService
         try
         {
             var jobs = _jobsClient.GetJobs()
+                .Where(job => Guid.TryParse(job.ID, out _))
                 .Select(job => new NomadJob(_configuration, Guid.Parse(job.ID),
                     string.Empty,
                     string.Empty,
