@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -20,11 +20,11 @@ import { NewComponent } from './components/application/new/new.component';
 import { NewComponent as NewChannelComponent } from './components/channel/new/new.component';
 import { ChannelComponent } from './components/channel/channel.component';
 import { HealthCheckComponent } from './components/health-check/health-check.component';
-import { environment } from './../environments/environment';
 import { SettingsComponent } from './components/application/settings/settings.component';
 import { LogsComponent } from './components/channel/logs/logs.component';
 import { OverviewComponent } from './components/channel/overview/overview.component';
 import { NgxJdenticonModule, JDENTICON_CONFIG } from 'ngx-jdenticon';
+import { AppConfigService } from './_services/app-config.service';
 
 export function apiConfigFactory(): Configuration {
 	const params: ConfigurationParameters = {
@@ -78,6 +78,12 @@ export function apiConfigFactory(): Configuration {
 			useValue: {
 				replaceMode: "observe"
 			}
+		},
+		{
+			provide: APP_INITIALIZER,
+			multi: true,
+			deps: [AppConfigService],
+			useFactory: (appConfigService : AppConfigService) => () => appConfigService.load()
 		}
 	],
 	bootstrap: [AppComponent]

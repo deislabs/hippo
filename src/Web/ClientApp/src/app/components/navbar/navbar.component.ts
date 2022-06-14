@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { faHippo, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
 import { SessionService } from 'src/app/_services/session.service';
 
 @Component({
@@ -8,7 +8,6 @@ import { SessionService } from 'src/app/_services/session.service';
 	styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent implements OnInit {
-	faHippo = faHippo;
 	faUser = faUser;
 
 	constructor(

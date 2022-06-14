@@ -1,4 +1,4 @@
-<h1 class="title has-text-centered">Log in to <span class="has-text-primary">Hippo</span></h1>
+<h1 class="title has-text-primary has-text-centered">Log in</h1>
 
 <article *ngIf="error" class="message is-danger">
 	<div class="message-header">
@@ -16,7 +16,7 @@
 		<div class="control has-icons-left has-icons-right">
 			<input type="text" formControlName="username"
 			[ngClass]="{ 'is-danger': submitted && f['username'].errors }"
-			class="input" placeholder="e.g. rhymenoceros" />
+			class="input" placeholder="Enter your username here" />
 			<div *ngIf="submitted && f['username'].errors" class="help is-danger">
 				<div *ngIf="f['username'].errors['required']">Username is required.</div>
 			</div>
@@ -28,7 +28,7 @@
 		<div class="control has-icons-left">
 			<input type="password" formControlName="password"
 			[ngClass]="{ 'is-danger': submitted && f['password'].errors }"
-			class="input" placeholder="make it strong!" />
+			class="input" />
 			<div *ngIf="submitted && f['password'].errors" class="help is-danger">
 				<div *ngIf="f['password'].errors['required']">Password is required.</div>
 			</div>
