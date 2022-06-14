@@ -1,16 +1,19 @@
-using System.ComponentModel.DataAnnotations;
 using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Core.Entities;
+using Hippo.Core.Events;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Hippo.Application.Revisions.Commands;
 
 public class ImportRevisionsCommand : IRequest
 {
-    [Required]
-    public Guid AppId { get; set; }
+    public App App { get; set; }
+
+    public ImportRevisionsCommand(App app)
+    {
+        App = app;
+    }
 }
 
 public class ImportRevisionsCommandHandler : IRequestHandler<ImportRevisionsCommand>
@@ -26,10 +29,7 @@ public class ImportRevisionsCommandHandler : IRequestHandler<ImportRevisionsComm
 
     public async Task<Unit> Handle(ImportRevisionsCommand request, CancellationToken cancellationToken)
     {
-        var app = await _context.Apps
-            .Where(a => a.Id == request.AppId)
-            .SingleOrDefaultAsync(cancellationToken);
-        _ = app ?? throw new NotFoundException(nameof(App), request.AppId);
+        var app = request.App;
         if (app.StorageId is null)
         {
             return Unit.Value;
@@ -38,6 +38,11 @@ public class ImportRevisionsCommandHandler : IRequestHandler<ImportRevisionsComm
         var allAppRevisions = await _bindleService.GetBindleRevisionNumbers(app.StorageId);
         var existingRevisions = _context.Revisions.Where(r => r.AppId == app.Id).ToList();
         var missingRevisions = GetMissingRevisions(allAppRevisions, existingRevisions, app.Id);
+
+        foreach (var entity in missingRevisions)
+        {
+            entity.AddDomainEvent(new CreatedEvent<Revision>(entity));
+        }
 
         _context.Revisions.AddRange(missingRevisions);
 

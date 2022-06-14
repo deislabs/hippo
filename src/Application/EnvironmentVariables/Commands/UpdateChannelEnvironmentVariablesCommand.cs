@@ -1,6 +1,7 @@
 using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Core.Entities;
+using Hippo.Core.Events;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
@@ -35,6 +36,11 @@ public class UpdateEnvironmentVariablesCommandHandler : IRequestHandler<UpdateCh
         var envVariablesToBeUpdated = EnvironmentVariablesToBeUpdated(existingVariables, request.EnvironmentVariables);
         var envVariablesToBeDeleted = EnvironmentVariablesToBeRemoved(existingVariables, request.EnvironmentVariables);
 
+        foreach (var entity in envVariablesToBeAdded)
+        {
+            entity.AddDomainEvent(new CreatedEvent<EnvironmentVariable>(entity));
+        }
+
         _context.EnvironmentVariables.AddRange(envVariablesToBeAdded);
 
         if (existingVariables.Count > 0)
@@ -49,7 +55,14 @@ public class UpdateEnvironmentVariablesCommandHandler : IRequestHandler<UpdateCh
                 }
                 updatedEnvVar.Key = environmentVariable.Key;
                 updatedEnvVar.Value = environmentVariable.Value;
+
+                updatedEnvVar.AddDomainEvent(new ModifiedEvent<EnvironmentVariable>(updatedEnvVar));
             }
+        }
+
+        foreach (var entity in envVariablesToBeDeleted)
+        {
+            entity.AddDomainEvent(new DeletedEvent<EnvironmentVariable>(entity));
         }
 
         _context.EnvironmentVariables.RemoveRange(envVariablesToBeDeleted);

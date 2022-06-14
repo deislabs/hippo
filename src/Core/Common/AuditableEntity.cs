@@ -1,6 +1,6 @@
 namespace Hippo.Core.Common;
 
-public abstract class AuditableEntity
+public abstract class AuditableEntity : BaseEntity
 {
 
     protected AuditableEntity()

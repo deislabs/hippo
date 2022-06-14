@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Core.Entities;
+using Hippo.Core.Events;
 using MediatR;
 
 namespace Hippo.Application.Certificates.Commands;
@@ -34,6 +35,8 @@ public class CreateCertificateCommandHandler : IRequestHandler<CreateCertificate
             PublicKey = request.PublicKey,
             PrivateKey = request.PrivateKey,
         };
+
+        entity.AddDomainEvent(new CreatedEvent<Certificate>(entity));
 
         _context.Certificates.Add(entity);
 

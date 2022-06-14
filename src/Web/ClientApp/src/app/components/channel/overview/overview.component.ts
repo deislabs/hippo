@@ -1,26 +1,34 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { ChannelService, RevisionDto } from 'src/app/core/api/v1';
+import { ChannelDto, ChannelService, RevisionDto } from 'src/app/core/api/v1';
 import { ComponentTypes } from 'src/app/_helpers/constants';
 import { faCheckCircle, faTimesCircle, faNetworkWired } from '@fortawesome/free-solid-svg-icons';
+import { Router } from '@angular/router';
 
 @Component({
-  selector: 'channel-overview',
-  templateUrl: './overview.component.html',
-  styleUrls: ['./overview.component.css']
+	selector: 'channel-overview',
+	templateUrl: './overview.component.html',
+	styleUrls: ['./overview.component.css']
 })
 export class OverviewComponent implements OnInit {
-  @Input() channelId = '';
-  activeRevision!: RevisionDto | undefined;
-  icons = { faCheckCircle, faTimesCircle, faNetworkWired };
-  types = ComponentTypes;
+	@Input() channelId = '';
+	channel!: ChannelDto;
+	activeRevision!: RevisionDto | undefined;
+	icons = { faCheckCircle, faTimesCircle, faNetworkWired };
+	types = ComponentTypes;
+	protocol = window.location.protocol;
 
-  constructor(private readonly channelService: ChannelService) { }
+	constructor(
+		private readonly channelService: ChannelService,
+		private router: Router) { }
 
-  ngOnInit(): void {
-    this.refreshData();
-  }
+	ngOnInit(): void {
+		this.refreshData();
+	}
 
-  refreshData() {
-		this.channelService.apiChannelChannelIdGet(this.channelId).subscribe(vm => (this.activeRevision = vm.activeRevision));
+	refreshData() {
+		this.channelService.apiChannelChannelIdGet(this.channelId).subscribe(channel => {
+			!channel ? this.router.navigate(['/404']) : this.channel = channel;
+			this.activeRevision = channel.activeRevision;
+		});
 	}
 }

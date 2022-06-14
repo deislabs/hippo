@@ -1,5 +1,6 @@
 using Hippo.Application.Common.Interfaces;
 using Hippo.Core.Entities;
+using Hippo.Core.Events;
 using MediatR;
 using System.ComponentModel.DataAnnotations;
 
@@ -30,6 +31,8 @@ public class CreateAppCommandHandler : IRequestHandler<CreateAppCommand, Guid>
             Name = request.Name,
             StorageId = request.StorageId
         };
+
+        entity.AddDomainEvent(new CreatedEvent<App>(entity));
 
         _context.Apps.Add(entity);
 

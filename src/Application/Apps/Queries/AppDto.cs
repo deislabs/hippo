@@ -18,7 +18,6 @@ public class AppDto
     [Required]
     public string StorageId { get; set; } = "";
 
-    [Required]
     public string? Description { get; set; } = "";
 
     [Required]

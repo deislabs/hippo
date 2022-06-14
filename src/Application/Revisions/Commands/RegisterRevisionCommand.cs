@@ -3,6 +3,7 @@ using AutoMapper;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Application.Revisions.Queries;
 using Hippo.Core.Entities;
+using Hippo.Core.Events;
 using MediatR;
 
 namespace Hippo.Application.Revisions.Commands;
@@ -40,6 +41,8 @@ public class RegisterRevisionCommandHandler : IRequestHandler<RegisterRevisionCo
                 App = app,
                 RevisionNumber = request.RevisionNumber
             };
+
+            entity.AddDomainEvent(new CreatedEvent<Revision>(entity));
 
             _context.Revisions.Add(entity);
 

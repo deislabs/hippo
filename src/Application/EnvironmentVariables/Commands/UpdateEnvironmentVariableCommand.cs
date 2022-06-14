@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Core.Entities;
+using Hippo.Core.Events;
 using MediatR;
 
 namespace Hippo.Application.EnvironmentVariables.Commands;
@@ -39,6 +40,8 @@ public class UpdateEnvironmentVariableCommandHandler : IRequestHandler<UpdateEnv
 
         entity.Key = request.Key;
         entity.Value = request.Value;
+
+        entity.AddDomainEvent(new ModifiedEvent<EnvironmentVariable>(entity));
 
         await _context.SaveChangesAsync(cancellationToken);
 

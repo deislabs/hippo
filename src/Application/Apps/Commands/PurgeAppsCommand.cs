@@ -21,10 +21,11 @@ public class PurgeAppsCommandHandler : IRequestHandler<PurgeAppsCommand>
 
     public async Task<Unit> Handle(PurgeAppsCommand request, CancellationToken cancellationToken)
     {
-        foreach (App app in _context.Apps)
+        foreach (var entity in _context.Apps)
         {
-            app.DomainEvents.Add(new DeletedEvent<App>(app));
+            entity.AddDomainEvent(new DeletedEvent<App>(entity));
         }
+
         _context.Apps.RemoveRange(_context.Apps);
 
         await _context.SaveChangesAsync(cancellationToken);
