@@ -182,7 +182,7 @@ public class NomadJobService : IJobService
             Config = new Dictionary<string, object>
             {
                 { "command", nomadJob.spinBinaryPath },
-                { "args", new List<string> { "up", "--listen", "${NOMAD_IP_http}:${NOMAD_PORT_http}", "--follow-all", "--bindle", nomadJob.BindleId } }
+                { "args", new List<string> { "up", "--listen", "${NOMAD_ADDR_http}", "--follow-all", "--bindle", nomadJob.BindleId } }
             }
         };
     }
@@ -192,6 +192,7 @@ public class NomadJobService : IJobService
         try
         {
             var jobs = _jobsClient.GetJobs()
+                .Where(job => Guid.TryParse(job.ID, out _))
                 .Select(job => new NomadJob(_configuration, Guid.Parse(job.ID),
                     string.Empty,
                     string.Empty,

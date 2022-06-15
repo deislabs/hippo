@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AppConfigService } from './_services/app-config.service';
 
 @Component({
 	selector: 'app-root',
@@ -6,5 +7,7 @@ import { Component } from '@angular/core';
 	styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-	title = 'Hippo';
+	constructor(private readonly appConfigService: AppConfigService) { }
+
+	title = this.appConfigService.title;
 }
