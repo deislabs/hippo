@@ -59,7 +59,7 @@
 				<div *ngIf="submitted && f['storageId'].errors" class="panel-block help is-danger">
 					<div *ngIf="f['storageId'].errors['required']">Storage ID is required.</div>
 				</div>
-				<div *ngIf="!storageList?.length" class="panel-block help is-danger">
+				<div *ngIf="!storageList?.length && !storageListLoading" class="panel-block help is-danger">
 					No bindles available. <span *ngIf="!storageQuery.length">&nbsp;Add by running `spin bindle push` </span>
 				</div>
 				<div class="panel-block buttons is-right">

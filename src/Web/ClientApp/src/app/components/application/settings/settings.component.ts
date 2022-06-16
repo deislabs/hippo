@@ -23,6 +23,8 @@ export class SettingsComponent implements OnInit {
 	faTrash = faTrash;
   faEdit = faEdit;
 
+  loading: boolean = false;
+
   constructor(private router: Router,
     private readonly appService: AppService,
     private readonly channelService: ChannelService) { }
