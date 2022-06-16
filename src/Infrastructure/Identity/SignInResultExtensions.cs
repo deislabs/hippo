@@ -12,21 +12,28 @@ public static class SignInResultExtensions
             return Result.Success();
         }
 
-        var errors = new string[] { };
+        var errors = new List<string>();
 
         if (result.IsLockedOut)
         {
-            errors.Append("Account locked.");
+            errors.Add("Account locked.");
         }
 
         if (result.IsNotAllowed)
         {
-            errors.Append("Account not allowed to sign in.");
+            errors.Add("Account not allowed to sign in.");
         }
 
         if (result.RequiresTwoFactor)
         {
-            errors.Append("Account requires two-factor authentication to log in.");
+            errors.Add("Account requires two-factor authentication to log in.");
+        }
+
+        if (!result.RequiresTwoFactor &&
+            !result.IsNotAllowed &&
+            !result.IsLockedOut)
+        {
+            errors.Add("Credentials are not valid.");
         }
 
         return Result.Failure(errors);
