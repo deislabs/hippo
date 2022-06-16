@@ -14,7 +14,7 @@ export class ListComponent implements OnInit {
 	originalEnvVars: any = [];
 
 	errors: Array<string> = [];
-	loading = false;
+	loading: boolean = false;
 	submitted = false;
 	faBackward = faBackward;
 	faTrash = faTrash;
@@ -78,7 +78,6 @@ export class ListComponent implements OnInit {
 				console.log(err.error.errors);
 				this.errors = this.parseError(err.error);
 				this.submitted = false;
-				this.loading = false;
 			}
 		});
 	}
@@ -103,6 +102,7 @@ export class ListComponent implements OnInit {
 	}
 
 	refreshData() {
+		this.loading = true;
 		this.envVarService.apiEnvironmentvariableGet().subscribe(
 			{
 				next: (vm) => {
@@ -116,6 +116,7 @@ export class ListComponent implements OnInit {
 							value: v.value
 						}
 					});
+					this.loading = false;
 				},
 				error: (err) => {
 					console.log(err.error.errors);

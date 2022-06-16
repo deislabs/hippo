@@ -14,7 +14,7 @@ public class LoginFailedException : Exception
 
     // TODO: write unit tests using multiple reasons as input
     public LoginFailedException(string[] reasons)
-        : base("Login failed: " + string.Join(", ", reasons))
+        : base(string.Join(", ", reasons))
     {
     }
 

@@ -41,8 +41,7 @@ export class NewComponent implements OnInit {
 
     this.registerDebouncedStorageQuery();
     
-    this.storageListLoading = true;
-    this.storageQueryChanged.next('');
+    this.searchStorages('');
 
     // get return url from route parameters or default to '/'
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
@@ -69,11 +68,11 @@ export class NewComponent implements OnInit {
   }
 
   searchStorages(newQuery: any) {
+    this.storageListLoading = true;
     this.storageQueryChanged.next(newQuery);
   }
 
   queryStorages(newQuery: any) {
-    this.storageListLoading = true;
     return this.storageService.apiStorageGet(newQuery, 0, 5);
   }
 
