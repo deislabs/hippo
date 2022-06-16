@@ -1,12 +1,13 @@
 <h1 class="title has-text-primary has-text-centered">Log in</h1>
 
-<article *ngIf="error" class="message is-danger">
+<article *ngIf="errors && errors.length > 0" class="message is-danger">
 	<div class="message-header">
 		<p>Error</p>
-		<button class="delete" aria-label="delete"></button>
 	</div>
 	<div class="message-body">
-		{{error}}
+		<p *ngFor="let error of errors" >
+			{{error}}
+		</p>
 	</div>
 </article>
 

@@ -10,7 +10,7 @@ import { SessionService } from 'src/app/_services/session.service';
 	styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-	error = '';
+	errors:Array<string> = [];
 	loginForm!: FormGroup;
 	loading = false;
 	submitted = false;
@@ -59,11 +59,33 @@ export class LoginComponent implements OnInit {
 					next: () => this.router.navigate([this.returnUrl]),
 					error: (error) => {
 						console.log(error);
-						this.error = (error.message) ? error.message : error.status ? `${error.status} - ${error.statusText}` : 'Server error';
+						this.errors = this.parseError(error);
 						this.loading = false;
 					}
 				}
 			);
 	}
 
+	parseError(error: any) {
+		if (error.error)
+		{
+			var err = error.error;
+			if (err.errors) {
+				return this.parseValidationErrors(err.errors);
+			} else {
+				return [(err.detail) ? err.detail : `${err.status} - ${err.title}`]
+			}
+		}
+		return [(error.message) ? error.message : error.status ? `${error.status} - ${error.statusText}` : 'Server error'];
+	}
+
+	parseValidationErrors(error: any) {
+		let errors = [];
+		for (var prop in error) {
+			if (error.hasOwnProperty(prop)) {
+				errors.push(...error[prop]);
+			}
+		}
+		return errors;
+	}
 }
