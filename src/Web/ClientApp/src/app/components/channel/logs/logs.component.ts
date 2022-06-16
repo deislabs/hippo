@@ -11,13 +11,27 @@ export class LogsComponent implements OnInit {
   @Input() channelId = '';
 
   logs: Array<string> = [];
+  loading: boolean = false;
 
   constructor(private readonly channelService: ChannelService) { }
 
   ngOnInit(): void {
-    this.channelService.apiChannelLogsChannelIdGet(this.channelId).subscribe(vm => {
-			this.logs = vm.logs;
-		});
+    this.refreshData();
+  }
+
+  refreshData(): void {
+    this.loading = true;
+    
+    this.channelService.apiChannelLogsChannelIdGet(this.channelId).subscribe({
+      next: (vm) => {
+        this.logs = vm.logs;
+        this.loading = false;
+      },
+      error: (error) => {
+        console.log(error);
+        this.loading = false;
+      }
+    });
   }
 
 }

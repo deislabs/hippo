@@ -16,6 +16,7 @@ export class OverviewComponent implements OnInit {
 	icons = { faCheckCircle, faTimesCircle, faNetworkWired };
 	types = ComponentTypes;
 	protocol = window.location.protocol;
+	loading: boolean = false;
 
 	constructor(
 		private readonly channelService: ChannelService,
@@ -26,9 +27,17 @@ export class OverviewComponent implements OnInit {
 	}
 
 	refreshData() {
-		this.channelService.apiChannelChannelIdGet(this.channelId).subscribe(channel => {
-			!channel ? this.router.navigate(['/404']) : this.channel = channel;
-			this.activeRevision = channel.activeRevision;
+		this.loading = true;
+		this.channelService.apiChannelChannelIdGet(this.channelId).subscribe({
+			next: (channel) => {
+				!channel ? this.router.navigate(['/404']) : this.channel = channel;
+				this.activeRevision = channel.activeRevision;
+				this.loading = false;
+			},
+			error: (error) => {
+				console.log(error);
+				this.loading = false;
+			}
 		});
 	}
 }

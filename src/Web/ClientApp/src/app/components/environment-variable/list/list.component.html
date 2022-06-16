@@ -16,7 +16,7 @@
         </p>
     </div>
 </article>
-<div class="box columns is-multiline has-background-light">
+<div *ngIf="!loading" class="box columns is-multiline has-background-light">
     <ng-template [ngIf]="envvars.length <= 0">
         <span class="column is-full">Channel has no environment variables</span>
     </ng-template>
@@ -68,5 +68,10 @@
             </span>
             <span>Save</span>
         </button>
+    </div>
+</div>
+<div *ngIf="loading" class="columns box has-background-light">
+    <div class="column is-2 is-offset-5">
+        <span class="loader is-size-2 m-auto"></span>
     </div>
 </div>

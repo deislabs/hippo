@@ -1,10 +1,17 @@
-<div *ngIf="logs.length > 0; else noLogs" class="box has-background-dark scrollable-horizontally">
-    <p *ngFor="let log of logs" class="has-text-white single-line">
-        {{log}}
-    </p>
-</div>
-<ng-template #noLogs>
-    <div class="box has-background-light">
-        There are no logs.
+<div *ngIf="!loading">
+    <div *ngIf="logs.length > 0; else noLogs" class="box has-background-dark scrollable-horizontally">
+        <p *ngFor="let log of logs" class="has-text-white single-line">
+            {{log}}
+        </p>
     </div>
-</ng-template>
+    <ng-template #noLogs>
+        <div class="box has-background-light">
+            There are no logs.
+        </div>
+    </ng-template>
+</div>
+<div *ngIf="loading" class="columns box has-background-light">
+    <div class="column is-2 is-offset-5">
+        <span class="loader is-size-2 m-auto"></span>
+    </div>
+</div>
