@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { faBackward, faTrash, faSave } from '@fortawesome/free-solid-svg-icons';
 import { ChannelService, EnvironmentVariableService } from 'src/app/core/api/v1';
 
@@ -7,7 +7,7 @@ import { ChannelService, EnvironmentVariableService } from 'src/app/core/api/v1'
 	templateUrl: './list.component.html',
 	styleUrls: ['./list.component.css']
 })
-export class ListComponent implements OnInit {
+export class ListComponent implements OnChanges {
 	@Input() channelId = '';
 
 	envvars: any = [];
@@ -22,7 +22,7 @@ export class ListComponent implements OnInit {
 
 	constructor(private readonly channelService: ChannelService, private readonly envVarService: EnvironmentVariableService) { }
 
-	ngOnInit(): void {
+	ngOnChanges(): void {
 		this.refreshData();
 	}
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { ChannelService } from 'src/app/core/api/v1';
 
 @Component({
@@ -6,7 +6,7 @@ import { ChannelService } from 'src/app/core/api/v1';
   templateUrl: './logs.component.html',
   styleUrls: ['./logs.component.css']
 })
-export class LogsComponent implements OnInit {
+export class LogsComponent implements OnChanges {
   @Input() appId = '';
   @Input() channelId = '';
 
@@ -15,7 +15,7 @@ export class LogsComponent implements OnInit {
 
   constructor(private readonly channelService: ChannelService) { }
 
-  ngOnInit(): void {
+  ngOnChanges(): void {
     this.refreshData();
   }
 
