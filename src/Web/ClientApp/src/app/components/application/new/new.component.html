@@ -1,12 +1,4 @@
-<article *ngIf="error" class="message is-danger">
-	<div class="message-header">
-		<p>Error</p>
-		<button class="delete" aria-label="delete"></button>
-	</div>
-	<div class="message-body">
-		{{error}}
-	</div>
-</article>
+<app-warning [error]="error"></app-warning>
 
 <form [formGroup]="appForm" (ngSubmit)="onSubmit()">
 	<div class="columns">

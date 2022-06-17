@@ -10,7 +10,7 @@ import { interval, startWith, Subscription, switchMap } from 'rxjs';
 })
 export class ListComponent implements OnInit {
 	apps: any[] = [];
-	error = '';
+	error: any = null;
 	faPlus = faPlus;
 	faCircle = faCircle;
 
@@ -74,6 +74,14 @@ export class ListComponent implements OnInit {
 	}
 
 	refreshData() {
-		this.appService.apiAppGet().subscribe(vm => (this.apps = vm.apps));
+		this.appService.apiAppGet().subscribe(
+			{
+				next: vm => (this.apps = vm.apps),
+				error: (error) => {
+					console.log(error);
+					this.error = error;
+				}
+			}
+		);
 	}
 }

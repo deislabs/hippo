@@ -10,7 +10,7 @@ import { ChannelRevisionSelectionStrategy, ChannelService } from 'src/app/core/a
 })
 export class NewComponent implements OnInit {
   @Input() appId: any = {};
-  error = '';
+  error: any = null;
   channelForm!: FormGroup;
   loading = false;
   submitted = false;
@@ -60,7 +60,7 @@ export class NewComponent implements OnInit {
       },
       error: (error) => {
         console.log(error);
-        this.error = (error.message) ? error.message : error.status ? `${error.status} - ${error.statusText}` : 'Server error';
+        this.error = error;
         this.loading = false;
       }
     });

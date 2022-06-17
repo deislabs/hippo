@@ -1,15 +1,6 @@
 <h1 class="title has-text-primary has-text-centered">Log in</h1>
 
-<article *ngIf="errors && errors.length > 0" class="message is-danger">
-	<div class="message-header">
-		<p>Error</p>
-	</div>
-	<div class="message-body">
-		<p *ngFor="let error of errors" >
-			{{error}}
-		</p>
-	</div>
-</article>
+<app-warning [error]="error"></app-warning>
 
 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="mgh-small mgb-medium">
 	<div class="field">

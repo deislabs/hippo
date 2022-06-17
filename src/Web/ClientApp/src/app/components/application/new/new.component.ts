@@ -13,7 +13,7 @@ import { Subject, of } from 'rxjs';
 })
 export class NewComponent implements OnInit {
   faDatabase = faDatabase;
-  error = '';
+  error: any = null;
   appForm!: FormGroup;
   storageList: Array<any> = [];
   loading = false;
@@ -60,6 +60,7 @@ export class NewComponent implements OnInit {
           },
           error: (error) => {
             console.log(error);
+            this.error = error;
             this.storageList = [];
             this.storageListLoading = false;
           }
@@ -102,7 +103,7 @@ export class NewComponent implements OnInit {
             next: () => this.router.navigate(['/']),
             error: (error) => {
               console.log(error);
-              this.error = (error.message) ? error.message : error.status ? `${error.status} - ${error.statusText}` : 'An error occurred while creating the channel';
+              this.error = error;
               // we can still continue at this point; the user will just have to add a channel to the app.
               this.router.navigate(['/']);
             }
@@ -110,7 +111,7 @@ export class NewComponent implements OnInit {
       },
       error: (error) => {
         console.log(error);
-        this.error = (error.message) ? error.message : error.status ? `${error.status} - ${error.statusText}` : 'An error occurred while creating the application';
+        this.error = error;
         this.loading = false;
       }
     });
