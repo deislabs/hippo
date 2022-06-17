@@ -11,8 +11,6 @@ public class UpdateAppCommandValidator : AbstractValidator<UpdateAppCommand>
 
     private readonly Regex validName = new Regex("^[a-zA-Z0-9-_]*$");
 
-    private readonly Regex validStorageId = new Regex("^[a-zA-Z0-9-_./]*$");
-
     public UpdateAppCommandValidator(IApplicationDbContext context)
     {
         _context = context;
@@ -22,11 +20,6 @@ public class UpdateAppCommandValidator : AbstractValidator<UpdateAppCommand>
             .MaximumLength(128)
             .Matches(validName)
             .MustAsync(BeUniqueName).WithMessage("The specified name already exists.");
-
-        RuleFor(a => a.StorageId)
-            .NotEmpty()
-            .MaximumLength(200)
-            .Matches(validStorageId);
     }
 
     public async Task<bool> BeUniqueName(UpdateAppCommand model, string name, CancellationToken cancellationToken)
