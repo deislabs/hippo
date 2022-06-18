@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { faBackward, faTrash, faSave } from '@fortawesome/free-solid-svg-icons';
 import { ChannelService, EnvironmentVariableService } from 'src/app/core/api/v1';
 
@@ -7,13 +7,13 @@ import { ChannelService, EnvironmentVariableService } from 'src/app/core/api/v1'
 	templateUrl: './list.component.html',
 	styleUrls: ['./list.component.css']
 })
-export class ListComponent implements OnInit {
+export class ListComponent implements OnChanges {
 	@Input() channelId = '';
 
 	envvars: any = [];
 	originalEnvVars: any = [];
 
-	errors: Array<string> = [];
+	error: any = null;
 	loading: boolean = false;
 	submitted = false;
 	faBackward = faBackward;
@@ -22,7 +22,7 @@ export class ListComponent implements OnInit {
 
 	constructor(private readonly channelService: ChannelService, private readonly envVarService: EnvironmentVariableService) { }
 
-	ngOnInit(): void {
+	ngOnChanges(): void {
 		this.refreshData();
 	}
 
@@ -72,11 +72,11 @@ export class ListComponent implements OnInit {
 			next: () => {
 				this.refreshData();
 				this.submitted = true;
-				this.errors = [];
+				this.error = null;
 			},
 			error: (err) => {
 				console.log(err.error.errors);
-				this.errors = this.parseError(err.error);
+				this.error = err;
 				this.submitted = false;
 			}
 		});
@@ -106,7 +106,7 @@ export class ListComponent implements OnInit {
 		this.envVarService.apiEnvironmentvariableGet().subscribe(
 			{
 				next: (vm) => {
-					this.errors = [];
+					this.error = null;
 					this.envvars = vm.environmentVariables.filter(element => element.channelId == this.channelId);
 					this.originalEnvVars = this.envvars.map((v: any) => {
 						return {
@@ -120,28 +120,10 @@ export class ListComponent implements OnInit {
 				},
 				error: (err) => {
 					console.log(err.error.errors);
-					this.errors = this.parseError(err.error);
+					this.error = err;
 					this.submitted = false;
 					this.loading = false;
 				}
 			});
-	}
-
-	parseError(error: any) {
-		if (error.errors) {
-			return this.parseValidationErrors(error.errors);
-		} else {
-			return [error.title];
-		}
-	}
-
-	parseValidationErrors(error: any) {
-		let errors = [];
-		for (var prop in error) {
-			if (error.hasOwnProperty(prop)) {
-				errors.push(...error[prop]);
-			}
-		}
-		return errors;
 	}
 }

@@ -6,16 +6,7 @@
         Environment Variables Saved
     </div>
 </article>
-<article *ngIf="errors && errors.length > 0" class="message is-danger">
-    <div class="message-header">
-        <p>Error</p>
-    </div>
-    <div class="message-body">
-        <p *ngFor="let error of errors" >
-            {{error}}
-        </p>
-    </div>
-</article>
+<app-warning [error]="error"></app-warning>
 <div *ngIf="!loading" class="box columns is-multiline has-background-light">
     <ng-template [ngIf]="envvars.length <= 0">
         <span class="column is-full">Channel has no environment variables</span>

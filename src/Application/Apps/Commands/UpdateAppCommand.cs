@@ -14,9 +14,6 @@ public class UpdateAppCommand : IRequest
 
     [Required]
     public string Name { get; set; } = "";
-
-    [Required]
-    public string StorageId { get; set; } = "";
 }
 
 public class UpdateAppCommandHandler : IRequestHandler<UpdateAppCommand>
@@ -39,7 +36,6 @@ public class UpdateAppCommandHandler : IRequestHandler<UpdateAppCommand>
         }
 
         entity.Name = request.Name;
-        entity.StorageId = request.StorageId;
 
         entity.AddDomainEvent(new ModifiedEvent<App>(entity));
 

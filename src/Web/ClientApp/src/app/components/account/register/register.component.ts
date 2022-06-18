@@ -12,7 +12,7 @@ import { MustMatch } from 'src/app/_helpers/must-match.validator';
 	styleUrls: ['./register.component.css']
 })
 export class RegisterComponent implements OnInit {
-	errors:Array<string> = [];
+	error: any = null;
 	registrationForm!: FormGroup;
 	loading = false;
 	submitted = false;
@@ -60,33 +60,10 @@ export class RegisterComponent implements OnInit {
 					next: () => this.router.navigate(['/']),
 					error: (err) => {
 						console.log(err);
-						this.errors = this.parseError(err);
+						this.error = err;
 						this.loading = false;
 					}
 				}
 			);
-	}
-
-	parseError(error: any) {
-		if (error.error)
-		{
-			var err = error.error;
-			if (err.errors) {
-				return this.parseValidationErrors(err.errors);
-			} else {
-				return [(err.detail) ? err.detail : `${err.status} - ${err.title}`]
-			}
-		}
-		return [(error.message) ? error.message : error.status ? `${error.status} - ${error.statusText}` : 'Server error'];
-	}
-
-	parseValidationErrors(error: any) {
-		let errors = [];
-		for (var prop in error) {
-			if (error.hasOwnProperty(prop)) {
-				errors.push(...error[prop]);
-			}
-		}
-		return errors;
 	}
 }

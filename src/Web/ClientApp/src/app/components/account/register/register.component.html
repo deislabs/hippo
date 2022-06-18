@@ -1,14 +1,5 @@
 <form [formGroup]="registrationForm" (ngSubmit)="onSubmit()">
-	<article *ngIf="errors && errors.length > 0" class="message is-danger">
-		<div class="message-header">
-			<p>Error</p>
-		</div>
-		<div class="message-body">
-			<p *ngFor="let error of errors" >
-				{{error}}
-			</p>
-		</div>
-	</article>
+	<app-warning [error]="error"></app-warning>
 
 	<div class="field">
 		<label class="label"><fa-icon class="icon" [icon]="faUser"></fa-icon>Username</label>

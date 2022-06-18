@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnChanges, Input } from '@angular/core';
 import { ChannelDto, ChannelService, RevisionDto } from 'src/app/core/api/v1';
 import { ComponentTypes } from 'src/app/_helpers/constants';
 import { faCheckCircle, faTimesCircle, faNetworkWired } from '@fortawesome/free-solid-svg-icons';
@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 	templateUrl: './overview.component.html',
 	styleUrls: ['./overview.component.css']
 })
-export class OverviewComponent implements OnInit {
+export class OverviewComponent implements OnChanges {
 	@Input() channelId = '';
 	channel!: ChannelDto;
 	activeRevision!: RevisionDto | undefined;
@@ -22,7 +22,7 @@ export class OverviewComponent implements OnInit {
 		private readonly channelService: ChannelService,
 		private router: Router) { }
 
-	ngOnInit(): void {
+	ngOnChanges(): void {
 		this.refreshData();
 	}
 
