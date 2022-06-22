@@ -53,7 +53,7 @@ export function apiConfigFactory(): Configuration {
   		LogsComponent,
     	OverviewComponent,
      	WarningComponent,
-      SuccessComponent,
+      	SuccessComponent,
 	],
 	imports: [
 		BrowserModule,

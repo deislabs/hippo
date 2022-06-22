@@ -15,6 +15,8 @@ export class SuccessComponent {
     visible: boolean = false;
     counter: number = 0;
     interval: any = null;
+    intervalResetTime: number = 3000;
+    incrementInterval: number = 10;
 
     constructor() {}
 
@@ -34,13 +36,13 @@ export class SuccessComponent {
         this.counter = 0;
 
         this.interval = setInterval(() => {
-            if (this.counter === 3) {
+            if (this.counter === this.intervalResetTime) {
                 clearInterval(this.interval);
                 this.visible = false;
                 this.counter = 0;
             } else {
-                this.counter++;
+                this.counter += this.incrementInterval ;
             }
-        }, 1000);
+        }, this.incrementInterval);
     }
 }
