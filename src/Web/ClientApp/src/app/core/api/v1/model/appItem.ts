@@ -9,10 +9,14 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ChannelDto } from './channelDto';
+import { AppChannelListItem } from './appChannelListItem';
 
 
-export interface ChannelsVm { 
-    channels: Array<ChannelDto>;
+export interface AppItem { 
+    name: string;
+    id: string;
+    storageId: string;
+    description?: string | null;
+    channels: Array<AppChannelListItem>;
 }
 

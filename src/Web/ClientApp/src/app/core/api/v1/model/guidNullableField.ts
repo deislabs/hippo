@@ -11,9 +11,7 @@
  */
 
 
-export interface AppChannelSummary { 
-    id: string;
-    name: string;
-    activeRevisionNumber?: string | null;
+export interface GuidNullableField { 
+    value?: string | null;
 }
 

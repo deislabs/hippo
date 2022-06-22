@@ -1,15 +1,18 @@
 using Hippo.Application.Apps.Extensions;
 using Hippo.Application.Common.Interfaces;
+using Hippo.Core.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hippo.Application.Apps.Queries;
 
-public class GetAppsQuery : IRequest<AppsVm>
+public class GetAppsQuery : SearchFilter, IRequest<Page<AppItem>>
 {
+    public new string SortBy { get; set; } = "Name";
+    public new bool IsSortedAscending { get; set; } = true;
 }
 
-public class GetAppsQueryHandler : IRequestHandler<GetAppsQuery, AppsVm>
+public class GetAppsQueryHandler : IRequestHandler<GetAppsQuery, Page<AppItem>>
 {
     private readonly IApplicationDbContext _context;
 
@@ -18,16 +21,27 @@ public class GetAppsQueryHandler : IRequestHandler<GetAppsQuery, AppsVm>
         _context = context;
     }
 
-    public async Task<AppsVm> Handle(GetAppsQuery request, CancellationToken cancellationToken)
+    public async Task<Page<AppItem>> Handle(GetAppsQuery request, CancellationToken cancellationToken)
     {
-        return new AppsVm
-        {
-            Apps = await _context.Apps
-                .OrderBy(a => a.Name)
+        var apps = _context.Apps
                 .Include(a => a.Channels)
-                .Include(a => a.Revisions)
-                .Select(a => a.ToAppDto())
-                .ToListAsync(cancellationToken)
+                .Include(a => a.Revisions);
+
+        var appItems = (await apps
+            .Where(app => app.Name.Contains(request.SearchText))
+            .Select(a => a.ToAppItem())
+            .ToListAsync())
+            .Sort(request.SortBy, request.IsSortedAscending)
+            .Skip(request.Offset)
+            .Take(request.PageSize)
+            .ToList();
+
+        return new Page<AppItem>
+        {
+            Items = appItems,
+            PageIndex = request.PageIndex,
+            PageSize = request.PageSize,
+            TotalItems = apps.Count()
         };
     }
 }

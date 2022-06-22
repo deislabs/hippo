@@ -1,4 +1,5 @@
 using Hippo.Application.Jobs;
+using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 
 namespace Hippo.Application.Channels.Queries;

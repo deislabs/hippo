@@ -10,9 +10,9 @@ using Hippo.Core.Enums;
 
 namespace Hippo.Application.Channels.Queries;
 
-public class ChannelDto : IMapFrom<Channel>
+public class ChannelItem : IMapFrom<Channel>
 {
-    public ChannelDto()
+    public ChannelItem()
     {
         EnvironmentVariables = new List<EnvironmentVariableDto>();
     }

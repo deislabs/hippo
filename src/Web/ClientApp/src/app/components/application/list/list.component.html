@@ -31,8 +31,8 @@
 							<span *ngFor="let channel of app.channels">
 								<span>{{channel.name}}</span>: 
 								<span *ngIf="channel.activeRevisionNumber"><strong>v{{channel.activeRevisionNumber}}</strong></span>
-								<span class="icon" [attr.data-tooltip]="channel.status">
-									<fa-icon [icon]="faCircle" [ngStyle]="{'color': getStatusColor(channel.status)}"></fa-icon>
+								<span class="icon" [attr.data-tooltip]="getChannelStatus(channel)">
+									<fa-icon [icon]="faCircle" [ngStyle]="{'color': getStatusColor(getChannelStatus(channel))}"></fa-icon>
 								</span>
 							</span>
 						</p>

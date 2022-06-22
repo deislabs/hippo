@@ -9,11 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { ChannelRevisionSelectionStrategy } from './channelRevisionSelectionStrategy';
 
 
-export interface ApplicationChannelSummary { 
-    id: string;
-    name: string;
-    activeRevisionNumber?: string | null;
+export interface ChannelRevisionSelectionStrategyField { 
+    value?: ChannelRevisionSelectionStrategy;
 }
 

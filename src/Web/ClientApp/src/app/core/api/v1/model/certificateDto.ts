@@ -9,7 +9,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ChannelDto } from './channelDto';
+import { ChannelItem } from './channelItem';
 
 
 export interface CertificateDto { 
@@ -17,6 +17,6 @@ export interface CertificateDto {
     name: string;
     publicKey: string;
     privateKey: string;
-    channels: Array<ChannelDto>;
+    channels: Array<ChannelItem>;
 }
 

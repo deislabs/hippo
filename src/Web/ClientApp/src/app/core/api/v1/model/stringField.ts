@@ -9,10 +9,9 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { AppDto } from './appDto';
 
 
-export interface AppsVm { 
-    apps: Array<AppDto>;
+export interface StringField { 
+    value?: string | null;
 }
 

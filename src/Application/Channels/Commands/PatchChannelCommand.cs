@@ -1,28 +1,37 @@
 using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
+using Hippo.Application.EnvironmentVariables.Commands;
 using Hippo.Core.Entities;
+using Hippo.Core.Enums;
 using Hippo.Core.Events;
+using Hippo.Core.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
-namespace Hippo.Application.EnvironmentVariables.Commands;
+namespace Hippo.Application.Channels.Commands;
 
-public class UpdateChannelEnvironmentVariablesCommand : IRequest
+public class PatchChannelCommand : IRequest
 {
     public Guid ChannelId { get; set; }
-    public List<UpdateEnvironmentVariableDto> EnvironmentVariables { get; set; } = new List<UpdateEnvironmentVariableDto>();
+    public Field<List<UpdateEnvironmentVariableDto>?> EnvironmentVariables { get; set; } = null!;
+    public Field<string> Name { get; set; } = null!;
+    public Field<string> Domain { get; set; } = null!;
+    public Field<ChannelRevisionSelectionStrategy> RevisionSelectionStrategy { get; set; } = null!;
+    public Field<string> RangeRule { get; set; } = null!;
+    public Field<Guid?> ActiveRevisionId { get; set; } = null!;
+    public Field<Guid?> CertificateId { get; set; } = null!;
 }
 
-public class UpdateEnvironmentVariablesCommandHandler : IRequestHandler<UpdateChannelEnvironmentVariablesCommand>
+public class PatchChannelCommandHandler : IRequestHandler<PatchChannelCommand>
 {
     private readonly IApplicationDbContext _context;
 
-    public UpdateEnvironmentVariablesCommandHandler(IApplicationDbContext context)
+    public PatchChannelCommandHandler(IApplicationDbContext context)
     {
         _context = context;
     }
 
-    public async Task<Unit> Handle(UpdateChannelEnvironmentVariablesCommand request, CancellationToken cancellationToken)
+    public async Task<Unit> Handle(PatchChannelCommand request, CancellationToken cancellationToken)
     {
         var channel = _context.Channels
             .Include(c => c.App)
@@ -30,11 +39,34 @@ public class UpdateEnvironmentVariablesCommandHandler : IRequestHandler<UpdateCh
 
         _ = channel ?? throw new NotFoundException(nameof(Channel), request.ChannelId);
 
+        request.EnvironmentVariables.WhenSet((envvars) => UpdateEnvironmentVariables(request, channel));
+        request.Name.WhenSet((name) => { channel.Name = name; });
+        request.Domain.WhenSet((domain) => { channel.Domain = domain; });
+        request.RevisionSelectionStrategy.WhenSet((revisionSelectionStrategy) => { channel.RevisionSelectionStrategy = revisionSelectionStrategy; });
+        request.RangeRule.WhenSet((rangeRule) => { channel.RangeRule = rangeRule; });
+        request.ActiveRevisionId.WhenSet((activeRevisionId) => { channel.ActiveRevisionId = activeRevisionId; });
+        request.CertificateId.WhenSet((certificateId) => { channel.CertificateId = certificateId; });
+
+        if (request.RevisionSelectionStrategy.IsSet()
+            && request.RevisionSelectionStrategy.Value == ChannelRevisionSelectionStrategy.UseRangeRule
+            && request.RangeRule.IsSet()
+            && request.RangeRule.Value is null)
+        {
+            channel.RangeRule = "*";
+        }
+
+        await _context.SaveChangesAsync(cancellationToken);
+
+        return Unit.Value;
+    }
+
+    private void UpdateEnvironmentVariables(PatchChannelCommand request, Channel? channel)
+    {
         var existingVariables = GetExistingEnvironmentVariables(request.ChannelId);
 
-        var envVariablesToBeAdded = EnvironmentVariablesToBeAdded(request.EnvironmentVariables, channel);
-        var envVariablesToBeUpdated = EnvironmentVariablesToBeUpdated(existingVariables, request.EnvironmentVariables);
-        var envVariablesToBeDeleted = EnvironmentVariablesToBeRemoved(existingVariables, request.EnvironmentVariables);
+        var envVariablesToBeAdded = EnvironmentVariablesToBeAdded(request.EnvironmentVariables.Value, channel);
+        var envVariablesToBeUpdated = EnvironmentVariablesToBeUpdated(existingVariables, request.EnvironmentVariables.Value);
+        var envVariablesToBeDeleted = EnvironmentVariablesToBeRemoved(existingVariables, request.EnvironmentVariables.Value);
 
         foreach (var entity in envVariablesToBeAdded)
         {
@@ -43,9 +75,9 @@ public class UpdateEnvironmentVariablesCommandHandler : IRequestHandler<UpdateCh
 
         _context.EnvironmentVariables.AddRange(envVariablesToBeAdded);
 
-        if (existingVariables.Count > 0)
+        if (existingVariables.Count > 0 && request.EnvironmentVariables.Value != null)
         {
-            foreach (var environmentVariable in request.EnvironmentVariables)
+            foreach (var environmentVariable in request.EnvironmentVariables.Value)
             {
                 var updatedEnvVar = existingVariables.FirstOrDefault(v => v.Id == environmentVariable.Id);
 
@@ -66,10 +98,6 @@ public class UpdateEnvironmentVariablesCommandHandler : IRequestHandler<UpdateCh
         }
 
         _context.EnvironmentVariables.RemoveRange(envVariablesToBeDeleted);
-
-        await _context.SaveChangesAsync(cancellationToken);
-
-        return Unit.Value;
     }
 
     private List<EnvironmentVariable> GetExistingEnvironmentVariables(Guid channelId)
@@ -81,6 +109,11 @@ public class UpdateEnvironmentVariablesCommandHandler : IRequestHandler<UpdateCh
 
     private static List<EnvironmentVariable> EnvironmentVariablesToBeAdded(List<UpdateEnvironmentVariableDto> environmentVariables, Channel channel)
     {
+        if (environmentVariables == null)
+        {
+            return new List<EnvironmentVariable>();
+        }
+
         var toBeAdded = new List<EnvironmentVariable>();
         var newVariables = environmentVariables.Where(v => v.Id == null);
 
@@ -102,7 +135,12 @@ public class UpdateEnvironmentVariablesCommandHandler : IRequestHandler<UpdateCh
     private static List<EnvironmentVariable> EnvironmentVariablesToBeUpdated(List<EnvironmentVariable> existingVariables,
         List<UpdateEnvironmentVariableDto> environmentVariables)
     {
-        var environmentVariablesIds = environmentVariables.Select(v => v.Id);
+        if (environmentVariables == null)
+        {
+            return new List<EnvironmentVariable>();
+        }
+
+        var environmentVariablesIds = environmentVariables?.Select(v => v.Id);
 
         return existingVariables.Where(v => environmentVariablesIds.Contains(v.Id)).ToList();
     }
@@ -110,6 +148,11 @@ public class UpdateEnvironmentVariablesCommandHandler : IRequestHandler<UpdateCh
     private static List<EnvironmentVariable> EnvironmentVariablesToBeRemoved(List<EnvironmentVariable> existingVariables,
         List<UpdateEnvironmentVariableDto> environmentVariables)
     {
+        if (environmentVariables == null)
+        {
+            environmentVariables = new List<UpdateEnvironmentVariableDto>();
+        }
+
         var environmentVariablesIds = environmentVariables.Select(v => v.Id);
 
         return existingVariables.Where(v => !environmentVariablesIds.Contains(v.Id)).ToList();

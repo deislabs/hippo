@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Hippo.Application.Apps.Queries;
 
-public class AppChannelSummary
+public class AppChannelListItem
 {
     [Required]
     public Guid Id { get; set; }

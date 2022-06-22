@@ -1,6 +1,7 @@
 using Hippo.Application.Channels.Commands;
 using Hippo.Application.Channels.Queries;
 using Hippo.Application.EnvironmentVariables.Commands;
+using Hippo.Core.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,15 +12,15 @@ namespace Hippo.Web.Api;
 public class ChannelController : ApiControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<ChannelsVm>> Index()
+    public async Task<ActionResult<Page<ChannelItem>>> Index()
     {
         return await Mediator.Send(new GetChannelsQuery());
     }
 
-    [HttpGet("{channelId}")]
-    public async Task<ActionResult<ChannelDto>> GetChannel(Guid channelId)
+    [HttpGet("{id}")]
+    public async Task<ActionResult<ChannelItem>> GetChannel(Guid id)
     {
-        return await Mediator.Send(new GetChannelQuery { Id = channelId });
+        return await Mediator.Send(new GetChannelQuery { Id = id });
     }
 
     [HttpGet("export")]
@@ -49,11 +50,11 @@ public class ChannelController : ApiControllerBase
         return NoContent();
     }
 
-    [HttpPut("{channelId}/environment-variables")]
-    public async Task<ActionResult> UpdateRange([FromRoute] Guid channelId,
-        [FromBody] UpdateChannelEnvironmentVariablesCommand command)
+    [HttpPatch("{id}")]
+    public async Task<ActionResult> Patch([FromRoute] Guid id,
+        [FromBody] PatchChannelCommand command)
     {
-        command.ChannelId = channelId;
+        command.ChannelId = id;
         await Mediator.Send(command);
 
         return NoContent();
@@ -67,9 +68,9 @@ public class ChannelController : ApiControllerBase
         return NoContent();
     }
 
-    [HttpGet("logs/{channelId}")]
-    public async Task<GetChannelLogsVm> Logs([FromRoute] Guid channelId)
+    [HttpGet("logs/{id}")]
+    public async Task<GetChannelLogsVm> Logs([FromRoute] Guid id)
     {
-        return await Mediator.Send(new GetChannelLogsQuery(channelId));
+        return await Mediator.Send(new GetChannelLogsQuery(id));
     }
 }

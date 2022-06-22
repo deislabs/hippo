@@ -1,5 +1,6 @@
 using Hippo.Application.Apps.Commands;
 using Hippo.Application.Apps.Queries;
+using Hippo.Core.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +11,7 @@ namespace Hippo.Web.Api;
 public class AppController : ApiControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<AppsVm>> Index()
+    public async Task<ActionResult<Page<AppItem>>> Index()
     {
         return await Mediator.Send(new GetAppsQuery());
     }

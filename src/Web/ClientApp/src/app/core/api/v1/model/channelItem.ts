@@ -9,20 +9,23 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { CertificateDto } from './certificateDto';
 import { ChannelRevisionSelectionStrategy } from './channelRevisionSelectionStrategy';
+import { AppSummaryDto } from './appSummaryDto';
 import { EnvironmentVariableDto } from './environmentVariableDto';
 import { RevisionDto } from './revisionDto';
-import { Certificate } from './certificate';
 
 
-export interface ChannelDetailsDto { 
+export interface ChannelItem { 
     id: string;
+    appId: string;
     name: string;
     domain: string;
     revisionSelectionStrategy: ChannelRevisionSelectionStrategy;
     activeRevision?: RevisionDto;
     rangeRule?: string | null;
-    certificate?: Certificate;
+    certificate?: CertificateDto;
     environmentVariables: Array<EnvironmentVariableDto>;
+    appSummary?: AppSummaryDto;
 }
 

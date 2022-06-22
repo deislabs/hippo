@@ -10,13 +10,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Hippo.Application.Channels.Queries;
 
-public class GetChannelQuery : IRequest<ChannelDto>
+public class GetChannelQuery : IRequest<ChannelItem>
 {
     [Required]
     public Guid Id { get; set; }
 }
 
-public class GetChannelQueryHandler : IRequestHandler<GetChannelQuery, ChannelDto>
+public class GetChannelQueryHandler : IRequestHandler<GetChannelQuery, ChannelItem>
 {
     private readonly IApplicationDbContext _context;
     private readonly IMapper _mapper;
@@ -27,11 +27,11 @@ public class GetChannelQueryHandler : IRequestHandler<GetChannelQuery, ChannelDt
         _mapper = mapper;
     }
 
-    public async Task<ChannelDto> Handle(GetChannelQuery request, CancellationToken cancellationToken)
+    public async Task<ChannelItem> Handle(GetChannelQuery request, CancellationToken cancellationToken)
     {
         var entity = await _context.Channels
             .Where(a => a.Id == request.Id)
-            .ProjectTo<ChannelDto>(_mapper.ConfigurationProvider)
+            .ProjectTo<ChannelItem>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(cancellationToken);
 
         if (entity is null)

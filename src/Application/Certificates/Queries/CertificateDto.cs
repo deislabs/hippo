@@ -9,7 +9,7 @@ public class CertificateDto : IMapFrom<Certificate>
 {
     public CertificateDto()
     {
-        Channels = new List<ChannelDto>();
+        Channels = new List<ChannelItem>();
     }
 
     [Required]
@@ -25,5 +25,5 @@ public class CertificateDto : IMapFrom<Certificate>
     public string PrivateKey { get; set; } = "";
 
     [Required]
-    public IList<ChannelDto> Channels { get; set; }
+    public IList<ChannelItem> Channels { get; set; }
 }
