@@ -1,6 +1,7 @@
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, ViewChild } from '@angular/core';
 import { faBackward, faTrash, faSave } from '@fortawesome/free-solid-svg-icons';
 import { ChannelService, EnvironmentVariableService } from 'src/app/core/api/v1';
+import { SuccessComponent } from '../../helpers/success/success.component';
 
 @Component({
 	selector: 'app-environment-variable-list',
@@ -9,13 +10,13 @@ import { ChannelService, EnvironmentVariableService } from 'src/app/core/api/v1'
 })
 export class ListComponent implements OnChanges {
 	@Input() channelId = '';
+	@ViewChild(SuccessComponent) success: SuccessComponent = new SuccessComponent;
 
 	envvars: any = [];
 	originalEnvVars: any = [];
 
 	error: any = null;
 	loading: boolean = false;
-	submitted = false;
 	faBackward = faBackward;
 	faTrash = faTrash;
 	faSave = faSave;
@@ -24,6 +25,7 @@ export class ListComponent implements OnChanges {
 
 	ngOnChanges(): void {
 		this.refreshData();
+		this.success.hide();
 	}
 
 	addNewVariable() {
@@ -71,13 +73,12 @@ export class ListComponent implements OnChanges {
 		}).subscribe({
 			next: () => {
 				this.refreshData();
-				this.submitted = true;
+				this.success.show();
 				this.error = null;
 			},
 			error: (err) => {
 				console.log(err.error.errors);
 				this.error = err;
-				this.submitted = false;
 			}
 		});
 	}
@@ -121,7 +122,6 @@ export class ListComponent implements OnChanges {
 				error: (err) => {
 					console.log(err.error.errors);
 					this.error = err;
-					this.submitted = false;
 					this.loading = false;
 				}
 			});

@@ -26,6 +26,7 @@ import { OverviewComponent } from './components/channel/overview/overview.compon
 import { NgxJdenticonModule, JDENTICON_CONFIG } from 'ngx-jdenticon';
 import { AppConfigService } from './_services/app-config.service';
 import { WarningComponent } from './components/helpers/warning/warning.component';
+import { SuccessComponent } from './components/helpers/success/success.component';
 
 export function apiConfigFactory(): Configuration {
 	const params: ConfigurationParameters = {
@@ -52,6 +53,7 @@ export function apiConfigFactory(): Configuration {
   		LogsComponent,
     	OverviewComponent,
      	WarningComponent,
+      SuccessComponent,
 	],
 	imports: [
 		BrowserModule,

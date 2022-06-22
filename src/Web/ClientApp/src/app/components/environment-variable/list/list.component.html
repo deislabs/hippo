@@ -1,11 +1,4 @@
-<article *ngIf="submitted" class="message is-success">
-    <div class="message-header">
-        <p>Success</p>
-    </div>
-    <div class="message-body">
-        Environment Variables Saved
-    </div>
-</article>
+<app-success></app-success>
 <app-warning [error]="error"></app-warning>
 <div *ngIf="!loading" class="box columns is-multiline has-background-light">
     <ng-template [ngIf]="envvars.length <= 0">
