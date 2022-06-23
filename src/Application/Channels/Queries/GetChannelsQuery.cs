@@ -27,7 +27,7 @@ public class GetChannelsQueryHandler : IRequestHandler<GetChannelsQuery, Page<Ch
     {
         var channels = await _context.Channels
                 .ProjectTo<ChannelItem>(_mapper.ConfigurationProvider)
-                .Where(c => c.Name.Contains(request.SearchText))
+                .Where(c => request.SearchText == null || c.Name.Contains(request.SearchText))
                 .ToListAsync(cancellationToken);
 
         var channelsPage = channels

@@ -27,7 +27,7 @@ public class GetCertificatesQueryHandler : IRequestHandler<GetCertificatesQuery,
     {
         var certificates = await _context.Certificates
                 .ProjectTo<CertificateItem>(_mapper.ConfigurationProvider)
-                .Where(c => c.Name.Contains(request.SearchText))
+                .Where(c => request.SearchText == null || c.Name.Contains(request.SearchText))
                 .ToListAsync(cancellationToken);
 
         var certificateItems = certificates

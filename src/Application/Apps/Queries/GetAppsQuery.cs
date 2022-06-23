@@ -26,7 +26,7 @@ public class GetAppsQueryHandler : IRequestHandler<GetAppsQuery, Page<AppItem>>
                 .Include(a => a.Revisions);
 
         var appItems = (await apps
-            .Where(app => app.Name.Contains(request.SearchText))
+            .Where(app => request.SearchText == null || app.Name.Contains(request.SearchText))
             .Select(a => a.ToAppItem())
             .ToListAsync())
             .SortBy(request.SortBy, request.IsSortedAscending)
