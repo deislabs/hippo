@@ -55,9 +55,9 @@ export class ListComponent implements OnInit {
 	}
 
 	getAllChannels() {
-		let allChannels: any = [];
+		let allChannels: AppChannelListItem[] = [];
 
-		this.apps?.forEach((app: any) => {
+		this.apps?.forEach((app: AppItem) => {
 			allChannels = allChannels.concat(app.channels);
 		})
 
