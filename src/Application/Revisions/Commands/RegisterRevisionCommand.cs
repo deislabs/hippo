@@ -46,7 +46,7 @@ public class RegisterRevisionCommandHandler : IRequestHandler<RegisterRevisionCo
 
             _context.Revisions.Add(entity);
 
-            viewModel.Revisions.Add(_mapper.Map<RevisionDto>(entity));
+            viewModel.Revisions.Add(_mapper.Map<RevisionItem>(entity));
         }
 
         await _context.SaveChangesAsync(cancellationToken);

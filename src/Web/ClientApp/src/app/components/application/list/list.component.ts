@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AppChannelListItem, AppItem, AppItemPage, AppService, ChannelJobStatus, JobStatus, JobStatusService } from 'src/app/core/api/v1';
+import { AppChannelListItem, AppItem, AppItemPage, AppService, ChannelJobStatusItem, ChannelJobStatusItemPage, JobStatus, JobStatusService } from 'src/app/core/api/v1';
 import { faPlus, faCircle } from '@fortawesome/free-solid-svg-icons';
 import { interval, startWith, Subscription, switchMap } from 'rxjs';
 
@@ -10,7 +10,7 @@ import { interval, startWith, Subscription, switchMap } from 'rxjs';
 })
 export class ListComponent implements OnInit {
 	apps: AppItem[] | null | undefined = [];
-	statuses: ChannelJobStatus[] = [];
+	statuses: ChannelJobStatusItem[] | null | undefined = [];
 	error: any = null;
 	faPlus = faPlus;
 	faCircle = faCircle;
@@ -29,17 +29,17 @@ export class ListComponent implements OnInit {
 		.pipe(
 			startWith(0),
 			switchMap(() => this.jobStatusService.apiJobstatusGet())
-		).subscribe((res: ChannelJobStatus[]) => {
-			this.statuses = res;
+		).subscribe((res: ChannelJobStatusItemPage) => {
+			this.statuses = res.items;
 		})
 	}
 
-	getChannelStatus(channel: AppChannelListItem): JobStatus {
-		let channelStatus = this.statuses.filter((status: ChannelJobStatus) => channel.id === status.channelId)[0];
+	getChannelStatus(channel: AppChannelListItem): JobStatus | undefined {
+		let channelStatus = this.statuses?.filter((status: ChannelJobStatusItem) => channel.id === status.channelId)[0];
 		return channelStatus?.status;
 	}
 
-	getStatusColor(status: JobStatus) {
+	getStatusColor(status: JobStatus | undefined) {
 		switch(status){
 			case JobStatus.Unknown:
 				return 'gray';

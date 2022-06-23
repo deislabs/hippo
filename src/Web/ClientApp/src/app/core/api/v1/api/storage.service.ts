@@ -19,7 +19,7 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
-import { StorageList } from '../model/storageList';
+import { StringPage } from '../model/stringPage';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -88,29 +88,34 @@ export class StorageService {
     }
 
     /**
-     * @param queryString 
-     * @param offset 
-     * @param limit 
+     * @param searchText 
+     * @param pageIndex 
+     * @param pageSize 
+     * @param isSortedAscending 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiStorageGet(queryString?: string, offset?: number, limit?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<StorageList>;
-    public apiStorageGet(queryString?: string, offset?: number, limit?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<StorageList>>;
-    public apiStorageGet(queryString?: string, offset?: number, limit?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<StorageList>>;
-    public apiStorageGet(queryString?: string, offset?: number, limit?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiStorageGet(searchText?: string, pageIndex?: number, pageSize?: number, isSortedAscending?: boolean, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<StringPage>;
+    public apiStorageGet(searchText?: string, pageIndex?: number, pageSize?: number, isSortedAscending?: boolean, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<StringPage>>;
+    public apiStorageGet(searchText?: string, pageIndex?: number, pageSize?: number, isSortedAscending?: boolean, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<StringPage>>;
+    public apiStorageGet(searchText?: string, pageIndex?: number, pageSize?: number, isSortedAscending?: boolean, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
-        if (queryString !== undefined && queryString !== null) {
+        if (searchText !== undefined && searchText !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>queryString, 'queryString');
+            <any>searchText, 'searchText');
         }
-        if (offset !== undefined && offset !== null) {
+        if (pageIndex !== undefined && pageIndex !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>offset, 'offset');
+            <any>pageIndex, 'pageIndex');
         }
-        if (limit !== undefined && limit !== null) {
+        if (pageSize !== undefined && pageSize !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>limit, 'limit');
+            <any>pageSize, 'pageSize');
+        }
+        if (isSortedAscending !== undefined && isSortedAscending !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>isSortedAscending, 'IsSortedAscending');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -153,7 +158,7 @@ export class StorageService {
             }
         }
 
-        return this.httpClient.get<StorageList>(`${this.configuration.basePath}/api/storage`,
+        return this.httpClient.get<StringPage>(`${this.configuration.basePath}/api/storage`,
             {
                 context: localVarHttpContext,
                 params: localVarQueryParameters,

@@ -1,5 +1,6 @@
 using Hippo.Application.Certificates.Commands;
 using Hippo.Application.Certificates.Queries;
+using Hippo.Core.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,9 +11,21 @@ namespace Hippo.Web.Api;
 public class CertificateController : ApiControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<CertificatesVm>> Index()
+    public async Task<ActionResult<Page<CertificateItem>>> Index(
+        [FromQuery] string searchText = "",
+        [FromQuery] int pageIndex = 0,
+        [FromQuery] int pageSize = 50,
+        [FromQuery] string sortBy = "Name",
+        [FromQuery] bool IsSortedAscending = true)
     {
-        return await Mediator.Send(new GetCertificatesQuery());
+        return await Mediator.Send(new GetCertificatesQuery()
+        {
+            SearchText = searchText,
+            PageIndex = pageIndex,
+            PageSize = pageSize,
+            SortBy = sortBy,
+            IsSortedAscending = IsSortedAscending
+        });
     }
 
     [HttpGet("export")]

@@ -9,11 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { CertificateDto } from './certificateDto';
+import { RevisionItem } from './revisionItem';
 import { ChannelRevisionSelectionStrategy } from './channelRevisionSelectionStrategy';
+import { CertificateItem } from './certificateItem';
 import { AppSummaryDto } from './appSummaryDto';
 import { EnvironmentVariableDto } from './environmentVariableDto';
-import { RevisionDto } from './revisionDto';
 
 
 export interface ChannelItem { 
@@ -22,9 +22,9 @@ export interface ChannelItem {
     name: string;
     domain: string;
     revisionSelectionStrategy: ChannelRevisionSelectionStrategy;
-    activeRevision?: RevisionDto;
+    activeRevision?: RevisionItem;
     rangeRule?: string | null;
-    certificate?: CertificateDto;
+    certificate?: CertificateItem;
     environmentVariables: Array<EnvironmentVariableDto>;
     appSummary?: AppSummaryDto;
 }

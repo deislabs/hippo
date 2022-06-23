@@ -27,10 +27,11 @@ public class GetChannelsQueryHandler : IRequestHandler<GetChannelsQuery, Page<Ch
     {
         var channels = await _context.Channels
                 .ProjectTo<ChannelItem>(_mapper.ConfigurationProvider)
-                .OrderBy(c => c.Name)
+                .Where(c => c.Name.Contains(request.SearchText))
                 .ToListAsync(cancellationToken);
 
         var channelsPage = channels
+            .SortBy(request.SortBy, request.IsSortedAscending)
             .Skip(request.Offset)
             .Take(request.PageSize)
             .ToList();

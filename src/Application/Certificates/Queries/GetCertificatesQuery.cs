@@ -1,16 +1,17 @@
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Hippo.Application.Common.Interfaces;
+using Hippo.Core.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hippo.Application.Certificates.Queries;
 
-public class GetCertificatesQuery : IRequest<CertificatesVm>
+public class GetCertificatesQuery : SearchFilter, IRequest<Page<CertificateItem>>
 {
 }
 
-public class GetCertificatesQueryHandler : IRequestHandler<GetCertificatesQuery, CertificatesVm>
+public class GetCertificatesQueryHandler : IRequestHandler<GetCertificatesQuery, Page<CertificateItem>>
 {
     private readonly IApplicationDbContext _context;
 
@@ -22,14 +23,25 @@ public class GetCertificatesQueryHandler : IRequestHandler<GetCertificatesQuery,
         _mapper = mapper;
     }
 
-    public async Task<CertificatesVm> Handle(GetCertificatesQuery request, CancellationToken cancellationToken)
+    public async Task<Page<CertificateItem>> Handle(GetCertificatesQuery request, CancellationToken cancellationToken)
     {
-        return new CertificatesVm
+        var certificates = await _context.Certificates
+                .ProjectTo<CertificateItem>(_mapper.ConfigurationProvider)
+                .Where(c => c.Name.Contains(request.SearchText))
+                .ToListAsync(cancellationToken);
+
+        var certificateItems = certificates
+            .SortBy(request.SortBy, request.IsSortedAscending)
+            .Skip(request.Offset)
+            .Take(request.PageSize)
+            .ToList();
+
+        return new Page<CertificateItem>
         {
-            Certificates = await _context.Certificates
-                .ProjectTo<CertificateDto>(_mapper.ConfigurationProvider)
-                .OrderBy(c => c.Name)
-                .ToListAsync(cancellationToken)
+            Items = certificateItems,
+            PageIndex = request.PageIndex,
+            PageSize = request.PageSize,
+            TotalItems = certificates.Count()
         };
     }
 }

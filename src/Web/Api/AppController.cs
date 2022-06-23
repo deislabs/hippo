@@ -11,9 +11,21 @@ namespace Hippo.Web.Api;
 public class AppController : ApiControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<Page<AppItem>>> Index()
+    public async Task<ActionResult<Page<AppItem>>> Index(
+        [FromQuery] string searchText = "",
+        [FromQuery] int pageIndex = 0,
+        [FromQuery] int pageSize = 50,
+        [FromQuery] string sortBy = "Name",
+        [FromQuery] bool IsSortedAscending = true)
     {
-        return await Mediator.Send(new GetAppsQuery());
+        return await Mediator.Send(new GetAppsQuery()
+        {
+            SearchText = searchText,
+            PageIndex = pageIndex,
+            PageSize = pageSize,
+            SortBy = sortBy,
+            IsSortedAscending = IsSortedAscending
+        });
     }
 
     [HttpGet("export")]

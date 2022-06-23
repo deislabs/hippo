@@ -9,10 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { RevisionDto } from './revisionDto';
+import { RevisionItem } from './RevisionItem';
 
 
 export interface RevisionsVm { 
-    revisions: Array<RevisionDto>;
+    revisions: Array<RevisionItem>;
 }
 

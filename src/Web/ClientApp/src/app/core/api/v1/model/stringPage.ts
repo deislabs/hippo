@@ -9,13 +9,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { RevisionComponentDto } from './revisionComponentDto';
 
 
-export interface RevisionItem { 
-    id: string;
-    appId: string;
-    revisionNumber: string;
-    readonly components: Array<RevisionComponentDto>;
+export interface StringPage { 
+    items?: Array<string> | null;
+    totalItems?: number;
+    pageIndex?: number | null;
+    pageSize?: number | null;
+    readonly isLastPage?: boolean | null;
 }
 

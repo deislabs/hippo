@@ -1,15 +1,16 @@
 using Hippo.Application.Common.Interfaces;
 using Hippo.Application.Jobs;
+using Hippo.Core.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hippo.Application.Channels.Queries;
 
-public class GetJobStatusesQuery : IRequest<List<ChannelJobStatus>>
+public class GetJobStatusesQuery : SearchFilter, IRequest<Page<ChannelJobStatusItem>>
 {
 }
 
-public class GetChannelStatusesQueryHandler : IRequestHandler<GetJobStatusesQuery, List<ChannelJobStatus>>
+public class GetChannelStatusesQueryHandler : IRequestHandler<GetJobStatusesQuery, Page<ChannelJobStatusItem>>
 {
     private readonly IApplicationDbContext _context;
     private readonly IJobService _jobService;
@@ -21,18 +22,27 @@ public class GetChannelStatusesQueryHandler : IRequestHandler<GetJobStatusesQuer
         _jobService = jobService;
     }
 
-    public async Task<List<ChannelJobStatus>> Handle(GetJobStatusesQuery request, CancellationToken cancellationToken)
+    public async Task<Page<ChannelJobStatusItem>> Handle(GetJobStatusesQuery request, CancellationToken cancellationToken)
     {
         var jobs = _jobService.GetJobs()?.ToList();
-        var entities = await _context.Channels
-            .Select(c => new ChannelJobStatus
+        var entities = (await _context.Channels
+            .Select(c => new ChannelJobStatusItem
             {
                 ChannelId = c.Id,
                 Status = GetJobStatus(jobs, c.Id),
             })
-            .ToListAsync(cancellationToken);
+            .ToListAsync(cancellationToken))
+            .Skip(request.Offset)
+            .Take(request.PageSize)
+            .ToList();
 
-        return entities;
+        return new Page<ChannelJobStatusItem>
+        {
+            Items = entities,
+            PageIndex = request.PageIndex,
+            PageSize = request.PageSize,
+            TotalItems = jobs == null ? 0 : jobs.Count
+        };
     }
 
     private static JobStatus GetJobStatus(List<Job>? jobs, Guid jobId)

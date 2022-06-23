@@ -32,11 +32,11 @@ public class ChannelItem : IMapFrom<Channel>
     [Required]
     public ChannelRevisionSelectionStrategy RevisionSelectionStrategy { get; set; }
 
-    public RevisionDto? ActiveRevision { get; set; }
+    public RevisionItem? ActiveRevision { get; set; }
 
     public string? RangeRule { get; set; }
 
-    public CertificateDto? Certificate { get; set; }
+    public CertificateItem? Certificate { get; set; }
 
     [Required]
     public IList<EnvironmentVariableDto> EnvironmentVariables { get; set; }

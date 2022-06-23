@@ -12,9 +12,21 @@ namespace Hippo.Web.Api;
 public class ChannelController : ApiControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<Page<ChannelItem>>> Index()
+    public async Task<ActionResult<Page<ChannelItem>>> Index(
+        [FromQuery] string searchText = "",
+        [FromQuery] int pageIndex = 0,
+        [FromQuery] int pageSize = 50,
+        [FromQuery] string sortBy = "Name",
+        [FromQuery] bool IsSortedAscending = true)
     {
-        return await Mediator.Send(new GetChannelsQuery());
+        return await Mediator.Send(new GetChannelsQuery()
+        {
+            SearchText = searchText,
+            PageIndex = pageIndex,
+            PageSize = pageSize,
+            SortBy = sortBy,
+            IsSortedAscending = IsSortedAscending
+        });
     }
 
     [HttpGet("{id}")]

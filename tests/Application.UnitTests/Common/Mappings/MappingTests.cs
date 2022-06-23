@@ -34,13 +34,13 @@ public class MappingTests
 
     [Theory]
     [InlineData(typeof(App), typeof(AppRecord))]
-    [InlineData(typeof(Certificate), typeof(CertificateDto))]
+    [InlineData(typeof(Certificate), typeof(CertificateItem))]
     [InlineData(typeof(Certificate), typeof(CertificateRecord))]
     [InlineData(typeof(Channel), typeof(ChannelItem))]
     [InlineData(typeof(Channel), typeof(ChannelRecord))]
     [InlineData(typeof(EnvironmentVariable), typeof(EnvironmentVariableDto))]
     [InlineData(typeof(EnvironmentVariable), typeof(EnvironmentVariableRecord))]
-    [InlineData(typeof(Revision), typeof(RevisionDto))]
+    [InlineData(typeof(Revision), typeof(RevisionItem))]
     [InlineData(typeof(Revision), typeof(RevisionRecord))]
     public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination)
     {

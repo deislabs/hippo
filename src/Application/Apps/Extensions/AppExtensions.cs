@@ -35,26 +35,4 @@ public static class AppExtensions
             StorageId = app.StorageId
         };
     }
-
-    public static IOrderedEnumerable<AppItem> Sort(this List<AppItem> appItems, string sortBy, bool isSortedAscending)
-    {
-        IOrderedEnumerable<AppItem> orderedAppItems;
-        var sortPropInfo = typeof(AppItem).GetProperty(sortBy);
-
-        if (sortPropInfo == null)
-        {
-            throw new Exception("Sort field does it exist");
-        }
-
-        if (isSortedAscending)
-        {
-            orderedAppItems = appItems.OrderBy(app => sortPropInfo.GetValue(app, null));
-        }
-        else
-        {
-            orderedAppItems = appItems.OrderByDescending(app => sortPropInfo.GetValue(app, null));
-        }
-
-        return orderedAppItems;
-    }
 }

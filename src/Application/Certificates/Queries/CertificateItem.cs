@@ -5,9 +5,9 @@ using Hippo.Core.Entities;
 
 namespace Hippo.Application.Certificates.Queries;
 
-public class CertificateDto : IMapFrom<Certificate>
+public class CertificateItem : IMapFrom<Certificate>
 {
-    public CertificateDto()
+    public CertificateItem()
     {
         Channels = new List<ChannelItem>();
     }

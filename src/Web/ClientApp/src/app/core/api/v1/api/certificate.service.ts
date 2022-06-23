@@ -19,7 +19,7 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
-import { CertificatesVm } from '../model/certificatesVm';
+import { CertificateItemPage } from '../model/certificateItemPage';
 // @ts-ignore
 import { CreateCertificateCommand } from '../model/createCertificateCommand';
 // @ts-ignore
@@ -150,13 +150,40 @@ export class CertificateService {
     }
 
     /**
+     * @param searchText 
+     * @param pageIndex 
+     * @param pageSize 
+     * @param sortBy 
+     * @param isSortedAscending 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiCertificateGet(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<CertificatesVm>;
-    public apiCertificateGet(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<CertificatesVm>>;
-    public apiCertificateGet(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<CertificatesVm>>;
-    public apiCertificateGet(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+    public apiCertificateGet(searchText?: string, pageIndex?: number, pageSize?: number, sortBy?: string, isSortedAscending?: boolean, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<CertificateItemPage>;
+    public apiCertificateGet(searchText?: string, pageIndex?: number, pageSize?: number, sortBy?: string, isSortedAscending?: boolean, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpResponse<CertificateItemPage>>;
+    public apiCertificateGet(searchText?: string, pageIndex?: number, pageSize?: number, sortBy?: string, isSortedAscending?: boolean, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<HttpEvent<CertificateItemPage>>;
+    public apiCertificateGet(searchText?: string, pageIndex?: number, pageSize?: number, sortBy?: string, isSortedAscending?: boolean, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext}): Observable<any> {
+
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (searchText !== undefined && searchText !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>searchText, 'searchText');
+        }
+        if (pageIndex !== undefined && pageIndex !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>pageIndex, 'pageIndex');
+        }
+        if (pageSize !== undefined && pageSize !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>pageSize, 'pageSize');
+        }
+        if (sortBy !== undefined && sortBy !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>sortBy, 'sortBy');
+        }
+        if (isSortedAscending !== undefined && isSortedAscending !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>isSortedAscending, 'IsSortedAscending');
+        }
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -198,9 +225,10 @@ export class CertificateService {
             }
         }
 
-        return this.httpClient.get<CertificatesVm>(`${this.configuration.basePath}/api/certificate`,
+        return this.httpClient.get<CertificateItemPage>(`${this.configuration.basePath}/api/certificate`,
             {
                 context: localVarHttpContext,
+                params: localVarQueryParameters,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,

@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Hippo.Application.Channels.Queries;
 
-public class ChannelJobStatus
+public class ChannelJobStatusItem
 {
     [Required]
     public Guid ChannelId { get; set; }

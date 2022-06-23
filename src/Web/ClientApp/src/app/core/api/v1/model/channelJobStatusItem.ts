@@ -9,13 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { RevisionComponentDto } from './revisionComponentDto';
+import { JobStatus } from './jobStatus';
 
 
-export interface RevisionItem { 
-    id: string;
-    appId: string;
-    revisionNumber: string;
-    readonly components: Array<RevisionComponentDto>;
+export interface ChannelJobStatusItem { 
+    channelId: string;
+    status: JobStatus;
 }
 

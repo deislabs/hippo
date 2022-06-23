@@ -15,7 +15,7 @@ export class NewComponent implements OnInit {
   faDatabase = faDatabase;
   error: any = null;
   appForm!: FormGroup;
-  storageList: Array<any> = [];
+  storageList: string[] | null | undefined = [];
   loading = false;
   storageListLoading = false;
   submitted = false;
@@ -55,7 +55,7 @@ export class NewComponent implements OnInit {
         this.queryStorages(query).subscribe(
         {
           next: (response) => {
-            this.storageList = response.storages;
+            this.storageList = response.items;
             this.storageListLoading = false;
           },
           error: (error) => {

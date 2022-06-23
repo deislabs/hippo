@@ -1,5 +1,6 @@
 using Hippo.Application.Revisions.Commands;
 using Hippo.Application.Revisions.Queries;
+using Hippo.Core.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,9 +11,15 @@ namespace Hippo.Web.Api;
 public class RevisionController : ApiControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<RevisionsVm>> Index()
+    public async Task<ActionResult<Page<RevisionItem>>> Index(
+        [FromQuery] int pageIndex = 0,
+        [FromQuery] int pageSize = 50)
     {
-        return await Mediator.Send(new GetRevisionsQuery());
+        return await Mediator.Send(new GetRevisionsQuery()
+        {
+            PageIndex = pageIndex,
+            PageSize = pageSize
+        });
     }
 
     [HttpGet("export")]

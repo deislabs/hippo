@@ -9,13 +9,14 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { RevisionComponentDto } from './revisionComponentDto';
+import { ChannelItem } from './channelItem';
 
 
-export interface RevisionItem { 
+export interface CertificateItem { 
     id: string;
-    appId: string;
-    revisionNumber: string;
-    readonly components: Array<RevisionComponentDto>;
+    name: string;
+    publicKey: string;
+    privateKey: string;
+    channels: Array<ChannelItem>;
 }
 

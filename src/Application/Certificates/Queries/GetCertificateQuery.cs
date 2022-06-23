@@ -9,13 +9,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Hippo.Application.Certificates.Queries;
 
-public class GetCertificateQuery : IRequest<CertificateDto>
+public class GetCertificateQuery : IRequest<CertificateItem>
 {
     [Required]
     public Guid Id { get; set; }
 }
 
-public class GetCertificateQueryHandler : IRequestHandler<GetCertificateQuery, CertificateDto>
+public class GetCertificateQueryHandler : IRequestHandler<GetCertificateQuery, CertificateItem>
 {
     private readonly IApplicationDbContext _context;
 
@@ -27,11 +27,11 @@ public class GetCertificateQueryHandler : IRequestHandler<GetCertificateQuery, C
         _mapper = mapper;
     }
 
-    public async Task<CertificateDto> Handle(GetCertificateQuery request, CancellationToken cancellationToken)
+    public async Task<CertificateItem> Handle(GetCertificateQuery request, CancellationToken cancellationToken)
     {
         var entity = await _context.Certificates
             .Where(a => a.Id == request.Id)
-            .ProjectTo<CertificateDto>(_mapper.ConfigurationProvider)
+            .ProjectTo<CertificateItem>(_mapper.ConfigurationProvider)
             .FirstOrDefaultAsync(cancellationToken);
 
         if (entity is null)
