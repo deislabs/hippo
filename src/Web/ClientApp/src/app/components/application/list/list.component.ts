@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AppDto, AppService, JobStatus, JobStatusService } from 'src/app/core/api/v1';
 import { faPlus, faCircle } from '@fortawesome/free-solid-svg-icons';
-import { interval, startWith, Subscription, switchMap } from 'rxjs';
 
 @Component({
 	selector: 'app-application-list',
@@ -24,12 +23,15 @@ export class ListComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.refreshData();
-		
-		this.jobStatusService.apiJobstatusGet().subscribe((res) => this.updateChannelStatuses(res));
+		this.getJobStatus();
 
 		this.interval = setInterval(() => {
-			this.jobStatusService.apiJobstatusGet().subscribe((res) => this.updateChannelStatuses(res));
+			this.getJobStatus();
 		}, this.timeInterval);		
+	}
+
+	getJobStatus(): void {
+		this.jobStatusService.apiJobstatusGet().subscribe((res) => this.updateChannelStatuses(res));
 	}
 
 	updateChannelStatuses(channelStatusList: any) {
