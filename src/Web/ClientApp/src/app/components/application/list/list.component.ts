@@ -16,21 +16,20 @@ export class ListComponent implements OnInit {
 
 	jobStatus = JobStatus;
 
-	timeInterval!: Subscription;
+	interval: any = null;
+	timeInterval: number = 5000;
 
 	constructor(private readonly appService: AppService,
 		private readonly jobStatusService: JobStatusService) { }
 
 	ngOnInit(): void {
 		this.refreshData();
+		
+		this.jobStatusService.apiJobstatusGet().subscribe((res) => this.updateChannelStatuses(res));
 
-		this.timeInterval = interval(5000)
-		.pipe(
-			startWith(0),
-			switchMap(() => this.jobStatusService.apiJobstatusGet())
-		).subscribe(res => {
-			this.updateChannelStatuses(res);
-		})
+		this.interval = setInterval(() => {
+			this.jobStatusService.apiJobstatusGet().subscribe((res) => this.updateChannelStatuses(res));
+		}, this.timeInterval);		
 	}
 
 	updateChannelStatuses(channelStatusList: any) {
@@ -70,6 +69,7 @@ export class ListComponent implements OnInit {
 	}
 
 	ngOnDestroy(): void {
+		clearInterval(this.interval);
 		this
 	}
 
