@@ -1,0 +1,9 @@
+<article *ngIf="visible" class="message is-success success-margins">
+    <div class="message-header">
+        <p>Success</p>
+    </div>
+    <div class="message-body">
+        Environment Variables Saved
+    </div>
+    <progress *ngIf="counter" class="progress is-x-small is-success" [attr.value]="counter" [attr.max]="intervalResetTime"></progress>
+</article>
