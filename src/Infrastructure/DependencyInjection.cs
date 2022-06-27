@@ -56,7 +56,7 @@ public static class DependencyInjection
 
         services.AddTransient<ITokenService, TokenService>();
 
-        services.AddTransient<IBindleService, BindleService>();
+        services.AddTransient<IStorageService, BindleService>();
 
         services.AddTransient<IJobService, NomadJobService>();
 
