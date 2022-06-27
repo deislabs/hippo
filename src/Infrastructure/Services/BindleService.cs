@@ -1,13 +1,13 @@
 using Deislabs.Bindle;
 using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
-using Hippo.Application.Common.Interfaces.BindleService;
+using Hippo.Application.Common.Interfaces.StorageService;
 using Microsoft.Extensions.Configuration;
 using Tomlyn;
 
 namespace Hippo.Infrastructure.Services;
 
-public class BindleService : IBindleService
+public class BindleService : IStorageService
 {
     private BindleClient _client { get; set; }
 

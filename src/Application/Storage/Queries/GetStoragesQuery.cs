@@ -19,16 +19,16 @@ public class GetStoragesQuery : IRequest<StorageList>
 
 public class ExportStoragesQueryHandler : IRequestHandler<GetStoragesQuery, StorageList>
 {
-    private readonly IBindleService _bindleService;
+    private readonly IStorageService _storageService;
 
-    public ExportStoragesQueryHandler(IBindleService bindleService)
+    public ExportStoragesQueryHandler(IStorageService storageService)
     {
-        _bindleService = bindleService;
+        _storageService = storageService;
     }
 
     public async Task<StorageList> Handle(GetStoragesQuery request, CancellationToken cancellationToken)
     {
-        var storages = await _bindleService.QueryAvailableStorages(request.QueryString, request.Offset, request.Limit);
+        var storages = await _storageService.QueryAvailableStorages(request.QueryString, request.Offset, request.Limit);
         var vm = new StorageList(storages.ToList());
         return vm;
     }
