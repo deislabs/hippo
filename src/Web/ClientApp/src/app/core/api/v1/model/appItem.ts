@@ -9,9 +9,14 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { AppChannelListItem } from './appChannelListItem';
 
 
-export interface StorageList { 
-    storages: Array<string>;
+export interface AppItem { 
+    name: string;
+    id: string;
+    storageId: string;
+    description?: string | null;
+    channels: Array<AppChannelListItem>;
 }
 

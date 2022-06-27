@@ -1,5 +1,5 @@
 import { Component, OnChanges, Input } from '@angular/core';
-import { ChannelDto, ChannelService, RevisionDto } from 'src/app/core/api/v1';
+import { ChannelItem, ChannelService, RevisionItem } from 'src/app/core/api/v1';
 import { ComponentTypes } from 'src/app/_helpers/constants';
 import { faCheckCircle, faTimesCircle, faNetworkWired } from '@fortawesome/free-solid-svg-icons';
 import { Router } from '@angular/router';
@@ -11,8 +11,8 @@ import { Router } from '@angular/router';
 })
 export class OverviewComponent implements OnChanges {
 	@Input() channelId = '';
-	channel!: ChannelDto;
-	activeRevision!: RevisionDto | undefined;
+	channel!: ChannelItem;
+	activeRevision!: RevisionItem | undefined;
 	icons = { faCheckCircle, faTimesCircle, faNetworkWired };
 	types = ComponentTypes;
 	protocol = window.location.protocol;
@@ -28,7 +28,7 @@ export class OverviewComponent implements OnChanges {
 
 	refreshData() {
 		this.loading = true;
-		this.channelService.apiChannelChannelIdGet(this.channelId).subscribe({
+		this.channelService.apiChannelIdGet(this.channelId).subscribe({
 			next: (channel) => {
 				!channel ? this.router.navigate(['/404']) : this.channel = channel;
 				this.activeRevision = channel.activeRevision;

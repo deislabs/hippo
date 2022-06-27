@@ -9,11 +9,14 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { JobStatus } from './jobStatus';
+import { ChannelItem } from './channelItem';
 
 
-export interface ChannelJobStatus { 
-    channelId: string;
-    status: JobStatus;
+export interface CertificateItem { 
+    id: string;
+    name: string;
+    publicKey: string;
+    privateKey: string;
+    channels: Array<ChannelItem>;
 }
 

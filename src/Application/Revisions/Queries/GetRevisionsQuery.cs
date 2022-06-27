@@ -1,16 +1,17 @@
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Hippo.Application.Common.Interfaces;
+using Hippo.Core.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hippo.Application.Revisions.Queries;
 
-public class GetRevisionsQuery : IRequest<RevisionsVm>
+public class GetRevisionsQuery : SearchFilter, IRequest<Page<RevisionItem>>
 {
 }
 
-public class GetRevisionsQueryHandler : IRequestHandler<GetRevisionsQuery, RevisionsVm>
+public class GetRevisionsQueryHandler : IRequestHandler<GetRevisionsQuery, Page<RevisionItem>>
 {
     private readonly IApplicationDbContext _context;
 
@@ -22,14 +23,23 @@ public class GetRevisionsQueryHandler : IRequestHandler<GetRevisionsQuery, Revis
         _mapper = mapper;
     }
 
-    public async Task<RevisionsVm> Handle(GetRevisionsQuery request, CancellationToken cancellationToken)
+    public async Task<Page<RevisionItem>> Handle(GetRevisionsQuery request, CancellationToken cancellationToken)
     {
-        return new RevisionsVm
+        var revisions = await _context.Revisions
+                .ProjectTo<RevisionItem>(_mapper.ConfigurationProvider)
+                .ToListAsync(cancellationToken);
+
+        var revisionsPage = revisions
+            .Skip(request.Offset)
+            .Take(request.PageSize)
+            .ToList();
+
+        return new Page<RevisionItem>
         {
-            Revisions = await _context.Revisions
-                .ProjectTo<RevisionDto>(_mapper.ConfigurationProvider)
-                .OrderBy(r => r.RevisionNumber)
-                .ToListAsync(cancellationToken)
+            Items = revisionsPage,
+            PageIndex = request.PageIndex,
+            PageSize = request.PageSize,
+            TotalItems = revisions.Count
         };
     }
 }

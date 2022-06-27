@@ -9,14 +9,14 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { AppChannelSummary } from './appChannelSummary';
+import { AppItem } from './appItem';
 
 
-export interface AppDto { 
-    id: string;
-    name: string;
-    storageId: string;
-    description: string;
-    channels: Array<AppChannelSummary>;
+export interface AppItemPage { 
+    items?: Array<AppItem> | null;
+    totalItems?: number;
+    pageIndex?: number | null;
+    pageSize?: number | null;
+    readonly isLastPage?: boolean | null;
 }
 

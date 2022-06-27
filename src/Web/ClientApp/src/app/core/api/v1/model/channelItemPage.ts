@@ -9,10 +9,14 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { CertificateDto } from './certificateDto';
+import { ChannelItem } from './channelItem';
 
 
-export interface CertificatesVm { 
-    certificates: Array<CertificateDto>;
+export interface ChannelItemPage { 
+    items?: Array<ChannelItem> | null;
+    totalItems?: number;
+    pageIndex?: number | null;
+    pageSize?: number | null;
+    readonly isLastPage?: boolean | null;
 }
 

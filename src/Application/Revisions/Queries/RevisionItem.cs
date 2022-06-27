@@ -4,7 +4,7 @@ using Hippo.Core.Entities;
 
 namespace Hippo.Application.Revisions.Queries;
 
-public class RevisionDto : IMapFrom<Revision>
+public class RevisionItem : IMapFrom<Revision>
 {
     [Required]
     public Guid Id { get; set; }

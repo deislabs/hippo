@@ -14,6 +14,5 @@
 export interface UpdateAppCommand { 
     id: string;
     name: string;
-    storageId: string;
 }
 

@@ -6,7 +6,7 @@ public class AppSummaryDto
 {
     public AppSummaryDto()
     {
-        Channels = new List<AppChannelSummary>();
+        Channels = new List<AppChannelListItem>();
     }
 
     [Required]
@@ -19,5 +19,5 @@ public class AppSummaryDto
     public string StorageId { get; set; } = "";
 
     [Required]
-    public IList<AppChannelSummary> Channels { get; set; }
+    public IList<AppChannelListItem> Channels { get; set; }
 }

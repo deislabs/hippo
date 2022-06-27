@@ -9,10 +9,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ChannelDto } from './channelDto';
+import { RevisionComponentDto } from './revisionComponentDto';
 
 
-export interface ChannelsVm { 
-    channels: Array<ChannelDto>;
+export interface RevisionItem { 
+    id: string;
+    appId: string;
+    revisionNumber: string;
+    readonly components: Array<RevisionComponentDto>;
 }
 
