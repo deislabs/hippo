@@ -21,7 +21,7 @@ public static class HealthCheckExtensions
 			{
 				var result = JsonConvert.SerializeObject(
 					new HealthInfo
-                    {
+					{
 						ServiceName = "Hippo",
 						Status = report.Status.ToString(),
 						Subservices = new List<HealthInfo>(
