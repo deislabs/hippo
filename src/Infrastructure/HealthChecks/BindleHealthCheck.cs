@@ -13,16 +13,16 @@ public class BindleHealthCheck : IHealthCheck
         _client = new BindleClient(configuration.GetConnectionString("Bindle"));
     }
 
-    public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
+    public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = default)
     {
         try
         {
-            _client.QueryInvoices();
-            return Task.FromResult(HealthCheckResult.Healthy("A healthy result."));
+            await _client.QueryInvoices();
+            return HealthCheckResult.Healthy("A healthy result.");
         }
         catch (Exception)
         {
-            return Task.FromResult(new HealthCheckResult(context.Registration.FailureStatus, "An unhealthy result."));
+            return new HealthCheckResult(context.Registration.FailureStatus, "An unhealthy result.");
         }
     }
 }
