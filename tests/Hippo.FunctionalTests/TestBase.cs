@@ -73,7 +73,7 @@ public class TestBase : IDisposable
         services.AddTransient(provider =>
             Mock.Of<ICurrentUserService>(s => s.UserId == _currentUserId));
 
-        services.AddTransient<IBindleService, FakeBindleService>();
+        services.AddTransient<IStorageService, FakeStorageService>();
 
         services.AddSingleton<IJobService, NullNomadService>();
 

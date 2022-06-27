@@ -11,16 +11,16 @@ public class UpdateRevisionDetails : INotificationHandler<CreatedEvent<Revision>
 {
     private readonly ILogger<UpdateRevisionDetails> _logger;
 
-    private readonly IBindleService _bindleService;
+    private readonly IStorageService _storageService;
 
     private readonly IMediator _mediator;
 
     public UpdateRevisionDetails(ILogger<UpdateRevisionDetails> logger,
-        IBindleService bindleService,
+        IStorageService storageService,
         IMediator mediator)
     {
         _logger = logger;
-        _bindleService = bindleService;
+        _storageService = storageService;
         _mediator = mediator;
     }
 
@@ -30,7 +30,7 @@ public class UpdateRevisionDetails : INotificationHandler<CreatedEvent<Revision>
 
         _logger.LogInformation($"Hippo Domain Event: {notification.GetType().Name}");
 
-        var revisionDetails = await _bindleService.GetRevisionDetails($"{revision.App.StorageId}/{revision.RevisionNumber}");
+        var revisionDetails = await _storageService.GetRevisionDetails($"{revision.App.StorageId}/{revision.RevisionNumber}");
         var command = new UpdateRevisionDetailsCommand
         {
             RevisionId = revision.Id,

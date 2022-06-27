@@ -19,12 +19,12 @@ public class ImportRevisionsCommand : IRequest
 public class ImportRevisionsCommandHandler : IRequestHandler<ImportRevisionsCommand>
 {
     private readonly IApplicationDbContext _context;
-    private readonly IBindleService _bindleService;
+    private readonly IStorageService _storageService;
 
-    public ImportRevisionsCommandHandler(IApplicationDbContext context, IBindleService bindleService)
+    public ImportRevisionsCommandHandler(IApplicationDbContext context, IStorageService storageService)
     {
         _context = context;
-        _bindleService = bindleService;
+        _storageService = storageService;
     }
 
     public async Task<Unit> Handle(ImportRevisionsCommand request, CancellationToken cancellationToken)
@@ -35,7 +35,7 @@ public class ImportRevisionsCommandHandler : IRequestHandler<ImportRevisionsComm
             return Unit.Value;
         }
 
-        var allAppRevisions = await _bindleService.GetBindleRevisionNumbers(app.StorageId);
+        var allAppRevisions = await _storageService.GetBindleRevisionNumbers(app.StorageId);
         var existingRevisions = _context.Revisions.Where(r => r.AppId == app.Id).ToList();
         var missingRevisions = GetMissingRevisions(allAppRevisions, existingRevisions, app.Id);
 

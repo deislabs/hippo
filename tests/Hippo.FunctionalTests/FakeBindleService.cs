@@ -1,11 +1,11 @@
 ﻿using Hippo.Application.Common.Interfaces;
-using Hippo.Application.Common.Interfaces.BindleService;
+using Hippo.Application.Common.Interfaces.StorageService;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Hippo.FunctionalTests;
 
-internal class FakeBindleService : IBindleService
+internal class FakeStorageService : IStorageService
 {
     public async Task<RevisionDetails> GetRevisionDetails(string revisionId)
     {
