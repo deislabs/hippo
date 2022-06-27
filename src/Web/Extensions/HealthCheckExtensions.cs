@@ -8,9 +8,9 @@ namespace Hippo.Web.Extensions;
 public static class HealthCheckExtensions
 {
 	public static IEndpointConventionBuilder MapCustomHealthChecks(
-		this IEndpointRouteBuilder endpoints)
+		this IEndpointRouteBuilder endpoints, string endpoint)
 	{
-		return endpoints.MapHealthChecks("/healthz", new HealthCheckOptions
+		return endpoints.MapHealthChecks(endpoint, new HealthCheckOptions
 		{
 			ResultStatusCodes =
 			{
