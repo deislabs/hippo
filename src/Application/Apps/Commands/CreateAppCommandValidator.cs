@@ -8,17 +8,17 @@ namespace Hippo.Application.Apps.Commands;
 public class CreateAppCommandValidator : AbstractValidator<CreateAppCommand>
 {
     private readonly IApplicationDbContext _context;
-    private readonly IBindleService _bindleService;
+    private readonly IStorageService _storageService;
 
     private readonly Regex validName = new Regex("^[a-zA-Z0-9-_]*$");
 
     private readonly Regex validStorageId = new Regex("^[a-zA-Z0-9-_./]*$");
 
     public CreateAppCommandValidator(IApplicationDbContext context,
-        IBindleService bindleService)
+        IStorageService storageService)
     {
         _context = context;
-        _bindleService = bindleService;
+        _storageService = storageService;
 
         RuleFor(a => a.Name)
             .NotEmpty().WithMessage("Name is required.")
@@ -41,7 +41,7 @@ public class CreateAppCommandValidator : AbstractValidator<CreateAppCommand>
 
     public async Task<bool> ExistInBindleServer(CreateAppCommand model, string storageId, CancellationToken cancellationToken)
     {
-        var storages = await _bindleService.QueryAvailableStorages(storageId, 0, null);
+        var storages = await _storageService.QueryAvailableStorages(storageId, 0, null);
 
         return storages.Contains(storageId);
     }

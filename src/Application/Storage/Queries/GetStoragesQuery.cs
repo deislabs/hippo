@@ -10,21 +10,21 @@ public class GetStoragesQuery : SearchFilter, IRequest<Page<string>>
 
 public class ExportStoragesQueryHandler : IRequestHandler<GetStoragesQuery, Page<string>>
 {
-    private readonly IBindleService _bindleService;
+    private readonly IStorageService _storageService;
 
-    public ExportStoragesQueryHandler(IBindleService bindleService)
+    public ExportStoragesQueryHandler(IStorageService storageService)
     {
-        _bindleService = bindleService;
+        _storageService = storageService;
     }
 
     public async Task<Page<string>> Handle(GetStoragesQuery request, CancellationToken cancellationToken)
     {
-        var storages = (await _bindleService
+        var storages = (await _storageService
             .QueryAvailableStorages(request.SearchText, (ulong)request.Offset, request.PageSize))
             .ScalarSortBy(request.IsSortedAscending)
             .ToList();
 
-        var totalCount = (await _bindleService
+        var totalCount = (await _storageService
             .QueryAvailableStorages(request.SearchText, null, null))
             .Count();
 

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AppChannelListItem, AppItem, AppItemPage, AppService, ChannelJobStatusItem, ChannelJobStatusItemPage, JobStatus, JobStatusService } from 'src/app/core/api/v1';
 import { faPlus, faCircle } from '@fortawesome/free-solid-svg-icons';
-import { interval, startWith, Subscription, switchMap } from 'rxjs';
 
 @Component({
 	selector: 'app-application-list',
@@ -17,21 +16,23 @@ export class ListComponent implements OnInit {
 
 	jobStatus = JobStatus;
 
-	timeInterval!: Subscription;
+	interval: any = null;
+	timeInterval: number = 5000;
 
 	constructor(private readonly appService: AppService,
 		private readonly jobStatusService: JobStatusService) { }
 
 	ngOnInit(): void {
 		this.refreshData();
+		this.getJobStatus();
 
-		this.timeInterval = interval(5000)
-		.pipe(
-			startWith(0),
-			switchMap(() => this.jobStatusService.apiJobstatusGet())
-		).subscribe((res: ChannelJobStatusItemPage) => {
-			this.statuses = res.items;
-		})
+		this.interval = setInterval(() => {
+			this.getJobStatus();
+		}, this.timeInterval);		
+	}
+
+	getJobStatus(): void {
+		this.jobStatusService.apiJobstatusGet().subscribe((res) => this.statuses = res.items);
 	}
 
 	getChannelStatus(channel: AppChannelListItem): JobStatus | undefined {
@@ -65,6 +66,7 @@ export class ListComponent implements OnInit {
 	}
 
 	ngOnDestroy(): void {
+		clearInterval(this.interval);
 		this
 	}
 

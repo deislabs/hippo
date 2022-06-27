@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Hippo.Application.Common.Interfaces.BindleService;
+namespace Hippo.Application.Common.Interfaces.StorageService;
 
 public class RevisionTrigger
 {

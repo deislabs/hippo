@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Hippo.Application.Common.Exceptions;
 using Hippo.Application.Common.Interfaces;
-using Hippo.Application.Common.Interfaces.BindleService;
+using Hippo.Application.Common.Interfaces.StorageService;
 using Hippo.Core.Events;
 using MediatR;
 using Microsoft.EntityFrameworkCore;

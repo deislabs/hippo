@@ -1,8 +1,8 @@
-using Hippo.Application.Common.Interfaces.BindleService;
+using Hippo.Application.Common.Interfaces.StorageService;
 
 namespace Hippo.Application.Common.Interfaces;
 
-public interface IBindleService
+public interface IStorageService
 {
     public Task<RevisionDetails> GetRevisionDetails(string revisionId);
 
