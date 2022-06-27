@@ -1,5 +1,3 @@
-using System.Text;
-using System.Text.Json.Serialization;
 using FluentValidation.AspNetCore;
 using Hippo.Application;
 using Hippo.Application.Common.Config;
@@ -8,6 +6,7 @@ using Hippo.Infrastructure;
 using Hippo.Infrastructure.Data;
 using Hippo.Infrastructure.HealthChecks;
 using Hippo.Infrastructure.Identity;
+using Hippo.Web.Extensions;
 using Hippo.Web.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +14,8 @@ using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Text;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -116,7 +117,7 @@ app.UseEndpoints(endpoints =>
         "API",
         "api/{controller}/{action}/{id?}"
     );
-    endpoints.MapHealthChecks("/healthz");
+    endpoints.MapCustomHealthChecks("/healthz");
     endpoints.MapSwagger();
 });
 
