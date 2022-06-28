@@ -68,8 +68,8 @@ export class ListComponent implements OnChanges {
 			return;
 		}
 
-		this.channelService.apiChannelChannelIdEnvironmentVariablesPut(this.channelId, {
-			environmentVariables: this.envvars
+		this.channelService.apiChannelIdPatch(this.channelId, {
+			environmentVariables: this.envvars,
 		}).subscribe({
 			next: () => {
 				this.refreshData();

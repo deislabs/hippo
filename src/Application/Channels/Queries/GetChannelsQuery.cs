@@ -1,16 +1,17 @@
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Hippo.Application.Common.Interfaces;
+using Hippo.Core.Models;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hippo.Application.Channels.Queries;
 
-public class GetChannelsQuery : IRequest<ChannelsVm>
+public class GetChannelsQuery : SearchFilter, IRequest<Page<ChannelItem>>
 {
 }
 
-public class GetChannelsQueryHandler : IRequestHandler<GetChannelsQuery, ChannelsVm>
+public class GetChannelsQueryHandler : IRequestHandler<GetChannelsQuery, Page<ChannelItem>>
 {
     private readonly IApplicationDbContext _context;
 
@@ -22,14 +23,25 @@ public class GetChannelsQueryHandler : IRequestHandler<GetChannelsQuery, Channel
         _mapper = mapper;
     }
 
-    public async Task<ChannelsVm> Handle(GetChannelsQuery request, CancellationToken cancellationToken)
+    public async Task<Page<ChannelItem>> Handle(GetChannelsQuery request, CancellationToken cancellationToken)
     {
-        return new ChannelsVm
+        var channels = await _context.Channels
+                .ProjectTo<ChannelItem>(_mapper.ConfigurationProvider)
+                .Where(c => request.SearchText == null || c.Name.Contains(request.SearchText))
+                .ToListAsync(cancellationToken);
+
+        var channelsPage = channels
+            .SortBy(request.SortBy, request.IsSortedAscending)
+            .Skip(request.Offset)
+            .Take(request.PageSize)
+            .ToList();
+
+        return new Page<ChannelItem>
         {
-            Channels = await _context.Channels
-                .ProjectTo<ChannelDto>(_mapper.ConfigurationProvider)
-                .OrderBy(c => c.Name)
-                .ToListAsync(cancellationToken)
+            Items = channelsPage,
+            PageIndex = request.PageIndex,
+            PageSize = request.PageSize,
+            TotalItems = channels.Count
         };
     }
 }

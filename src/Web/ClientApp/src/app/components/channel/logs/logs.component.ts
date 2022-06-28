@@ -22,7 +22,7 @@ export class LogsComponent implements OnChanges {
   refreshData(): void {
     this.loading = true;
     
-    this.channelService.apiChannelLogsChannelIdGet(this.channelId).subscribe({
+    this.channelService.apiChannelLogsIdGet(this.channelId).subscribe({
       next: (vm) => {
         this.logs = vm.logs;
         this.loading = false;

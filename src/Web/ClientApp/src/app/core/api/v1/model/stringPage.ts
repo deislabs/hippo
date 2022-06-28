@@ -9,14 +9,13 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ChannelDto } from './channelDto';
 
 
-export interface CertificateDto { 
-    id: string;
-    name: string;
-    publicKey: string;
-    privateKey: string;
-    channels: Array<ChannelDto>;
+export interface StringPage { 
+    items?: Array<string> | null;
+    totalItems?: number;
+    pageIndex?: number | null;
+    pageSize?: number | null;
+    readonly isLastPage?: boolean | null;
 }
 

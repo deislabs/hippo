@@ -34,6 +34,7 @@ builder.Services.AddHealthChecks()
             .AddCheck<NomadHealthCheck>("Nomad");
 
 builder.Services.AddControllers()
+    .AddNewtonsoftJson()
     .AddJsonOptions(opt =>
     {
         opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());

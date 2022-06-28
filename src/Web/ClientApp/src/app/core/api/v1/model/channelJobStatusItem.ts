@@ -9,10 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { RevisionDto } from './revisionDto';
+import { JobStatus } from './jobStatus';
 
 
-export interface RevisionsVm { 
-    revisions: Array<RevisionDto>;
+export interface ChannelJobStatusItem { 
+    channelId: string;
+    status: JobStatus;
 }
 

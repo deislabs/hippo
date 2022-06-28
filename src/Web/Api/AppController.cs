@@ -1,5 +1,6 @@
 using Hippo.Application.Apps.Commands;
 using Hippo.Application.Apps.Queries;
+using Hippo.Core.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,9 +11,21 @@ namespace Hippo.Web.Api;
 public class AppController : ApiControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<AppsVm>> Index()
+    public async Task<ActionResult<Page<AppItem>>> Index(
+        [FromQuery] string searchText = "",
+        [FromQuery] int pageIndex = 0,
+        [FromQuery] int pageSize = 50,
+        [FromQuery] string sortBy = "Name",
+        [FromQuery] bool IsSortedAscending = true)
     {
-        return await Mediator.Send(new GetAppsQuery());
+        return await Mediator.Send(new GetAppsQuery()
+        {
+            SearchText = searchText,
+            PageIndex = pageIndex,
+            PageSize = pageSize,
+            SortBy = sortBy,
+            IsSortedAscending = IsSortedAscending
+        });
     }
 
     [HttpGet("export")]

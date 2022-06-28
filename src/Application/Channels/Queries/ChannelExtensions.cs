@@ -5,9 +5,9 @@ namespace Hippo.Application.Channels.Queries;
 
 public static class ChannelExtensions
 {
-    public static AppChannelSummary ToApplicationChannelSummaryDto(this Channel channel)
+    public static AppChannelListItem ToApplicationChannelSummaryDto(this Channel channel)
     {
-        return new AppChannelSummary
+        return new AppChannelListItem
         {
             Id = channel.Id,
             Name = channel.Name,
@@ -15,7 +15,7 @@ public static class ChannelExtensions
         };
     }
 
-    public static IList<AppChannelSummary> ToChannelSummaryDtoList(this IList<Channel> channels)
+    public static IList<AppChannelListItem> ToChannelSummaryDtoList(this IList<Channel> channels)
     {
         return channels.OrderBy(c => c.Created).Select(x => x.ToApplicationChannelSummaryDto()).ToList();
     }

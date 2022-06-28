@@ -9,11 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { UpdateEnvironmentVariableDto } from './updateEnvironmentVariableDto';
+import { ChannelRevisionSelectionStrategy } from './channelRevisionSelectionStrategy';
 
 
-export interface UpdateChannelEnvironmentVariablesCommand { 
-    channelId?: string;
-    environmentVariables?: Array<UpdateEnvironmentVariableDto> | null;
+export interface ChannelRevisionSelectionStrategyField { 
+    value?: ChannelRevisionSelectionStrategy;
 }
 

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AppDto, AppService, JobStatus, JobStatusService } from 'src/app/core/api/v1';
+import { AppChannelListItem, AppItem, AppItemPage, AppService, ChannelJobStatusItem, ChannelJobStatusItemPage, JobStatus, JobStatusService } from 'src/app/core/api/v1';
 import { faPlus, faCircle } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -8,7 +8,8 @@ import { faPlus, faCircle } from '@fortawesome/free-solid-svg-icons';
 	styleUrls: ['./list.component.css']
 })
 export class ListComponent implements OnInit {
-	apps: any[] = [];
+	apps: AppItem[] | null | undefined = [];
+	statuses: ChannelJobStatusItem[] | null | undefined = [];
 	error: any = null;
 	faPlus = faPlus;
 	faCircle = faCircle;
@@ -31,21 +32,15 @@ export class ListComponent implements OnInit {
 	}
 
 	getJobStatus(): void {
-		this.jobStatusService.apiJobstatusGet().subscribe((res) => this.updateChannelStatuses(res));
+		this.jobStatusService.apiJobstatusGet().subscribe((res) => this.statuses = res.items);
 	}
 
-	updateChannelStatuses(channelStatusList: any) {
-		let channels = this.getAllChannels();
-
-		channelStatusList.forEach((channelStatus: any) => {
-			let channel = channels.filter((channel: any) => channel.id === channelStatus.channelId)[0];
-			if (channel) {
-				channel.status = channelStatus.status;
-			}
-		});
+	getChannelStatus(channel: AppChannelListItem): JobStatus | undefined {
+		let channelStatus = this.statuses?.filter((status: ChannelJobStatusItem) => channel.id === status.channelId)[0];
+		return channelStatus?.status;
 	}
 
-	getStatusColor(status: JobStatus) {
+	getStatusColor(status: JobStatus | undefined) {
 		switch(status){
 			case JobStatus.Unknown:
 				return 'gray';
@@ -61,9 +56,9 @@ export class ListComponent implements OnInit {
 	}
 
 	getAllChannels() {
-		let allChannels: any = [];
+		let allChannels: AppChannelListItem[] = [];
 
-		this.apps.forEach(app => {
+		this.apps?.forEach((app: AppItem) => {
 			allChannels = allChannels.concat(app.channels);
 		})
 
@@ -78,7 +73,7 @@ export class ListComponent implements OnInit {
 	refreshData() {
 		this.appService.apiAppGet().subscribe(
 			{
-				next: vm => (this.apps = vm.apps),
+				next: vm => (this.apps = vm.items),
 				error: (error) => {
 					console.log(error);
 					this.error = error;

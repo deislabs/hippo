@@ -9,13 +9,10 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { AppChannelListItem } from './appChannelListItem';
+import { UpdateEnvironmentVariableDto } from './updateEnvironmentVariableDto';
 
 
-export interface AppSummaryDto { 
-    id: string;
-    name: string;
-    storageId: string;
-    channels: Array<AppChannelListItem>;
+export interface UpdateEnvironmentVariableDtoListField { 
+    value?: Array<UpdateEnvironmentVariableDto> | null;
 }
 

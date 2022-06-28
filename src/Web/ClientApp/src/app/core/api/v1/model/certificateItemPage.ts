@@ -9,11 +9,14 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { CertificateItem } from './certificateItem';
 
 
-export interface ApplicationChannelSummary { 
-    id: string;
-    name: string;
-    activeRevisionNumber?: string | null;
+export interface CertificateItemPage { 
+    items?: Array<CertificateItem> | null;
+    totalItems?: number;
+    pageIndex?: number | null;
+    pageSize?: number | null;
+    readonly isLastPage?: boolean | null;
 }
 

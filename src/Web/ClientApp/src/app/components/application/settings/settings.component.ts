@@ -47,7 +47,6 @@ export class SettingsComponent implements OnInit {
     if (this.editAppName !== this.channel.appSummary.name) {
       this.appService.apiAppIdPut(this.channel.appSummary.id, {
         id: this.channel.appSummary.id,
-        storageId: this.channel.appSummary.storageId,
         name: this.editAppName
       }).subscribe({
         next: () => {
@@ -104,7 +103,7 @@ export class SettingsComponent implements OnInit {
 
   editChannelInfo(channel: any) {
     if (this.editChannelName !== this.channel.name) {
-      this.channelService.apiChannelChannelIdGet(channel.id).subscribe({
+      this.channelService.apiChannelIdGet(channel.id).subscribe({
         next: (channelDetails) => {
           this.channelService.apiChannelIdPut(channel.id, {
             id: channelDetails.id,

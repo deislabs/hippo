@@ -13,9 +13,9 @@ public static class AppExtensions
             .FirstOrDefault();
     }
 
-    public static AppDto ToAppDto(this App app)
+    public static AppItem ToAppItem(this App app)
     {
-        return new AppDto
+        return new AppItem
         {
             Id = app.Id,
             Name = app.Name,

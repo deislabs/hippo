@@ -9,13 +9,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Hippo.Application.Apps.Queries;
 
-public class GetAppQuery : IRequest<AppDto>
+public class GetAppQuery : IRequest<AppItem>
 {
     [Required]
     public Guid Id { get; set; }
 }
 
-public class GetAppQueryHandler : IRequestHandler<GetAppQuery, AppDto>
+public class GetAppQueryHandler : IRequestHandler<GetAppQuery, AppItem>
 {
     private readonly IApplicationDbContext _context;
 
@@ -27,7 +27,7 @@ public class GetAppQueryHandler : IRequestHandler<GetAppQuery, AppDto>
         _mapper = mapper;
     }
 
-    public async Task<AppDto> Handle(GetAppQuery request, CancellationToken cancellationToken)
+    public async Task<AppItem> Handle(GetAppQuery request, CancellationToken cancellationToken)
     {
         var entity = await _context.Apps
             .Where(a => a.Id == request.Id)
@@ -40,6 +40,6 @@ public class GetAppQueryHandler : IRequestHandler<GetAppQuery, AppDto>
             throw new NotFoundException(nameof(App), request.Id);
         }
 
-        return entity.ToAppDto();
+        return entity.ToAppItem();
     }
 }
