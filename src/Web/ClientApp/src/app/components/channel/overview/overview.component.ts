@@ -51,4 +51,14 @@ export class OverviewComponent implements OnChanges {
 			}
 		});
 	}
+
+	getRedirectRoute(route: string): string {
+		if (route) {
+			if (route.slice(-3) === '...') {
+				return route.slice(0, -3);
+			} else {
+				return route;
+			}
+		} else return '';
+	}
 }
