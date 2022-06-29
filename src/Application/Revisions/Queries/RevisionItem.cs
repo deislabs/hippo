@@ -18,6 +18,8 @@ public class RevisionItem : IMapFrom<Revision>
     [Required]
     public IList<RevisionComponentDto> Components { get; private set; } = new List<RevisionComponentDto>();
 
+    public string? Type { get; set; }
+
     public string OrderKey()
     {
         if (SemVer.Version.TryParse(RevisionNumber, out var version))

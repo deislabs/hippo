@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ChannelService, ChannelItem, AppChannelListItem } from 'src/app/core/api/v1';
-import { ApplicationTabs } from 'src/app/_helpers/constants';
+import { ApplicationTabs, ComponentTypes } from 'src/app/_helpers/constants';
 import { faCog, faStream, faFilter, faChartBar, faAngleDown } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -16,6 +16,7 @@ export class ChannelComponent implements OnInit {
 	selectedChannel!: AppChannelListItem;
 	isSelectClicked: boolean = false;
 	tabs = ApplicationTabs;
+	types = ComponentTypes;
 	activeTab = ApplicationTabs.Overview;
 	protocol = window.location.protocol;
 
