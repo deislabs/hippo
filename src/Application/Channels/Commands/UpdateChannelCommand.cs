@@ -18,7 +18,7 @@ public class UpdateChannelCommand : IRequest
     public string Name { get; set; } = "";
 
     [Required]
-    public string Domain { get; set; } = "";
+    public string? Domain { get; set; }
 
     [Required]
     public ChannelRevisionSelectionStrategy RevisionSelectionStrategy { get; set; }
@@ -26,6 +26,8 @@ public class UpdateChannelCommand : IRequest
     public string? RangeRule { get; set; }
 
     public Guid? ActiveRevisionId { get; set; }
+
+    public DateTime LastPublishDate { get; set; }
 
     public Guid? CertificateId { get; set; }
 }
