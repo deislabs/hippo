@@ -1,23 +1,28 @@
-import { Component } from '@angular/core';
-import { SessionService } from 'src/app/_services/session.service';
+import { Component, OnInit } from '@angular/core';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { SessionService } from 'src/app/_services/session.service';
 
 @Component({
-    selector: 'app-navbar',
-    templateUrl: './navbar.component.html',
-    styleUrls: ['./navbar.component.css']
+	selector: 'app-navbar',
+	templateUrl: './navbar.component.html',
+	styleUrls: ['./navbar.component.css']
 })
-export class NavbarComponent {
-    faUser = faUser;
+export class NavbarComponent implements OnInit {
+	faUser = faUser;
 
-    constructor(private readonly sessionService: SessionService) {}
+	constructor(
+		private readonly sessionService: SessionService	) { }
 
-    isLoggedIn(): boolean {
-        return this.sessionService.isLoggedIn();
-    }
+	ngOnInit(): void {
+	}
 
-    logout(): void {
-        this.sessionService.logout();
-        location.reload();
-    }
+	isLoggedIn(): boolean {
+		return this.sessionService.isLoggedIn();
+	}
+
+	logout(): void {
+		this.sessionService.logout();
+		location.reload();
+	}
+
 }

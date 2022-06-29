@@ -2,35 +2,36 @@ import { Component, Input, OnChanges } from '@angular/core';
 import { ChannelService } from 'src/app/core/api/v1';
 
 @Component({
-    selector: 'app-logs',
-    templateUrl: './logs.component.html',
-    styleUrls: ['./logs.component.css']
+  selector: 'app-logs',
+  templateUrl: './logs.component.html',
+  styleUrls: ['./logs.component.css']
 })
 export class LogsComponent implements OnChanges {
-    @Input() appId = '';
-    @Input() channelId = '';
+  @Input() appId = '';
+  @Input() channelId = '';
 
-    logs: Array<string> = [];
-    loading = false;
+  logs: Array<string> = [];
+  loading: boolean = false;
 
-    constructor(private readonly channelService: ChannelService) {}
+  constructor(private readonly channelService: ChannelService) { }
 
-    ngOnChanges(): void {
-        this.refreshData();
-    }
+  ngOnChanges(): void {
+    this.refreshData();
+  }
 
-    refreshData(): void {
-        this.loading = true;
+  refreshData(): void {
+    this.loading = true;
+    
+    this.channelService.apiChannelLogsIdGet(this.channelId).subscribe({
+      next: (vm) => {
+        this.logs = vm.logs;
+        this.loading = false;
+      },
+      error: (error) => {
+        console.log(error);
+        this.loading = false;
+      }
+    });
+  }
 
-        this.channelService.apiChannelLogsIdGet(this.channelId).subscribe({
-            next: (vm) => {
-                this.logs = vm.logs;
-                this.loading = false;
-            },
-            error: (error) => {
-                console.log(error);
-                this.loading = false;
-            }
-        });
-    }
 }

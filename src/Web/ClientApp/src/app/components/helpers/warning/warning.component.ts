@@ -1,57 +1,53 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { Component, OnInit, Input, OnChanges } from '@angular/core';
 
 @Component({
-    selector: 'app-warning',
-    templateUrl: './warning.component.html',
-    styleUrls: ['./warning.component.css']
+	selector: 'app-warning',
+	templateUrl: './warning.component.html',
+	styleUrls: ['./warning.component.css']
 })
 export class WarningComponent implements OnInit, OnChanges {
-    @Input() error: any = null;
-    errors: Array<string> = [];
+	@Input() error: any = null;
+	errors: Array<string> = [];
 
-    ngOnInit(): void {
-        this.errors = this.parseError(this.error);
-    }
+	constructor() { }
 
-    ngOnChanges(): void {
-        this.errors = this.parseError(this.error);
-    }
+	ngOnInit(): void {
+		this.errors = this.parseError(this.error);
+	}
 
-    closeWarning() {
-        this.errors = [];
-    }
+	ngOnChanges(): void {
+		this.errors = this.parseError(this.error);
+	}
 
-    parseError(error: any) {
-        if (error) {
-            if (error.error) {
-                const err = error.error;
-                if (err.errors) {
-                    return this.parseValidationErrors(err.errors);
-                } else {
-                    return [
-                        err.detail ? err.detail : `${err.status} - ${err.title}`
-                    ];
-                }
-            }
-            return [
-                error.message
-                    ? error.message
-                    : error.status
-                    ? `${error.status} - ${error.statusText}`
-                    : 'Server error'
-            ];
-        } else {
-            return [];
-        }
-    }
+	closeWarning() {
+		this.errors = [];
+	}
 
-    parseValidationErrors(error: any) {
-        const errors = [];
-        for (const prop in error) {
-            if (Object.prototype.hasOwnProperty.call(error, prop)) {
-                errors.push(...error[prop]);
-            }
-        }
-        return errors;
-    }
+  	parseError(error: any) {
+		if (error) {
+			if (error.error)
+			{
+				var err = error.error;
+				if (err.errors) {
+					return this.parseValidationErrors(err.errors);
+				} else {
+					return [(err.detail) ? err.detail : `${err.status} - ${err.title}`]
+				}
+			}
+			return [(error.message) ? error.message : error.status ? `${error.status} - ${error.statusText}` : 'Server error'];
+		} else {
+			return [];
+		}
+	}	
+
+	parseValidationErrors(error: any) {
+		let errors = [];
+		for (var prop in error) {
+			if (error.hasOwnProperty(prop)) {
+				errors.push(...error[prop]);
+			}
+		}
+		return errors;
+	}
+
 }
