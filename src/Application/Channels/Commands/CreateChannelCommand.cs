@@ -82,6 +82,10 @@ public class CreateChannelCommandHandler : IRequestHandler<CreateChannelCommand,
         }
 
         entity.ActiveRevision = await GetActiveRevision(request, entity, cancellationToken);
+        if (entity.ActiveRevision is not null)
+        {
+            entity.LastPublishAt = DateTime.Now;
+        }
 
         entity.AddDomainEvent(new CreatedEvent<Channel>(entity));
 

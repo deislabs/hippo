@@ -1,3 +1,4 @@
+using Hippo.Application.Channels.Commands;
 using Hippo.Application.Common.Interfaces;
 using Hippo.Application.Rules;
 using Hippo.Core.Entities;
@@ -15,10 +16,15 @@ public class RevisionCreatedEventHandler : INotificationHandler<CreatedEvent<Rev
 
     private readonly IApplicationDbContext _context;
 
-    public RevisionCreatedEventHandler(ILogger<RevisionCreatedEventHandler> logger, IApplicationDbContext context)
+    private readonly IMediator _mediator;
+
+    public RevisionCreatedEventHandler(ILogger<RevisionCreatedEventHandler> logger,
+        IApplicationDbContext context,
+        IMediator mediator)
     {
         _logger = logger;
         _context = context;
+        _mediator = mediator;
     }
 
     public async Task Handle(CreatedEvent<Revision> notification, CancellationToken cancellationToken)
@@ -39,13 +45,20 @@ public class RevisionCreatedEventHandler : INotificationHandler<CreatedEvent<Rev
                 if (activeRevision is not null && activeRevision != channel.ActiveRevision && activeRevision.RevisionNumber == notification.Entity.RevisionNumber)
                 {
                     _logger.LogInformation($"Channel {channel.Id} changed its active revision to {activeRevision.Id}");
-                    channel.ActiveRevision = activeRevision;
-                    channel.AddDomainEvent(new ModifiedEvent<Channel>(channel));
-                    // TODO Call a command instead of updating the database in the EventHandler
+                    
+                    await _mediator.Send(new UpdateChannelCommand
+                    {
+                        Id = channel.Id,
+                        ActiveRevisionId = activeRevision.Id,
+                        LastPublishDate = DateTime.Now,
+                        CertificateId = channel.CertificateId,
+                        Domain = channel.Domain,
+                        Name = channel.Name,
+                        RangeRule = channel.RangeRule,
+                        RevisionSelectionStrategy = channel.RevisionSelectionStrategy,
+                    }, cancellationToken);
                 }
             }
         }
-
-        await _context.SaveChangesAsync(cancellationToken);
     }
 }
