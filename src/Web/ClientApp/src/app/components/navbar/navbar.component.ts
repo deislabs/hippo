@@ -9,6 +9,7 @@ import { SessionService } from 'src/app/_services/session.service';
 })
 export class NavbarComponent implements OnInit {
 	faUser = faUser;
+	menuActive = '';
 
 	constructor(
 		private readonly sessionService: SessionService	) { }
@@ -25,4 +26,7 @@ export class NavbarComponent implements OnInit {
 		location.reload();
 	}
 
+	onBurger(): void {
+		this.menuActive = (this.menuActive == '' ? 'is-active' : '');
+	}
 }
