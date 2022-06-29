@@ -1,10 +1,7 @@
-import {
-    Component,
-    Injectable,
-} from '@angular/core';
+import { Component, Injectable } from '@angular/core';
 
 @Injectable({
-    providedIn: 'root',
+    providedIn: 'root'
 })
 @Component({
     selector: 'app-success',
@@ -12,13 +9,11 @@ import {
     styleUrls: ['./success.component.css']
 })
 export class SuccessComponent {
-    visible: boolean = false;
-    counter: number = 0;
-    interval: any = null;
-    intervalResetTime: number = 3000;
-    incrementInterval: number = 10;
-
-    constructor() {}
+    visible = false;
+    counter = 0;
+    interval: any;
+    intervalResetTime = 3000;
+    incrementInterval = 10;
 
     show(): void {
         clearInterval(this.interval);
@@ -41,7 +36,7 @@ export class SuccessComponent {
                 this.visible = false;
                 this.counter = 0;
             } else {
-                this.counter += this.incrementInterval ;
+                this.counter += this.incrementInterval;
             }
         }, this.incrementInterval);
     }
