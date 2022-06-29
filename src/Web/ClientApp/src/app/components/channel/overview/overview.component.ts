@@ -3,6 +3,8 @@ import { ChannelItem, ChannelService, RevisionItem } from 'src/app/core/api/v1';
 import { ComponentTypes } from 'src/app/_helpers/constants';
 import { faCheckCircle, faTimesCircle, faNetworkWired } from '@fortawesome/free-solid-svg-icons';
 import { Router } from '@angular/router';
+import TimeAgo from 'javascript-time-ago';
+import en from 'javascript-time-ago/locale/en'
 
 @Component({
 	selector: 'channel-overview',
@@ -13,14 +15,19 @@ export class OverviewComponent implements OnChanges {
 	@Input() channelId = '';
 	channel!: ChannelItem;
 	activeRevision!: RevisionItem | undefined;
+	publishedAt: string | null | undefined;
 	icons = { faCheckCircle, faTimesCircle, faNetworkWired };
 	types = ComponentTypes;
 	protocol = window.location.protocol;
 	loading: boolean = false;
+	timeAgo: any;
 
 	constructor(
 		private readonly channelService: ChannelService,
-		private router: Router) { }
+		private router: Router) { 
+			TimeAgo.addDefaultLocale(en);
+			this.timeAgo = new TimeAgo('en-US');
+		}
 
 	ngOnChanges(): void {
 		this.refreshData();
@@ -31,7 +38,11 @@ export class OverviewComponent implements OnChanges {
 		this.channelService.apiChannelIdGet(this.channelId).subscribe({
 			next: (channel) => {
 				!channel ? this.router.navigate(['/404']) : this.channel = channel;
-				this.activeRevision = channel.activeRevision;
+				this.activeRevision = channel.activeRevision;				
+				if (channel.lastPublishAt) {
+					const date = new Date(channel.lastPublishAt);
+					this.publishedAt = this.timeAgo.format(date);
+				}
 				this.loading = false;
 			},
 			error: (error) => {
