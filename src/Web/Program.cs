@@ -103,12 +103,8 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// enable swagger in development.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 
 app.UseEndpoints(endpoints =>
