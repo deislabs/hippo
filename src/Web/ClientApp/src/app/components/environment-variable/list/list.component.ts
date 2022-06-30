@@ -1,6 +1,6 @@
 import {
     ChannelService,
-    EnvironmentVariableService
+    EnvironmentVariableService,
 } from 'src/app/core/api/v1';
 import { Component, Input, OnChanges, ViewChild } from '@angular/core';
 import { faBackward, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
@@ -10,7 +10,7 @@ import { SuccessComponent } from '../../helpers/success/success.component';
 @Component({
     selector: 'app-environment-variable-list',
     templateUrl: './list.component.html',
-    styleUrls: ['./list.component.css']
+    styleUrls: ['./list.component.css'],
 })
 export class ListComponent implements OnChanges {
     @Input() channelId = '';
@@ -40,7 +40,7 @@ export class ListComponent implements OnChanges {
         this.envvars.push({
             channelId: this.channelId,
             key: '',
-            value: ''
+            value: '',
         });
     }
 
@@ -84,7 +84,7 @@ export class ListComponent implements OnChanges {
 
         this.channelService
             .apiChannelIdPatch(this.channelId, {
-                environmentVariables: this.envvars
+                environmentVariables: this.envvars,
             })
             .subscribe({
                 next: () => {
@@ -95,7 +95,7 @@ export class ListComponent implements OnChanges {
                 error: (err) => {
                     console.log(err.error.errors);
                     this.error = err;
-                }
+                },
             });
     }
 
@@ -131,7 +131,7 @@ export class ListComponent implements OnChanges {
                         id: v.id,
                         channelId: v.channelId,
                         key: v.key,
-                        value: v.value
+                        value: v.value,
                     };
                 });
                 this.loading = false;
@@ -140,7 +140,7 @@ export class ListComponent implements OnChanges {
                 console.log(err.error.errors);
                 this.error = err;
                 this.loading = false;
-            }
+            },
         });
     }
 }

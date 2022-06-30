@@ -3,7 +3,7 @@ import {
     HttpEvent,
     HttpHandler,
     HttpInterceptor,
-    HttpRequest
+    HttpRequest,
 } from '@angular/common/http';
 import { Observable, catchError, throwError } from 'rxjs';
 import { Injectable } from '@angular/core';
@@ -25,8 +25,8 @@ export class AuthInterceptor implements HttpInterceptor {
                     // For now, just redirect to the login page. Hippo needs to support token refresh requests.
                     this.router.navigate(['/login'], {
                         queryParams: {
-                            returnUrl: this.router.routerState.snapshot.url
-                        }
+                            returnUrl: this.router.routerState.snapshot.url,
+                        },
                     });
                 }
                 return throwError(() => error);

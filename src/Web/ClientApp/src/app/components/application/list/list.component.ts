@@ -4,7 +4,7 @@ import {
     AppService,
     ChannelJobStatusItem,
     JobStatus,
-    JobStatusService
+    JobStatusService,
 } from 'src/app/core/api/v1';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { faCircle, faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -12,7 +12,7 @@ import { faCircle, faPlus } from '@fortawesome/free-solid-svg-icons';
 @Component({
     selector: 'app-application-list',
     templateUrl: './list.component.html',
-    styleUrls: ['./list.component.css']
+    styleUrls: ['./list.component.css'],
 })
 export class ListComponent implements OnInit, OnDestroy {
     apps: AppItem[] | null | undefined = [];
@@ -89,7 +89,7 @@ export class ListComponent implements OnInit, OnDestroy {
             error: (error) => {
                 console.log(error);
                 this.error = error;
-            }
+            },
         });
     }
 }

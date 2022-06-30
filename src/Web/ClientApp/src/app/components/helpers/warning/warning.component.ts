@@ -3,7 +3,7 @@ import { Component, Input, OnChanges, OnInit } from '@angular/core';
 @Component({
     selector: 'app-warning',
     templateUrl: './warning.component.html',
-    styleUrls: ['./warning.component.css']
+    styleUrls: ['./warning.component.css'],
 })
 export class WarningComponent implements OnInit, OnChanges {
     @Input() error: any = null;
@@ -29,7 +29,9 @@ export class WarningComponent implements OnInit, OnChanges {
                     return this.parseValidationErrors(err.errors);
                 } else {
                     return [
-                        err.detail ? err.detail : `${err.status} - ${err.title}`
+                        err.detail
+                            ? err.detail
+                            : `${err.status} - ${err.title}`,
                     ];
                 }
             }
@@ -38,7 +40,7 @@ export class WarningComponent implements OnInit, OnChanges {
                     ? error.message
                     : error.status
                     ? `${error.status} - ${error.statusText}`
-                    : 'Server error'
+                    : 'Server error',
             ];
         } else {
             return [];

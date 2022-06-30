@@ -3,7 +3,7 @@ import {
     AppService,
     ChannelRevisionSelectionStrategy,
     ChannelService,
-    StorageService
+    StorageService,
 } from 'src/app/core/api/v1';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -11,7 +11,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import {
     faDatabase,
     faSearch,
-    faTable
+    faTable,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { Subject } from 'rxjs';
@@ -19,7 +19,7 @@ import { Subject } from 'rxjs';
 @Component({
     selector: 'app-application-new',
     templateUrl: './new.component.html',
-    styleUrls: ['./new.component.css']
+    styleUrls: ['./new.component.css'],
 })
 export class NewComponent implements OnInit {
     faDatabase = faDatabase;
@@ -48,7 +48,7 @@ export class NewComponent implements OnInit {
     ngOnInit() {
         this.appForm = new FormGroup({
             name: new FormControl('', [Validators.required]),
-            storageId: new FormControl('', [Validators.required])
+            storageId: new FormControl('', [Validators.required]),
         });
 
         this.registerDebouncedStorageQuery();
@@ -73,7 +73,7 @@ export class NewComponent implements OnInit {
                         this.error = error;
                         this.storageList = [];
                         this.storageListLoading = false;
-                    }
+                    },
                 });
             });
     }
@@ -90,7 +90,7 @@ export class NewComponent implements OnInit {
     selectStorage(storage: string) {
         this.selectedStorage = storage;
         this.appForm.patchValue({
-            storageId: storage
+            storageId: storage,
         });
     }
 
@@ -109,7 +109,7 @@ export class NewComponent implements OnInit {
         this.appService
             .apiAppPost({
                 name: this.f['name'].value,
-                storageId: this.f['storageId'].value
+                storageId: this.f['storageId'].value,
             })
             .subscribe({
                 next: (appId) => {
@@ -122,7 +122,7 @@ export class NewComponent implements OnInit {
                             rangeRule: '*',
                             domain: `${this.f['name'].value}.${window.location.hostname}`
                                 .replace('_', '-')
-                                .toLowerCase()
+                                .toLowerCase(),
                         })
                         .subscribe({
                             next: () => this.router.navigate(['/']),
@@ -131,14 +131,14 @@ export class NewComponent implements OnInit {
                                 this.error = error;
                                 // we can still continue at this point; the user will just have to add a channel to the app.
                                 this.router.navigate(['/']);
-                            }
+                            },
                         });
                 },
                 error: (error) => {
                     console.log(error);
                     this.error = error;
                     this.loading = false;
-                }
+                },
             });
     }
 }

@@ -8,7 +8,7 @@ import { SessionService } from 'src/app/_services/session.service';
 @Component({
     selector: 'app-account-login',
     templateUrl: './login.component.html',
-    styleUrls: ['./login.component.css']
+    styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
     error: any = null;
@@ -34,8 +34,8 @@ export class LoginComponent implements OnInit {
             username: new FormControl('', [Validators.required]),
             password: new FormControl('', [
                 Validators.required,
-                Validators.minLength(8)
-            ])
+                Validators.minLength(8),
+            ]),
         });
 
         // get return url from route parameters or default to '/'
@@ -62,7 +62,7 @@ export class LoginComponent implements OnInit {
                     console.log(error);
                     this.error = error;
                     this.loading = false;
-                }
+                },
             });
     }
 }

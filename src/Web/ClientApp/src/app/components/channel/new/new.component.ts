@@ -1,7 +1,7 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     ChannelRevisionSelectionStrategy,
-    ChannelService
+    ChannelService,
 } from 'src/app/core/api/v1';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -9,7 +9,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 @Component({
     selector: 'app-channel-new',
     templateUrl: './new.component.html',
-    styleUrls: ['./new.component.css']
+    styleUrls: ['./new.component.css'],
 })
 export class NewComponent implements OnInit {
     @Input() appId: any = {};
@@ -33,7 +33,7 @@ export class NewComponent implements OnInit {
 
     ngOnInit() {
         this.channelForm = new FormGroup({
-            name: new FormControl('', [Validators.required])
+            name: new FormControl('', [Validators.required]),
         });
 
         // get return url from route parameters or default to '/'
@@ -66,7 +66,7 @@ export class NewComponent implements OnInit {
                 name: this.f['name'].value,
                 revisionSelectionStrategy:
                     ChannelRevisionSelectionStrategy.UseRangeRule,
-                rangeRule: '*'
+                rangeRule: '*',
             })
             .subscribe({
                 next: (channelId) => {
@@ -76,7 +76,7 @@ export class NewComponent implements OnInit {
                     console.log(error);
                     this.error = error;
                     this.loading = false;
-                }
+                },
             });
     }
 }

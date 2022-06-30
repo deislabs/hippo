@@ -2,7 +2,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
     AppChannelListItem,
     ChannelItem,
-    ChannelService
+    ChannelService,
 } from 'src/app/core/api/v1';
 import { Component, OnInit } from '@angular/core';
 import {
@@ -10,14 +10,14 @@ import {
     faChartBar,
     faCog,
     faFilter,
-    faStream
+    faStream,
 } from '@fortawesome/free-solid-svg-icons';
 import { ApplicationTabs } from 'src/app/_helpers/constants';
 
 @Component({
     selector: 'app-channel',
     templateUrl: './channel.component.html',
-    styleUrls: ['./channel.component.css']
+    styleUrls: ['./channel.component.css'],
 })
 export class ChannelComponent implements OnInit {
     icons = { faCog, faStream, faFilter, faChartBar, faAngleDown };

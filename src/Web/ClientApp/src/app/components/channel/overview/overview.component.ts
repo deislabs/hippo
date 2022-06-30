@@ -3,7 +3,7 @@ import { Component, Input, OnChanges } from '@angular/core';
 import {
     faCheckCircle,
     faNetworkWired,
-    faTimesCircle
+    faTimesCircle,
 } from '@fortawesome/free-solid-svg-icons';
 
 import { ComponentTypes } from 'src/app/_helpers/constants';
@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 @Component({
     selector: 'app-channel-overview',
     templateUrl: './overview.component.html',
-    styleUrls: ['./overview.component.css']
+    styleUrls: ['./overview.component.css'],
 })
 export class OverviewComponent implements OnChanges {
     @Input() channelId = '';
@@ -45,7 +45,7 @@ export class OverviewComponent implements OnChanges {
             error: (error) => {
                 console.log(error);
                 this.loading = false;
-            }
+            },
         });
     }
 }

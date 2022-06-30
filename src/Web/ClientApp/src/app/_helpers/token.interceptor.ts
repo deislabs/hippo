@@ -2,14 +2,14 @@ import {
     HttpEvent,
     HttpHandler,
     HttpInterceptor,
-    HttpRequest
+    HttpRequest,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SessionService } from '../_services/session.service';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class TokenInterceptor implements HttpInterceptor {
     constructor(private readonly sessionService: SessionService) {}
@@ -22,7 +22,7 @@ export class TokenInterceptor implements HttpInterceptor {
 
         if (token) {
             request = request.clone({
-                setHeaders: { Authorization: `Bearer ${token}` }
+                setHeaders: { Authorization: `Bearer ${token}` },
             });
         }
 

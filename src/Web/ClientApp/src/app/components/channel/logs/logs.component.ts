@@ -4,7 +4,7 @@ import { ChannelService } from 'src/app/core/api/v1';
 @Component({
     selector: 'app-logs',
     templateUrl: './logs.component.html',
-    styleUrls: ['./logs.component.css']
+    styleUrls: ['./logs.component.css'],
 })
 export class LogsComponent implements OnChanges {
     @Input() appId = '';
@@ -30,7 +30,7 @@ export class LogsComponent implements OnChanges {
             error: (error) => {
                 console.log(error);
                 this.loading = false;
-            }
+            },
         });
     }
 }

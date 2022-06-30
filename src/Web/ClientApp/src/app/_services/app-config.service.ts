@@ -24,7 +24,7 @@ export class AppConfigService {
                     console.log('using default configuration');
                     this.config = Object.assign({}, defaults || {});
                     resolve(this.config);
-                }
+                },
             });
         });
     }

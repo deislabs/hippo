@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 @Component({
     selector: 'app-account-register',
     templateUrl: './register.component.html',
-    styleUrls: ['./register.component.css']
+    styleUrls: ['./register.component.css'],
 })
 export class RegisterComponent implements OnInit {
     error: any = null;
@@ -30,12 +30,12 @@ export class RegisterComponent implements OnInit {
                 username: new FormControl('', [Validators.required]),
                 password: new FormControl('', [
                     Validators.required,
-                    Validators.minLength(6)
+                    Validators.minLength(6),
                 ]),
                 passwordConfirm: new FormControl('', [
                     Validators.required,
-                    Validators.minLength(6)
-                ])
+                    Validators.minLength(6),
+                ]),
             },
             MustMatch('password', 'passwordConfirm')
         );
@@ -56,7 +56,7 @@ export class RegisterComponent implements OnInit {
         this.accountService
             .apiAccountPost({
                 userName: this.f['username'].value,
-                password: this.f['password'].value
+                password: this.f['password'].value,
             })
             .subscribe({
                 // TODO: navigate to registration confirmation page
@@ -65,7 +65,7 @@ export class RegisterComponent implements OnInit {
                     console.log(err);
                     this.error = err;
                     this.loading = false;
-                }
+                },
             });
     }
 }

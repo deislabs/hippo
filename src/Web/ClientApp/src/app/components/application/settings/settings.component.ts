@@ -7,7 +7,7 @@ import { Router } from '@angular/router';
 @Component({
     selector: 'app-settings',
     templateUrl: './settings.component.html',
-    styleUrls: ['./settings.component.css']
+    styleUrls: ['./settings.component.css'],
 })
 export class SettingsComponent implements OnInit {
     @Input() channel: any = {};
@@ -41,7 +41,7 @@ export class SettingsComponent implements OnInit {
             next: () => this.router.navigate(['/']),
             error: (error) => {
                 console.log(error);
-            }
+            },
         });
     }
 
@@ -50,7 +50,7 @@ export class SettingsComponent implements OnInit {
             this.appService
                 .apiAppIdPut(this.channel.appSummary.id, {
                     id: this.channel.appSummary.id,
-                    name: this.editAppName
+                    name: this.editAppName,
                 })
                 .subscribe({
                     next: () => {
@@ -59,7 +59,7 @@ export class SettingsComponent implements OnInit {
                     },
                     error: (error) => {
                         console.log(error);
-                    }
+                    },
                 });
         } else {
             this.cancelEditingAppInfo();
@@ -90,13 +90,13 @@ export class SettingsComponent implements OnInit {
 
                     if (this.channel.id === channelId) {
                         this.router.navigate([
-                            `/channel/${this.channel.appSummary.channels[0].id}`
+                            `/channel/${this.channel.appSummary.channels[0].id}`,
                         ]);
                     }
                 },
                 error: (error) => {
                     console.log(error);
-                }
+                },
             });
         }
     }
@@ -106,7 +106,7 @@ export class SettingsComponent implements OnInit {
         this.editChannelId = channel.id;
     }
 
-    cancelEditingChannelInfo(channel: any) {
+    cancelEditingChannelInfo() {
         this.editChannelId = '';
     }
 
@@ -122,7 +122,7 @@ export class SettingsComponent implements OnInit {
                                 channelDetails.revisionSelectionStrategy,
                             rangeRule: channelDetails.rangeRule,
                             domain: channelDetails.domain,
-                            activeRevisionId: channelDetails.activeRevision?.id
+                            activeRevisionId: channelDetails.activeRevision?.id,
                         })
                         .subscribe({
                             next: () => {
@@ -131,15 +131,15 @@ export class SettingsComponent implements OnInit {
                             },
                             error: (error) => {
                                 console.log(error);
-                            }
+                            },
                         });
                 },
                 error: (error) => {
                     console.log(error);
-                }
+                },
             });
         } else {
-            this.cancelEditingChannelInfo(channel);
+            this.cancelEditingChannelInfo();
         }
     }
 
@@ -151,7 +151,7 @@ export class SettingsComponent implements OnInit {
         this.showChannelForm = false;
         this.channel.appSummary.channels.push({
             id: channel.channelId,
-            name: channel.name
+            name: channel.name,
         });
     }
 }

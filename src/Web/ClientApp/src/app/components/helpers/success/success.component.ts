@@ -1,12 +1,12 @@
 import { Component, Injectable } from '@angular/core';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 @Component({
     selector: 'app-success',
     templateUrl: './success.component.html',
-    styleUrls: ['./success.component.css']
+    styleUrls: ['./success.component.css'],
 })
 export class SuccessComponent {
     visible = false;

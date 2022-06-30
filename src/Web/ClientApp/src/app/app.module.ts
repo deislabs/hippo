@@ -2,7 +2,7 @@ import { APP_INITIALIZER, NgModule } from '@angular/core';
 import {
     ApiModule,
     Configuration,
-    ConfigurationParameters
+    ConfigurationParameters,
 } from './core/api/v1';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
@@ -35,7 +35,7 @@ import { WarningComponent } from './components/helpers/warning/warning.component
 
 export function apiConfigFactory(): Configuration {
     const params: ConfigurationParameters = {
-        basePath: `${window.location.protocol}//${window.location.host}`
+        basePath: `${window.location.protocol}//${window.location.host}`,
     };
     return new Configuration(params);
 }
@@ -58,7 +58,7 @@ export function apiConfigFactory(): Configuration {
         LogsComponent,
         OverviewComponent,
         WarningComponent,
-        SuccessComponent
+        SuccessComponent,
     ],
     imports: [
         BrowserModule,
@@ -68,34 +68,34 @@ export function apiConfigFactory(): Configuration {
         ReactiveFormsModule,
         FormsModule,
         FontAwesomeModule,
-        NgxJdenticonModule
+        NgxJdenticonModule,
     ],
     providers: [
         {
             provide: HTTP_INTERCEPTORS,
             useClass: TokenInterceptor,
-            multi: true
+            multi: true,
         },
         {
             provide: HTTP_INTERCEPTORS,
             useClass: AuthInterceptor,
             multi: true,
-            deps: [SessionService]
+            deps: [SessionService],
         },
         {
             provide: JDENTICON_CONFIG,
             useValue: {
-                replaceMode: 'observe'
-            }
+                replaceMode: 'observe',
+            },
         },
         {
             provide: APP_INITIALIZER,
             multi: true,
             deps: [AppConfigService],
             useFactory: (appConfigService: AppConfigService) => () =>
-                appConfigService.load()
-        }
+                appConfigService.load(),
+        },
     ],
-    bootstrap: [AppComponent]
+    bootstrap: [AppComponent],
 })
 export class AppModule {}

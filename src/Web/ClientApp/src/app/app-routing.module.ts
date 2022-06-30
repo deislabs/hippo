@@ -3,7 +3,7 @@ import {
     RouterModule,
     RouterStateSnapshot,
     Routes,
-    TitleStrategy
+    TitleStrategy,
 } from '@angular/router';
 
 import { AppConfigService } from './_services/app-config.service';
@@ -23,28 +23,28 @@ const routes: Routes = [
         path: 'channel/:id',
         component: ChannelComponent,
         canActivate: [AuthGuard],
-        title: 'Overview'
+        title: 'Overview',
     },
     {
         path: 'app/new',
         component: NewComponent,
         canActivate: [AuthGuard],
-        title: 'Create a new App'
+        title: 'Create a new App',
     },
     { path: 'login', component: LoginComponent, title: 'Log in' },
     { path: 'register', component: RegisterComponent, title: 'Sign up' },
     {
         path: 'styleguide',
         component: StyleguideComponent,
-        title: 'Style Guide'
+        title: 'Style Guide',
     },
     {
         path: '',
         component: ListComponent,
         canActivate: [AuthGuard],
-        title: 'Dashboard'
+        title: 'Dashboard',
     },
-    { path: '**', redirectTo: '404' }
+    { path: '**', redirectTo: '404' },
 ];
 
 @Injectable()
@@ -67,6 +67,8 @@ export class TemplatePageTitleStrategy extends TitleStrategy {
 @NgModule({
     imports: [RouterModule.forRoot(routes, { useHash: true })],
     exports: [RouterModule],
-    providers: [{ provide: TitleStrategy, useClass: TemplatePageTitleStrategy }]
+    providers: [
+        { provide: TitleStrategy, useClass: TemplatePageTitleStrategy },
+    ],
 })
 export class AppRoutingModule {}

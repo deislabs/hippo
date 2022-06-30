@@ -3,14 +3,14 @@ import {
     CanActivate,
     Router,
     RouterStateSnapshot,
-    UrlTree
+    UrlTree,
 } from '@angular/router';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { SessionService } from '../_services/session.service';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
     constructor(
@@ -30,7 +30,7 @@ export class AuthGuard implements CanActivate {
             return true;
         }
         this.router.navigate(['/login'], {
-            queryParams: { returnUrl: state.url }
+            queryParams: { returnUrl: state.url },
         });
         return false;
     }
