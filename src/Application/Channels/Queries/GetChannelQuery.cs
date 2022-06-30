@@ -45,7 +45,7 @@ public class GetChannelQueryHandler : IRequestHandler<GetChannelQuery, ChannelIt
             .Select(a => a.ToAppSummaryDto())
             .FirstOrDefaultAsync(cancellationToken);
 
-        if (entity.ActiveRevision != null)
+        if (entity.ActiveRevision is not null)
         {
             entity.ActiveRevision.Type = entity.ActiveRevision.Components.FirstOrDefault()?.Type;
         }

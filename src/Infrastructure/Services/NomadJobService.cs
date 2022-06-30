@@ -57,7 +57,7 @@ public class NomadJobService : IJobService
             .Select(a => a.ID)
             .FirstOrDefault();
 
-        if (allocationId == null)
+        if (allocationId is null)
         {
             return new string[] { };
         }

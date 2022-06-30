@@ -75,7 +75,7 @@ public class PatchChannelCommandHandler : IRequestHandler<PatchChannelCommand>
 
         _context.EnvironmentVariables.AddRange(envVariablesToBeAdded);
 
-        if (existingVariables.Count > 0 && request.EnvironmentVariables.Value != null)
+        if (existingVariables.Count > 0 && request.EnvironmentVariables.Value is not null)
         {
             foreach (var environmentVariable in request.EnvironmentVariables.Value)
             {

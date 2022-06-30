@@ -12,11 +12,11 @@ public static class MappingExtensions
         foreach (var property in destinationType.GetProperties())
         {
             PropertyDescriptor? descriptor = TypeDescriptor.GetProperties(destinationType)?[property.Name];
-            if (descriptor == null || descriptor.Attributes == null)
+            if (descriptor is null || descriptor.Attributes is null)
                 continue;
 
             var attribute = descriptor.Attributes[typeof(NoMapAttribute)];
-            if (attribute != null && (NoMapAttribute)attribute != null)
+            if (attribute is not null && (NoMapAttribute)attribute is not null)
             {
                 expression.ForMember(property.Name, opt => opt.Ignore());
             }
