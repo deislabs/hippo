@@ -9,6 +9,7 @@ import { faUser } from '@fortawesome/free-solid-svg-icons';
 })
 export class NavbarComponent {
     faUser = faUser;
+    menuActive = '';
 
     constructor(private readonly sessionService: SessionService) {}
 
@@ -19,5 +20,8 @@ export class NavbarComponent {
     logout(): void {
         this.sessionService.logout();
         location.reload();
+    }
+    onBurger(): void {
+        this.menuActive = this.menuActive == '' ? 'is-active' : '';
     }
 }

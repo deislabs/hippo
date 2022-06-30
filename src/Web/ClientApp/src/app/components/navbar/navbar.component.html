@@ -1,4 +1,4 @@
-<nav id="topbar" class="navbar" role="navigation" aria-label="main navigation">
+<nav class="navbar is-wide is-sticky" role="navigation" aria-label="main navigation">
 	<div class="navbar-brand">
 		<a class="navbar-item" routerLink="/">
 			<div class="logo">
@@ -6,15 +6,15 @@
 			</div>
 		</a>
 
-		<a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="hippoMenu">
+		<a role="button" class="navbar-burger {{ menuActive }}" aria-label="menu" aria-expanded="false" (click)="onBurger()">
 			<span aria-hidden="true"></span>
 			<span aria-hidden="true"></span>
 			<span aria-hidden="true"></span>
 		</a>
 	</div>
 
-	<div id="hippoMenu" class="navbar-menu">
-		<div class="navbar-menu navbar-end" *ngIf="isLoggedIn(); else elseBlock">
+	<div class="navbar-menu {{ menuActive }}">
+		<div class="navbar-end" *ngIf="isLoggedIn(); else elseBlock">
 			<div class="navbar-item has-dropdown is-hoverable">
 				<a class="navbar-link">
 					<fa-icon class="icon" [icon]="faUser"></fa-icon>
@@ -29,7 +29,7 @@
 			</div>
 		</div>
 		<ng-template #elseBlock>
-			<div class="navbar-menu navbar-end">
+			<div class="navbar-end">
 				<div class="buttons">
 					<a class="navbar-item button is-outlined" routerLink="/login">Log in</a>
 					<a class="navbar-item button is-primary" routerLink="/register">Sign up</a>
