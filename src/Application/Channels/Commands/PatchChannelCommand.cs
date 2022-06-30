@@ -13,7 +13,7 @@ namespace Hippo.Application.Channels.Commands;
 public class PatchChannelCommand : IRequest
 {
     public Guid ChannelId { get; set; }
-    public Field<List<UpdateEnvironmentVariableDto>> EnvironmentVariables { get; set; } = null!;
+    public Field<List<UpdateEnvironmentVariableDto>?> EnvironmentVariables { get; set; } = null!;
     public Field<string> Name { get; set; } = null!;
     public Field<string> Domain { get; set; } = null!;
     public Field<ChannelRevisionSelectionStrategy> RevisionSelectionStrategy { get; set; } = null!;
@@ -81,7 +81,7 @@ public class PatchChannelCommandHandler : IRequestHandler<PatchChannelCommand>
             {
                 var updatedEnvVar = existingVariables.FirstOrDefault(v => v.Id == environmentVariable.Id);
 
-                if (updatedEnvVar == null)
+                if (updatedEnvVar is null)
                 {
                     continue;
                 }
@@ -107,15 +107,15 @@ public class PatchChannelCommandHandler : IRequestHandler<PatchChannelCommand>
             .ToList();
     }
 
-    private static List<EnvironmentVariable> EnvironmentVariablesToBeAdded(List<UpdateEnvironmentVariableDto> environmentVariables, Channel channel)
+    private static List<EnvironmentVariable> EnvironmentVariablesToBeAdded(List<UpdateEnvironmentVariableDto>? environmentVariables, Channel channel)
     {
-        if (environmentVariables == null)
+        if (environmentVariables is null)
         {
             return new List<EnvironmentVariable>();
         }
 
         var toBeAdded = new List<EnvironmentVariable>();
-        var newVariables = environmentVariables.Where(v => v.Id == null);
+        var newVariables = environmentVariables.Where(v => v.Id is null);
 
         foreach (var environmentVariable in newVariables)
         {
@@ -133,9 +133,9 @@ public class PatchChannelCommandHandler : IRequestHandler<PatchChannelCommand>
     }
 
     private static List<EnvironmentVariable> EnvironmentVariablesToBeUpdated(List<EnvironmentVariable> existingVariables,
-        List<UpdateEnvironmentVariableDto> environmentVariables)
+        List<UpdateEnvironmentVariableDto>? environmentVariables)
     {
-        if (environmentVariables == null)
+        if (environmentVariables is null)
         {
             return new List<EnvironmentVariable>();
         }
@@ -146,9 +146,9 @@ public class PatchChannelCommandHandler : IRequestHandler<PatchChannelCommand>
     }
 
     private static List<EnvironmentVariable> EnvironmentVariablesToBeRemoved(List<EnvironmentVariable> existingVariables,
-        List<UpdateEnvironmentVariableDto> environmentVariables)
+        List<UpdateEnvironmentVariableDto>? environmentVariables)
     {
-        if (environmentVariables == null)
+        if (environmentVariables is null)
         {
             environmentVariables = new List<UpdateEnvironmentVariableDto>();
         }
