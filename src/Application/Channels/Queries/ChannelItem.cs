@@ -34,6 +34,8 @@ public class ChannelItem : IMapFrom<Channel>
 
     public RevisionItem? ActiveRevision { get; set; }
 
+    public DateTime? LastPublishAt { get; set; }
+
     public string? RangeRule { get; set; }
 
     public CertificateItem? Certificate { get; set; }

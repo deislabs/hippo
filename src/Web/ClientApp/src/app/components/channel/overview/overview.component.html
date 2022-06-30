@@ -2,11 +2,11 @@
     <div *ngIf="!loading">
         <div class="box">
             <div *ngIf="activeRevision">
-                <!-- TODO: add uptime -->
+                <!-- TODO: add status -->
                 <span class="icon has-text-success">
                     <fa-icon [icon]="icons.faCheckCircle"></fa-icon>
                 </span>
-                Version {{activeRevision.revisionNumber}} is running.
+                Version {{activeRevision.revisionNumber}} was published {{publishedAt}}.
             </div>
             <div *ngIf="!activeRevision">
                 <span class="icon has-text-danger">

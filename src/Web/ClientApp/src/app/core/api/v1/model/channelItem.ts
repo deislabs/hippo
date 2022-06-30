@@ -22,6 +22,7 @@ export interface ChannelItem {
     domain: string;
     revisionSelectionStrategy: ChannelRevisionSelectionStrategy;
     activeRevision?: RevisionItem;
+    lastPublishAt?: string | null;
     rangeRule?: string | null;
     certificate?: CertificateItem;
     environmentVariables: Array<EnvironmentVariableDto>;
