@@ -41,13 +41,13 @@ public class GetChannelStatusesQueryHandler : IRequestHandler<GetJobStatusesQuer
             Items = entities,
             PageIndex = request.PageIndex,
             PageSize = request.PageSize,
-            TotalItems = jobs == null ? 0 : jobs.Count
+            TotalItems = jobs is null ? 0 : jobs.Count
         };
     }
 
     private static JobStatus GetJobStatus(List<Job>? jobs, Guid jobId)
     {
-        if (jobs == null)
+        if (jobs is null)
         {
             return JobStatus.Unknown;
         }
