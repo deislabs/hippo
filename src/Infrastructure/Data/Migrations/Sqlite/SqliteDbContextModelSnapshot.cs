@@ -117,6 +117,9 @@ namespace Hippo.Infrastructure.Data.Migrations.Sqlite
                     b.Property<string>("LastModifiedBy")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime?>("LastPublishAt")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(64)
