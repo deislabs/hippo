@@ -149,12 +149,19 @@ public class NomadJobService : IJobService
             tags.Add("traefik.http.routers." + nomadJob.Id + @".tls.domains[0].main=" + nomadJob.Domain);
         }
 
-        return new Service
+        var serviceProvider = _configuration.GetValue("Nomad:ServiceProvider", "consul");
+
+        var service = new Service
         {
             PortLabel = "http",
             Name = nomadJob.Id.ToString(),
             Tags = tags,
-            Checks = new List<ServiceCheck>
+            Provider = serviceProvider,
+        };
+
+        if (serviceProvider == "consul")
+        {
+            service.Checks = new List<ServiceCheck>
             {
                 new ServiceCheck
                 {
@@ -163,8 +170,10 @@ public class NomadJobService : IJobService
                     Interval = 10000000000,
                     Timeout = 2000000000
                 }
-            }
-        };
+            };
+
+        }
+        return service;
     }
 
     private Fermyon.Nomad.Model.Task GenerateJobTask(NomadJob nomadJob)
