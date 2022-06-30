@@ -24,7 +24,7 @@ public class PageAndSortFilter : IPageFilter, ISortFilter
     public int PageIndex { get; set; }
     public int PageSize { get; set; }
     public int Offset { get { return PageIndex * PageSize; } }
-    public string SortBy { get; set; }
+    public string SortBy { get; set; } = string.Empty;
     public bool IsSortedAscending { get; set; }
 
     public PageAndSortFilter()

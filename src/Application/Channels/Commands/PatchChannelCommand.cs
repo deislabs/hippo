@@ -13,7 +13,7 @@ namespace Hippo.Application.Channels.Commands;
 public class PatchChannelCommand : IRequest
 {
     public Guid ChannelId { get; set; }
-    public Field<List<UpdateEnvironmentVariableDto>?> EnvironmentVariables { get; set; } = null!;
+    public Field<List<UpdateEnvironmentVariableDto>> EnvironmentVariables { get; set; } = null!;
     public Field<string> Name { get; set; } = null!;
     public Field<string> Domain { get; set; } = null!;
     public Field<ChannelRevisionSelectionStrategy> RevisionSelectionStrategy { get; set; } = null!;
@@ -60,7 +60,7 @@ public class PatchChannelCommandHandler : IRequestHandler<PatchChannelCommand>
         return Unit.Value;
     }
 
-    private void UpdateEnvironmentVariables(PatchChannelCommand request, Channel? channel)
+    private void UpdateEnvironmentVariables(PatchChannelCommand request, Channel channel)
     {
         var existingVariables = GetExistingEnvironmentVariables(request.ChannelId);
 
@@ -140,7 +140,7 @@ public class PatchChannelCommandHandler : IRequestHandler<PatchChannelCommand>
             return new List<EnvironmentVariable>();
         }
 
-        var environmentVariablesIds = environmentVariables?.Select(v => v.Id);
+        var environmentVariablesIds = environmentVariables.Select(v => v.Id);
 
         return existingVariables.Where(v => environmentVariablesIds.Contains(v.Id)).ToList();
     }
