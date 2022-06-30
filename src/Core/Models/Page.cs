@@ -15,7 +15,7 @@ public class Page<TModel>
     /// <summary>
     /// the fetched items
     /// </summary>
-    public IReadOnlyCollection<TModel> Items { get; set; }
+    public IReadOnlyCollection<TModel> Items { get; set; } = new List<TModel>();
 
     /// <summary>
     /// the total number of items for the requested query
@@ -38,7 +38,7 @@ public class Page<TModel>
         {
             if (!PageIndex.HasValue || !PageSize.HasValue)
                 return null;
-                
+
             return TotalItems == PageIndex * PageSize + Items.Count;
         }
     }

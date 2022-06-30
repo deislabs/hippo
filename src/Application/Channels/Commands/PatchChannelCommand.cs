@@ -60,7 +60,7 @@ public class PatchChannelCommandHandler : IRequestHandler<PatchChannelCommand>
         return Unit.Value;
     }
 
-    private void UpdateEnvironmentVariables(PatchChannelCommand request, Channel? channel)
+    private void UpdateEnvironmentVariables(PatchChannelCommand request, Channel channel)
     {
         var existingVariables = GetExistingEnvironmentVariables(request.ChannelId);
 
@@ -81,7 +81,7 @@ public class PatchChannelCommandHandler : IRequestHandler<PatchChannelCommand>
             {
                 var updatedEnvVar = existingVariables.FirstOrDefault(v => v.Id == environmentVariable.Id);
 
-                if (updatedEnvVar == null)
+                if (updatedEnvVar is null)
                 {
                     continue;
                 }
@@ -107,15 +107,15 @@ public class PatchChannelCommandHandler : IRequestHandler<PatchChannelCommand>
             .ToList();
     }
 
-    private static List<EnvironmentVariable> EnvironmentVariablesToBeAdded(List<UpdateEnvironmentVariableDto> environmentVariables, Channel channel)
+    private static List<EnvironmentVariable> EnvironmentVariablesToBeAdded(List<UpdateEnvironmentVariableDto>? environmentVariables, Channel channel)
     {
-        if (environmentVariables == null)
+        if (environmentVariables is null)
         {
             return new List<EnvironmentVariable>();
         }
 
         var toBeAdded = new List<EnvironmentVariable>();
-        var newVariables = environmentVariables.Where(v => v.Id == null);
+        var newVariables = environmentVariables.Where(v => v.Id is null);
 
         foreach (var environmentVariable in newVariables)
         {
@@ -133,22 +133,22 @@ public class PatchChannelCommandHandler : IRequestHandler<PatchChannelCommand>
     }
 
     private static List<EnvironmentVariable> EnvironmentVariablesToBeUpdated(List<EnvironmentVariable> existingVariables,
-        List<UpdateEnvironmentVariableDto> environmentVariables)
+        List<UpdateEnvironmentVariableDto>? environmentVariables)
     {
-        if (environmentVariables == null)
+        if (environmentVariables is null)
         {
             return new List<EnvironmentVariable>();
         }
 
-        var environmentVariablesIds = environmentVariables?.Select(v => v.Id);
+        var environmentVariablesIds = environmentVariables.Select(v => v.Id);
 
         return existingVariables.Where(v => environmentVariablesIds.Contains(v.Id)).ToList();
     }
 
     private static List<EnvironmentVariable> EnvironmentVariablesToBeRemoved(List<EnvironmentVariable> existingVariables,
-        List<UpdateEnvironmentVariableDto> environmentVariables)
+        List<UpdateEnvironmentVariableDto>? environmentVariables)
     {
-        if (environmentVariables == null)
+        if (environmentVariables is null)
         {
             environmentVariables = new List<UpdateEnvironmentVariableDto>();
         }
