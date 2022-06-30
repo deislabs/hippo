@@ -54,6 +54,6 @@ public class GetChannelStatusesQueryHandler : IRequestHandler<GetJobStatusesQuer
 
         var job = jobs.Where(job => job.Id == jobId).FirstOrDefault();
 
-        return job != null ? job.Status : JobStatus.Dead;
+        return job is not null ? job.Status : JobStatus.Dead;
     }
 }

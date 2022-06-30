@@ -25,7 +25,7 @@ public class ChannelCreatedEventHandler : INotificationHandler<CreatedEvent<Chan
 
         _logger.LogInformation($"Hippo Domain Event: {notification.GetType().Name}");
 
-        if (channel.ActiveRevision != null)
+        if (channel.ActiveRevision is not null)
         {
             _logger.LogInformation($"{channel.App.Name}: Starting channel {channel.Name} at revision {channel.ActiveRevision.RevisionNumber}");
             var envvars = channel.EnvironmentVariables.ToDictionary(

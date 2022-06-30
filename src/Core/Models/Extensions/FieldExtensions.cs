@@ -4,7 +4,7 @@ public static class FieldExtensions
 {
     public static bool IsSet<T>(this Field<T> field)
     {
-        return field != null;
+        return field is not null;
     }
 
     public static void WhenSet<T>(this Field<T> field, Action<T> action)

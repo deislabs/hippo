@@ -16,7 +16,7 @@ public static class MappingExtensions
                 continue;
 
             var attribute = descriptor.Attributes[typeof(NoMapAttribute)];
-            if (attribute != null && (NoMapAttribute)attribute != null)
+            if (attribute is not null && (NoMapAttribute)attribute is not null)
             {
                 expression.ForMember(property.Name, opt => opt.Ignore());
             }
