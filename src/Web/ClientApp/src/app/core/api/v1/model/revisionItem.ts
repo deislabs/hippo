@@ -16,4 +16,5 @@ export interface RevisionItem {
     appId: string;
     revisionNumber: string;
     readonly components: Array<RevisionComponentDto>;
+    type?: string | null;
 }

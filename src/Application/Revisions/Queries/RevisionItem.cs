@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using Hippo.Application.Common.Attributes;
 using Hippo.Application.Common.Mappings;
 using Hippo.Core.Entities;
 
@@ -17,6 +18,9 @@ public class RevisionItem : IMapFrom<Revision>
 
     [Required]
     public IList<RevisionComponentDto> Components { get; private set; } = new List<RevisionComponentDto>();
+
+    [NoMap]
+    public string? Type { get; set; }
 
     public string OrderKey()
     {

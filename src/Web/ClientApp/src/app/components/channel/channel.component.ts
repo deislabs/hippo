@@ -4,6 +4,7 @@ import {
     ChannelItem,
     ChannelService,
 } from 'src/app/core/api/v1';
+import { ApplicationTabs, ComponentTypes } from 'src/app/_helpers/constants';
 import { Component, OnInit } from '@angular/core';
 import {
     faAngleDown,
@@ -12,7 +13,6 @@ import {
     faFilter,
     faStream,
 } from '@fortawesome/free-solid-svg-icons';
-import { ApplicationTabs } from 'src/app/_helpers/constants';
 
 @Component({
     selector: 'app-channel',
@@ -26,6 +26,7 @@ export class ChannelComponent implements OnInit {
     selectedChannel!: AppChannelListItem;
     isSelectClicked = false;
     tabs = ApplicationTabs;
+    types = ComponentTypes;
     activeTab = ApplicationTabs.Overview;
     protocol = window.location.protocol;
 

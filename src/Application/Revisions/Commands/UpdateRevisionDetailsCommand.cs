@@ -32,7 +32,7 @@ public class UpdateRevisionDetailsCommandHandler : IRequestHandler<UpdateRevisio
             .SingleOrDefaultAsync(cancellationToken);
         _ = revision ?? throw new NotFoundException(nameof(Core.Entities.Revision), request.RevisionId);
         var revisionDetails = request.RevisionDetails;
-        if (revisionDetails == null || revisionDetails.SpinToml == null)
+        if (revisionDetails is null || revisionDetails.SpinToml is null)
         {
             return Unit.Value;
         }

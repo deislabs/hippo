@@ -92,11 +92,9 @@ export class StorageService {
                 );
             } else if (value instanceof Date) {
                 if (key != null) {
-                    httpParams = httpParams.append(
-                        key,
-                        (value as Date).toISOString().substr(0, 10)
-                    );
+                    httpParams = httpParams.append(key, (value as Date).toISOString().substr(0, 10));
                 } else {
+                   throw Error("key may not be null if value is Date");
                     throw Error('key may not be null if value is Date');
                 }
             } else {

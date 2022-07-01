@@ -7,7 +7,7 @@ public static class FilteringExtensions
         IOrderedEnumerable<T> orderedItems;
         var sortPropInfo = typeof(T).GetProperty(sortBy);
 
-        if (sortPropInfo == null)
+        if (sortPropInfo is null)
         {
             throw new Exception("Sort field does it exist");
         }
