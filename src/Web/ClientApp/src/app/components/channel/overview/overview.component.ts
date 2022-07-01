@@ -1,64 +1,72 @@
-import { Component, OnChanges, Input } from '@angular/core';
 import { ChannelItem, ChannelService, RevisionItem } from 'src/app/core/api/v1';
+import { Component, Input, OnChanges } from '@angular/core';
+import {
+    faCheckCircle,
+    faNetworkWired,
+    faTimesCircle,
+} from '@fortawesome/free-solid-svg-icons';
+
 import { ComponentTypes } from 'src/app/_helpers/constants';
-import { faCheckCircle, faTimesCircle, faNetworkWired } from '@fortawesome/free-solid-svg-icons';
 import { Router } from '@angular/router';
 import TimeAgo from 'javascript-time-ago';
-import en from 'javascript-time-ago/locale/en'
+import en from 'javascript-time-ago/locale/en';
 
 @Component({
-	selector: 'channel-overview',
-	templateUrl: './overview.component.html',
-	styleUrls: ['./overview.component.css']
+    selector: 'app-channel-overview',
+    templateUrl: './overview.component.html',
+    styleUrls: ['./overview.component.css'],
 })
 export class OverviewComponent implements OnChanges {
-	@Input() channelId = '';
-	channel!: ChannelItem;
-	activeRevision!: RevisionItem | undefined;
-	publishedAt: string | null | undefined;
-	icons = { faCheckCircle, faTimesCircle, faNetworkWired };
-	types = ComponentTypes;
-	protocol = window.location.protocol;
-	loading: boolean = false;
-	timeAgo: any;
+    @Input() channelId = '';
+    channel!: ChannelItem;
+    activeRevision!: RevisionItem | undefined;
+    publishedAt: string | null | undefined;
+    icons = { faCheckCircle, faTimesCircle, faNetworkWired };
+    types = ComponentTypes;
+    protocol = window.location.protocol;
+    loading = false;
+    timeAgo: any;
 
-	constructor(
-		private readonly channelService: ChannelService,
-		private router: Router) { 
-			TimeAgo.addDefaultLocale(en);
-			this.timeAgo = new TimeAgo('en-US');
-		}
+    constructor(
+        private readonly channelService: ChannelService,
+        private router: Router
+    ) {
+        TimeAgo.addDefaultLocale(en);
+        this.timeAgo = new TimeAgo('en-US');
+    }
 
-	ngOnChanges(): void {
-		this.refreshData();
-	}
+    ngOnChanges(): void {
+        this.refreshData();
+    }
 
-	refreshData() {
-		this.loading = true;
-		this.channelService.apiChannelIdGet(this.channelId).subscribe({
-			next: (channel) => {
-				!channel ? this.router.navigate(['/404']) : this.channel = channel;
-				this.activeRevision = channel.activeRevision;				
-				if (channel.lastPublishAt) {
-					const date = new Date(channel.lastPublishAt);
-					this.publishedAt = this.timeAgo.format(date);
-				}
-				this.loading = false;
-			},
-			error: (error) => {
-				console.log(error);
-				this.loading = false;
-			}
-		});
-	}
+    refreshData() {
+        this.loading = true;
+        this.channelService.apiChannelIdGet(this.channelId).subscribe({
+            next: (channel) => {
+                !channel
+                    ? this.router.navigate(['/404'])
+                    : (this.channel = channel);
+                this.activeRevision = channel.activeRevision;
+                if (channel.lastPublishAt) {
+                    const date = new Date(channel.lastPublishAt);
+                    this.publishedAt = this.timeAgo.format(date);
+                }
+                this.loading = false;
+            },
+            error: (error) => {
+                console.log(error);
+                this.loading = false;
+            },
+        });
+    }
 
-	getRedirectRoute(route: string): string {
-		if (route) {
-			if (route.slice(-3) === '...') {
-				return route.slice(0, -3);
-			} else {
-				return route;
-			}
-		} else return '';
-	}
+    getRedirectRoute(route: string): string {
+        if (route) {
+            if (route.slice(-3) === '...') {
+                return route.slice(0, -3);
+            } else {
+                return route;
+            }
+        } else return '';
+    }
 }

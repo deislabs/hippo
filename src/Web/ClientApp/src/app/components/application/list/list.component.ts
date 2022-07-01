@@ -1,84 +1,95 @@
-import { Component, OnInit } from '@angular/core';
-import { AppChannelListItem, AppItem, AppItemPage, AppService, ChannelJobStatusItem, ChannelJobStatusItemPage, JobStatus, JobStatusService } from 'src/app/core/api/v1';
-import { faPlus, faCircle } from '@fortawesome/free-solid-svg-icons';
+import {
+    AppChannelListItem,
+    AppItem,
+    AppService,
+    ChannelJobStatusItem,
+    JobStatus,
+    JobStatusService,
+} from 'src/app/core/api/v1';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { faCircle, faPlus } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-	selector: 'app-application-list',
-	templateUrl: './list.component.html',
-	styleUrls: ['./list.component.css']
+    selector: 'app-application-list',
+    templateUrl: './list.component.html',
+    styleUrls: ['./list.component.css'],
 })
-export class ListComponent implements OnInit {
-	apps: AppItem[] | null | undefined = [];
-	statuses: ChannelJobStatusItem[] | null | undefined = [];
-	error: any = null;
-	faPlus = faPlus;
-	faCircle = faCircle;
+export class ListComponent implements OnInit, OnDestroy {
+    apps: AppItem[] | null | undefined = [];
+    statuses: ChannelJobStatusItem[] | null | undefined = [];
+    error: any = null;
+    faPlus = faPlus;
+    faCircle = faCircle;
 
-	jobStatus = JobStatus;
+    jobStatus = JobStatus;
 
-	interval: any = null;
-	timeInterval: number = 5000;
+    interval: any = null;
+    timeInterval = 5000;
 
-	constructor(private readonly appService: AppService,
-		private readonly jobStatusService: JobStatusService) { }
+    constructor(
+        private readonly appService: AppService,
+        private readonly jobStatusService: JobStatusService
+    ) {}
 
-	ngOnInit(): void {
-		this.refreshData();
-		this.getJobStatus();
+    ngOnInit(): void {
+        this.refreshData();
+        this.getJobStatus();
 
-		this.interval = setInterval(() => {
-			this.getJobStatus();
-		}, this.timeInterval);		
-	}
+        this.interval = setInterval(() => {
+            this.getJobStatus();
+        }, this.timeInterval);
+    }
 
-	getJobStatus(): void {
-		this.jobStatusService.apiJobstatusGet().subscribe((res) => this.statuses = res.items);
-	}
+    getJobStatus(): void {
+        this.jobStatusService
+            .apiJobstatusGet()
+            .subscribe((res) => (this.statuses = res.items));
+    }
 
-	getChannelStatus(channel: AppChannelListItem): JobStatus | undefined {
-		let channelStatus = this.statuses?.filter((status: ChannelJobStatusItem) => channel.id === status.channelId)[0];
-		return channelStatus?.status;
-	}
+    getChannelStatus(channel: AppChannelListItem): JobStatus | undefined {
+        const channelStatus = this.statuses?.filter(
+            (status: ChannelJobStatusItem) => channel.id === status.channelId
+        )[0];
+        return channelStatus?.status;
+    }
 
-	getStatusColor(status: JobStatus | undefined) {
-		switch(status){
-			case JobStatus.Unknown:
-				return 'gray';
-			case JobStatus.Pending:
-				return 'yellow';
-			case JobStatus.Running:
-				return 'green';
-			case JobStatus.Dead:
-				return 'red';
-			default:
-				return 'gray';
-		}
-	}
+    getStatusColor(status: JobStatus | undefined) {
+        switch (status) {
+            case JobStatus.Unknown:
+                return 'gray';
+            case JobStatus.Pending:
+                return 'yellow';
+            case JobStatus.Running:
+                return 'green';
+            case JobStatus.Dead:
+                return 'red';
+            default:
+                return 'gray';
+        }
+    }
 
-	getAllChannels() {
-		let allChannels: AppChannelListItem[] = [];
+    getAllChannels() {
+        let allChannels: AppChannelListItem[] = [];
 
-		this.apps?.forEach((app: AppItem) => {
-			allChannels = allChannels.concat(app.channels);
-		})
+        this.apps?.forEach((app: AppItem) => {
+            allChannels = allChannels.concat(app.channels);
+        });
 
-		return allChannels;
-	}
+        return allChannels;
+    }
 
-	ngOnDestroy(): void {
-		clearInterval(this.interval);
-		this
-	}
+    ngOnDestroy(): void {
+        clearInterval(this.interval);
+        this;
+    }
 
-	refreshData() {
-		this.appService.apiAppGet().subscribe(
-			{
-				next: vm => (this.apps = vm.items),
-				error: (error) => {
-					console.log(error);
-					this.error = error;
-				}
-			}
-		);
-	}
+    refreshData() {
+        this.appService.apiAppGet().subscribe({
+            next: (vm) => (this.apps = vm.items),
+            error: (error) => {
+                console.log(error);
+                this.error = error;
+            },
+        });
+    }
 }

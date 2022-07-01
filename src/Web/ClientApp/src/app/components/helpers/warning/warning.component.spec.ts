@@ -3,21 +3,20 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { WarningComponent } from './warning.component';
 
 describe('WarningComponent', () => {
-  let component: WarningComponent;
-  let fixture: ComponentFixture<WarningComponent>;
+    let component: WarningComponent;
+    let fixture: ComponentFixture<WarningComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ WarningComponent ]
-    })
-    .compileComponents();
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            declarations: [WarningComponent]
+        }).compileComponents();
 
-    fixture = TestBed.createComponent(WarningComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+        fixture = TestBed.createComponent(WarningComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });
