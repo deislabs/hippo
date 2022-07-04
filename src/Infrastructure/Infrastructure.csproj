@@ -22,7 +22,7 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.6" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="6.0.6" />
 		<PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="6.0.5" />
-		<PackageReference Include="Tomlyn" Version="0.14.4" />
+		<PackageReference Include="Tomlyn" Version="0.15.0" />
 	</ItemGroup>
 
 	<ItemGroup>
