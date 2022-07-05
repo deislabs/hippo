@@ -26,7 +26,7 @@ export class ChannelComponent implements OnInit {
 		private readonly channelService: ChannelService) { }
 
 	ngOnInit(): void {
-		this.route.params.subscribe(params => {
+		this.route.params.subscribe((params: any) => {
 			this.channelId = params['id'];
 			this.refreshData();
 		});
@@ -45,5 +45,9 @@ export class ChannelComponent implements OnInit {
 			!channel ? this.router.navigate(['/404']) : this.channel = channel;
 			this.selectedChannel = <AppChannelListItem>(channel?.appSummary?.channels.filter((channel) => channel.id === this.channelId)[0]);
 		});
+	}
+
+	envvarsUpdated(envvars: any) {
+		this.channel.environmentVariables = envvars;
 	}
 }

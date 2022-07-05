@@ -14,7 +14,7 @@ public class ChannelItem : IMapFrom<Channel>
 {
     public ChannelItem()
     {
-        EnvironmentVariables = new List<EnvironmentVariableDto>();
+        EnvironmentVariables = new List<EnvironmentVariableItem>();
     }
 
     [Required]
@@ -41,7 +41,7 @@ public class ChannelItem : IMapFrom<Channel>
     public CertificateItem? Certificate { get; set; }
 
     [Required]
-    public IList<EnvironmentVariableDto> EnvironmentVariables { get; set; }
+    public IList<EnvironmentVariableItem> EnvironmentVariables { get; set; }
 
     [NoMap]
     public AppSummaryDto? AppSummary { get; set; }

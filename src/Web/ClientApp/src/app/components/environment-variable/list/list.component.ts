@@ -1,6 +1,6 @@
-import { Component, Input, OnChanges, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnChanges, ViewChild, SimpleChange } from '@angular/core';
 import { faBackward, faTrash, faSave } from '@fortawesome/free-solid-svg-icons';
-import { ChannelService, EnvironmentVariableService } from 'src/app/core/api/v1';
+import { ChannelService } from 'src/app/core/api/v1';
 import { SuccessComponent } from '../../helpers/success/success.component';
 
 @Component({
@@ -10,22 +10,26 @@ import { SuccessComponent } from '../../helpers/success/success.component';
 })
 export class ListComponent implements OnChanges {
 	@Input() channelId = '';
+	@Input() originalEnvVars: any = [];
 	@ViewChild(SuccessComponent) success: SuccessComponent = new SuccessComponent;
 
+	@Output()
+  	updated: EventEmitter<Array<any>> = new EventEmitter<Array<any>>();
+
 	envvars: any = [];
-	originalEnvVars: any = [];
 
 	error: any = null;
-	loading: boolean = false;
 	faBackward = faBackward;
 	faTrash = faTrash;
 	faSave = faSave;
 
-	constructor(private readonly channelService: ChannelService, private readonly envVarService: EnvironmentVariableService) { }
+	constructor(private readonly channelService: ChannelService) { }
 
-	ngOnChanges(): void {
+	ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
+		if(changes['channelId'] && changes['channelId'].previousValue != changes['channelId'].currentValue) {
+			this.success.hide();
+		}
 		this.refreshData();
-		this.success.hide();
 	}
 
 	addNewVariable() {
@@ -72,15 +76,19 @@ export class ListComponent implements OnChanges {
 			environmentVariables: this.envvars,
 		}).subscribe({
 			next: () => {
+				this.emitUpdated(this.envvars);
 				this.refreshData();
 				this.success.show();
 				this.error = null;
 			},
 			error: (err) => {
-				console.log(err.error.errors);
 				this.error = err;
 			}
 		});
+	}
+
+	emitUpdated(envvars: any) {
+		this.updated.emit(envvars);
 	}
 
 	validateEnvVars() {
@@ -103,27 +111,14 @@ export class ListComponent implements OnChanges {
 	}
 
 	refreshData() {
-		this.loading = true;
-		this.envVarService.apiEnvironmentvariableGet().subscribe(
-			{
-				next: (vm) => {
-					this.error = null;
-					this.envvars = vm.environmentVariables.filter(element => element.channelId == this.channelId);
-					this.originalEnvVars = this.envvars.map((v: any) => {
-						return {
-							id: v.id,
-							channelId: v.channelId,
-							key: v.key,
-							value: v.value
-						}
-					});
-					this.loading = false;
-				},
-				error: (err) => {
-					console.log(err.error.errors);
-					this.error = err;
-					this.loading = false;
-				}
+		this.envvars = [];
+		this.originalEnvVars.forEach((originalEnvVar: any) => {
+			this.envvars.push({
+				id: originalEnvVar.id,
+				channelId: originalEnvVar.channelId,
+				key: originalEnvVar.key,
+				value: originalEnvVar.value,
 			});
+		});
 	}
 }

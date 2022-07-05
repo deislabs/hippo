@@ -9,17 +9,12 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { ChannelRevisionSelectionStrategy } from './channelRevisionSelectionStrategy';
 
 
-export interface UpdateChannelCommand { 
+export interface EnvironmentVariableItem { 
     id: string;
-    name: string;
-    domain: string;
-    revisionSelectionStrategy: ChannelRevisionSelectionStrategy;
-    rangeRule?: string | null;
-    activeRevisionId?: string | null;
-    lastPublishDate?: string;
-    certificateId?: string | null;
+    channelId: string;
+    key: string;
+    value: string;
 }
 
