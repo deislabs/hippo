@@ -14,13 +14,4 @@ export * from './revision.service';
 import { RevisionService } from './revision.service';
 export * from './storage.service';
 import { StorageService } from './storage.service';
-export const APIS = [
-    AccountService,
-    AppService,
-    CertificateService,
-    ChannelService,
-    EnvironmentVariableService,
-    JobStatusService,
-    RevisionService,
-    StorageService
-];
+export const APIS = [AccountService, AppService, CertificateService, ChannelService, EnvironmentVariableService, JobStatusService, RevisionService, StorageService];
