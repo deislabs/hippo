@@ -1,12 +1,15 @@
-import { Component, EventEmitter, Input, Output, OnChanges, ViewChild, SimpleChange } from '@angular/core';
-import { faBackward, faTrash, faSave } from '@fortawesome/free-solid-svg-icons';
-import { ChannelService } from 'src/app/core/api/v1';
+import {
+    ChannelService,
+} from 'src/app/core/api/v1';
+import { Component, EventEmitter, Input, Output, OnChanges, SimpleChange, ViewChild } from '@angular/core';
+import { faBackward, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
+
 import { SuccessComponent } from '../../helpers/success/success.component';
 
 @Component({
-	selector: 'app-environment-variable-list',
-	templateUrl: './list.component.html',
-	styleUrls: ['./list.component.css']
+    selector: 'app-environment-variable-list',
+    templateUrl: './list.component.html',
+    styleUrls: ['./list.component.css'],
 })
 export class ListComponent implements OnChanges {
 	@Input() channelId = '';
@@ -32,40 +35,44 @@ export class ListComponent implements OnChanges {
 		this.refreshData();
 	}
 
-	addNewVariable() {
-		this.envvars.push({
-			channelId: this.channelId,
-			key: "",
-			value: ""
-		})
-	}
+    addNewVariable() {
+        this.envvars.push({
+            channelId: this.channelId,
+            key: '',
+            value: '',
+        });
+    }
 
-	inputChanges(changedVar: any) {
-		if (!changedVar.id) {
-			return;
-		}
-		
+    inputChanges(changedVar: any) {
+        if (!changedVar.id) {
+            return;
+        }
+
+        const originalVar = this.originalEnvVars.filter(
+            (v: any) => v.id === changedVar.id
+        )[0];
+
+        if (
+            originalVar.key !== changedVar.key ||
+            originalVar.value !== changedVar.value
+        ) {
+            changedVar.isChanged = true;
+        } else {
+            changedVar.isChanged = false;
+        }
+    }
+
+    undoChange(changedVar: any) {
 		let originalVar = this.originalEnvVars.filter((v: any) => v.id === changedVar.id)[0];
-
-		if (originalVar.key !== changedVar.key ||
-			originalVar.value !== changedVar.value) {
-			changedVar.isChanged = true;
-		} else {
-			changedVar.isChanged = false;
-		}
-	}
-
-	undoChange(changedVar: any) {
-		let originalVar = this.originalEnvVars.filter((v: any) => v.id === changedVar.id)[0];
-
-		changedVar.key = originalVar.key;
-		changedVar.value = originalVar.value;
-		changedVar.isChanged = false;
-	}
-
-	removeVariable(envvar: any) {
-		this.envvars = this.envvars.filter((v: any) => v !== envvar);
-	}
+        if (
+            originalVar.key !== changedVar.key ||
+            originalVar.value !== changedVar.value
+        ) {
+            changedVar.isChanged = true;
+        } else {
+            changedVar.isChanged = false;
+        }
+    }
 
 	save() {
 		if (!this.validateEnvVars()) {
@@ -87,26 +94,29 @@ export class ListComponent implements OnChanges {
 		});
 	}
 
+    removeVariable(envvar: any) {
+        this.envvars = this.envvars.filter((v: any) => v !== envvar);
+    }
+
 	emitUpdated(envvars: any) {
 		this.updated.emit(envvars);
 	}
 
-	validateEnvVars() {
-		let isValid = true;
-		this.envvars.forEach((envvar: any) => {
-			envvar.errors = [];
+    validateEnvVars(): boolean {
+        let isValid = true;
+        this.envvars.forEach((envvar: any) => {
+            envvar.errors = [];
 
-			if (envvar.key === '') {
-				envvar.errors.push('Must specify key');
-				isValid = false;
-			}
+            if (envvar.key === '') {
+                envvar.errors.push('Must specify key');
+                isValid = false;
+            }
 
-			if (envvar.value === '') {
-				envvar.errors.push('Must specify value');
-				isValid = false;
-			}
-		});
-
+            if (envvar.value === '') {
+                envvar.errors.push('Must specify value');
+                isValid = false;
+            }
+        });
 		return isValid;
 	}
 

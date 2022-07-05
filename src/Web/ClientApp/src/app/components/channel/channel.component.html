@@ -8,7 +8,7 @@
             <p>{{channel.domain}}</p>
         </div>
     </div>
-    <div *ngIf="channel.appSummary.channels.length > 1 && activeTab != tabs.Settings">
+    <div *ngIf="channel.appSummary.channels.length > 1 && activeTab !== tabs.Settings">
         <div class="dropdown"
             [ngClass]="{ 'is-active': isSelectClicked }"
             (click)="toggleIsSelectClicked()">
@@ -23,7 +23,7 @@
             <div class="dropdown-menu" id="dropdown-menu" role="menu">
               <div class="dropdown-content">
                 <a *ngFor="let channel of channel.appSummary.channels" class="dropdown-item"
-                    [ngClass]="{ 'is-active': selectedChannel.id == channel.id }"
+                    [ngClass]="{ 'is-active': selectedChannel.id === channel.id }"
                     routerLink="/channel/{{channel.id}}">
                   {{channel.name}}
                 </a>
@@ -37,7 +37,7 @@
     <aside class="menu column is-full-mobile is-one-fifth-tablet">
         <ul class="menu-list">
             <li (click)="changeTab(tabs.Overview)">
-                <a [ngClass]="{ 'is-active': activeTab == tabs.Overview }">
+                <a [ngClass]="{ 'is-active': activeTab === tabs.Overview }">
                     <span class="icons">
                         <fa-icon [icon]="icons.faChartBar"></fa-icon>
                     </span>
@@ -45,7 +45,7 @@
                 </a>
             </li>
             <li (click)="changeTab(tabs.Logs)">
-                <a [ngClass]="{ 'is-active': activeTab == tabs.Logs }">
+                <a [ngClass]="{ 'is-active': activeTab === tabs.Logs }">
                     <span class="icons">
                         <fa-icon [icon]="icons.faStream"></fa-icon>
                     </span>
@@ -53,7 +53,7 @@
                 </a>
             </li>
             <li (click)="changeTab(tabs.Environment)">
-                <a [ngClass]="{ 'is-active': activeTab == tabs.Environment }">
+                <a [ngClass]="{ 'is-active': activeTab === tabs.Environment }">
                     <span class="icons">
                         <fa-icon [icon]="icons.faFilter"></fa-icon>
                     </span>
@@ -61,7 +61,7 @@
                 </a>
             </li>
             <li (click)="changeTab(tabs.Settings)">
-                <a [ngClass]="{ 'is-active': activeTab == tabs.Settings }">
+                <a [ngClass]="{ 'is-active': activeTab === tabs.Settings }">
                     <span class="icons">
                         <fa-icon [icon]="icons.faCog"></fa-icon>
                     </span>
@@ -72,7 +72,7 @@
     </aside>
 
     <div class="column is-full-mobile is-four-fifths-tablet">
-        <channel-overview *ngIf="activeTab == tabs.Overview" [channelId]="channel.id"></channel-overview>
+        <app-channel-overview *ngIf="activeTab == tabs.Overview" [channelId]="channel.id"></app-channel-overview>
         <app-settings *ngIf="activeTab == tabs.Settings" [channel]="channel"></app-settings>
         <app-logs *ngIf="activeTab == tabs.Logs" [appId]="channel.appSummary.id" [channelId]="channel.id"></app-logs>
         <app-environment-variable-list *ngIf="activeTab == tabs.Environment"
