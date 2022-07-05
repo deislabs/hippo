@@ -2,11 +2,12 @@ import {
     ChannelItem,
     ChannelService,
     JobStatus,
+    JobStatusService,
     RevisionItem,
 } from 'src/app/core/api/v1';
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
 import {
-    faCheckCircle,
+    faCircle,
     faNetworkWired,
     faTimesCircle,
 } from '@fortawesome/free-solid-svg-icons';
@@ -21,32 +22,65 @@ import en from 'javascript-time-ago/locale/en';
     templateUrl: './overview.component.html',
     styleUrls: ['./overview.component.css'],
 })
-export class OverviewComponent implements OnChanges {
+export class OverviewComponent implements OnChanges, OnInit, OnDestroy {
     @Input() channelId = '';
     channel!: ChannelItem;
+    channelStatus!: JobStatus;
     activeRevision!: RevisionItem | undefined;
     publishedAt: string | null | undefined;
-    icons = { faCheckCircle, faTimesCircle, faNetworkWired };
+    icons = { faCircle, faTimesCircle, faNetworkWired };
     types = ComponentTypes;
     protocol = window.location.protocol;
     loading = false;
     timeAgo: any;
-
-    jobStatus = JobStatus;
 
     interval: any = null;
     timeInterval = 5000;
 
     constructor(
         private readonly channelService: ChannelService,
+        private readonly jobStatusService: JobStatusService,
         private router: Router
     ) {
         TimeAgo.addDefaultLocale(en);
         this.timeAgo = new TimeAgo('en-US');
     }
 
+    ngOnInit(): void {
+        this.getJobStatus();
+
+        this.interval = setInterval(() => {
+            this.getJobStatus();
+        }, this.timeInterval);
+    }
+
     ngOnChanges(): void {
         this.refreshData();
+    }
+
+    ngOnDestroy(): void {
+        clearInterval(this.interval);
+    }
+
+    getJobStatus(): void {
+        this.jobStatusService
+            .apiJobstatusChannelIdGet(this.channelId)
+            .subscribe((res) => (this.channelStatus = res.status));
+    }
+
+    getStatusColor(status: JobStatus | undefined) {
+        switch (status) {
+            case JobStatus.Unknown:
+                return 'gray';
+            case JobStatus.Pending:
+                return 'yellow';
+            case JobStatus.Running:
+                return 'green';
+            case JobStatus.Dead:
+                return 'red';
+            default:
+                return 'gray';
+        }
     }
 
     refreshData() {
