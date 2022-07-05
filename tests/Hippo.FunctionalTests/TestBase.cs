@@ -220,6 +220,11 @@ public class NullNomadService : IJobService
         return null;
     }
 
+    public Job? GetJob(string jobName)
+    {
+        return null;
+    }
+
     private class NullJob : Job
     {
         public void Reload() { }
