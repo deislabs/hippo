@@ -1,3 +1,4 @@
+import { ChannelService, EnvironmentVariableItem } from 'src/app/core/api/v1';
 import {
     Component,
     EventEmitter,
@@ -8,7 +9,6 @@ import {
     ViewChild,
 } from '@angular/core';
 import { faBackward, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { ChannelService } from 'src/app/core/api/v1';
 
 import { SuccessComponent } from '../../helpers/success/success.component';
 
@@ -19,12 +19,14 @@ import { SuccessComponent } from '../../helpers/success/success.component';
 })
 export class ListComponent implements OnChanges {
     @Input() channelId = '';
-    @Input() originalEnvVars: any = [];
+    @Input() originalEnvVars: Array<EnvironmentVariableItem> = [];
     @ViewChild(SuccessComponent) success: SuccessComponent =
         new SuccessComponent();
 
     @Output()
-    updated: EventEmitter<Array<any>> = new EventEmitter<Array<any>>();
+    updated: EventEmitter<Array<EnvironmentVariableItem>> = new EventEmitter<
+        Array<EnvironmentVariableItem>
+    >();
 
     envvars: any = [];
 
@@ -109,11 +111,13 @@ export class ListComponent implements OnChanges {
             });
     }
 
-    removeVariable(envvar: any) {
-        this.envvars = this.envvars.filter((v: any) => v !== envvar);
+    removeVariable(envvar: EnvironmentVariableItem) {
+        this.envvars = this.envvars.filter(
+            (v: EnvironmentVariableItem) => v !== envvar
+        );
     }
 
-    emitUpdated(envvars: any) {
+    emitUpdated(envvars: Array<EnvironmentVariableItem>) {
         this.updated.emit(envvars);
     }
 
@@ -137,13 +141,15 @@ export class ListComponent implements OnChanges {
 
     refreshData() {
         this.envvars = [];
-        this.originalEnvVars.forEach((originalEnvVar: any) => {
-            this.envvars.push({
-                id: originalEnvVar.id,
-                channelId: originalEnvVar.channelId,
-                key: originalEnvVar.key,
-                value: originalEnvVar.value,
-            });
-        });
+        this.originalEnvVars.forEach(
+            (originalEnvVar: EnvironmentVariableItem) => {
+                this.envvars.push({
+                    id: originalEnvVar.id,
+                    channelId: originalEnvVar.channelId,
+                    key: originalEnvVar.key,
+                    value: originalEnvVar.value,
+                });
+            }
+        );
     }
 }
