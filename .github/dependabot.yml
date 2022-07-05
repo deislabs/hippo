@@ -34,6 +34,15 @@ updates:
       - dependency-name: "*"
         update-types: ["version-update:semver-major"]
   - package-ecosystem: "nuget"
+    directory: "/tests/Infrastructure.UnitTests"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "08:00"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+  - package-ecosystem: "nuget"
     directory: "/tests/Application.UnitTests"
     schedule:
       interval: "weekly"

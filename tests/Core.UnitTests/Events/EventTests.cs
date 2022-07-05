@@ -4,7 +4,7 @@ using Hippo.Core.Entities;
 using Hippo.Core.Events;
 using Xunit;
 
-namespace Core.UnitTests.Events;
+namespace Hippo.Core.UnitTests.Events;
 
 public class EventTests
 {
