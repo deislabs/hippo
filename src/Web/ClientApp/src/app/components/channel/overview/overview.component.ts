@@ -1,4 +1,9 @@
-import { ChannelItem, ChannelService, RevisionItem } from 'src/app/core/api/v1';
+import {
+    ChannelItem,
+    ChannelService,
+    JobStatus,
+    RevisionItem,
+} from 'src/app/core/api/v1';
 import { Component, Input, OnChanges } from '@angular/core';
 import {
     faCheckCircle,
@@ -26,6 +31,11 @@ export class OverviewComponent implements OnChanges {
     protocol = window.location.protocol;
     loading = false;
     timeAgo: any;
+
+    jobStatus = JobStatus;
+
+    interval: any = null;
+    timeInterval = 5000;
 
     constructor(
         private readonly channelService: ChannelService,
