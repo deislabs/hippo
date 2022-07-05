@@ -2,7 +2,7 @@ using System;
 using Hippo.Core.Common;
 using Xunit;
 
-namespace Core.UnitTests.Common;
+namespace Hippo.Core.UnitTests.Common;
 
 public class AuditableEntityTests
 {

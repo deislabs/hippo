@@ -2,7 +2,7 @@ using System;
 using Hippo.Core.Enums;
 using Xunit;
 
-namespace Core.UnitTests.Enums;
+namespace Hippo.Core.UnitTests.Enums;
 
 public class ChannelRevisionSelectionStrategyTests
 {

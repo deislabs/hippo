@@ -1,7 +1,7 @@
 using Xunit;
 using Hippo.Infrastructure.Services;
 
-namespace Infrastructure.UnitTests.Services;
+namespace Hippo.Infrastructure.UnitTests.Services;
 
 public class BindleServiceTests
 {
