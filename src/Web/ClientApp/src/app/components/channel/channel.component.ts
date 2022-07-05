@@ -66,7 +66,7 @@ export class ChannelComponent implements OnInit {
             });
     }
 
-	envvarsUpdated(envvars: any) {
-		this.channel.environmentVariables = envvars;
-	}
+    envvarsUpdated(envvars: any) {
+        this.channel.environmentVariables = envvars;
+    }
 }
