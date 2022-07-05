@@ -38,7 +38,7 @@ public class UpdateRevisionDetailsCommandHandler : IRequestHandler<UpdateRevisio
         }
 
         revision.Description = revisionDetails.Description;
-        var newComponents = revisionDetails.SpinToml.Component
+        var newComponents = revisionDetails.SpinToml.Components
             .Select(c => new Core.Entities.RevisionComponent
             {
                 Source = c.Source,

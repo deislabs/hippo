@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.UnitTests", "tests\Cor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hippo.FunctionalTests", "tests\Hippo.FunctionalTests\Hippo.FunctionalTests.csproj", "{8C25A909-52B2-4326-BF00-23C053376EB5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.UnitTests", "tests\Infrastructure.UnitTests\Infrastructure.UnitTests.csproj", "{4F25FBC8-3753-495C-8799-2DEE473D4764}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,6 +60,10 @@ Global
 		{8C25A909-52B2-4326-BF00-23C053376EB5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C25A909-52B2-4326-BF00-23C053376EB5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C25A909-52B2-4326-BF00-23C053376EB5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F25FBC8-3753-495C-8799-2DEE473D4764}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F25FBC8-3753-495C-8799-2DEE473D4764}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F25FBC8-3753-495C-8799-2DEE473D4764}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F25FBC8-3753-495C-8799-2DEE473D4764}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{96764F9E-66BB-4F64-A1BA-DE92537996E1} = {A432DA6D-ADCE-4EA1-9697-7A637F75605D}
@@ -67,5 +73,6 @@ Global
 		{AE958DF1-B480-4556-A68C-E042072DB7A6} = {3043D016-B9BF-4706-9773-3D58457A78AC}
 		{0BFC9718-3107-4E48-B952-C0B345A55A20} = {3043D016-B9BF-4706-9773-3D58457A78AC}
 		{8C25A909-52B2-4326-BF00-23C053376EB5} = {3043D016-B9BF-4706-9773-3D58457A78AC}
+		{4F25FBC8-3753-495C-8799-2DEE473D4764} = {3043D016-B9BF-4706-9773-3D58457A78AC}
 	EndGlobalSection
 EndGlobal
