@@ -18,14 +18,14 @@ public class GetJobStatusQueryHandler : IRequestHandler<GetJobStatusQuery, Chann
         _jobService = jobService;
     }
 
-    public async Task<ChannelJobStatusItem> Handle(GetJobStatusQuery request, CancellationToken cancellationToken)
+    public Task<ChannelJobStatusItem> Handle(GetJobStatusQuery request, CancellationToken cancellationToken)
     {
         var job = _jobService.GetJob(request.ChannelId.ToString());
 
-        return new ChannelJobStatusItem
+        return Task.FromResult(new ChannelJobStatusItem
         {
             ChannelId = request.ChannelId,
             Status = job?.Status ?? JobStatus.Dead,
-        };
+        });
     }
 }
