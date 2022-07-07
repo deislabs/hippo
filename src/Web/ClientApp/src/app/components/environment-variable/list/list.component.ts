@@ -120,15 +120,27 @@ export class ListComponent implements OnChanges {
     validateEnvVars(): boolean {
         let isValid = true;
         this.envvars.forEach((envvar: any) => {
-            envvar.errors = [];
+            envvar.errors = {
+                keys: [],
+                values: [],
+            };
 
             if (envvar.key === '') {
-                envvar.errors.push('Must specify key');
+                envvar.errors.keys.push('Must specify key');
                 isValid = false;
             }
 
             if (envvar.value === '') {
-                envvar.errors.push('Must specify value');
+                envvar.errors.values.push('Must specify value');
+                isValid = false;
+            }
+
+            if (
+                this.envvars.filter(
+                    (item: EnvironmentVariableItem) => item.key == envvar.key
+                ).length > 1
+            ) {
+                envvar.errors.keys.push('Key must be unique');
                 isValid = false;
             }
         });

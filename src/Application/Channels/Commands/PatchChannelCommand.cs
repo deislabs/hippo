@@ -115,23 +115,17 @@ public class PatchChannelCommandHandler : IRequestHandler<PatchChannelCommand>
             return new List<EnvironmentVariable>();
         }
 
-        var toBeAdded = new List<EnvironmentVariable>();
         var existingVariablesKeys = existingVariables.Select(v => v.Key);
-        var newVariables = environmentVariables.Where(v => !existingVariablesKeys.Contains(v.Key));
 
-        foreach (var environmentVariable in newVariables)
-        {
-            var entity = new EnvironmentVariable
+        return environmentVariables
+            .Where(v => !existingVariablesKeys.Contains(v.Key))
+            .Select(entity => new EnvironmentVariable
             {
-                Key = environmentVariable.Key,
-                Value = environmentVariable.Value,
+                Key = entity.Key,
+                Value = entity.Value,
                 Channel = channel
-            };
-
-            toBeAdded.Add(entity);
-        }
-
-        return toBeAdded;
+            })
+            .ToList();
     }
 
     private static List<EnvironmentVariable> EnvironmentVariablesToBeUpdated(List<EnvironmentVariable> existingVariables,

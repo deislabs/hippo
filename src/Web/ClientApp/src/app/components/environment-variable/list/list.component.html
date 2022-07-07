@@ -11,13 +11,13 @@
                 <input class="input" type="text" placeholder="Env. variable key"
                     [(ngModel)]="envvar.key"
                     (ngModelChange)="inputChanges(envvar)"
-                    [ngClass]="{ 'is-danger': envvar.errors && envvar.errors.length > 0 && !envvar.key }">
+                    [ngClass]="{ 'is-danger': envvar.errors && envvar.errors.keys && envvar.errors.keys.length > 0 }">
             </div>
             <div class="column is-4">
                 <input class="input" type="text" placeholder="Env. variable value"
                     [(ngModel)]="envvar.value"
                     (ngModelChange)="inputChanges(envvar)"
-                    [ngClass]="{ 'is-danger': envvar.errors && envvar.errors.length > 0 && !envvar.value }">
+                    [ngClass]="{ 'is-danger': envvar.errors && envvar.errors.values && envvar.errors.values.length > 0 }">
             </div>
             <div class="column is-4 field is-grouped">
                 <p class="control">
