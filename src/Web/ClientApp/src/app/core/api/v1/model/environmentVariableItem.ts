@@ -12,7 +12,6 @@
 
 
 export interface EnvironmentVariableItem { 
-    id: string;
     channelId: string;
     key: string;
     value: string;

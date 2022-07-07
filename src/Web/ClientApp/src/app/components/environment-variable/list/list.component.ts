@@ -79,21 +79,17 @@ export class ListComponent implements OnChanges {
         const originalVar = this.originalEnvVars.filter(
             (v: any) => v.id === changedVar.id
         )[0];
-        if (
-            originalVar.key !== changedVar.key ||
-            originalVar.value !== changedVar.value
-        ) {
-            changedVar.isChanged = true;
-        } else {
-            changedVar.isChanged = false;
-        }
+
+        changedVar.key = originalVar.key;
+        changedVar.value = originalVar.value;
+        changedVar.isChanged = false;
     }
 
     save() {
         if (!this.validateEnvVars()) {
             return;
         }
-
+        console.log(this.envvars);
         this.channelService
             .apiChannelIdPatch(this.channelId, {
                 environmentVariables: this.envvars,
@@ -141,15 +137,14 @@ export class ListComponent implements OnChanges {
 
     refreshData() {
         this.envvars = [];
-        this.originalEnvVars.forEach(
-            (originalEnvVar: EnvironmentVariableItem) => {
-                this.envvars.push({
-                    id: originalEnvVar.id,
-                    channelId: originalEnvVar.channelId,
-                    key: originalEnvVar.key,
-                    value: originalEnvVar.value,
-                });
-            }
-        );
+        this.originalEnvVars.forEach((originalEnvVar: any, index: number) => {
+            originalEnvVar.id = index.toString();
+            this.envvars.push({
+                id: index.toString(),
+                channelId: originalEnvVar.channelId,
+                key: originalEnvVar.key,
+                value: originalEnvVar.value,
+            });
+        });
     }
 }

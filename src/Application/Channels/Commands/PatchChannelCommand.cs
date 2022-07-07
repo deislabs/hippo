@@ -64,7 +64,7 @@ public class PatchChannelCommandHandler : IRequestHandler<PatchChannelCommand>
     {
         var existingVariables = GetExistingEnvironmentVariables(request.ChannelId);
 
-        var envVariablesToBeAdded = EnvironmentVariablesToBeAdded(request.EnvironmentVariables.Value, channel);
+        var envVariablesToBeAdded = EnvironmentVariablesToBeAdded(existingVariables, request.EnvironmentVariables.Value, channel);
         var envVariablesToBeUpdated = EnvironmentVariablesToBeUpdated(existingVariables, request.EnvironmentVariables.Value);
         var envVariablesToBeDeleted = EnvironmentVariablesToBeRemoved(existingVariables, request.EnvironmentVariables.Value);
 
@@ -79,7 +79,7 @@ public class PatchChannelCommandHandler : IRequestHandler<PatchChannelCommand>
         {
             foreach (var environmentVariable in request.EnvironmentVariables.Value)
             {
-                var updatedEnvVar = existingVariables.FirstOrDefault(v => v.Id == environmentVariable.Id);
+                var updatedEnvVar = existingVariables.FirstOrDefault(v => v.Key == environmentVariable.Key);
 
                 if (updatedEnvVar is null)
                 {
@@ -107,7 +107,8 @@ public class PatchChannelCommandHandler : IRequestHandler<PatchChannelCommand>
             .ToList();
     }
 
-    private static List<EnvironmentVariable> EnvironmentVariablesToBeAdded(List<UpdateEnvironmentVariableDto>? environmentVariables, Channel channel)
+    private static List<EnvironmentVariable> EnvironmentVariablesToBeAdded(List<EnvironmentVariable> existingVariables, 
+        List<UpdateEnvironmentVariableDto>? environmentVariables, Channel channel)
     {
         if (environmentVariables is null)
         {
@@ -115,7 +116,8 @@ public class PatchChannelCommandHandler : IRequestHandler<PatchChannelCommand>
         }
 
         var toBeAdded = new List<EnvironmentVariable>();
-        var newVariables = environmentVariables.Where(v => v.Id is null);
+        var existingVariablesKeys = existingVariables.Select(v => v.Key);
+        var newVariables = environmentVariables.Where(v => !existingVariablesKeys.Contains(v.Key));
 
         foreach (var environmentVariable in newVariables)
         {
@@ -140,9 +142,9 @@ public class PatchChannelCommandHandler : IRequestHandler<PatchChannelCommand>
             return new List<EnvironmentVariable>();
         }
 
-        var environmentVariablesIds = environmentVariables.Select(v => v.Id);
+        var environmentVariablesKeys = environmentVariables.Select(v => v.Key);
 
-        return existingVariables.Where(v => environmentVariablesIds.Contains(v.Id)).ToList();
+        return existingVariables.Where(v => environmentVariablesKeys.Contains(v.Key)).ToList();
     }
 
     private static List<EnvironmentVariable> EnvironmentVariablesToBeRemoved(List<EnvironmentVariable> existingVariables,
@@ -153,8 +155,8 @@ public class PatchChannelCommandHandler : IRequestHandler<PatchChannelCommand>
             environmentVariables = new List<UpdateEnvironmentVariableDto>();
         }
 
-        var environmentVariablesIds = environmentVariables.Select(v => v.Id);
+        var environmentVariablesKeys = environmentVariables.Select(v => v.Key);
 
-        return existingVariables.Where(v => !environmentVariablesIds.Contains(v.Id)).ToList();
+        return existingVariables.Where(v => !environmentVariablesKeys.Contains(v.Key)).ToList();
     }
 }
