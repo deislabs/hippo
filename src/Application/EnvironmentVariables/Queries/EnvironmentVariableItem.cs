@@ -4,11 +4,8 @@ using Hippo.Core.Entities;
 
 namespace Hippo.Application.EnvironmentVariables.Queries;
 
-public class EnvironmentVariableDto : IMapFrom<EnvironmentVariable>
+public class EnvironmentVariableItem : IMapFrom<EnvironmentVariable>
 {
-    [Required]
-    public Guid Id { get; set; }
-
     [Required]
     public Guid ChannelId { get; set; }
 

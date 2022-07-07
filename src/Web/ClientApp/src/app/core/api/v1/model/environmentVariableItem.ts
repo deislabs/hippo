@@ -9,13 +9,11 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
-import { AppChannelListItem } from './appChannelListItem';
 
 
-export interface AppSummaryDto { 
-    id: string;
-    name: string;
-    storageId: string;
-    channels: Array<AppChannelListItem>;
+export interface EnvironmentVariableItem { 
+    channelId: string;
+    key: string;
+    value: string;
 }
 
