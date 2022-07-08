@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Hippo.Web.Api;
 
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class ChannelController : ApiControllerBase
 {
     [HttpGet]
