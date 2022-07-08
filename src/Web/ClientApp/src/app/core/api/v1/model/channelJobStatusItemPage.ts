@@ -13,10 +13,10 @@ import { ChannelJobStatusItem } from './channelJobStatusItem';
 
 
 export interface ChannelJobStatusItemPage { 
-    items?: Array<ChannelJobStatusItem> | null;
-    totalItems?: number;
-    pageIndex?: number | null;
-    pageSize?: number | null;
-    readonly isLastPage?: boolean | null;
+    items: Array<ChannelJobStatusItem>;
+    totalItems: number;
+    pageIndex: number;
+    pageSize: number;
+    readonly isLastPage: boolean;
 }
 

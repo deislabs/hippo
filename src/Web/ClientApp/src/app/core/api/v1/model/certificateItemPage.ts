@@ -13,10 +13,10 @@ import { CertificateItem } from './certificateItem';
 
 
 export interface CertificateItemPage { 
-    items?: Array<CertificateItem> | null;
-    totalItems?: number;
-    pageIndex?: number | null;
-    pageSize?: number | null;
-    readonly isLastPage?: boolean | null;
+    items: Array<CertificateItem>;
+    totalItems: number;
+    pageIndex: number;
+    pageSize: number;
+    readonly isLastPage: boolean;
 }
 

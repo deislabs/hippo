@@ -12,10 +12,10 @@
 
 
 export interface StringPage { 
-    items?: Array<string> | null;
-    totalItems?: number;
-    pageIndex?: number | null;
-    pageSize?: number | null;
-    readonly isLastPage?: boolean | null;
+    items: Array<string>;
+    totalItems: number;
+    pageIndex: number;
+    pageSize: number;
+    readonly isLastPage: boolean;
 }
 
