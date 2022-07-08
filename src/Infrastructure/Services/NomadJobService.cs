@@ -216,6 +216,24 @@ public class NomadJobService : IJobService
         }
     }
 
+    public Application.Jobs.Job? GetJob(string jobName)
+    {
+        try
+        {
+            var job = _jobsClient.GetJob(jobName);
+
+            return new NomadJob(_configuration,
+                Guid.Parse(job.ID),
+                string.Empty,
+                string.Empty,
+                Enum.Parse<JobStatus>(FormatNomadJobStatus(job.Status)));
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
     private string FormatNomadJobStatus(string status)
     {
         return char.ToUpper(status[0]) + status[1..];

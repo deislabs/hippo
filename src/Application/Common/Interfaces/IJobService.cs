@@ -8,4 +8,5 @@ public interface IJobService
     public void DeleteJob(string jobName);
     public string[] GetJobLogs(string jobName);
     public IEnumerable<Job>? GetJobs();
+    public Job? GetJob(string jobName);
 }

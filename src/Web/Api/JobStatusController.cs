@@ -20,4 +20,13 @@ public class JobStatusController : ApiControllerBase
             PageSize = pageSize,
         });
     }
+
+    [HttpGet("{channelId}")]
+    public async Task<ActionResult<ChannelJobStatusItem>> GetJobStatus(Guid channelId)
+    {
+        return await Mediator.Send(new GetJobStatusQuery
+        {
+            ChannelId = channelId,
+        });
+    }
 }

@@ -2,9 +2,13 @@
     <div *ngIf="!loading">
         <div class="box">
             <div *ngIf="activeRevision">
-                <!-- TODO: add status -->
-                <span class="icon has-text-success">
-                    <fa-icon [icon]="icons.faCheckCircle"></fa-icon>
+                <span class="icon">
+                    <fa-icon
+                        [icon]="icons.faCircle" 
+                        [ngStyle]="{'color': getStatusColor(channelStatus)}"
+                        [attr.data-tooltip]=channelStatus
+                    >
+                    </fa-icon>
                 </span>
                 Version {{activeRevision.revisionNumber}} was published {{publishedAt}}.
             </div>

@@ -13,8 +13,8 @@ import { AppChannelListItem } from './appChannelListItem';
 
 
 export interface AppItem { 
-    name: string;
     id: string;
+    name: string;
     storageId: string;
     description?: string | null;
     channels: Array<AppChannelListItem>;
