@@ -13,10 +13,10 @@ import { RevisionItem } from './revisionItem';
 
 
 export interface RevisionItemPage { 
-    items?: Array<RevisionItem> | null;
-    totalItems?: number;
-    pageIndex?: number | null;
-    pageSize?: number | null;
-    readonly isLastPage?: boolean | null;
+    items: Array<RevisionItem>;
+    totalItems: number;
+    pageIndex: number;
+    pageSize: number;
+    readonly isLastPage: boolean;
 }
 

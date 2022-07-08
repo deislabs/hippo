@@ -13,10 +13,10 @@ import { ChannelItem } from './channelItem';
 
 
 export interface ChannelItemPage { 
-    items?: Array<ChannelItem> | null;
-    totalItems?: number;
-    pageIndex?: number | null;
-    pageSize?: number | null;
-    readonly isLastPage?: boolean | null;
+    items: Array<ChannelItem>;
+    totalItems: number;
+    pageIndex: number;
+    pageSize: number;
+    readonly isLastPage: boolean;
 }
 
