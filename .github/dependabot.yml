@@ -1,6 +1,12 @@
 version: 2
 updates:
   - package-ecosystem: "nuget"
+    directory: "/src/Core"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "08:00"
+  - package-ecosystem: "nuget"
     directory: "/src/Application"
     schedule:
       interval: "weekly"
@@ -20,6 +26,15 @@ updates:
         update-types: ["version-update:semver-major"]
   - package-ecosystem: "nuget"
     directory: "/src/Web"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "08:00"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major"]
+  - package-ecosystem: "nuget"
+    directory: "/tests/Infrastructure.UnitTests"
     schedule:
       interval: "weekly"
       day: "monday"

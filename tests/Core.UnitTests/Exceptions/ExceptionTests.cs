@@ -2,7 +2,7 @@ using System;
 using Hippo.Core.Exceptions;
 using Xunit;
 
-namespace Core.UnitTests.Exceptions;
+namespace Hippo.Core.UnitTests.Exceptions;
 
 public class ExceptionTests
 {

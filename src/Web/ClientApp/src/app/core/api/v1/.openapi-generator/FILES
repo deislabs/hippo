@@ -6,7 +6,6 @@ api/api.ts
 api/app.service.ts
 api/certificate.service.ts
 api/channel.service.ts
-api/environmentVariable.service.ts
 api/jobStatus.service.ts
 api/revision.service.ts
 api/storage.service.ts
@@ -30,10 +29,8 @@ model/createAccountCommand.ts
 model/createAppCommand.ts
 model/createCertificateCommand.ts
 model/createChannelCommand.ts
-model/createEnvironmentVariableCommand.ts
 model/createTokenCommand.ts
-model/environmentVariableDto.ts
-model/environmentVariablesVm.ts
+model/environmentVariableItem.ts
 model/getChannelLogsVm.ts
 model/guidNullableField.ts
 model/jobStatus.ts
@@ -49,7 +46,6 @@ model/tokenInfo.ts
 model/updateAppCommand.ts
 model/updateCertificateCommand.ts
 model/updateChannelCommand.ts
-model/updateEnvironmentVariableCommand.ts
 model/updateEnvironmentVariableDto.ts
 model/updateEnvironmentVariableDtoListField.ts
 variables.ts

@@ -75,6 +75,10 @@
         <app-channel-overview *ngIf="activeTab === tabs.Overview" [channelId]="channel.id"></app-channel-overview>
         <app-settings *ngIf="activeTab === tabs.Settings" [channel]="channel"></app-settings>
         <app-logs *ngIf="activeTab === tabs.Logs" [appId]="channel.appSummary.id" [channelId]="channel.id"></app-logs>
-        <app-environment-variable-list *ngIf="activeTab === tabs.Environment" [channelId]="channel.id"></app-environment-variable-list>
+        <app-environment-variable-list *ngIf="activeTab === tabs.Environment"
+            [channelId]="channel.id"
+            [originalEnvVars]="channel.environmentVariables" 
+            (updated)="envvarsUpdated($event)">
+        </app-environment-variable-list>
     </div>
 </div>

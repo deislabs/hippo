@@ -5,7 +5,7 @@ using Hippo.Core.Entities;
 
 namespace Hippo.Application.Revisions.Queries;
 
-public class RevisionItem : IMapFrom<Revision>
+public class RevisionItem : IMapFrom<Revision>, IComparable<RevisionItem>
 {
     [Required]
     public Guid Id { get; set; }
@@ -22,12 +22,13 @@ public class RevisionItem : IMapFrom<Revision>
     [NoMap]
     public string? Type { get; set; }
 
-    public string OrderKey()
+    public int CompareTo(RevisionItem? other)
     {
-        if (SemVer.Version.TryParse(RevisionNumber, out var version))
-        {
-            return $"{version.Major:D9}{version.Minor:D9}{version.Patch:D9}{RevisionNumber}";
-        }
-        return RevisionNumber!;
+        if (other is null)
+            throw new ArgumentNullException();
+
+        Version a = new Version(RevisionNumber);
+        Version b = new Version(other.RevisionNumber);
+        return a.CompareTo(b);
     }
 }

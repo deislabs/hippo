@@ -47,13 +47,12 @@ public class BindleService : IStorageService
         }
 
         var parcelHttpResponse = await _client.GetParcel(revisionId, parcelId);
-        return await ParseSpinTomlParcel(parcelHttpResponse);
+        return ParseSpinToml(await parcelHttpResponse.ReadAsStringAsync());
     }
 
-    private static async Task<RevisionSpinToml> ParseSpinTomlParcel(HttpContent parcelResponse)
+    public static RevisionSpinToml ParseSpinToml(string spinToml)
     {
-        var content = await parcelResponse.ReadAsStringAsync();
-        var parsedContent = Toml.Parse(content);
+        var parsedContent = Toml.Parse(spinToml);
         if (parsedContent.HasErrors)
         {
             throw new ArgumentException($"Error parsing Toml content");

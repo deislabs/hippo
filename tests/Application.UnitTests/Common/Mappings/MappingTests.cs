@@ -38,7 +38,7 @@ public class MappingTests
     [InlineData(typeof(Certificate), typeof(CertificateRecord))]
     [InlineData(typeof(Channel), typeof(ChannelItem))]
     [InlineData(typeof(Channel), typeof(ChannelRecord))]
-    [InlineData(typeof(EnvironmentVariable), typeof(EnvironmentVariableDto))]
+    [InlineData(typeof(EnvironmentVariable), typeof(EnvironmentVariableItem))]
     [InlineData(typeof(EnvironmentVariable), typeof(EnvironmentVariableRecord))]
     [InlineData(typeof(Revision), typeof(RevisionItem))]
     [InlineData(typeof(Revision), typeof(RevisionRecord))]
