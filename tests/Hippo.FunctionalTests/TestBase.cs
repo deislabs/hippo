@@ -122,9 +122,9 @@ public class TestBase : IDisposable
     {
         using var scope = _scopeFactory.CreateScope();
 
-        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Account>>();
+        var userManager = scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
 
-        var user = new Account { UserName = userName, Email = userName };
+        var user = new IdentityUser(userName);
 
         var result = await userManager.CreateAsync(user, password);
 
@@ -142,7 +142,7 @@ public class TestBase : IDisposable
 
         if (result.Succeeded)
         {
-            _currentUserId = user.Id;
+            _currentUserId = user.UserName;
 
             return _currentUserId;
         }

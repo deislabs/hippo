@@ -1,4 +1,5 @@
 ﻿using Hippo.Application.Common.Interfaces;
+using MediatR;
 using MediatR.Pipeline;
 using Microsoft.Extensions.Logging;
 
@@ -20,13 +21,8 @@ public class LoggingBehaviour<TRequest> : IRequestPreProcessor<TRequest> where T
     public async Task Process(TRequest request, CancellationToken cancellationToken)
     {
         var requestName = typeof(TRequest).Name;
-        var userId = _currentUserService.UserId ?? string.Empty;
-        string userName = string.Empty;
-
-        if (!string.IsNullOrEmpty(userId))
-        {
-            userName = await _identityService.GetUserNameAsync(userId);
-        }
+        var userId = _currentUserService.UserId;
+        var userName = string.IsNullOrEmpty(userId) ? null : await _identityService.GetUserNameAsync(userId, cancellationToken);
 
         _logger.LogInformation("Hippo Request: {Name} {@UserId} {@UserName} {@Request}",
             requestName, userId, userName, request);

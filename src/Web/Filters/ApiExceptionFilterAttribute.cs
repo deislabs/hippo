@@ -14,6 +14,7 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
         // Register known exception types and handlers.
         _exceptionHandlers = new Dictionary<Type, Action<ExceptionContext>>
             {
+                { typeof(AccountException), HandleAccountException},
                 { typeof(ValidationException), HandleValidationException },
                 { typeof(LoginFailedException), HandleLoginFailedException },
                 { typeof(NotFoundException), HandleNotFoundException },
@@ -46,6 +47,22 @@ public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
         }
 
         HandleUnknownException(context);
+    }
+
+    private void HandleAccountException(ExceptionContext context)
+    {
+        var exception = (AccountException)context.Exception;
+
+        var details = new ProblemDetails()
+        {
+            Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+            Title = "Registration failed.",
+            Detail = exception.Message
+        };
+
+        context.Result = new BadRequestObjectResult(details);
+
+        context.ExceptionHandled = true;
     }
 
     private void HandleValidationException(ExceptionContext context)

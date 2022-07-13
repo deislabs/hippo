@@ -19,7 +19,7 @@ export class SessionService {
     // log into the system with the provided credentials
     login(username: string, password: string) {
         return this.accountService
-            .apiAccountCreatetokenPost({ userName: username, password })
+            .apiAccountLoginPasswordPost({ userName: username, password })
             .pipe(
                 map((tokenInfo) => {
                     localStorage.setItem('token', JSON.stringify(tokenInfo));

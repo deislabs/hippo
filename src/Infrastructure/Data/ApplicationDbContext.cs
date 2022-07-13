@@ -1,15 +1,16 @@
 using System.Reflection;
 using Hippo.Application.Common.Interfaces;
+using Hippo.Application.Common.Models;
 using Hippo.Core.Entities;
 using Hippo.Infrastructure.Data.Interceptors;
-using Hippo.Infrastructure.Identity;
 using MediatR;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hippo.Infrastructure.Data;
 
-public class ApplicationDbContext : IdentityDbContext<Account>, IApplicationDbContext
+public class ApplicationDbContext : IdentityDbContext<IdentityUser>, IApplicationDbContext
 {
     private readonly IMediator _mediator;
     private readonly AuditableEntitySaveChangesInterceptor _auditableEntitySaveChangesInterceptor;
@@ -58,7 +59,7 @@ public class ApplicationDbContext : IdentityDbContext<Account>, IApplicationDbCo
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
         var result = await base.SaveChangesAsync(cancellationToken);
-        
+
         await _mediator.DispatchDomainEvents(this);
 
         return result;

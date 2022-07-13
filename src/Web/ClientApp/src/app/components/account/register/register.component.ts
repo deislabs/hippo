@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { faLock, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faAt, faLock } from '@fortawesome/free-solid-svg-icons';
 
 import { AccountService } from 'src/app/core/api/v1';
 import { MustMatch } from 'src/app/_helpers/must-match.validator';
@@ -16,7 +16,7 @@ export class RegisterComponent implements OnInit {
     registrationForm!: FormGroup;
     loading = false;
     submitted = false;
-    faUser = faUser;
+    faAt = faAt;
     faLock = faLock;
 
     constructor(
@@ -56,11 +56,24 @@ export class RegisterComponent implements OnInit {
         this.accountService
             .apiAccountPost({
                 userName: this.f['username'].value,
-                password: this.f['password'].value,
             })
             .subscribe({
                 // TODO: navigate to registration confirmation page
-                next: () => this.router.navigate(['/']),
+                next: () => {
+                    this.accountService
+                        .apiAccountAddPasswordPost({
+                            userName: this.f['username'].value,
+                            password: this.f['password'].value,
+                        })
+                        .subscribe({
+                            next: () => this.router.navigate(['/']),
+                            error: (err) => {
+                                console.log(err);
+                                this.error = err;
+                                this.loading = false;
+                            },
+                        });
+                },
                 error: (err) => {
                     console.log(err);
                     this.error = err;

@@ -11,23 +11,20 @@ namespace Hippo.Application.Accounts.Commands;
 public class CreateAccountCommand : IRequest<string>
 {
     [Required]
-    public string UserName { get; set; } = "";
-
-    [Required]
-    public string Password { get; set; } = "";
+    public string UserName { get; set; } = string.Empty;
 }
 
 public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand, string>
 {
     private readonly ICurrentUserService _currentUserService;
-    private readonly HippoConfig _hippoConfig;
     private readonly IIdentityService _identityService;
+    private readonly HippoConfig _hippoConfig;
 
-    public CreateAccountCommandHandler(ICurrentUserService currentUserService, HippoConfig hippoConfig, IIdentityService identityService)
+    public CreateAccountCommandHandler(ICurrentUserService currentUserService, IIdentityService identityService, HippoConfig hippoConfig)
     {
         _currentUserService = currentUserService;
-        _hippoConfig = hippoConfig;
         _identityService = identityService;
+        _hippoConfig = hippoConfig;
     }
 
     public async Task<string> Handle(CreateAccountCommand request, CancellationToken cancellationToken)
@@ -41,7 +38,7 @@ public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand,
 
             case RegistrationMode.AdministratorOnly:
                 {
-                    if (_currentUserService.UserId is null || !await _identityService.IsInRoleAsync(_currentUserService.UserId, UserRole.Administrator))
+                    if (string.IsNullOrEmpty(_currentUserService.UserId) || !await _identityService.IsInRoleAsync(_currentUserService.UserId, UserRole.Administrator, cancellationToken))
                     {
                         throw new ForbiddenAccessException("only administrators are allowed to register new accounts");
                     }
@@ -49,7 +46,12 @@ public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand,
                 }
         }
 
-        var result = await _identityService.CreateUserAsync(request.UserName, request.Password);
+        var result = await _identityService.CreateUserAsync(request.UserName, cancellationToken);
+        if (!result.Result.Succeeded)
+        {
+            throw new AccountException(result.Result.Errors);
+        }
+
         return result.UserId;
     }
 }

@@ -32,7 +32,7 @@ public class RequestLoggerTests
 
         await requestLogger.Process(new CreateAppCommand { Name = "helloworld", StorageId = "bacongobbler/helloworld" }, new CancellationToken());
 
-        _identityService.Verify(i => i.GetUserNameAsync(It.IsAny<string>()), Times.Once);
+        _identityService.Verify(i => i.GetUserNameAsync(It.IsAny<string>(), CancellationToken.None), Times.Once);
     }
 
     [Fact]
@@ -42,6 +42,6 @@ public class RequestLoggerTests
 
         await requestLogger.Process(new CreateAppCommand { Name = "helloworld", StorageId = "bacongobbler/helloworld" }, new CancellationToken());
 
-        _identityService.Verify(i => i.GetUserNameAsync(It.IsAny<string>()), Times.Never);
+        _identityService.Verify(i => i.GetUserNameAsync(It.IsAny<string>(), CancellationToken.None), Times.Never);
     }
 }

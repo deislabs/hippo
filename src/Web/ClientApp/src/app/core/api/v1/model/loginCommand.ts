@@ -11,7 +11,8 @@
  */
 
 
-export interface CreateAccountCommand { 
+export interface LoginCommand { 
     userName: string;
+    password: string;
 }
 

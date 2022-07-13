@@ -4,7 +4,7 @@
 
 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="mgh-small mgb-medium">
 	<div class="field">
-		<label class="label"><fa-icon class="icon" [icon]="faUser"></fa-icon>Username</label>
+		<label class="label"><fa-icon class="icon" [icon]="faAt"></fa-icon>Username</label>
 		<div class="control has-icons-left has-icons-right">
 			<input type="text" formControlName="username"
 			[ngClass]="{ 'is-danger': submitted && f['username'].errors }"

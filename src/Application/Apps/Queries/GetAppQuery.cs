@@ -19,11 +19,14 @@ public class GetAppQueryHandler : IRequestHandler<GetAppQuery, AppItem>
 {
     private readonly IApplicationDbContext _context;
 
+    private readonly ICurrentUserService _currentUserService;
+
     private readonly IMapper _mapper;
 
-    public GetAppQueryHandler(IApplicationDbContext context, IMapper mapper)
+    public GetAppQueryHandler(IApplicationDbContext context, ICurrentUserService currentUserService, IMapper mapper)
     {
         _context = context;
+        _currentUserService = currentUserService;
         _mapper = mapper;
     }
 
@@ -31,6 +34,7 @@ public class GetAppQueryHandler : IRequestHandler<GetAppQuery, AppItem>
     {
         var entity = await _context.Apps
             .Where(a => a.Id == request.Id)
+            .Where(a => a.CreatedBy == _currentUserService.UserId)
             .Include(a => a.Channels)
             .Include(a => a.Revisions)
             .FirstOrDefaultAsync(cancellationToken);

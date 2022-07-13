@@ -1,4 +1,5 @@
 using Hippo.Application.Common.Security;
+using Hippo.Core.Entities;
 using Hippo.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 
@@ -16,15 +17,10 @@ public static class ApplicationDbContextSeed
         }
     }
 
-    public static async Task SeedAdministratorAccountsAsync(UserManager<Account> userManager, string username, string email, string password)
+    public static async Task SeedAdministratorAccountsAsync(UserManager<IdentityUser> userManager, string username, string password)
     {
-        var user = new Account
-        {
-            UserName = username,
-            Email = email
-        };
-
-        await userManager.CreateAsync(user, password);
-        await userManager.AddToRoleAsync(user, UserRole.Administrator);
+        var identityUser = new IdentityUser(username);
+        await userManager.CreateAsync(identityUser, password);
+        await userManager.AddToRoleAsync(identityUser, UserRole.Administrator);
     }
 }

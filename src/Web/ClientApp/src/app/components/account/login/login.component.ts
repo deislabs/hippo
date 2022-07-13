@@ -1,7 +1,7 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { faLock, faUser } from '@fortawesome/free-solid-svg-icons';
+import { faAt, faLock } from '@fortawesome/free-solid-svg-icons';
 
 import { SessionService } from 'src/app/_services/session.service';
 
@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit {
     loading = false;
     submitted = false;
     returnUrl = '/';
-    faUser = faUser;
+    faAt = faAt;
     faLock = faLock;
 
     constructor(

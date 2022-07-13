@@ -5,7 +5,6 @@ using Hippo.Application.Common.Interfaces;
 using Hippo.Infrastructure;
 using Hippo.Infrastructure.Data;
 using Hippo.Infrastructure.HealthChecks;
-using Hippo.Infrastructure.Identity;
 using Hippo.Web.Extensions;
 using Hippo.Web.Services;
 using Microsoft.AspNetCore.Identity;
@@ -46,7 +45,7 @@ builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services.Configure<ApiBehaviorOptions>(options =>
             options.SuppressModelStateInvalidFilter = true);
 
-builder.Services.AddAuthentication().AddCookie().AddJwtBearer(cfg =>
+builder.Services.AddAuthentication().AddJwtBearer(cfg =>
     {
         cfg.TokenValidationParameters = new TokenValidationParameters
         {
@@ -132,7 +131,7 @@ using (var scope = app.Services.CreateScope())
             context.Database.Migrate();
         }
 
-        var userManager = services.GetRequiredService<UserManager<Account>>();
+        var userManager = services.GetRequiredService<UserManager<IdentityUser>>();
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
 
         await ApplicationDbContextSeed.SeedIdentityRolesAsync(roleManager);
@@ -142,7 +141,7 @@ using (var scope = app.Services.CreateScope())
 
         foreach (var admin in hippoConfig.Administrators)
         {
-            await ApplicationDbContextSeed.SeedAdministratorAccountsAsync(userManager, admin.Username, admin.Username, admin.Password);
+            await ApplicationDbContextSeed.SeedAdministratorAccountsAsync(userManager, admin.Username, admin.Password);
         }
     }
     catch (Exception ex)

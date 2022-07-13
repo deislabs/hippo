@@ -13,12 +13,14 @@ configuration.ts
 encoder.ts
 git_push.sh
 index.ts
+model/addPasswordCommand.ts
 model/appChannelListItem.ts
 model/appItem.ts
 model/appItemPage.ts
 model/appSummaryDto.ts
 model/certificateItem.ts
 model/certificateItemPage.ts
+model/changePasswordCommand.ts
 model/channelItem.ts
 model/channelItemPage.ts
 model/channelJobStatusItem.ts
@@ -29,11 +31,11 @@ model/createAccountCommand.ts
 model/createAppCommand.ts
 model/createCertificateCommand.ts
 model/createChannelCommand.ts
-model/createTokenCommand.ts
 model/environmentVariableItem.ts
 model/getChannelLogsVm.ts
 model/guidNullableField.ts
 model/jobStatus.ts
+model/loginWithPasswordCommand.ts
 model/models.ts
 model/patchChannelCommand.ts
 model/registerRevisionCommand.ts
