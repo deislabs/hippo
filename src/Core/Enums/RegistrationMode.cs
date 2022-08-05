@@ -1,8 +1,13 @@
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
 namespace Hippo.Core.Enums;
 
 /// <summary>
 /// The mode to use to when registering new accounts
 /// </summary>
+
+[JsonConverter(typeof(StringEnumConverter))]
 public enum RegistrationMode
 {
     /// <summary>
