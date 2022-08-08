@@ -1,8 +1,13 @@
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
 namespace Hippo.Core.Enums;
 
 /// <summary>
 /// The strategy to use to select a revision for the Channel
 /// </summary>
+
+[JsonConverter(typeof(StringEnumConverter))]
 public enum ChannelRevisionSelectionStrategy
 {
     /// <summary>
