@@ -7,8 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Hippo.Web.Api;
 
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-public class AppController : ApiControllerBase
+public class AppsController : ApiControllerBase
 {
     [HttpGet]
     public async Task<ActionResult<Page<AppItem>>> Index(
@@ -26,14 +25,6 @@ public class AppController : ApiControllerBase
             SortBy = sortBy,
             IsSortedAscending = IsSortedAscending
         });
-    }
-
-    [HttpGet("export")]
-    public async Task<FileResult> Export()
-    {
-        var vm = await Mediator.Send(new ExportAppsQuery());
-
-        return File(vm.Content, vm.ContentType, vm.FileName);
     }
 
     [HttpPost]

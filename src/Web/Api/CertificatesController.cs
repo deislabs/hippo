@@ -7,8 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Hippo.Web.Api;
 
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-public class CertificateController : ApiControllerBase
+public class CertificatesController : ApiControllerBase
 {
     [HttpGet]
     public async Task<ActionResult<Page<CertificateItem>>> Index(
@@ -26,14 +25,6 @@ public class CertificateController : ApiControllerBase
             SortBy = sortBy,
             IsSortedAscending = IsSortedAscending
         });
-    }
-
-    [HttpGet("export")]
-    public async Task<FileResult> Export()
-    {
-        var vm = await Mediator.Send(new ExportCertificatesQuery());
-
-        return File(vm.Content, vm.ContentType, vm.FileName);
     }
 
     [HttpPost]

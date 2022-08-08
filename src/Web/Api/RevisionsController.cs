@@ -1,14 +1,11 @@
 using Hippo.Application.Revisions.Commands;
 using Hippo.Application.Revisions.Queries;
 using Hippo.Core.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hippo.Web.Api;
 
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-public class RevisionController : ApiControllerBase
+public class RevisionsController : ApiControllerBase
 {
     [HttpGet]
     public async Task<ActionResult<Page<RevisionItem>>> Index(
@@ -20,14 +17,6 @@ public class RevisionController : ApiControllerBase
             PageIndex = pageIndex,
             PageSize = pageSize
         });
-    }
-
-    [HttpGet("export")]
-    public async Task<FileResult> Export()
-    {
-        var vm = await Mediator.Send(new ExportRevisionsQuery());
-
-        return File(vm.Content, vm.ContentType, vm.FileName);
     }
 
     [HttpPost]

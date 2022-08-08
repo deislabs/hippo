@@ -15,6 +15,7 @@ public class Channel : AuditableEntity
     public Revision? ActiveRevision { get; set; }
 
     public DateTime? LastPublishAt { get; set; }
+    public DesiredStatus DesiredStatus { get; set; }
 
     public Guid? CertificateId { get; set; }
 

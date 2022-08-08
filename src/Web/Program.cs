@@ -7,6 +7,7 @@ using Hippo.Infrastructure.Data;
 using Hippo.Infrastructure.HealthChecks;
 using Hippo.Infrastructure.Identity;
 using Hippo.Web.Extensions;
+using Hippo.Web.Helpers;
 using Hippo.Web.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -45,6 +46,11 @@ builder.Services.AddRouting(options => options.LowercaseUrls = true);
 
 builder.Services.Configure<ApiBehaviorOptions>(options =>
             options.SuppressModelStateInvalidFilter = true);
+
+builder.Services.AddMvc(options =>
+{
+    options.Conventions.Add(new ApiControllerNameConvention());
+});
 
 builder.Services.AddAuthentication().AddCookie().AddJwtBearer(cfg =>
     {
