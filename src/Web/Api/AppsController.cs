@@ -27,6 +27,12 @@ public class AppsController : ApiControllerBase
         });
     }
 
+    [HttpGet("{id}")]
+    public async Task<ActionResult<AppItem>> GetApp(Guid id)
+    {
+        return await Mediator.Send(new GetAppQuery { Id = id });
+    }
+
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] CreateAppCommand command)
     {
