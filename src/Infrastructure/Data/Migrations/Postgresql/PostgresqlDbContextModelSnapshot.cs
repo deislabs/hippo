@@ -17,7 +17,7 @@ namespace Hippo.Infrastructure.Data.Migrations.Postgresql
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.5")
+                .HasAnnotation("ProductVersion", "6.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -111,6 +111,9 @@ namespace Hippo.Infrastructure.Data.Migrations.Postgresql
 
                     b.Property<string>("CreatedBy")
                         .HasColumnType("text");
+
+                    b.Property<int>("DesiredStatus")
+                        .HasColumnType("integer");
 
                     b.Property<string>("Domain")
                         .IsRequired()

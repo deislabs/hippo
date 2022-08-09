@@ -1,13 +1,10 @@
 using Hippo.Application.Revisions.Queries;
 using Hippo.Core.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hippo.Web.Api;
 
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-public class StorageController : ApiControllerBase
+public class StoragesController : ApiControllerBase
 {
     [HttpGet]
     public async Task<Page<string>> QueryStorages(

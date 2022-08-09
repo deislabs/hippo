@@ -1,15 +1,11 @@
 using Hippo.Application.Channels.Commands;
 using Hippo.Application.Channels.Queries;
-using Hippo.Application.EnvironmentVariables.Commands;
 using Hippo.Core.Models;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hippo.Web.Api;
 
-[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-public class ChannelController : ApiControllerBase
+public class ChannelsController : ApiControllerBase
 {
     [HttpGet]
     public async Task<ActionResult<Page<ChannelItem>>> Index(
@@ -35,14 +31,6 @@ public class ChannelController : ApiControllerBase
         return await Mediator.Send(new GetChannelQuery { Id = id });
     }
 
-    [HttpGet("export")]
-    public async Task<FileResult> Export()
-    {
-        var vm = await Mediator.Send(new ExportChannelsQuery());
-
-        return File(vm.Content, vm.ContentType, vm.FileName);
-    }
-
     [HttpPost]
     public async Task<ActionResult<Guid>> Create([FromBody] CreateChannelCommand command)
     {
@@ -53,6 +41,19 @@ public class ChannelController : ApiControllerBase
     public async Task<ActionResult> Update(Guid id, UpdateChannelCommand command)
     {
         if (id != command.Id)
+        {
+            return BadRequest();
+        }
+
+        await Mediator.Send(command);
+
+        return NoContent();
+    }
+
+    [HttpPut("{channelId}/desired-status")]
+    public async Task<ActionResult> UpdateDesiredStatus(Guid channelId, UpdateDesiredStatusCommand command)
+    {
+        if (channelId != command.ChannelId)
         {
             return BadRequest();
         }
@@ -80,7 +81,7 @@ public class ChannelController : ApiControllerBase
         return NoContent();
     }
 
-    [HttpGet("logs/{id}")]
+    [HttpGet("{id}/logs")]
     public async Task<GetChannelLogsVm> Logs([FromRoute] Guid id)
     {
         return await Mediator.Send(new GetChannelLogsQuery(id));
