@@ -3,8 +3,8 @@ import {
     AppItem,
     AppsService,
     ChannelJobStatusItem,
-    JobStatus,
     ChannelStatusesService,
+    JobStatus,
 } from 'src/app/core/api/v1';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { faCircle, faPlus } from '@fortawesome/free-solid-svg-icons';
