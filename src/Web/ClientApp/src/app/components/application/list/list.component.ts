@@ -1,10 +1,10 @@
 import {
     AppChannelListItem,
     AppItem,
-    AppService,
+    AppsService,
     ChannelJobStatusItem,
+    ChannelStatusesService,
     JobStatus,
-    JobStatusService,
 } from 'src/app/core/api/v1';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { faCircle, faPlus } from '@fortawesome/free-solid-svg-icons';
@@ -27,8 +27,8 @@ export class ListComponent implements OnInit, OnDestroy {
     timeInterval = 5000;
 
     constructor(
-        private readonly appService: AppService,
-        private readonly jobStatusService: JobStatusService
+        private readonly appsService: AppsService,
+        private readonly channelStatusesService: ChannelStatusesService
     ) {}
 
     ngOnInit(): void {
@@ -41,8 +41,8 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     getJobStatus(): void {
-        this.jobStatusService
-            .apiJobstatusGet()
+        this.channelStatusesService
+            .apiChannelStatusesGet()
             .subscribe((res) => (this.statuses = res.items));
     }
 
@@ -84,7 +84,7 @@ export class ListComponent implements OnInit, OnDestroy {
     }
 
     refreshData() {
-        this.appService.apiAppGet().subscribe({
+        this.appsService.apiAppsGet().subscribe({
             next: (vm) => (this.apps = vm.items),
             error: (error) => {
                 console.log(error);

@@ -1,8 +1,8 @@
 import {
     ChannelItem,
-    ChannelService,
+    ChannelStatusesService,
+    ChannelsService,
     JobStatus,
-    JobStatusService,
     RevisionItem,
 } from 'src/app/core/api/v1';
 import { Component, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
@@ -38,8 +38,8 @@ export class OverviewComponent implements OnChanges, OnInit, OnDestroy {
     timeInterval = 5000;
 
     constructor(
-        private readonly channelService: ChannelService,
-        private readonly jobStatusService: JobStatusService,
+        private readonly channelsService: ChannelsService,
+        private readonly channelStatusesService: ChannelStatusesService,
         private router: Router
     ) {
         TimeAgo.addDefaultLocale(en);
@@ -63,9 +63,9 @@ export class OverviewComponent implements OnChanges, OnInit, OnDestroy {
     }
 
     getJobStatus(): void {
-        this.jobStatusService
-            .apiJobstatusChannelIdGet(this.channelId)
-            .subscribe((res) => (this.channelStatus = res.status));
+        this.channelStatusesService
+            .apiChannelStatusesGet(undefined, undefined, this.channelId)
+            .subscribe((res) => (this.channelStatus = res.items[0].status));
     }
 
     getStatusColor(status: JobStatus | undefined) {
@@ -85,7 +85,7 @@ export class OverviewComponent implements OnChanges, OnInit, OnDestroy {
 
     refreshData() {
         this.loading = true;
-        this.channelService.apiChannelIdGet(this.channelId).subscribe({
+        this.channelsService.apiChannelsIdGet(this.channelId).subscribe({
             next: (channel) => {
                 !channel
                     ? this.router.navigate(['/404'])

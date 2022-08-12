@@ -1,4 +1,4 @@
-import { AccountService, TokenInfo } from 'src/app/core/api/v1';
+import { AuthTokensService, TokenInfo } from 'src/app/core/api/v1';
 import { BehaviorSubject, Observable, map } from 'rxjs';
 import { Injectable } from '@angular/core';
 
@@ -9,7 +9,7 @@ export class SessionService {
     tokenSubject$: BehaviorSubject<TokenInfo>;
     token$: Observable<TokenInfo>;
 
-    constructor(private readonly accountService: AccountService) {
+    constructor(private readonly authTokensService: AuthTokensService) {
         this.tokenSubject$ = new BehaviorSubject<TokenInfo>(
             JSON.parse(localStorage.getItem('token') || '{}')
         );
@@ -18,8 +18,8 @@ export class SessionService {
 
     // log into the system with the provided credentials
     login(username: string, password: string) {
-        return this.accountService
-            .apiAccountCreatetokenPost({ userName: username, password })
+        return this.authTokensService
+            .apiAuthTokensPost({ userName: username, password })
             .pipe(
                 map((tokenInfo) => {
                     localStorage.setItem('token', JSON.stringify(tokenInfo));

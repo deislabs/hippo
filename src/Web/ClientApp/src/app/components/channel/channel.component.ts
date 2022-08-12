@@ -2,7 +2,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
     AppChannelListItem,
     ChannelItem,
-    ChannelService,
+    ChannelsService,
 } from 'src/app/core/api/v1';
 import { ApplicationTabs, ComponentTypes } from 'src/app/_helpers/constants';
 import { Component, OnInit } from '@angular/core';
@@ -33,7 +33,7 @@ export class ChannelComponent implements OnInit {
     constructor(
         private route: ActivatedRoute,
         private router: Router,
-        private readonly channelService: ChannelService
+        private readonly channelsService: ChannelsService
     ) {}
 
     ngOnInit(): void {
@@ -52,8 +52,8 @@ export class ChannelComponent implements OnInit {
     }
 
     refreshData() {
-        this.channelService
-            .apiChannelIdGet(this.channelId)
+        this.channelsService
+            .apiChannelsIdGet(this.channelId)
             .subscribe((channel) => {
                 !channel
                     ? this.router.navigate(['/404'])

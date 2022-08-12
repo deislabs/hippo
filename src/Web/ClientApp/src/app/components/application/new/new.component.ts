@@ -1,9 +1,9 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-    AppService,
+    AppsService,
     ChannelRevisionSelectionStrategy,
-    ChannelService,
-    StorageService,
+    ChannelsService,
+    StoragesService,
 } from 'src/app/core/api/v1';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -38,9 +38,9 @@ export class NewComponent implements OnInit {
     storageQueryChanged = new Subject<string>();
 
     constructor(
-        private readonly appService: AppService,
-        private readonly channelService: ChannelService,
-        private readonly storageService: StorageService,
+        private readonly appsService: AppsService,
+        private readonly channelsService: ChannelsService,
+        private readonly storagesService: StoragesService,
         private route: ActivatedRoute,
         private readonly router: Router
     ) {}
@@ -84,7 +84,7 @@ export class NewComponent implements OnInit {
     }
 
     queryStorages(newQuery: string) {
-        return this.storageService.apiStorageGet(newQuery, 0, 5);
+        return this.storagesService.apiStoragesGet(newQuery, 0, 5);
     }
 
     selectStorage(storage: string) {
@@ -106,15 +106,15 @@ export class NewComponent implements OnInit {
         }
 
         this.loading = true;
-        this.appService
-            .apiAppPost({
+        this.appsService
+            .apiAppsPost({
                 name: this.f['name'].value,
                 storageId: this.f['storageId'].value,
             })
             .subscribe({
                 next: (appId) => {
-                    this.channelService
-                        .apiChannelPost({
+                    this.channelsService
+                        .apiChannelsPost({
                             appId: appId,
                             name: 'Production',
                             revisionSelectionStrategy:

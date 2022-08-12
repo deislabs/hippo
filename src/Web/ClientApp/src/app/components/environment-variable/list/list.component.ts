@@ -1,4 +1,4 @@
-import { ChannelService, EnvironmentVariableItem } from 'src/app/core/api/v1';
+import { ChannelsService, EnvironmentVariableItem } from 'src/app/core/api/v1';
 import {
     Component,
     EventEmitter,
@@ -35,7 +35,7 @@ export class ListComponent implements OnChanges {
     faTrash = faTrash;
     faSave = faSave;
 
-    constructor(private readonly channelService: ChannelService) {}
+    constructor(private readonly channelsService: ChannelsService) {}
 
     ngOnChanges(changes: { [propName: string]: SimpleChange }): void {
         if (
@@ -90,8 +90,8 @@ export class ListComponent implements OnChanges {
             return;
         }
         console.log(this.envvars);
-        this.channelService
-            .apiChannelIdPatch(this.channelId, {
+        this.channelsService
+            .apiChannelsIdPatch(this.channelId, {
                 environmentVariables: this.envvars,
             })
             .subscribe({
