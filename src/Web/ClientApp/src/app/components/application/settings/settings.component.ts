@@ -1,4 +1,4 @@
-import { AppService, ChannelService } from 'src/app/core/api/v1';
+import { AppsService, ChannelsService } from 'src/app/core/api/v1';
 import { Component, Input, OnInit } from '@angular/core';
 import { faEdit, faPlus, faTrash } from '@fortawesome/free-solid-svg-icons';
 
@@ -28,8 +28,8 @@ export class SettingsComponent implements OnInit {
 
     constructor(
         private router: Router,
-        private readonly appService: AppService,
-        private readonly channelService: ChannelService
+        private readonly appsService: AppsService,
+        private readonly channelsService: ChannelsService
     ) {}
 
     ngOnInit(): void {
@@ -37,7 +37,7 @@ export class SettingsComponent implements OnInit {
     }
 
     deleteApp(id: string) {
-        this.appService.apiAppIdDelete(id).subscribe({
+        this.appsService.apiAppsIdDelete(id).subscribe({
             next: () => this.router.navigate(['/']),
             error: (error) => {
                 console.log(error);
@@ -47,8 +47,8 @@ export class SettingsComponent implements OnInit {
 
     editAppInfo() {
         if (this.editAppName !== this.channel.appSummary.name) {
-            this.appService
-                .apiAppIdPut(this.channel.appSummary.id, {
+            this.appsService
+                .apiAppsIdPut(this.channel.appSummary.id, {
                     id: this.channel.appSummary.id,
                     name: this.editAppName,
                 })
@@ -81,7 +81,7 @@ export class SettingsComponent implements OnInit {
 
     deleteChannel(channelId: string) {
         if (this.channel.appSummary.channels.length > 1) {
-            this.channelService.apiChannelIdDelete(channelId).subscribe({
+            this.channelsService.apiChannelsIdDelete(channelId).subscribe({
                 next: () => {
                     this.channel.appSummary.channels =
                         this.channel.appSummary.channels.filter(
@@ -112,17 +112,18 @@ export class SettingsComponent implements OnInit {
 
     editChannelInfo(channel: any) {
         if (this.editChannelName !== this.channel.name) {
-            this.channelService.apiChannelIdGet(channel.id).subscribe({
-                next: (channelDetails) => {
-                    this.channelService
-                        .apiChannelIdPut(channel.id, {
-                            id: channelDetails.id,
+            this.channelsService.apiChannelsIdGet(channel.id).subscribe({
+                next: (channelsDetails) => {
+                    this.channelsService
+                        .apiChannelsIdPut(channel.id, {
+                            id: channelsDetails.id,
                             name: this.editChannelName,
                             revisionSelectionStrategy:
-                                channelDetails.revisionSelectionStrategy,
-                            rangeRule: channelDetails.rangeRule,
-                            domain: channelDetails.domain,
-                            activeRevisionId: channelDetails.activeRevision?.id,
+                                channelsDetails.revisionSelectionStrategy,
+                            rangeRule: channelsDetails.rangeRule,
+                            domain: channelsDetails.domain,
+                            activeRevisionId:
+                                channelsDetails.activeRevision?.id,
                         })
                         .subscribe({
                             next: () => {

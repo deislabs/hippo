@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges } from '@angular/core';
-import { ChannelService } from 'src/app/core/api/v1';
+import { ChannelsService } from 'src/app/core/api/v1';
 
 @Component({
     selector: 'app-logs',
@@ -13,7 +13,7 @@ export class LogsComponent implements OnChanges {
     logs: Array<string> = [];
     loading = false;
 
-    constructor(private readonly channelService: ChannelService) {}
+    constructor(private readonly channelsService: ChannelsService) {}
 
     ngOnChanges(): void {
         this.refreshData();
@@ -22,7 +22,7 @@ export class LogsComponent implements OnChanges {
     refreshData(): void {
         this.loading = true;
 
-        this.channelService.apiChannelLogsIdGet(this.channelId).subscribe({
+        this.channelsService.apiChannelsIdLogsGet(this.channelId).subscribe({
             next: (vm) => {
                 this.logs = vm.logs;
                 this.loading = false;

@@ -1,7 +1,7 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import {
     ChannelRevisionSelectionStrategy,
-    ChannelService,
+    ChannelsService,
 } from 'src/app/core/api/v1';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
@@ -26,7 +26,7 @@ export class NewComponent implements OnInit {
     created: EventEmitter<object> = new EventEmitter<object>();
 
     constructor(
-        private readonly channelService: ChannelService,
+        private readonly channelsService: ChannelsService,
         private route: ActivatedRoute,
         private readonly router: Router
     ) {}
@@ -60,8 +60,8 @@ export class NewComponent implements OnInit {
         }
 
         this.loading = true;
-        this.channelService
-            .apiChannelPost({
+        this.channelsService
+            .apiChannelsPost({
                 appId: this.appId,
                 name: this.f['name'].value,
                 revisionSelectionStrategy:

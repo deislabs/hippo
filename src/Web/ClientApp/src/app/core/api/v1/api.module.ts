@@ -2,13 +2,14 @@ import { NgModule, ModuleWithProviders, SkipSelf, Optional } from '@angular/core
 import { Configuration } from './configuration';
 import { HttpClient } from '@angular/common/http';
 
-import { AccountService } from './api/account.service';
-import { AppService } from './api/app.service';
-import { CertificateService } from './api/certificate.service';
-import { ChannelService } from './api/channel.service';
-import { JobStatusService } from './api/jobStatus.service';
-import { RevisionService } from './api/revision.service';
-import { StorageService } from './api/storage.service';
+import { AccountsService } from './api/accounts.service';
+import { AppsService } from './api/apps.service';
+import { AuthTokensService } from './api/authTokens.service';
+import { CertificatesService } from './api/certificates.service';
+import { ChannelStatusesService } from './api/channelStatuses.service';
+import { ChannelsService } from './api/channels.service';
+import { RevisionsService } from './api/revisions.service';
+import { StoragesService } from './api/storages.service';
 
 @NgModule({
   imports:      [],

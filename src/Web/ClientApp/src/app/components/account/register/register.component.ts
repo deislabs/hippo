@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { faLock, faUser } from '@fortawesome/free-solid-svg-icons';
 
-import { AccountService } from 'src/app/core/api/v1';
+import { AccountsService } from 'src/app/core/api/v1';
 import { MustMatch } from 'src/app/_helpers/must-match.validator';
 import { Router } from '@angular/router';
 
@@ -20,7 +20,7 @@ export class RegisterComponent implements OnInit {
     faLock = faLock;
 
     constructor(
-        private readonly accountService: AccountService,
+        private readonly accountsService: AccountsService,
         private readonly router: Router
     ) {}
 
@@ -53,8 +53,8 @@ export class RegisterComponent implements OnInit {
         }
 
         this.loading = true;
-        this.accountService
-            .apiAccountPost({
+        this.accountsService
+            .apiAccountsPost({
                 userName: this.f['username'].value,
                 password: this.f['password'].value,
             })
