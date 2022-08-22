@@ -20,7 +20,7 @@ public class RevisionComponent
     public string? Files { get; set; }
 
     /// Optional list of HTTP hosts the component is allowed to connect.
-    public List<string>? AllowedHTTPHosts { get; set; }
+    public List<string>? AllowedHttpHosts { get; set; }
 
     /// Environment variables to be mapped inside the Wasm module at runtime.
     public Dictionary<string, string>? Environment { get; set; }
