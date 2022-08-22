@@ -57,8 +57,10 @@ public class ApplicationDbContext : IdentityDbContext<Account>, IApplicationDbCo
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
     {
+        await _mediator.DispatchDeletedDomainEvents(this);
+
         var result = await base.SaveChangesAsync(cancellationToken);
-        
+
         await _mediator.DispatchDomainEvents(this);
 
         return result;
