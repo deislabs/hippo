@@ -196,6 +196,11 @@ public class TestBase : IDisposable
         return new string(Enumerable.Repeat(chars, length)
             .Select(s => s[random.Next(s.Length)]).ToArray());
     }
+
+    public static IConfiguration GetConfiguration()
+    {
+        return _configuration;
+    }
 }
 
 public class NullNomadService : IJobService
