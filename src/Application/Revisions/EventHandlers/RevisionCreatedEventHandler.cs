@@ -50,7 +50,7 @@ public class RevisionCreatedEventHandler : INotificationHandler<CreatedEvent<Rev
                     {
                         Id = channel.Id,
                         ActiveRevisionId = activeRevision.Id,
-                        LastPublishDate = DateTime.Now,
+                        LastPublishDate = DateTime.UtcNow,
                         CertificateId = channel.CertificateId,
                         Domain = channel.Domain,
                         Name = channel.Name,
