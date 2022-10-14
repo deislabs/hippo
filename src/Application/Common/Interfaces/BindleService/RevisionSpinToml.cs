@@ -7,7 +7,7 @@ public class RevisionSpinToml
 {
     public RevisionTrigger? Trigger { get; set; }
 
-    public Dictionary<string, Dictionary<string, string>> Config { get; set; } = new();
+    public Dictionary<string, Dictionary<string, string>> Variables { get; set; } = new();
 
     [Required]
     [DataMember(Name = "component")]

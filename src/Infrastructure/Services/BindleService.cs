@@ -60,7 +60,8 @@ public class BindleService : IStorageService
 
         var tomlOptions = new TomlModelOptions
         {
-            ConvertPropertyName = name => TomlNamingHelper.PascalToCamelCase(name)
+            ConvertPropertyName = name => TomlNamingHelper.PascalToCamelCase(name),
+            IgnoreMissingProperties = true
         };
 
         return parsedContent.ToModel<RevisionSpinToml>(tomlOptions);
