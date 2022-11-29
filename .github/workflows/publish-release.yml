@@ -38,7 +38,7 @@ jobs:
     needs: release
     strategy:
       matrix:
-        target: ['linux-x64', 'win-x64', 'osx-x64']
+        target: ['linux-x64', 'win-x64', 'osx-x64', 'linux-arm64']
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
