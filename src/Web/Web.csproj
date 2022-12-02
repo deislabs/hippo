@@ -12,49 +12,7 @@
 		<IsPackable>true</IsPackable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
-		<SpaRoot>ClientApp</SpaRoot>
-		<SpaProxyServerUrl>http://localhost:44467</SpaProxyServerUrl>
-		<SpaProxyLaunchCommand>npm start</SpaProxyLaunchCommand>
 	</PropertyGroup>
-
-	<ItemGroup>
-		<!-- Don't publish the SPA source files, but do show them in the project files list -->
-		<Content Remove="$(SpaRoot)\**" />
-		<None Remove="$(SpaRoot)\**" />
-		<None Include="$(SpaRoot)\**" Exclude="$(SpaRoot)\node_modules\**" />
-	</ItemGroup>
-
-	<Target Name="NpmInstall" BeforeTargets="Build" Inputs="$(SpaRoot)\package.json" Outputs="$(SpaRoot)\node_modules\.install-stamp">
-		<!-- Ensure Node.js is installed -->
-		<Exec Command="node --version" ContinueOnError="true" EchoOff="true" StandardOutputImportance="Low">
-			<Output TaskParameter="ExitCode" PropertyName="ErrorCode" />
-		</Exec>
-		<Error Condition="'$(ErrorCode)' != '0'" Text="Node.js is required to build and run this project. To continue, please install Node.js from https://nodejs.org/, and then restart your command prompt or IDE." />
-		<Message Importance="high" Text="Restoring dependencies using 'npm'. This may take several minutes..." />
-		<Exec WorkingDirectory="$(SpaRoot)\" Command="npm install" />
-		<!-- Write the stamp file so incremental builds work -->
-		<Touch Files="$(SpaRoot)\node_modules\.install-stamp" AlwaysCreate="true" />
-	</Target>
-
-	<Target Name="PublishRunWebpack" BeforeTargets="Build" DependsOnTargets="NpmInstall">
-		<Exec WorkingDirectory="$(SpaRoot)\" Command="npm run lint" />
-		<Exec WorkingDirectory="$(SpaRoot)\" Command="npm run publish" />
-
-		<!-- Include the newly-built files in the publish output -->
-		<ItemGroup>
-			<DistFiles Include="wwwroot\**" />
-			<ResolvedFileToPublish Include="@(DistFiles->'%(FullPath)')" Exclude="@(ResolvedFileToPublish)">
-				<RelativePath>%(DistFiles.Identity)</RelativePath>
-				<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-				<ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-			</ResolvedFileToPublish>
-		</ItemGroup>
-	</Target>
-
-	<Target Name="NpmClean" BeforeTargets="Clean">
-		<RemoveDir Directories="wwwroot" />
-		<RemoveDir Directories="$(SpaRoot)\node_modules" />
-	</Target>
 
 	<ItemGroup>
 		<PackageReference Include="FluentValidation.AspNetCore" Version="10.4.0" />
