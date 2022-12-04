@@ -48,11 +48,16 @@ public class CreateChannelCommandHandler : IRequestHandler<CreateChannelCommand,
 
         var app = await _context.Apps
             .Where(a => a.Id == request.AppId)
+            .Include(a => a.Channels)
             .SingleOrDefaultAsync(cancellationToken);
         _ = app ?? throw new NotFoundException(nameof(App), request.AppId);
-        var defaultDomain = $"{request.Name}.{app.Name}.{_config.PlatformDomain}"
-            .Replace('_', '-')
-            .ToLower();
+
+        var defaultDomain = $"{app.Name}.{_config.PlatformDomain}";
+
+        if (app.Channels.Count > 0)
+            defaultDomain = $"{request.Name}-" + defaultDomain;
+
+        defaultDomain = defaultDomain.Replace('_', '-').ToLower();
 
         var entity = new Channel
         {
