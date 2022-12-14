@@ -1,0 +1,24 @@
+<app-warning [error]="error"></app-warning>
+
+<form [formGroup]="channelForm" (ngSubmit)="onSubmit()">
+	<div class="field">
+		<label class="label">Name</label>
+		<div class="control has-icons-left has-icons-right">
+			<input type="text" formControlName="name"
+				[ngClass]="{ 'is-danger': submitted && f['name'].errors }"
+				class="input" placeholder="amphibius" />
+			<div *ngIf="submitted && f['name'].errors" class="help is-danger">
+				<div *ngIf="f['name'].errors['required']">Name is required.</div>
+			</div>
+		</div>
+	</div>
+
+	<button [disabled]="loading" type="submit" class="button is-primary">
+		<span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+		Create
+	</button>
+	<button [disabled]="loading" type="button" (click)="cancel()" class="button ml-1">
+		<span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+		Cancel
+	</button>
+</form>

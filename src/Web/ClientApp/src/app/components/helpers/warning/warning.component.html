@@ -1,0 +1,11 @@
+<article *ngIf="errors && errors.length > 0" class="message is-danger">
+    <div class="message-header">
+        <p>Error</p>
+        <button class="delete" aria-label="delete" (click)="closeWarning()"></button>
+    </div>
+    <div class="message-body">
+        <p *ngFor="let error of errors" >
+            {{error}}
+        </p>
+    </div>
+</article>

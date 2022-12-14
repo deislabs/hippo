@@ -1,0 +1,51 @@
+<div class="box p-6 has-background-light">
+    <div *ngIf="!loading">
+        <div class="box">
+            <div *ngIf="activeRevision">
+                <span class="icon">
+                    <fa-icon
+                        [icon]="icons.faCircle" 
+                        [ngStyle]="{'color': getStatusColor(channelStatus)}"
+                        [attr.data-tooltip]=channelStatus
+                    >
+                    </fa-icon>
+                </span>
+                Version {{activeRevision.revisionNumber}} was published {{publishedAt}}.
+            </div>
+            <div *ngIf="!activeRevision">
+                <span class="icon has-text-danger">
+                    <fa-icon [icon]="icons.faTimesCircle"></fa-icon>
+                </span>
+                No active revision found on this channel.
+            </div>
+        </div>
+    
+        <div *ngIf="activeRevision">
+            <div class="title is-size-5">Active revision components</div>
+            <div class="columns is-multiline mx-1">
+                <div *ngFor="let component of activeRevision.components"
+                    class="box has-text-centered column is-full-mobile is-half-tablet is-one-quarter-desktop mb-5 ml-2"
+                >
+                    <div class="is-uppercase">{{component.type}}</div>
+                    <div class="fa-5x has-text-info-dark">
+                        <span class="icon">
+                            <fa-icon [icon]="icons.faNetworkWired"></fa-icon>
+                        </span>
+                    </div>
+                    <div class="has-text-weight-bold is-size-4">{{component.name}}</div>
+                    <div class="is-underlined">
+                        <div *ngIf="component.type === types.HTTP">
+                            <a href="{{protocol}}//{{channel.domain}}{{getRedirectRoute(component.route!)}}" target="_blank">{{component.route}}</a>
+                        </div>
+                        <div *ngIf="component.type === types.Redis">{{component.channel}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="loading" class="columns">
+        <div class="column is-2 is-offset-5">
+            <span class="loader is-size-2 m-auto"></span>
+        </div>
+    </div>
+</div>

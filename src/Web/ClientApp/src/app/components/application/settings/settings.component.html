@@ -1,0 +1,98 @@
+<div class="box columns is-multiline has-background-light">
+    <span class="subtitle column is-12 has-text-weight-bold">
+        App info
+    </span>
+    <div class="field column is-12">
+        <label class="label">Name</label>
+        <div class="control">
+            <div *ngIf="!isEditingAppInfo">
+                <span>{{channel.appSummary.name}}</span>
+                <button class="button is-link ml-2 small-edit-button" (click)="startEditingAppInfo()">
+                    <fa-icon class="icon small-edit-button-icon" [icon]="faEdit"></fa-icon>
+                </button>
+            </div>
+            <div *ngIf="isEditingAppInfo" class="columns ml-1 mt-1">
+                <input *ngIf="isEditingAppInfo" class="input column is-4" type="text" placeholder="Name" [(ngModel)]="editAppName" >
+                <div class="field is-grouped ml-2">
+                    <p class="control">
+                        <button class="button is-link is-outlined"
+                            (click)="editAppInfo()">
+                            <span>Save</span>
+                        </button>
+                    </p>
+                    <p class="control">
+                        <button class="button is-danger is-outlined"
+                            (click)="cancelEditingAppInfo()">
+                            <span>Cancel</span>
+                        </button>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="field column is-12">
+        <label class="label">Storage</label>
+        <div class="control">
+            <span>{{channel.appSummary.storageId}}</span>
+        </div>
+    </div>
+    <div class="column">
+        <button class="button is-danger" (click)="deleteApp(channel.appId)">
+            <fa-icon class="icon" [icon]="faTrash"></fa-icon>
+            <span>Delete application</span>
+        </button>
+    </div>
+    <span class="subtitle column is-12 has-text-weight-bold">
+        Channels
+    </span>
+    <div *ngFor="let chn of channel.appSummary.channels" class="column is-12">
+        <div *ngIf="chn.id !== editChannelId" class="columns">
+            <span class="column is-4">{{chn.name}}</span>
+            <div class="field is-grouped ml-2">
+                <p class="control">
+                    <button *ngIf="!showChannelForm"
+                        class="button is-link is-outlined"
+                        (click)="startEditingChannelInfo(chn)">
+                        <span>Edit</span>
+                    </button>
+                </p>
+                <p class="control">
+                    <button *ngIf="!showChannelForm && channel.appSummary.channels.length > 1"
+                        class="button is-danger is-outlined"
+                        (click)="deleteChannel(chn.id)">
+                        <span>Delete</span>
+                    </button>
+                </p>
+            </div>
+        </div>
+        <div *ngIf="chn.id === editChannelId" class="columns mb-1">
+            <input class="input column is-4" type="text" placeholder="Name" [(ngModel)]="editChannelName">
+            <div class="field is-grouped ml-2">
+                <p class="control">
+                    <button class="button is-link is-outlined"
+                        (click)="editChannelInfo(chn)">
+                        <span>Save</span>
+                    </button>
+                </p>
+                <p class="control">
+                    <button class="button is-danger is-outlined"
+                        (click)="cancelEditingChannelInfo()">
+                        <span>Cancel</span>
+                    </button>
+                </p>
+            </div>
+        </div>
+    </div>
+    <app-channel-new *ngIf="showChannelForm" [appId]="channel.appSummary.id" class="column is-12"
+        (cancelled)="cancelNewChannelAddition()"
+        (created)="newChannelCreated($event)">
+    </app-channel-new>
+    <div class="column">
+        <button *ngIf="!showChannelForm"
+            class="button is-link is-outlined"
+            (click)="addNewChannel()">
+            <fa-icon class="icon" [icon]="faPlus"></fa-icon>
+            <span>Add Channel</span>
+        </button>
+    </div>
+</div>

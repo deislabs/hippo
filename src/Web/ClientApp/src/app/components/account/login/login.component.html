@@ -1,0 +1,38 @@
+<h1 class="title has-text-primary has-text-centered">Log in</h1>
+
+<app-warning [error]="error"></app-warning>
+
+<form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="mgh-small mgb-medium">
+	<div class="field">
+		<label class="label"><fa-icon class="icon" [icon]="faUser"></fa-icon>Username</label>
+		<div class="control has-icons-left has-icons-right">
+			<input type="text" formControlName="username"
+			[ngClass]="{ 'is-danger': submitted && f['username'].errors }"
+			class="input" placeholder="Enter your username here" />
+			<div *ngIf="submitted && f['username'].errors" class="help is-danger">
+				<div *ngIf="f['username'].errors['required']">Username is required.</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="field">
+		<label class="label"><fa-icon class="icon" [icon]="faLock"></fa-icon>Password</label>
+		<div class="control has-icons-left">
+			<input type="password" formControlName="password"
+			[ngClass]="{ 'is-danger': submitted && f['password'].errors }"
+			class="input" />
+			<div *ngIf="submitted && f['password'].errors" class="help is-danger">
+				<div *ngIf="f['password'].errors['required']">Password is required.</div>
+			</div>
+		</div>
+	</div>
+
+	<button [disabled]="loading" class="button is-primary">
+		<span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+		Log in
+	</button>
+</form>
+
+<div class="has-text-centered">
+	<p class="has-text-centered">Don't have an account yet? <a routerLink="/register">Sign up</a> here.</p>
+</div>
