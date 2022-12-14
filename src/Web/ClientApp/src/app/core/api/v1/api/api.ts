@@ -1,0 +1,17 @@
+export * from './accounts.service';
+import { AccountsService } from './accounts.service';
+export * from './apps.service';
+import { AppsService } from './apps.service';
+export * from './authTokens.service';
+import { AuthTokensService } from './authTokens.service';
+export * from './certificates.service';
+import { CertificatesService } from './certificates.service';
+export * from './channelStatuses.service';
+import { ChannelStatusesService } from './channelStatuses.service';
+export * from './channels.service';
+import { ChannelsService } from './channels.service';
+export * from './revisions.service';
+import { RevisionsService } from './revisions.service';
+export * from './storages.service';
+import { StoragesService } from './storages.service';
+export const APIS = [AccountsService, AppsService, AuthTokensService, CertificatesService, ChannelStatusesService, ChannelsService, RevisionsService, StoragesService];

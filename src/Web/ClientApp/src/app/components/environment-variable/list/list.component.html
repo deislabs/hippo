@@ -1,0 +1,56 @@
+<app-success></app-success>
+<app-warning [error]="error"></app-warning>
+<div class="box columns is-multiline has-background-light">
+    <ng-template [ngIf]="envvars.length <= 0">
+        <span class="column is-full">Channel has no environment variables</span>
+    </ng-template>
+    <ng-template *ngFor="let envvar of envvars"
+        [ngIf]="envvars.length > 0">
+        <div class="columns column is-full is-multiline">
+            <div class="column is-4">
+                <input class="input" type="text" placeholder="Env. variable key"
+                    [(ngModel)]="envvar.key"
+                    (ngModelChange)="inputChanges(envvar)"
+                    [ngClass]="{ 'is-danger': envvar.errors && envvar.errors.keys && envvar.errors.keys.length > 0 }">
+            </div>
+            <div class="column is-4">
+                <input class="input" type="text" placeholder="Env. variable value"
+                    [(ngModel)]="envvar.value"
+                    (ngModelChange)="inputChanges(envvar)"
+                    [ngClass]="{ 'is-danger': envvar.errors && envvar.errors.values && envvar.errors.values.length > 0 }">
+            </div>
+            <div class="column is-4 field is-grouped">
+                <p class="control">
+                    <button (click)="removeVariable(envvar)"
+                        class="button is-link is-outlined is-fullwidth">
+                        <span class="icon is-small">
+                            <fa-icon [icon]="faTrash"></fa-icon>
+                        </span>
+                        <span>Remove</span>
+                    </button>
+                </p>
+                <p class="control">
+                    <button (click)="undoChange(envvar)"
+                        *ngIf="envvar.isChanged"
+                        class="button is-link is-outlined is-fullwidth">
+                        <span class="icon is-small">
+                            <fa-icon [icon]="faBackward"></fa-icon>
+                        </span>
+                        <span>Undo</span>
+                    </button>
+                </p>
+            </div>
+        </div>
+    </ng-template>
+    <div class="column is-1">
+        <button class="button is-link is-outlined" (click)="addNewVariable()">Add</button>
+    </div>
+    <div class="column is-2 is-offset-10">
+        <button class="button is-link is-outlined is-fullwidth env-save-button is-pulled-right" (click)="save()">
+            <span class="icon is-small">
+                <fa-icon [icon]="faSave"></fa-icon>
+            </span>
+            <span>Save</span>
+        </button>
+    </div>
+</div>

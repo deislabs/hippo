@@ -102,6 +102,8 @@ builder.Services.AddSwaggerGen(c =>
 
 var app = builder.Build();
 
+app.UseFileServer();
+
 app.UseRouting();
 
 app.UseAuthentication();
