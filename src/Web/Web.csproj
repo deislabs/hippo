@@ -62,7 +62,7 @@
 		<PackageReference Include="Microsoft.AspNetCore.SpaProxy" Version="6.0.11" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning" Version="5.0.0" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.11" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.14" />
 		<PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="6.0.11" />
 		<PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="6.0.11" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.17.0" />
