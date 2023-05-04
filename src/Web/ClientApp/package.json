@@ -42,7 +42,7 @@
     "@angular-eslint/template-parser": "15.x",
     "@angular/cli": "15.x",
     "@angular/compiler-cli": "15.x",
-    "@openapitools/openapi-generator-cli": "2.5.x",
+    "@openapitools/openapi-generator-cli": "2.6.x",
     "@types/jasmine": "4.3.x",
     "@types/node": "18.x",
     "@typescript-eslint/eslint-plugin": "5.46.x",
